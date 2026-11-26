@@ -23,8 +23,8 @@ input { background:#0b1220; border:1px solid var(--border); color:var(--text); p
 .bottom-nav button.active { color:var(--accent); }
 .small { color:var(--muted); font-size:.85rem; }
 .flex { display:flex; gap:.5rem; align-items:center; flex-wrap:wrap; }
-.key { background:#1e293b; border:1px solid #334155; border-radius:10px; padding:0.85rem 0.3rem; text-align:center; font-weight:700; font-size:1.15rem; cursor:pointer; }
-.key.active { background:var(--accent); color:#0b1220; }
+.key { border-radius:10px; padding:0.85rem 0.3rem; text-align:center; font-weight:700; font-size:1.15rem; cursor:pointer; border:1px solid #334155; }
+.key.active { outline:3px solid var(--accent); }
 .player-row { background:var(--surface2); border-radius:14px; padding:0.9rem 1.1rem; margin:0.45rem 0; display:flex; justify-content:space-between; align-items:center; cursor:pointer; }
 .player-row:active { background:#243044; }
 .rank { width:28px; font-weight:700; color:var(--muted); }
@@ -90,6 +90,13 @@ const SUPABASE_ANON_KEY = 'sb_publishable_HEGO45Fw5dl1s8sAbFnSkg_VzWU_guj';
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const REDIRECT = 'https://rand50.github.io/score-tracker/game_tracker.html';
 
+// Card colors matching Flip 7
+const CARD_COLORS = {
+  0: '#1a1a1a', 1: '#4a90d9', 2: '#f4d03f', 3: '#e74c3c', 4: '#27ae60',
+  5: '#2ecc71', 6: '#8e44ad', 7: '#e67e22', 8: '#16a085', 9: '#d35400',
+  10: '#c0392b', 11: '#2c3e50', 12: '#7f8c8d'
+};
+
 let players = [];
 let history = [];
 let currentGame = null;
@@ -108,7 +115,8 @@ async function checkSession() {
     document.getElementById('login-view').classList.add('hidden');
     document.getElementById('app-view').classList.remove('hidden');
     await loadData();
-    showView('home');
+    restoreActiveGame();
+    showView(currentGame ? 'active' : 'home');
   }
 }
 async function signInWithGoogle() {
@@ -133,6 +141,17 @@ async function saveData() {
   await sb.from('score_history').upsert({ user_id:user.id, players, history, updated_at:new Date().toISOString() });
 }
 
+function persistActive() {
+  if (currentGame) localStorage.setItem('gst_active', JSON.stringify(currentGame));
+  else localStorage.removeItem('gst_active');
+}
+function restoreActiveGame() {
+  const saved = localStorage.getItem('gst_active');
+  if (saved) {
+    try { currentGame = JSON.parse(saved); } catch(e) {}
+  }
+}
+
 function showView(v) {
   document.querySelectorAll('.view').forEach(el => el.classList.add('hidden'));
   document.getElementById('view-'+v).classList.remove('hidden');
@@ -141,6 +160,7 @@ function showView(v) {
   if (v==='home') renderRecent();
   if (v==='new') renderNew();
   if (v==='history') renderHistory();
+  if (v==='active' && currentGame) renderLeaderboard();
 }
 
 function renderNew() {
@@ -159,8 +179,8 @@ function addPlayer(){
 function startGame(){
   if (!players.length){ alert('Add players'); return; }
   currentGame = { type:selectedGame, players:players.map(n=>({name:n,score:0})), rounds:[] };
+  persistActive();
   showView('active');
-  renderLeaderboard();
 }
 
 function renderLeaderboard(){
@@ -184,11 +204,11 @@ function openPad(idx){
   document.getElementById('pad').innerHTML = `
     <div class="small" style="margin:.6rem 0">Scoring for <strong>${currentGame.players[idx].name}</strong></div>
     <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:8px">
-      ${numbers.map(n => `<div class="key" id="n${n}" onclick="toggleNum(${n})">${n}</div>`).join('')}
+      ${numbers.map(n => `<div class="key" id="n${n}" style="background:${CARD_COLORS[n]};color:white" onclick="toggleNum(${n})">${n}</div>`).join('')}
     </div>
     <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:10px">
-      <div class="key" id="kx2" onclick="toggleX2()">×2</div>
-      ${mods.map(m => `<div class="key" id="m${m}" onclick="toggleMod(${m})">+${m}</div>`).join('')}
+      <div class="key" id="kx2" style="background:#1e293b" onclick="toggleX2()">×2</div>
+      ${mods.map(m => `<div class="key" id="m${m}" style="background:#1e293b" onclick="toggleMod(${m})">+${m}</div>`).join('')}
     </div>
     <div class="flex">
       <button class="btn" onclick="toggleBust()">Bust</button>
@@ -239,6 +259,7 @@ function toggleBust(){
 function commitScore(){
   currentGame.players[scoringPlayer].score += calculate(currentRoundState);
   currentGame.rounds.push({ player: scoringPlayer, pts: calculate(currentRoundState) });
+  persistActive();
   renderLeaderboard();
 }
 
@@ -246,6 +267,7 @@ function endGame(){
   currentGame.endTime = new Date().toISOString();
   history.unshift(currentGame);
   saveData();
+  localStorage.removeItem('gst_active');
   currentGame = null;
   showView('history');
 }
