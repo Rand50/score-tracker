@@ -9,11 +9,750 @@
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-512.jpg">
 <title>Score Tracker</title>
-<!-- Full app content goes here. Upload the complete game_tracker.html from the zip for the full version. -->
+<style>
+:root {
+  --bg: #0b1220;
+  --surface: #151c2c;
+  --surface2: #1e293b;
+  --text: #f1f5f9;
+  --muted: #94a3b8;
+  --accent: #22d3ee;
+  --accent-dim: #0891b2;
+  --success: #34d399;
+  --danger: #f43f5e;
+  --border: rgba(255,255,255,0.08);
+  --radius: 16px;
+  --shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding-bottom: 80px;
+}
+.app-header {
+  padding: 1.2rem 1.2rem 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.app-header h1 { margin: 0; font-size: 1.6rem; font-weight: 700; letter-spacing: -0.5px; }
+.view { padding: 0 1rem 1rem; max-width: 900px; margin: 0 auto; }
+.hidden { display: none !important; }
+.card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+.game-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+.game-card {
+  background: var(--surface2);
+  border-radius: 14px;
+  padding: 0;
+  text-align: center;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.2s;
+  overflow: hidden;
+  height: 160px;
+  position: relative;
+  background-size: cover;
+  background-position: center;
+}
+.game-card .overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(transparent, rgba(0,0,0,0.85));
+  padding: 1.2rem 0.5rem 0.6rem;
+  color: white;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+.game-card:hover, .game-card.selected {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+.btn {
+  background: var(--surface2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 0.75rem 1.4rem;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn.primary {
+  background: linear-gradient(135deg, var(--accent), var(--accent-dim));
+  color: #0b1220;
+  border: none;
+}
+.btn.success { background: var(--success); color: #0b1220; border: none; }
+.btn.danger { background: var(--danger); color: white; border: none; }
+.btn:active { transform: scale(0.98); }
+.score-pill {
+  background: var(--surface2);
+  border-radius: 12px;
+  padding: 0.8rem;
+  text-align: center;
+}
+.score-pill .name { font-size: 0.85rem; color: var(--muted); }
+.score-pill .score { font-size: 1.8rem; font-weight: 700; color: var(--accent); margin-top: 0.2rem; }
+.player-list { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0.5rem 0; }
+.player-chip {
+  background: var(--surface2);
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+}
+input, select, textarea {
+  background: #0b1220;
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 0.7rem;
+  border-radius: 10px;
+  width: 100%;
+  font-size: 1rem;
+}
+label { display: block; margin: 0.6rem 0 0.25rem; color: var(--muted); font-size: 0.85rem; }
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(12px);
+  display: flex;
+  justify-content: space-around;
+  padding: 0.6rem 0 calc(0.6rem + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--border);
+  z-index: 100;
+}
+.bottom-nav button {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  cursor: pointer;
+}
+.bottom-nav button.active { color: var(--accent); }
+.bottom-nav .icon { font-size: 1.4rem; }
+.flex { display: flex; gap: 0.6rem; align-items: center; }
+.space-between { justify-content: space-between; }
+.small { color: var(--muted); font-size: 0.85rem; }
+table { width: 100%; border-collapse: collapse; }
+td, th { padding: 0.6rem 0.4rem; text-align: left; border-bottom: 1px solid var(--border); }
+.ai-chat {
+  background: #0b1220;
+  border-radius: 12px;
+  padding: 1rem;
+  max-height: 300px;
+  overflow-y: auto;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+.ai-msg { margin: 0.5rem 0; padding: 0.6rem 0.8rem; border-radius: 10px; max-width: 85%; }
+.ai-msg.user { background: var(--accent-dim); margin-left: auto; }
+.ai-msg.bot { background: var(--surface2); }
+</style>
 </head>
 <body>
-<h1>Score Tracker</h1>
-<p>Please replace this file with the full game_tracker.html from the downloadable zip for the complete app.</p>
-<p>Or drag the full zip onto Netlify for an immediate working version.</p>
+<header class="app-header">
+  <h1>Score Tracker</h1>
+  <button class="btn" style="padding:0.4rem 0.8rem; font-size:0.85rem" onclick="showView('ai')">AI Rules</button>
+</header>
+
+<div id="view-home" class="view">
+  <div class="card" style="text-align:center; padding:1.5rem 1rem;">
+    <div style="font-size:3rem; margin-bottom:0.5rem;">🎲</div>
+    <h2 style="margin:0 0 0.5rem">Ready to play?</h2>
+    <p class="small" style="margin-bottom:1.2rem">Track scores live or log a finished game in seconds.</p>
+    <button class="btn primary" style="width:100%; max-width:280px; padding:1rem" onclick="showView('new')">Start a Game</button>
+  </div>
+  <div class="card">
+    <h3 style="margin-top:0">Recent</h3>
+    <div id="recent-list"></div>
+  </div>
+</div>
+
+<div id="view-new" class="view hidden">
+  <div class="card">
+    <h2 style="margin-top:0">Choose Game</h2>
+    <div class="game-grid" id="game-grid"></div>
+    <label>Version / Scoring rules</label>
+    <select id="version-select"></select>
+    <label>Mode</label>
+    <select id="mode-select">
+      <option value="live">Live tracking (during play)</option>
+      <option value="quick">Quick log (final scores)</option>
+    </select>
+    <h3 style="margin:1.2rem 0 0.5rem">Players</h3>
+    <div class="player-list" id="player-chips"></div>
+    <div class="flex" style="margin-top:0.5rem">
+      <input type="text" id="new-player-name" placeholder="Add player">
+      <button class="btn" onclick="addPlayer()">+</button>
+    </div>
+    <button class="btn primary" style="width:100%; margin-top:1.2rem" onclick="startGame()">Start Playing</button>
+  </div>
+</div>
+
+<div id="view-active" class="view hidden">
+  <div class="card">
+    <div class="space-between flex">
+      <h2 id="active-title" style="margin:0"></h2>
+      <button class="btn" style="padding:0.4rem 0.7rem" onclick="cancelGame()">✕</button>
+    </div>
+    <div id="active-scores" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:0.6rem; margin:1rem 0"></div>
+    <div id="active-content"></div>
+    <div class="flex" style="margin-top:1rem">
+      <button class="btn success" id="end-btn" onclick="endGame()" style="flex:1">Save Game</button>
+      <button class="btn" id="round-btn" onclick="addRound()">+ Round</button>
+    </div>
+  </div>
+</div>
+
+<div id="view-history" class="view hidden">
+  <div class="card">
+    <div class="space-between flex">
+      <h2 style="margin:0">History</h2>
+      <div class="flex">
+        <button class="btn" style="padding:0.4rem 0.7rem" onclick="exportData()">Export</button>
+        <button class="btn" style="padding:0.4rem 0.7rem" onclick="document.getElementById('import-file').click()">Import</button>
+      </div>
+    </div>
+    <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(event)">
+    <div id="history-list" style="margin-top:1rem"></div>
+  </div>
+</div>
+
+<div id="view-stats" class="view hidden">
+  <div class="card">
+    <h2 style="margin-top:0">Stats</h2>
+    <div id="stats-content"></div>
+  </div>
+</div>
+
+<div id="view-ai" class="view hidden">
+  <div class="card">
+    <h2 style="margin-top:0">AI Rules Assistant</h2>
+    <p class="small">Describe your house rules or custom scoring. The assistant will help you set up how to track it. (This is a guided helper — for complex logic, you can also chat with Grok and paste the result.)</p>
+    <div class="ai-chat" id="ai-chat">
+      <div class="ai-msg bot">Hi! Tell me the game and how you score it. For example: "We play Flip 7 but race to 150 and ignore the x2 card" or "Custom Carcassonne where farms are worth 5 points per city."</div>
+    </div>
+    <div class="flex">
+      <input type="text" id="ai-input" placeholder="Describe your rules..." onkeypress="if(event.key==='Enter') sendAI()">
+      <button class="btn primary" onclick="sendAI()">Send</button>
+    </div>
+    <div style="margin-top:1rem">
+      <button class="btn" onclick="applyCustomFromAI()">Apply as Custom Game Template</button>
+    </div>
+  </div>
+</div>
+
+<nav class="bottom-nav">
+  <button onclick="showView('home')" id="nav-home" class="active"><span class="icon">🏠</span>Home</button>
+  <button onclick="showView('new')" id="nav-new"><span class="icon">➕</span>Play</button>
+  <button onclick="showView('history')" id="nav-history"><span class="icon">📜</span>History</button>
+  <button onclick="showView('stats')" id="nav-stats"><span class="icon">📊</span>Stats</button>
+</nav>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// ── Supabase config (fill these in after you create a free project) ──
+const SUPABASE_URL = 'YOUR_SUPABASE_URL';          // e.g. https://xxxx.supabase.co
+const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY'; // from Project Settings → API
+
+let supabase = null;
+if (SUPABASE_URL.startsWith('https') && SUPABASE_ANON_KEY.length > 20) {
+  supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+}
+
+// Sync helpers
+async function syncToBackend() {
+  if (!supabase) return;
+  try {
+    // Simple approach: store the whole history as one document per user/device
+    // (upgrade later to per-game rows if you want richer queries)
+    const deviceId = localStorage.getItem('gst_device_id') || (crypto.randomUUID?.() || Date.now().toString());
+    localStorage.setItem('gst_device_id', deviceId);
+
+    await supabase.from('score_history').upsert({
+      device_id: deviceId,
+      players: players,
+      history: history,
+      updated_at: new Date().toISOString()
+    }, { onConflict: 'device_id' });
+  } catch (e) {
+    console.log('Sync failed (offline or not configured):', e.message);
+  }
+}
+
+async function loadFromBackend() {
+  if (!supabase) return;
+  try {
+    const deviceId = localStorage.getItem('gst_device_id');
+    if (!deviceId) return;
+    const { data } = await supabase.from('score_history').select('*').eq('device_id', deviceId).single();
+    if (data) {
+      if (data.players) players = data.players;
+      if (data.history) history = data.history;
+      save(); // also keep local copy
+      renderRecent();
+    }
+  } catch (e) {
+    console.log('Load failed:', e.message);
+  }
+}
+
+let players = JSON.parse(localStorage.getItem('gst_players') || '[]');
+let history = JSON.parse(localStorage.getItem('gst_history') || '[]');
+let currentGame = null;
+let selectedGame = 'flip7';
+let aiMessages = [];
+
+const games = [
+  { id: 'flip7', name: 'Flip 7', img: 'images/flip7.jpg', versions: ['Standard (to 200)', 'With a Vengeance', 'Thematic / Promo'] },
+  { id: '7wonders', name: '7 Wonders', img: 'images/7wonders.jpg', versions: ['Base (1st/2nd Ed)', 'With Leaders', 'With Cities', 'With Armada', 'Other expansion'] },
+  { id: 'carcassonne', name: 'Carcassonne', img: '', versions: ['Classic (current scoring)', 'Older edition (small cities)', 'With Inns & Cathedrals', 'With other expansions'] },
+  { id: 'catan', name: 'Catan', img: '', versions: ['Base (to 10 VP)', 'Cities & Knights (to 13)', 'Seafarers', '5-6 Player'] },
+  { id: 'ohhell', name: 'Oh Hell', img: 'images/ohhell.jpg', versions: ['Exact: 10+bid (miss=0)', '1 per trick +10 if exact', 'Other variant'] },
+  { id: 'hearts', name: 'Hearts', img: '', versions: ['Standard (to 100)', 'Short (to 50)', 'With Jack of Diamonds'] },
+  { id: 'nertz', name: 'Nertz', img: 'images/nertz.png', versions: ['Standard (+1/-2, optional bonus)', 'To 100', 'To 150', 'No bonus for calling'] },
+  { id: 'other', name: 'Custom', img: '', versions: ['Custom rules'] }
+];
+
+function save() {
+  localStorage.setItem('gst_players', JSON.stringify(players));
+  localStorage.setItem('gst_history', JSON.stringify(history));
+  syncToBackend(); // fire-and-forget
+}
+
+function showView(v) {
+  document.querySelectorAll('.view').forEach(el => el.classList.add('hidden'));
+  document.querySelectorAll('.bottom-nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById('view-' + v).classList.remove('hidden');
+  document.getElementById('nav-' + v)?.classList.add('active');
+  if (v === 'home') renderRecent();
+  if (v === 'new') renderNew();
+  if (v === 'history') renderHistory();
+  if (v === 'stats') renderStats();
+}
+
+function renderNew() {
+  const grid = document.getElementById('game-grid');
+  grid.innerHTML = games.map(g => `
+    <div class="game-card ${g.id === selectedGame ? 'selected' : ''}" 
+         onclick="selectGame('${g.id}')"
+         style="${g.img ? `background-image:url('${g.img}')` : 'background:var(--surface2)'}">
+      <div class="overlay">${g.name}</div>
+    </div>
+  `).join('');
+  const g = games.find(x => x.id === selectedGame);
+  document.getElementById('version-select').innerHTML = (g.versions || ['Standard']).map(v => `<option>${v}</option>`).join('');
+  const chips = document.getElementById('player-chips');
+  chips.innerHTML = players.map((p, i) => `
+    <div class="player-chip">
+      <input type="checkbox" id="chk-${i}" checked style="width:auto">
+      ${p}
+      <span onclick="removePlayer(${i})" style="cursor:pointer; color:var(--danger)">×</span>
+    </div>
+  `).join('') || '<span class="small">Add players below</span>';
+}
+
+function selectGame(id) {
+  selectedGame = id;
+  renderNew();
+}
+
+function addPlayer() {
+  const input = document.getElementById('new-player-name');
+  const name = input.value.trim();
+  if (name && !players.includes(name)) {
+    players.push(name);
+    save();
+    input.value = '';
+    renderNew();
+  }
+}
+
+function removePlayer(i) {
+  players.splice(i, 1);
+  save();
+  renderNew();
+}
+
+function startGame() {
+  const mode = document.getElementById('mode-select').value;
+  const selected = [];
+  players.forEach((p, i) => {
+    if (document.getElementById('chk-' + i)?.checked) selected.push(p);
+  });
+  if (!selected.length) { alert('Add and select at least one player'); return; }
+  currentGame = {
+    id: Date.now(),
+    type: selectedGame,
+    version: document.getElementById('version-select').value,
+    mode,
+    players: selected.map(n => ({ name: n, score: 0, details: [] })),
+    rounds: [],
+    startTime: new Date().toISOString(),
+    notes: ''
+  };
+  showView('active');
+  renderActive();
+}
+
+function renderActive() {
+  const g = games.find(x => x.id === currentGame.type);
+  document.getElementById('active-title').textContent = g.name + (currentGame.version ? ` · ${currentGame.version}` : '') + (currentGame.mode === 'quick' ? ' · Log' : '');
+  const scores = document.getElementById('active-scores');
+  scores.innerHTML = currentGame.players.map(p => `
+    <div class="score-pill">
+      <div class="name">${p.name}</div>
+      <div class="score">${p.score}</div>
+    </div>
+  `).join('');
+  const content = document.getElementById('active-content');
+  const roundBtn = document.getElementById('round-btn');
+  if (currentGame.mode === 'quick') {
+    roundBtn.classList.add('hidden');
+    content.innerHTML = currentGame.players.map((p, i) => `
+      <div class="flex" style="margin-bottom:0.5rem">
+        <span style="width:100px">${p.name}</span>
+        <input type="number" value="${p.score}" onchange="currentGame.players[${i}].score=parseInt(this.value)||0; renderActiveScores()">
+      </div>
+    `).join('') + '<label>Notes</label><textarea id="notes" rows="2"></textarea>';
+  } else {
+    roundBtn.classList.remove('hidden');
+    renderRoundForm();
+  }
+}
+
+function renderActiveScores() {
+  document.getElementById('active-scores').innerHTML = currentGame.players.map(p => `
+    <div class="score-pill"><div class="name">${p.name}</div><div class="score">${p.score}</div></div>
+  `).join('');
+}
+
+function renderRoundForm() {
+  const type = currentGame.type;
+  const content = document.getElementById('active-content');
+  if (type === 'flip7') {
+    content.innerHTML = `<p class="small">Round ${currentGame.rounds.length + 1} — enter number sum, modifiers, etc.</p>` +
+      currentGame.players.map((p, i) => `
+        <div style="margin-bottom:0.8rem; padding:0.6rem; background:var(--surface2); border-radius:10px">
+          <strong>${p.name}</strong>
+          <div class="flex" style="flex-wrap:wrap; margin-top:0.4rem">
+            <div style="flex:1; min-width:80px"><label>Num sum</label><input type="number" id="f7n${i}" value="0"></div>
+            <div style="flex:1; min-width:80px"><label>×2</label><select id="f7x${i}"><option value="0">No</option><option value="1">Yes</option></select></div>
+            <div style="flex:1; min-width:80px"><label>+Mods</label><input type="number" id="f7m${i}" value="0"></div>
+            <div style="flex:1; min-width:80px"><label>Flip7</label><select id="f7b${i}"><option value="0">No</option><option value="1">+15</option></select></div>
+            <div style="flex:1; min-width:80px"><label>Bust</label><select id="f7bust${i}"><option value="0">No</option><option value="1">Yes</option></select></div>
+          </div>
+        </div>
+      `).join('') + `<button class="btn primary" onclick="submitFlip7()">Score Round</button>`;
+  } else if (type === 'ohhell') {
+    content.innerHTML = `<p class="small">Hand ${currentGame.rounds.length + 1}</p>
+      <div class="flex"><label style="width:auto;margin:0">Cards</label><input type="number" id="ohc" value="5" style="width:70px">
+      <select id="ohs"><option value="exact0">Exact = 10+bid (else 0)</option><option value="bonus">1/trick +10 if exact</option></select></div>` +
+      currentGame.players.map((p, i) => `
+        <div class="flex" style="margin:0.4rem 0">
+          <span style="width:90px">${p.name}</span>
+          Bid <input type="number" id="ohb${i}" value="0" style="width:60px">
+          Took <input type="number" id="oht${i}" value="0" style="width:60px">
+        </div>
+      `).join('') + `<button class="btn primary" onclick="submitOhHell()">Score Hand</button>`;
+  } else if (type === 'hearts') {
+    content.innerHTML = `<p class="small">Hand ${currentGame.rounds.length + 1} — points or shoot the moon</p>` +
+      currentGame.players.map((p, i) => `
+        <div class="flex" style="margin:0.4rem 0">
+          <span style="width:90px">${p.name}</span>
+          Pts <input type="number" id="hp${i}" value="0" style="width:70px">
+          <label style="margin:0"><input type="checkbox" id="hm${i}" style="width:auto"> Moon</label>
+        </div>
+      `).join('') + `<button class="btn primary" onclick="submitHearts()">Score Hand</button>`;
+  } else if (type === 'nertz') {
+    content.innerHTML = `<p class="small">Round ${currentGame.rounds.length + 1}</p>
+      <label>Nertz bonus</label><input type="number" id="nb" value="10">` +
+      currentGame.players.map((p, i) => `
+        <div class="flex" style="margin:0.4rem 0">
+          <span style="width:90px">${p.name}</span>
+          Lake <input type="number" id="nl${i}" value="0" style="width:60px">
+          Left <input type="number" id="nleft${i}" value="0" style="width:60px">
+          <label style="margin:0"><input type="checkbox" id="nc${i}" style="width:auto"> Called</label>
+        </div>
+      `).join('') + `<button class="btn primary" onclick="submitNertz()">Score Round</button>`;
+  } else if (type === 'catan') {
+    content.innerHTML = `<p class="small">Update VP as you build. First to 10 on your turn wins.</p>` +
+      currentGame.players.map((p, i) => `
+        <div style="margin-bottom:0.6rem; padding:0.6rem; background:var(--surface2); border-radius:10px">
+          <strong>${p.name}</strong>
+          <div class="flex" style="flex-wrap:wrap">
+            <div><label>Settl.</label><input type="number" id="cs${i}" value="0" onchange="updCatan(${i})" style="width:70px"></div>
+            <div><label>Cities</label><input type="number" id="cc${i}" value="0" onchange="updCatan(${i})" style="width:70px"></div>
+            <div><label>VP cards</label><input type="number" id="cv${i}" value="0" onchange="updCatan(${i})" style="width:70px"></div>
+            <div><label>LR</label><select id="clr${i}" onchange="updCatan(${i})"><option value="0">No</option><option value="2">+2</option></select></div>
+            <div><label>LA</label><select id="cla${i}" onchange="updCatan(${i})"><option value="0">No</option><option value="2">+2</option></select></div>
+          </div>
+        </div>
+      `).join('') + '<label>Notes</label><textarea id="notes" rows="2"></textarea>';
+  } else if (type === '7wonders') {
+    content.innerHTML = `<p class="small">Enter points per category.</p>` +
+      currentGame.players.map((p, i) => `
+        <div style="margin-bottom:0.6rem; padding:0.6rem; background:var(--surface2); border-radius:10px">
+          <strong>${p.name}</strong>
+          <div class="flex" style="flex-wrap:wrap">
+            <div><label>Mil</label><input type="number" id="wm${i}" value="0" onchange="updWonders(${i})" style="width:70px"></div>
+            <div><label>Coins</label><input type="number" id="wc${i}" value="0" onchange="updWonders(${i})" style="width:70px"></div>
+            <div><label>Wonder</label><input type="number" id="ww${i}" value="0" onchange="updWonders(${i})" style="width:70px"></div>
+            <div><label>Blue</label><input type="number" id="wb${i}" value="0" onchange="updWonders(${i})" style="width:70px"></div>
+            <div><label>Sci</label><input type="number" id="ws${i}" value="0" onchange="updWonders(${i})" style="width:70px"></div>
+            <div><label>Y+P</label><input type="number" id="wp${i}" value="0" onchange="updWonders(${i})" style="width:70px"></div>
+          </div>
+        </div>
+      `).join('') + '<label>Notes</label><textarea id="notes" rows="2"></textarea>';
+  } else {
+    content.innerHTML = currentGame.players.map((p, i) => `
+      <div class="flex" style="margin-bottom:0.5rem">
+        <span style="width:100px">${p.name}</span>
+        <input type="number" value="${p.score}" onchange="currentGame.players[${i}].score=parseInt(this.value)||0; renderActiveScores()">
+      </div>
+    `).join('') + '<label>Notes / breakdown</label><textarea id="notes" rows="3"></textarea>';
+  }
+}
+
+function updCatan(i) {
+  const s = +document.getElementById('cs'+i).value || 0;
+  const c = +document.getElementById('cc'+i).value || 0;
+  const v = +document.getElementById('cv'+i).value || 0;
+  const lr = +document.getElementById('clr'+i).value || 0;
+  const la = +document.getElementById('cla'+i).value || 0;
+  currentGame.players[i].score = s + c*2 + v + lr + la;
+  renderActiveScores();
+}
+
+function updWonders(i) {
+  const m = +document.getElementById('wm'+i).value || 0;
+  const c = +document.getElementById('wc'+i).value || 0;
+  const w = +document.getElementById('ww'+i).value || 0;
+  const b = +document.getElementById('wb'+i).value || 0;
+  const s = +document.getElementById('ws'+i).value || 0;
+  const p = +document.getElementById('wp'+i).value || 0;
+  currentGame.players[i].score = m + c + w + b + s + p;
+  renderActiveScores();
+}
+
+function submitFlip7() {
+  currentGame.players.forEach((p, i) => {
+    const bust = document.getElementById('f7bust'+i).value === '1';
+    let pts = 0;
+    if (!bust) {
+      let num = +document.getElementById('f7n'+i).value || 0;
+      if (document.getElementById('f7x'+i).value === '1') num *= 2;
+      pts = num + (+document.getElementById('f7m'+i).value || 0);
+      if (document.getElementById('f7b'+i).value === '1') pts += 15;
+    }
+    p.score += pts;
+  });
+  currentGame.rounds.push({ type: 'flip7' });
+  renderActive();
+  if (currentGame.players.some(p => p.score >= 200)) alert('200+ reached! Highest total wins when you save.');
+}
+
+function submitOhHell() {
+  const mode = document.getElementById('ohs').value;
+  currentGame.players.forEach((p, i) => {
+    const bid = +document.getElementById('ohb'+i).value || 0;
+    const took = +document.getElementById('oht'+i).value || 0;
+    let pts = mode === 'exact0' ? (bid === took ? 10 + bid : 0) : took + (bid === took ? 10 : 0);
+    p.score += pts;
+  });
+  currentGame.rounds.push({ type: 'ohhell' });
+  renderActive();
+}
+
+function submitHearts() {
+  const moons = currentGame.players.map((_, i) => document.getElementById('hm'+i).checked);
+  if (moons.filter(Boolean).length === 1) {
+    const idx = moons.indexOf(true);
+    currentGame.players.forEach((p, i) => p.score += i === idx ? 0 : 26);
+  } else {
+    currentGame.players.forEach((p, i) => p.score += +document.getElementById('hp'+i).value || 0);
+  }
+  currentGame.rounds.push({ type: 'hearts' });
+  renderActive();
+  if (currentGame.players.some(p => p.score >= 100)) alert('100+ reached. Lowest score wins.');
+}
+
+function submitNertz() {
+  const bonus = +document.getElementById('nb').value || 0;
+  currentGame.players.forEach((p, i) => {
+    const lake = +document.getElementById('nl'+i).value || 0;
+    const left = +document.getElementById('nleft'+i).value || 0;
+    const called = document.getElementById('nc'+i).checked;
+    p.score += lake - left * 2 + (called ? bonus : 0);
+  });
+  currentGame.rounds.push({ type: 'nertz' });
+  renderActive();
+}
+
+function addRound() { renderRoundForm(); }
+
+function endGame() {
+  const notes = document.getElementById('notes')?.value || '';
+  currentGame.notes = notes;
+  currentGame.endTime = new Date().toISOString();
+  const scores = currentGame.players.map(p => p.score);
+  if (currentGame.type === 'hearts') {
+    const min = Math.min(...scores);
+    currentGame.winner = currentGame.players.filter(p => p.score === min).map(p => p.name).join(', ');
+  } else {
+    const max = Math.max(...scores);
+    currentGame.winner = currentGame.players.filter(p => p.score === max).map(p => p.name).join(', ');
+  }
+  history.unshift(currentGame);
+  save();
+  currentGame = null;
+  showView('history');
+}
+
+function cancelGame() {
+  if (confirm('Discard this game?')) { currentGame = null; showView('home'); }
+}
+
+function renderRecent() {
+  const el = document.getElementById('recent-list');
+  const rec = history.slice(0, 4);
+  el.innerHTML = rec.length ? rec.map(g => `
+    <div style="padding:0.6rem 0; border-bottom:1px solid var(--border)">
+      <strong>${gameName(g.type)}</strong> · ${g.winner || '—'}
+      <div class="small">${new Date(g.endTime || g.startTime).toLocaleDateString()} · ${g.players.map(p => p.name + ' ' + p.score).join(', ')}</div>
+    </div>
+  `).join('') : '<p class="small">No games yet — tap Play to start.</p>';
+}
+
+function gameName(t) { return games.find(g => g.id === t)?.name || t; }
+
+function renderHistory() {
+  const el = document.getElementById('history-list');
+  if (!history.length) { el.innerHTML = '<p class="small">Nothing here yet.</p>'; return; }
+  el.innerHTML = history.map((g, i) => `
+    <div style="padding:0.8rem 0; border-bottom:1px solid var(--border)">
+      <div class="space-between flex">
+        <div>
+          <strong>${gameName(g.type)}</strong>
+          <div class="small">${new Date(g.endTime || g.startTime).toLocaleDateString()}</div>
+        </div>
+        <button class="btn danger" style="padding:0.3rem 0.6rem" onclick="deleteGame(${i})">×</button>
+      </div>
+      <div style="margin-top:0.3rem">${g.players.map(p => `${p.name}: <strong>${p.score}</strong>`).join(' · ')}</div>
+      <div class="small" style="color:var(--success)">Winner: ${g.winner || '—'}</div>
+      ${g.notes ? `<div class="small">${g.notes}</div>` : ''}
+    </div>
+  `).join('');
+}
+
+function deleteGame(i) {
+  if (confirm('Delete?')) { history.splice(i, 1); save(); renderHistory(); }
+}
+
+function renderStats() {
+  const el = document.getElementById('stats-content');
+  if (!history.length) { el.innerHTML = '<p class="small">Play some games first.</p>'; return; }
+  const counts = {}, wins = {}, gamesPlayed = {};
+  history.forEach(g => {
+    counts[g.type] = (counts[g.type] || 0) + 1;
+    g.players.forEach(p => gamesPlayed[p.name] = (gamesPlayed[p.name] || 0) + 1);
+    (g.winner || '').split(', ').filter(Boolean).forEach(w => wins[w] = (wins[w] || 0) + 1);
+  });
+  let html = '<h3>By Game</h3>';
+  Object.entries(counts).forEach(([t, c]) => html += `<div>${gameName(t)}: ${c}</div>`);
+  html += '<h3 style="margin-top:1rem">Win Rates</h3>';
+  Object.keys(gamesPlayed).sort().forEach(n => {
+    const w = wins[n] || 0;
+    html += `<div>${n}: ${w}/${gamesPlayed[n]} (${((w / gamesPlayed[n]) * 100).toFixed(0)}%)</div>`;
+  });
+  el.innerHTML = html;
+}
+
+function exportData() {
+  const blob = new Blob([JSON.stringify({ players, history }, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'scores.json';
+  a.click();
+}
+
+function importData(e) {
+  const f = e.target.files[0];
+  if (!f) return;
+  const r = new FileReader();
+  r.onload = ev => {
+    try {
+      const d = JSON.parse(ev.target.result);
+      if (d.players) players = d.players;
+      if (d.history) history = d.history;
+      save();
+      alert('Imported');
+      showView('history');
+    } catch { alert('Bad file'); }
+  };
+  r.readAsText(f);
+}
+
+function sendAI() {
+  const input = document.getElementById('ai-input');
+  const text = input.value.trim();
+  if (!text) return;
+  const chat = document.getElementById('ai-chat');
+  chat.innerHTML += `<div class="ai-msg user">${text}</div>`;
+  aiMessages.push({ role: 'user', text });
+  input.value = '';
+  // Simple local response engine for common cases
+  let reply = "Got it. For custom rules, use the Custom game type and enter final scores, or describe the exact point values and I can suggest how to track them. You can also chat with Grok for a full custom scoring setup and then use the notes field.";
+  if (text.toLowerCase().includes('flip')) reply = "For Flip 7 house rules: use the built-in Flip 7 tracker and adjust the target in your head, or switch to Custom and log rounds manually. Want me to note a specific change?";
+  if (text.toLowerCase().includes('hearts') || text.toLowerCase().includes('moon')) reply = "Hearts tracker already supports shoot the moon. For other variants, use Custom or add notes.";
+  if (text.toLowerCase().includes('custom') || text.toLowerCase().includes('house')) reply = "Perfect — start a Custom game and use the notes field to record your scoring method. Or tell me the exact rules and I'll help you set it up.";
+  setTimeout(() => {
+    chat.innerHTML += `<div class="ai-msg bot">${reply}</div>`;
+    chat.scrollTop = chat.scrollHeight;
+  }, 400);
+}
+
+function applyCustomFromAI() {
+  selectedGame = 'other';
+  alert('Switched to Custom game. Start a new game and use notes or freeform scores for your house rules.');
+  showView('new');
+}
+
+// PWA
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js').catch(() => {});
+}
+
+loadFromBackend();
+showView('home');
+</script>
 </body>
 </html>
