@@ -27,6 +27,7 @@ input, select { background:#0b1220; border:1px solid var(--border); color:var(--
 .key.active { outline:3px solid var(--accent); }
 .player-row { background:var(--surface2); border-radius:14px; padding:0.9rem 1.1rem; margin:0.45rem 0; display:flex; justify-content:space-between; align-items:center; cursor:pointer; }
 .rank { width:28px; font-weight:700; color:var(--muted); }
+.cat { padding:.5rem .8rem; border-radius:8px; font-size:.85rem; font-weight:600; cursor:pointer; border:none; color:white; }
 </style>
 </head>
 <body>
@@ -107,13 +108,13 @@ let scoringPlayer = null;
 let currentRoundState = null;
 
 const games = [
-  { id:'flip7', name:'Flip 7', img:'flip7.jpg', versions:['Standard (to 200)','With a Vengeance'], theme:'cards' },
-  { id:'7wonders', name:'7 Wonders', img:'7wonders.jpg', versions:['Base','With Leaders','With Cities','With Armada'], theme:'wonders' },
-  { id:'carcassonne', name:'Carcassonne', img:'', versions:['Classic','With Inns & Cathedrals'], theme:'tiles' },
-  { id:'catan', name:'Catan', img:'', versions:['Base (to 10)','Cities & Knights (to 13)'], theme:'hex' },
-  { id:'ohhell', name:'Oh Hell', img:'ohhell.jpg', versions:['Exact = 10+bid','1/trick +10 if exact'], theme:'tricks' },
-  { id:'hearts', name:'Hearts', img:'', versions:['Standard (to 100)','Short (to 50)'], theme:'hearts' },
-  { id:'nertz', name:'Nertz', img:'nertz.png', versions:['Standard','To 100','To 150'], theme:'solitaire' },
+  { id:'flip7', name:'Flip 7', img:'flip7.jpg', versions:['Standard (to 200)','With a Vengeance'], theme:'flip7' },
+  { id:'7wonders', name:'7 Wonders', img:'7wonders.jpg', versions:['Base','With Leaders','With Cities'], theme:'7wonders' },
+  { id:'carcassonne', name:'Carcassonne', img:'', versions:['Classic','Inns & Cathedrals'], theme:'carcassonne' },
+  { id:'catan', name:'Catan', img:'', versions:['Base (to 10)','Cities & Knights'], theme:'catan' },
+  { id:'ohhell', name:'Oh Hell', img:'ohhell.jpg', versions:['Exact = 10+bid'], theme:'ohhell' },
+  { id:'hearts', name:'Hearts', img:'', versions:['Standard (to 100)'], theme:'hearts' },
+  { id:'nertz', name:'Nertz', img:'nertz.png', versions:['Standard'], theme:'nertz' },
   { id:'other', name:'Custom', img:'', versions:['Custom'], theme:'generic' }
 ];
 
@@ -208,13 +209,14 @@ function openPad(idx){
   scoringPlayer = idx;
   const g = games.find(x=>x.id===currentGame.type);
   document.getElementById('pad').classList.remove('hidden');
-  if (g.theme === 'cards') {
-    openFlip7Pad(idx);
-  } else if (g.theme === 'tricks') {
-    openOhHellPad(idx);
-  } else {
-    openGenericPad(idx, g);
-  }
+  if (g.theme === 'flip7') openFlip7Pad(idx);
+  else if (g.theme === '7wonders') open7WondersPad(idx);
+  else if (g.theme === 'catan') openCatanPad(idx);
+  else if (g.theme === 'carcassonne') openCarcassonnePad(idx);
+  else if (g.theme === 'ohhell') openOhHellPad(idx);
+  else if (g.theme === 'hearts') openHeartsPad(idx);
+  else if (g.theme === 'nertz') openNertzPad(idx);
+  else openGenericPad(idx, g);
 }
 
 function openFlip7Pad(idx){
@@ -240,9 +242,63 @@ function openFlip7Pad(idx){
   updateFlip7Preview();
 }
 
+function open7WondersPad(idx){
+  document.getElementById('pad').innerHTML = `
+    <div class="small" style="margin:.6rem 0">7 Wonders · <strong>${currentGame.players[idx].name}</strong></div>
+    <div class="flex" style="margin:.4rem 0">
+      <span style="width:90px">Military</span><input type="number" id="w-mil" value="0" style="width:80px">
+    </div>
+    <div class="flex" style="margin:.4rem 0">
+      <span style="width:90px">Science</span><input type="number" id="w-sci" value="0" style="width:80px">
+    </div>
+    <div class="flex" style="margin:.4rem 0">
+      <span style="width:90px">Civilian</span><input type="number" id="w-civ" value="0" style="width:80px">
+    </div>
+    <div class="flex" style="margin:.4rem 0">
+      <span style="width:90px">Wonder</span><input type="number" id="w-won" value="0" style="width:80px">
+    </div>
+    <div class="flex" style="margin:.4rem 0">
+      <span style="width:90px">Coins</span><input type="number" id="w-coin" value="0" style="width:80px">
+    </div>
+    <div class="flex" style="margin-top:.6rem">
+      <button class="btn primary" onclick="commit7Wonders()">Add</button>
+      <button class="btn" onclick="renderLeaderboard()">Cancel</button>
+    </div>
+  `;
+}
+
+function openCatanPad(idx){
+  document.getElementById('pad').innerHTML = `
+    <div class="small" style="margin:.6rem 0">Catan · <strong>${currentGame.players[idx].name}</strong></div>
+    <div class="flex" style="margin:.4rem 0"><span style="width:110px">Settlements</span><input type="number" id="c-set" value="0" style="width:70px"></div>
+    <div class="flex" style="margin:.4rem 0"><span style="width:110px">Cities</span><input type="number" id="c-cit" value="0" style="width:70px"></div>
+    <div class="flex" style="margin:.4rem 0"><span style="width:110px">Longest Road</span><input type="number" id="c-lr" value="0" style="width:70px"></div>
+    <div class="flex" style="margin:.4rem 0"><span style="width:110px">Largest Army</span><input type="number" id="c-la" value="0" style="width:70px"></div>
+    <div class="flex" style="margin:.4rem 0"><span style="width:110px">Dev cards</span><input type="number" id="c-dev" value="0" style="width:70px"></div>
+    <div class="flex" style="margin-top:.6rem">
+      <button class="btn primary" onclick="commitCatan()">Add VP</button>
+      <button class="btn" onclick="renderLeaderboard()">Cancel</button>
+    </div>
+  `;
+}
+
+function openCarcassonnePad(idx){
+  document.getElementById('pad').innerHTML = `
+    <div class="small" style="margin:.6rem 0">Carcassonne · <strong>${currentGame.players[idx].name}</strong></div>
+    <div class="flex" style="margin:.4rem 0"><span style="width:100px">Cities</span><input type="number" id="ca-cit" value="0" style="width:80px"></div>
+    <div class="flex" style="margin:.4rem 0"><span style="width:100px">Roads</span><input type="number" id="ca-road" value="0" style="width:80px"></div>
+    <div class="flex" style="margin:.4rem 0"><span style="width:100px">Monasteries</span><input type="number" id="ca-mon" value="0" style="width:80px"></div>
+    <div class="flex" style="margin:.4rem 0"><span style="width:100px">Fields</span><input type="number" id="ca-field" value="0" style="width:80px"></div>
+    <div class="flex" style="margin-top:.6rem">
+      <button class="btn primary" onclick="commitCarcassonne()">Add</button>
+      <button class="btn" onclick="renderLeaderboard()">Cancel</button>
+    </div>
+  `;
+}
+
 function openOhHellPad(idx){
   document.getElementById('pad').innerHTML = `
-    <div class="small" style="margin:.6rem 0">Hand for <strong>${currentGame.players[idx].name}</strong></div>
+    <div class="small" style="margin:.6rem 0">Oh Hell · <strong>${currentGame.players[idx].name}</strong></div>
     <div class="flex">
       <input type="number" id="oh-bid" placeholder="Bid" style="width:80px">
       <input type="number" id="oh-tricks" placeholder="Tricks" style="width:80px">
@@ -254,9 +310,33 @@ function openOhHellPad(idx){
   `;
 }
 
+function openHeartsPad(idx){
+  document.getElementById('pad').innerHTML = `
+    <div class="small" style="margin:.6rem 0">Hearts · <strong>${currentGame.players[idx].name}</strong></div>
+    <div class="flex"><span style="width:100px">Hearts</span><input type="number" id="h-hearts" value="0" style="width:70px"></div>
+    <div class="flex" style="margin-top:.4rem"><span style="width:100px">Queen</span><select id="h-queen"><option value="0">No</option><option value="13">Yes (+13)</option></select></div>
+    <div class="flex" style="margin-top:.6rem">
+      <button class="btn primary" onclick="commitHearts()">Add</button>
+      <button class="btn" onclick="renderLeaderboard()">Cancel</button>
+    </div>
+  `;
+}
+
+function openNertzPad(idx){
+  document.getElementById('pad').innerHTML = `
+    <div class="small" style="margin:.6rem 0">Nertz · <strong>${currentGame.players[idx].name}</strong></div>
+    <div class="flex"><span style="width:120px">Cards played</span><input type="number" id="n-played" value="0" style="width:70px"></div>
+    <div class="flex" style="margin-top:.4rem"><span style="width:120px">Left in Nertz</span><input type="number" id="n-left" value="0" style="width:70px"></div>
+    <div class="flex" style="margin-top:.6rem">
+      <button class="btn primary" onclick="commitNertz()">Add</button>
+      <button class="btn" onclick="renderLeaderboard()">Cancel</button>
+    </div>
+  `;
+}
+
 function openGenericPad(idx, g){
   document.getElementById('pad').innerHTML = `
-    <div class="small" style="margin:.6rem 0">Add points for <strong>${currentGame.players[idx].name}</strong> (${g.name})</div>
+    <div class="small" style="margin:.6rem 0">${g.name} · <strong>${currentGame.players[idx].name}</strong></div>
     <input type="number" id="gen-pts" value="0" placeholder="Points">
     <div class="flex" style="margin-top:.6rem">
       <button class="btn primary" onclick="commitGeneric()">Add</button>
@@ -303,6 +383,24 @@ function commitFlip7(){
   persistActive();
   renderLeaderboard();
 }
+function commit7Wonders(){
+  const pts = (+document.getElementById('w-mil').value||0) + (+document.getElementById('w-sci').value||0) + (+document.getElementById('w-civ').value||0) + (+document.getElementById('w-won').value||0) + (+document.getElementById('w-coin').value||0);
+  currentGame.players[scoringPlayer].score += pts;
+  persistActive();
+  renderLeaderboard();
+}
+function commitCatan(){
+  const pts = (+document.getElementById('c-set').value||0) + (+document.getElementById('c-cit').value||0)*2 + (+document.getElementById('c-lr').value||0) + (+document.getElementById('c-la').value||0) + (+document.getElementById('c-dev').value||0);
+  currentGame.players[scoringPlayer].score += pts;
+  persistActive();
+  renderLeaderboard();
+}
+function commitCarcassonne(){
+  const pts = (+document.getElementById('ca-cit').value||0) + (+document.getElementById('ca-road').value||0) + (+document.getElementById('ca-mon').value||0) + (+document.getElementById('ca-field').value||0);
+  currentGame.players[scoringPlayer].score += pts;
+  persistActive();
+  renderLeaderboard();
+}
 function commitOhHell(){
   const bid = +document.getElementById('oh-bid').value || 0;
   const tricks = +document.getElementById('oh-tricks').value || 0;
@@ -311,9 +409,21 @@ function commitOhHell(){
   persistActive();
   renderLeaderboard();
 }
-function commitGeneric(){
-  const pts = +document.getElementById('gen-pts').value || 0;
+function commitHearts(){
+  const pts = (+document.getElementById('h-hearts').value||0) + (+document.getElementById('h-queen').value||0);
   currentGame.players[scoringPlayer].score += pts;
+  persistActive();
+  renderLeaderboard();
+}
+function commitNertz(){
+  const played = +document.getElementById('n-played').value || 0;
+  const left = +document.getElementById('n-left').value || 0;
+  currentGame.players[scoringPlayer].score += played - (left * 2);
+  persistActive();
+  renderLeaderboard();
+}
+function commitGeneric(){
+  currentGame.players[scoringPlayer].score += +document.getElementById('gen-pts').value || 0;
   persistActive();
   renderLeaderboard();
 }
