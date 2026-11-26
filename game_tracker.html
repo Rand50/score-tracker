@@ -13,20 +13,19 @@ body { margin:0; font-family:system-ui,sans-serif; background:var(--bg); color:v
 .btn { background:var(--surface2); color:var(--text); border:1px solid var(--border); padding:0.7rem 1.2rem; border-radius:12px; font-weight:600; cursor:pointer; }
 .btn.primary { background:linear-gradient(135deg,var(--accent),var(--accent-dim)); color:#0b1220; border:none; }
 .btn.google { background:#fff; color:#333; border:none; }
-input { background:#0b1220; border:1px solid var(--border); color:var(--text); padding:0.6rem; border-radius:8px; }
-.game-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:0.6rem; }
-.game-card { background:var(--surface2); border-radius:12px; height:140px; cursor:pointer; position:relative; background-size:cover; background-position:center; border:2px solid transparent; }
+input, select { background:#0b1220; border:1px solid var(--border); color:var(--text); padding:0.7rem; border-radius:10px; width:100%; font-size:1rem; }
+.game-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:0.75rem; margin:1rem 0; }
+.game-card { background:var(--surface2); border-radius:14px; height:160px; cursor:pointer; position:relative; background-size:cover; background-position:center; border:2px solid transparent; }
 .game-card.selected { border-color:var(--accent); }
-.game-card .overlay { position:absolute; bottom:0; left:0; right:0; background:linear-gradient(transparent,rgba(0,0,0,.85)); padding:.5rem; color:white; font-weight:600; font-size:.85rem; }
+.game-card .overlay { position:absolute; bottom:0; left:0; right:0; background:linear-gradient(transparent,rgba(0,0,0,.85)); padding:.6rem; color:white; font-weight:600; }
 .bottom-nav { position:fixed; bottom:0; left:0; right:0; background:rgba(15,23,42,.95); display:flex; justify-content:space-around; padding:.6rem 0; }
 .bottom-nav button { background:none; border:none; color:var(--muted); }
 .bottom-nav button.active { color:var(--accent); }
 .small { color:var(--muted); font-size:.85rem; }
-.flex { display:flex; gap:.5rem; align-items:center; flex-wrap:wrap; }
+.flex { display:flex; gap:.5rem; align-items:center; }
 .key { border-radius:10px; padding:0.85rem 0.3rem; text-align:center; font-weight:700; font-size:1.15rem; cursor:pointer; border:1px solid #334155; }
 .key.active { outline:3px solid var(--accent); }
 .player-row { background:var(--surface2); border-radius:14px; padding:0.9rem 1.1rem; margin:0.45rem 0; display:flex; justify-content:space-between; align-items:center; cursor:pointer; }
-.player-row:active { background:#243044; }
 .rank { width:28px; font-weight:700; color:var(--muted); }
 </style>
 </head>
@@ -35,7 +34,7 @@ input { background:#0b1220; border:1px solid var(--border); color:var(--text); p
   <div class="card" style="max-width:400px;margin:4rem auto;text-align:center">
     <h1>Score Tracker</h1>
     <button class="btn google" style="width:100%" onclick="signInWithGoogle()">Continue with Google</button>
-    <input type="email" id="email" placeholder="Or email" style="margin-top:1rem;width:100%">
+    <input type="email" id="email" placeholder="Or email" style="margin-top:1rem">
     <button class="btn primary" style="width:100%;margin-top:.8rem" onclick="signInWithEmail()">Send magic link</button>
     <p id="login-msg" class="small"></p>
   </div>
@@ -56,13 +55,17 @@ input { background:#0b1220; border:1px solid var(--border); color:var(--text); p
   </div>
   <div id="view-new" class="view hidden">
     <div class="card">
-      <h2>Choose Game</h2>
+      <h2 style="margin-top:0">Choose Game</h2>
       <div class="game-grid" id="game-grid"></div>
-      <label>Version</label><select id="version-select"></select>
+      <label class="small">Version</label>
+      <select id="version-select"><option>Standard (to 200)</option></select>
       <h3>Players</h3>
-      <div id="player-chips"></div>
-      <div class="flex"><input id="new-player-name" placeholder="Add player"><button class="btn" onclick="addPlayer()">+</button></div>
-      <button class="btn primary" style="width:100%;margin-top:1rem" onclick="startGame()">Start Playing</button>
+      <div id="player-chips" style="margin:.5rem 0"></div>
+      <div class="flex">
+        <input id="new-player-name" placeholder="Add player" style="flex:1">
+        <button class="btn" onclick="addPlayer()">+</button>
+      </div>
+      <button class="btn primary" style="width:100%;margin-top:1.2rem" onclick="startGame()">Start Playing</button>
     </div>
   </div>
   <div id="view-active" class="view hidden">
@@ -90,11 +93,10 @@ const SUPABASE_ANON_KEY = 'sb_publishable_HEGO45Fw5dl1s8sAbFnSkg_VzWU_guj';
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const REDIRECT = 'https://rand50.github.io/score-tracker/game_tracker.html';
 
-// Card colors matching Flip 7
 const CARD_COLORS = {
-  0: '#1a1a1a', 1: '#4a90d9', 2: '#f4d03f', 3: '#e74c3c', 4: '#27ae60',
-  5: '#2ecc71', 6: '#8e44ad', 7: '#e67e22', 8: '#16a085', 9: '#d35400',
-  10: '#c0392b', 11: '#2c3e50', 12: '#7f8c8d'
+  0:'#1a1a1a',1:'#4a90d9',2:'#f4d03f',3:'#e74c3c',4:'#27ae60',
+  5:'#2ecc71',6:'#8e44ad',7:'#e67e22',8:'#16a085',9:'#d35400',
+  10:'#c0392b',11:'#2c3e50',12:'#7f8c8d'
 };
 
 let players = [];
@@ -105,7 +107,7 @@ let scoringPlayer = null;
 let currentRoundState = null;
 
 const games = [
-  { id:'flip7', name:'Flip 7', img:'flip7.jpg', versions:['Standard (to 200)'] },
+  { id:'flip7', name:'Flip 7', img:'flip7.jpg', versions:['Standard (to 200)','With a Vengeance'] },
   { id:'other', name:'Custom', img:'', versions:['Custom'] }
 ];
 
@@ -147,9 +149,7 @@ function persistActive() {
 }
 function restoreActiveGame() {
   const saved = localStorage.getItem('gst_active');
-  if (saved) {
-    try { currentGame = JSON.parse(saved); } catch(e) {}
-  }
+  if (saved) try { currentGame = JSON.parse(saved); } catch(e) {}
 }
 
 function showView(v) {
@@ -168,7 +168,9 @@ function renderNew() {
     <div class="game-card ${g.id===selectedGame?'selected':''}" onclick="selectGame('${g.id}')"
          style="${g.img?`background-image:url('${g.img}')`:''}"><div class="overlay">${g.name}</div></div>
   `).join('');
-  document.getElementById('player-chips').innerHTML = players.map(p=>`<span class="small">${p} </span>`).join('') || '<span class="small">Add players</span>';
+  const g = games.find(x=>x.id===selectedGame);
+  document.getElementById('version-select').innerHTML = (g.versions||['Standard']).map(v=>`<option>${v}</option>`).join('');
+  document.getElementById('player-chips').innerHTML = players.map(p=>`<span class="small">${p} </span>`).join('') || '<span class="small">Add players below</span>';
 }
 function selectGame(id){ selectedGame=id; renderNew(); }
 function addPlayer(){
@@ -178,7 +180,7 @@ function addPlayer(){
 
 function startGame(){
   if (!players.length){ alert('Add players'); return; }
-  currentGame = { type:selectedGame, players:players.map(n=>({name:n,score:0})), rounds:[] };
+  currentGame = { type:selectedGame, version:document.getElementById('version-select').value, players:players.map(n=>({name:n,score:0})), rounds:[] };
   persistActive();
   showView('active');
 }
@@ -228,12 +230,10 @@ function calculate(st){
   if (st.numbers.size === 7) extra += 15;
   return sum + extra;
 }
-
 function updatePreview(){
   const pts = calculate(currentRoundState);
   document.getElementById('preview').textContent = `This round: +${pts}` + (currentRoundState.numbers.size===7 ? ' (includes Flip 7 +15)' : '');
 }
-
 function toggleNum(n){
   if (currentRoundState.numbers.has(n)) currentRoundState.numbers.delete(n);
   else currentRoundState.numbers.add(n);
@@ -255,14 +255,12 @@ function toggleBust(){
   currentRoundState.bust = !currentRoundState.bust;
   updatePreview();
 }
-
 function commitScore(){
   currentGame.players[scoringPlayer].score += calculate(currentRoundState);
   currentGame.rounds.push({ player: scoringPlayer, pts: calculate(currentRoundState) });
   persistActive();
   renderLeaderboard();
 }
-
 function endGame(){
   currentGame.endTime = new Date().toISOString();
   history.unshift(currentGame);
@@ -271,7 +269,6 @@ function endGame(){
   currentGame = null;
   showView('history');
 }
-
 function renderRecent(){
   document.getElementById('recent-list').innerHTML = history.slice(0,5).map(g=>`<div>${g.type} · ${new Date(g.endTime||Date.now()).toLocaleDateString()}</div>`).join('') || '<p class="small">No games yet</p>';
 }
