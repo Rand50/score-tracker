@@ -10,7 +10,7 @@ body { font-family: system-ui, sans-serif; background: #0b1220; color: #f1f5f9; 
 .btn { padding: 0.8rem 1.5rem; border-radius: 12px; border: none; font-weight: 600; cursor: pointer; width: 100%; margin: 0.5rem 0; }
 .btn.google { background: white; color: #333; }
 .btn.primary { background: #22d3ee; color: #0b1220; }
-input { width: 100%; padding: 0.7rem; border-radius: 10px; border: 1px solid #333; background: #0b1220; color: white; }
+input { width: 100%; padding: 0.7rem; border-radius: 10px; border: 1px solid #333; background: #0b1220; color: white; box-sizing: border-box; }
 .hidden { display: none; }
 </style>
 </head>
@@ -25,13 +25,10 @@ input { width: 100%; padding: 0.7rem; border-radius: 10px; border: 1px solid #33
 </div>
 
 <div id="app-view" class="hidden">
-  <header style="padding:1rem; display:flex; justify-content:space-between;">
-    <h1>Score Tracker</h1>
-    <button class="btn" onclick="signOut()">Sign out</button>
-  </header>
   <div class="card">
-    <h2>You're signed in</h2>
-    <p>Game tracking UI will appear here once fully restored.</p>
+    <h2>Signed in</h2>
+    <p>Login works. Full game UI coming next.</p>
+    <button class="btn" onclick="signOut()">Sign out</button>
   </div>
 </div>
 
@@ -40,6 +37,8 @@ input { width: 100%; padding: 0.7rem; border-radius: 10px; border: 1px solid #33
 const SUPABASE_URL = 'https://lezfdnqqfejqyxqwlcfg.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_HEGO45Fw5dl1s8sAbFnSkg_VzWU_guj';
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const REDIRECT = 'https://rand50.github.io/score-tracker/game_tracker.html';
 
 async function checkSession() {
   const { data: { session } } = await sb.auth.getSession();
@@ -50,12 +49,18 @@ async function checkSession() {
 }
 
 async function signInWithGoogle() {
-  await sb.auth.signInWithOAuth({ provider: 'google' });
+  await sb.auth.signInWithOAuth({
+    provider: 'google',
+    options: { redirectTo: REDIRECT }
+  });
 }
 
 async function signInWithEmail() {
   const email = document.getElementById('email').value;
-  const { error } = await sb.auth.signInWithOtp({ email });
+  const { error } = await sb.auth.signInWithOtp({
+    email,
+    options: { emailRedirectTo: REDIRECT }
+  });
   document.getElementById('login-msg').textContent = error ? error.message : 'Check your email';
 }
 
