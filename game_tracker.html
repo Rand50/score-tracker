@@ -2,213 +2,70 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#0f172a">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Score Tracker</title>
-<link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icon-512.jpg">
 <style>
-:root {
-  --bg: #0b1220; --surface: #151c2c; --surface2: #1e293b; --text: #f1f5f9; --muted: #94a3b8;
-  --accent: #22d3ee; --accent-dim: #0891b2; --success: #34d399; --danger: #f43f5e;
-  --border: rgba(255,255,255,0.08); --radius: 16px;
-}
-* { box-sizing: border-box; }
-body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 80px; }
-.app-header { padding: 1.2rem 1.2rem 0.5rem; display: flex; justify-content: space-between; align-items: center; }
-.app-header h1 { margin: 0; font-size: 1.6rem; }
-.view { padding: 0 1rem 1rem; max-width: 900px; margin: 0 auto; }
-.hidden { display: none !important; }
-.card { background: var(--surface); border-radius: var(--radius); padding: 1.25rem; margin-bottom: 1rem; border: 1px solid var(--border); }
-.btn { background: var(--surface2); color: var(--text); border: 1px solid var(--border); padding: 0.75rem 1.4rem; border-radius: 12px; font-size: 1rem; font-weight: 600; cursor: pointer; }
-.btn.primary { background: linear-gradient(135deg, var(--accent), var(--accent-dim)); color: #0b1220; border: none; }
-.btn.google { background: #fff; color: #333; border: none; }
-input, select { background: #0b1220; border: 1px solid var(--border); color: var(--text); padding: 0.7rem; border-radius: 10px; width: 100%; font-size: 1rem; }
-.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(15,23,42,0.95); display: flex; justify-content: space-around; padding: 0.6rem 0; border-top: 1px solid var(--border); }
-.bottom-nav button { background: none; border: none; color: var(--muted); font-size: 0.75rem; display: flex; flex-direction: column; align-items: center; }
-.bottom-nav button.active { color: var(--accent); }
-.game-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 0.75rem; }
-.game-card { background: var(--surface2); border-radius: 14px; height: 160px; cursor: pointer; position: relative; background-size: cover; background-position: center; border: 2px solid transparent; }
-.game-card.selected { border-color: var(--accent); }
-.game-card .overlay { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.85)); padding: 0.6rem; color: white; font-weight: 600; }
-.small { color: var(--muted); font-size: 0.85rem; }
-.flex { display: flex; gap: 0.6rem; align-items: center; }
+body { font-family: system-ui, sans-serif; background: #0b1220; color: #f1f5f9; margin: 0; }
+.card { background: #151c2c; margin: 2rem auto; padding: 2rem; border-radius: 16px; max-width: 400px; text-align: center; }
+.btn { padding: 0.8rem 1.5rem; border-radius: 12px; border: none; font-weight: 600; cursor: pointer; width: 100%; margin: 0.5rem 0; }
+.btn.google { background: white; color: #333; }
+.btn.primary { background: #22d3ee; color: #0b1220; }
+input { width: 100%; padding: 0.7rem; border-radius: 10px; border: 1px solid #333; background: #0b1220; color: white; }
+.hidden { display: none; }
 </style>
 </head>
 <body>
-<div id="login-view" class="view">
-  <div class="card" style="max-width:400px; margin: 4rem auto; text-align:center;">
-    <h1>Score Tracker</h1>
-    <p class="small">Sign in to sync your games across devices</p>
-    <button class="btn google" style="width:100%; margin:1rem 0;" onclick="signInWithGoogle()">Continue with Google</button>
-    <div class="small" style="margin:1rem 0;">or</div>
-    <input type="email" id="email" placeholder="Email">
-    <button class="btn primary" style="width:100%; margin-top:0.8rem;" onclick="signInWithEmail()">Send magic link</button>
-    <p id="login-msg" class="small"></p>
-  </div>
+<div id="login-view" class="card">
+  <h1>Score Tracker</h1>
+  <p>Sign in to sync your games</p>
+  <button class="btn google" onclick="signInWithGoogle()">Continue with Google</button>
+  <input type="email" id="email" placeholder="Or enter email">
+  <button class="btn primary" onclick="signInWithEmail()">Send magic link</button>
+  <p id="login-msg"></p>
 </div>
 
 <div id="app-view" class="hidden">
-  <header class="app-header">
+  <header style="padding:1rem; display:flex; justify-content:space-between;">
     <h1>Score Tracker</h1>
     <button class="btn" onclick="signOut()">Sign out</button>
   </header>
-  <div id="view-home" class="view">
-    <div class="card" style="text-align:center;">
-      <div style="font-size:3rem;">🎲</div>
-      <h2>Ready to play?</h2>
-      <button class="btn primary" style="width:100%; max-width:280px;" onclick="showView('new')">Start a Game</button>
-    </div>
-    <div class="card"><h3>Recent</h3><div id="recent-list"></div></div>
+  <div class="card">
+    <h2>You're signed in</h2>
+    <p>Game tracking UI will appear here once fully restored.</p>
   </div>
-  <div id="view-new" class="view hidden">
-    <div class="card">
-      <h2>Choose Game</h2>
-      <div class="game-grid" id="game-grid"></div>
-      <label>Version</label><select id="version-select"></select>
-      <label>Mode</label>
-      <select id="mode-select"><option value="live">Live</option><option value="quick">Quick log</option></select>
-      <h3>Players</h3>
-      <div id="player-chips"></div>
-      <div class="flex"><input id="new-player-name" placeholder="Add player"><button class="btn" onclick="addPlayer()">+</button></div>
-      <button class="btn primary" style="width:100%; margin-top:1rem;" onclick="startGame()">Start Playing</button>
-    </div>
-  </div>
-  <div id="view-active" class="view hidden">
-    <div class="card">
-      <h2 id="active-title"></h2>
-      <div id="active-scores"></div>
-      <div id="active-content"></div>
-      <button class="btn primary" onclick="endGame()">Save Game</button>
-    </div>
-  </div>
-  <div id="view-history" class="view hidden"><div class="card"><h2>History</h2><div id="history-list"></div></div></div>
-  <div id="view-stats" class="view hidden"><div class="card"><h2>Stats</h2><div id="stats-content"></div></div></div>
-  <nav class="bottom-nav">
-    <button onclick="showView('home')" id="nav-home" class="active">Home</button>
-    <button onclick="showView('new')" id="nav-new">Play</button>
-    <button onclick="showView('history')" id="nav-history">History</button>
-    <button onclick="showView('stats')" id="nav-stats">Stats</button>
-  </nav>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const SUPABASE_URL = 'https://lezfdnqqfejqyxqwlcfg.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_HEGO45Fw5dl1s8sAbFnSkg_VzWU_guj';
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-let players = [];
-let history = [];
-let currentGame = null;
-let selectedGame = 'flip7';
-
-const games = [
-  { id: 'flip7', name: 'Flip 7', img: 'flip7.jpg' },
-  { id: '7wonders', name: '7 Wonders', img: '7wonders.jpg' },
-  { id: 'ohhell', name: 'Oh Hell', img: 'ohhell.jpg' },
-  { id: 'nertz', name: 'Nertz', img: 'nertz.png' },
-  { id: 'carcassonne', name: 'Carcassonne', img: '' },
-  { id: 'catan', name: 'Catan', img: '' },
-  { id: 'hearts', name: 'Hearts', img: '' },
-  { id: 'other', name: 'Custom', img: '' }
-];
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 async function checkSession() {
-  const { data: { session } } = await supabase.auth.getSession();
+  const { data: { session } } = await sb.auth.getSession();
   if (session) {
     document.getElementById('login-view').classList.add('hidden');
     document.getElementById('app-view').classList.remove('hidden');
-    await loadData();
-    showView('home');
   }
 }
 
 async function signInWithGoogle() {
-  await supabase.auth.signInWithOAuth({ provider: 'google' });
+  await sb.auth.signInWithOAuth({ provider: 'google' });
 }
 
 async function signInWithEmail() {
   const email = document.getElementById('email').value;
-  const { error } = await supabase.auth.signInWithOtp({ email });
-  document.getElementById('login-msg').textContent = error ? error.message : 'Check your email for the magic link';
+  const { error } = await sb.auth.signInWithOtp({ email });
+  document.getElementById('login-msg').textContent = error ? error.message : 'Check your email';
 }
 
 async function signOut() {
-  await supabase.auth.signOut();
+  await sb.auth.signOut();
   location.reload();
 }
 
-async function loadData() {
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return;
-  const { data } = await supabase.from('score_history').select('*').eq('user_id', user.id).single();
-  if (data) {
-    players = data.players || [];
-    history = data.history || [];
-  }
-}
-
-async function saveData() {
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return;
-  await supabase.from('score_history').upsert({
-    user_id: user.id,
-    players,
-    history,
-    updated_at: new Date().toISOString()
-  });
-}
-
-function showView(v) {
-  document.querySelectorAll('.view').forEach(el => el.classList.add('hidden'));
-  document.getElementById('view-' + v).classList.remove('hidden');
-  document.querySelectorAll('.bottom-nav button').forEach(b => b.classList.remove('active'));
-  document.getElementById('nav-' + v)?.classList.add('active');
-  if (v === 'home') renderRecent();
-  if (v === 'new') renderNew();
-  if (v === 'history') renderHistory();
-}
-
-function renderNew() {
-  document.getElementById('game-grid').innerHTML = games.map(g => `
-    <div class="game-card ${g.id===selectedGame?'selected':''}" onclick="selectGame('${g.id}')"
-         style="${g.img?`background-image:url('${g.img}')`:''}"><div class="overlay">${g.name}</div></div>
-  `).join('');
-}
-
-function selectGame(id) { selectedGame = id; renderNew(); }
-
-function addPlayer() {
-  const name = document.getElementById('new-player-name').value.trim();
-  if (name && !players.includes(name)) { players.push(name); saveData(); renderNew(); }
-}
-
-function startGame() {
-  if (!players.length) { alert('Add players first'); return; }
-  currentGame = { type: selectedGame, players: players.map(n => ({name:n, score:0})), startTime: new Date().toISOString() };
-  showView('active');
-  document.getElementById('active-title').textContent = games.find(g=>g.id===selectedGame).name;
-}
-
-function endGame() {
-  currentGame.endTime = new Date().toISOString();
-  history.unshift(currentGame);
-  saveData();
-  currentGame = null;
-  showView('history');
-}
-
-function renderRecent() {
-  document.getElementById('recent-list').innerHTML = history.slice(0,5).map(g => `<div>${g.type} - ${new Date(g.endTime||g.startTime).toLocaleDateString()}</div>`).join('') || '<p class="small">No games yet</p>';
-}
-
-function renderHistory() {
-  document.getElementById('history-list').innerHTML = history.map(g => `<div class="card">${g.type}<br>${g.players.map(p=>p.name+': '+p.score).join(' · ')}</div>`).join('') || '<p class="small">No history</p>';
-}
-
 checkSession();
-supabase.auth.onAuthStateChange((event, session) => { if (session) checkSession(); });
+sb.auth.onAuthStateChange(() => checkSession());
 </script>
 </body>
 </html>
