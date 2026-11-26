@@ -3,60 +3,49 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#0f172a">
 <title>Score Tracker</title>
-<link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icon-512.jpg">
 <style>
-:root {
-  --bg: #0b1220; --surface: #151c2c; --surface2: #1e293b; --text: #f1f5f9; --muted: #94a3b8;
-  --accent: #22d3ee; --accent-dim: #0891b2; --success: #34d399; --danger: #f43f5e;
-  --border: rgba(255,255,255,0.08); --radius: 16px;
-}
-* { box-sizing: border-box; }
-body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 80px; }
-.app-header { padding: 1.2rem; display: flex; justify-content: space-between; align-items: center; }
-.view { padding: 0 1rem 1rem; max-width: 900px; margin: 0 auto; }
-.hidden { display: none !important; }
-.card { background: var(--surface); border-radius: var(--radius); padding: 1.25rem; margin-bottom: 1rem; border: 1px solid var(--border); }
-.btn { background: var(--surface2); color: var(--text); border: 1px solid var(--border); padding: 0.75rem 1.4rem; border-radius: 12px; font-size: 1rem; font-weight: 600; cursor: pointer; }
-.btn.primary { background: linear-gradient(135deg, var(--accent), var(--accent-dim)); color: #0b1220; border: none; }
-.btn.google { background: #fff; color: #333; border: none; }
-input, select { background: #0b1220; border: 1px solid var(--border); color: var(--text); padding: 0.7rem; border-radius: 10px; width: 100%; font-size: 1rem; }
-.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(15,23,42,0.95); display: flex; justify-content: space-around; padding: 0.6rem 0; border-top: 1px solid var(--border); }
-.bottom-nav button { background: none; border: none; color: var(--muted); font-size: 0.75rem; }
-.bottom-nav button.active { color: var(--accent); }
-.game-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 0.75rem; }
-.game-card { background: var(--surface2); border-radius: 14px; height: 160px; cursor: pointer; position: relative; background-size: cover; background-position: center; border: 2px solid transparent; }
-.game-card.selected { border-color: var(--accent); }
-.game-card .overlay { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.85)); padding: 0.6rem; color: white; font-weight: 600; }
-.small { color: var(--muted); font-size: 0.85rem; }
-.flex { display: flex; gap: 0.6rem; align-items: center; }
+:root { --bg:#0b1220; --surface:#151c2c; --surface2:#1e293b; --text:#f1f5f9; --muted:#94a3b8; --accent:#22d3ee; --accent-dim:#0891b2; --border:rgba(255,255,255,0.08); --radius:16px; }
+body { margin:0; font-family:system-ui,sans-serif; background:var(--bg); color:var(--text); padding-bottom:80px; }
+.view { padding:0 1rem; max-width:900px; margin:0 auto; }
+.hidden { display:none !important; }
+.card { background:var(--surface); border-radius:var(--radius); padding:1.25rem; margin-bottom:1rem; border:1px solid var(--border); }
+.btn { background:var(--surface2); color:var(--text); border:1px solid var(--border); padding:0.75rem 1.4rem; border-radius:12px; font-weight:600; cursor:pointer; }
+.btn.primary { background:linear-gradient(135deg,var(--accent),var(--accent-dim)); color:#0b1220; border:none; }
+.btn.google { background:#fff; color:#333; border:none; }
+input,select { background:#0b1220; border:1px solid var(--border); color:var(--text); padding:0.7rem; border-radius:10px; width:100%; }
+.game-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:0.75rem; }
+.game-card { background:var(--surface2); border-radius:14px; height:160px; cursor:pointer; position:relative; background-size:cover; background-position:center; border:2px solid transparent; }
+.game-card.selected { border-color:var(--accent); }
+.game-card .overlay { position:absolute; bottom:0; left:0; right:0; background:linear-gradient(transparent,rgba(0,0,0,.85)); padding:.6rem; color:white; font-weight:600; }
+.bottom-nav { position:fixed; bottom:0; left:0; right:0; background:rgba(15,23,42,.95); display:flex; justify-content:space-around; padding:.6rem 0; }
+.bottom-nav button { background:none; border:none; color:var(--muted); }
+.bottom-nav button.active { color:var(--accent); }
+.small { color:var(--muted); font-size:.85rem; }
+.flex { display:flex; gap:.6rem; align-items:center; }
 </style>
 </head>
 <body>
 <div id="login-view" class="view">
-  <div class="card" style="max-width:400px; margin:4rem auto; text-align:center;">
+  <div class="card" style="max-width:400px;margin:4rem auto;text-align:center">
     <h1>Score Tracker</h1>
-    <p class="small">Sign in to sync your games across devices</p>
-    <button class="btn google" style="width:100%;" onclick="signInWithGoogle()">Continue with Google</button>
-    <div class="small" style="margin:1rem 0;">or</div>
-    <input type="email" id="email" placeholder="Email">
-    <button class="btn primary" style="width:100%; margin-top:0.8rem;" onclick="signInWithEmail()">Send magic link</button>
+    <button class="btn google" style="width:100%" onclick="signInWithGoogle()">Continue with Google</button>
+    <input type="email" id="email" placeholder="Or email" style="margin-top:1rem">
+    <button class="btn primary" style="width:100%;margin-top:.8rem" onclick="signInWithEmail()">Send magic link</button>
     <p id="login-msg" class="small"></p>
   </div>
 </div>
 
 <div id="app-view" class="hidden">
-  <header class="app-header">
-    <h1>Score Tracker</h1>
+  <header style="padding:1rem;display:flex;justify-content:space-between;align-items:center">
+    <h1 style="margin:0">Score Tracker</h1>
     <button class="btn" onclick="signOut()">Sign out</button>
   </header>
   <div id="view-home" class="view">
-    <div class="card" style="text-align:center;">
-      <div style="font-size:3rem;">🎲</div>
+    <div class="card" style="text-align:center">
+      <div style="font-size:3rem">🎲</div>
       <h2>Ready to play?</h2>
-      <button class="btn primary" style="width:100%; max-width:280px;" onclick="showView('new')">Start a Game</button>
+      <button class="btn primary" style="width:100%;max-width:280px" onclick="showView('new')">Start a Game</button>
     </div>
     <div class="card"><h3>Recent</h3><div id="recent-list"></div></div>
   </div>
@@ -64,17 +53,22 @@ input, select { background: #0b1220; border: 1px solid var(--border); color: var
     <div class="card">
       <h2>Choose Game</h2>
       <div class="game-grid" id="game-grid"></div>
+      <label>Version</label><select id="version-select"></select>
       <h3>Players</h3>
       <div id="player-chips"></div>
       <div class="flex"><input id="new-player-name" placeholder="Add player"><button class="btn" onclick="addPlayer()">+</button></div>
-      <button class="btn primary" style="width:100%; margin-top:1rem;" onclick="startGame()">Start Playing</button>
+      <button class="btn primary" style="width:100%;margin-top:1rem" onclick="startGame()">Start Playing</button>
     </div>
   </div>
   <div id="view-active" class="view hidden">
     <div class="card">
       <h2 id="active-title"></h2>
+      <div id="active-scores"></div>
       <div id="active-content"></div>
-      <button class="btn primary" onclick="endGame()">Save Game</button>
+      <div class="flex" style="margin-top:1rem">
+        <button class="btn primary" id="end-btn" onclick="endGame()">Save Game</button>
+        <button class="btn" id="round-btn" onclick="addRound()">+ Round</button>
+      </div>
     </div>
   </div>
   <div id="view-history" class="view hidden"><div class="card"><h2>History</h2><div id="history-list"></div></div></div>
@@ -98,14 +92,14 @@ let currentGame = null;
 let selectedGame = 'flip7';
 
 const games = [
-  { id: 'flip7', name: 'Flip 7', img: 'flip7.jpg' },
-  { id: '7wonders', name: '7 Wonders', img: '7wonders.jpg' },
-  { id: 'ohhell', name: 'Oh Hell', img: 'ohhell.jpg' },
-  { id: 'nertz', name: 'Nertz', img: 'nertz.png' },
-  { id: 'carcassonne', name: 'Carcassonne', img: '' },
-  { id: 'catan', name: 'Catan', img: '' },
-  { id: 'hearts', name: 'Hearts', img: '' },
-  { id: 'other', name: 'Custom', img: '' }
+  { id:'flip7', name:'Flip 7', img:'flip7.jpg', versions:['Standard (to 200)','With a Vengeance'] },
+  { id:'7wonders', name:'7 Wonders', img:'7wonders.jpg', versions:['Base','With Leaders','With Cities'] },
+  { id:'ohhell', name:'Oh Hell', img:'ohhell.jpg', versions:['Exact = 10+bid','1/trick +10 if exact'] },
+  { id:'nertz', name:'Nertz', img:'nertz.png', versions:['Standard','To 100','To 150'] },
+  { id:'carcassonne', name:'Carcassonne', img:'', versions:['Classic','With Inns & Cathedrals'] },
+  { id:'catan', name:'Catan', img:'', versions:['Base (to 10)','Cities & Knights'] },
+  { id:'hearts', name:'Hearts', img:'', versions:['Standard (to 100)','Short (to 50)'] },
+  { id:'other', name:'Custom', img:'', versions:['Custom'] }
 ];
 
 async function checkSession() {
@@ -119,49 +113,35 @@ async function checkSession() {
 }
 
 async function signInWithGoogle() {
-  await sb.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: REDIRECT } });
+  await sb.auth.signInWithOAuth({ provider:'google', options:{ redirectTo:REDIRECT } });
 }
-
 async function signInWithEmail() {
   const email = document.getElementById('email').value;
-  const { error } = await sb.auth.signInWithOtp({ email, options: { emailRedirectTo: REDIRECT } });
+  const { error } = await sb.auth.signInWithOtp({ email, options:{ emailRedirectTo:REDIRECT } });
   document.getElementById('login-msg').textContent = error ? error.message : 'Check your email';
 }
-
-async function signOut() {
-  await sb.auth.signOut();
-  location.reload();
-}
+async function signOut() { await sb.auth.signOut(); location.reload(); }
 
 async function loadData() {
   const { data: { user } } = await sb.auth.getUser();
   if (!user) return;
   const { data } = await sb.from('score_history').select('*').eq('user_id', user.id).maybeSingle();
-  if (data) {
-    players = data.players || [];
-    history = data.history || [];
-  }
+  if (data) { players = data.players || []; history = data.history || []; }
 }
-
 async function saveData() {
   const { data: { user } } = await sb.auth.getUser();
   if (!user) return;
-  await sb.from('score_history').upsert({
-    user_id: user.id,
-    players,
-    history,
-    updated_at: new Date().toISOString()
-  });
+  await sb.from('score_history').upsert({ user_id:user.id, players, history, updated_at:new Date().toISOString() });
 }
 
 function showView(v) {
   document.querySelectorAll('.view').forEach(el => el.classList.add('hidden'));
-  document.getElementById('view-' + v).classList.remove('hidden');
+  document.getElementById('view-'+v).classList.remove('hidden');
   document.querySelectorAll('.bottom-nav button').forEach(b => b.classList.remove('active'));
-  document.getElementById('nav-' + v)?.classList.add('active');
-  if (v === 'home') renderRecent();
-  if (v === 'new') renderNew();
-  if (v === 'history') renderHistory();
+  document.getElementById('nav-'+v)?.classList.add('active');
+  if (v==='home') renderRecent();
+  if (v==='new') renderNew();
+  if (v==='history') renderHistory();
 }
 
 function renderNew() {
@@ -169,39 +149,91 @@ function renderNew() {
     <div class="game-card ${g.id===selectedGame?'selected':''}" onclick="selectGame('${g.id}')"
          style="${g.img?`background-image:url('${g.img}')`:''}"><div class="overlay">${g.name}</div></div>
   `).join('');
-  document.getElementById('player-chips').innerHTML = players.map(p => `<span class="small">${p} </span>`).join('') || '<span class="small">Add players below</span>';
+  const g = games.find(x=>x.id===selectedGame);
+  document.getElementById('version-select').innerHTML = (g.versions||[]).map(v=>`<option>${v}</option>`).join('');
+  document.getElementById('player-chips').innerHTML = players.map(p=>`<span class="small">${p} </span>`).join('') || '<span class="small">Add players</span>';
+}
+function selectGame(id){ selectedGame=id; renderNew(); }
+function addPlayer(){
+  const name = document.getElementById('new-player-name').value.trim();
+  if (name && !players.includes(name)) { players.push(name); document.getElementById('new-player-name').value=''; saveData(); renderNew(); }
 }
 
-function selectGame(id) { selectedGame = id; renderNew(); }
+function startGame(){
+  if (!players.length){ alert('Add players'); return; }
+  currentGame = { type:selectedGame, version:document.getElementById('version-select').value, players:players.map(n=>({name:n,score:0})), rounds:[] };
+  showView('active');
+  renderActive();
+}
 
-function addPlayer() {
-  const name = document.getElementById('new-player-name').value.trim();
-  if (name && !players.includes(name)) {
-    players.push(name);
-    document.getElementById('new-player-name').value = '';
-    saveData();
-    renderNew();
+function renderActive(){
+  const g = games.find(x=>x.id===currentGame.type);
+  document.getElementById('active-title').textContent = g.name + ' · ' + currentGame.version;
+  document.getElementById('active-scores').innerHTML = currentGame.players.map(p=>`<div style="display:inline-block;margin:.4rem;padding:.6rem;background:var(--surface2);border-radius:10px"><div class="small">${p.name}</div><div style="font-size:1.4rem;color:var(--accent)">${p.score}</div></div>`).join('');
+  renderRoundForm();
+}
+
+function renderRoundForm(){
+  const type = currentGame.type;
+  const content = document.getElementById('active-content');
+  if (type === 'flip7') {
+    content.innerHTML = `<p class="small">Round ${currentGame.rounds.length+1}</p>` +
+      currentGame.players.map((p,i)=>`
+        <div style="margin-bottom:.8rem;padding:.6rem;background:var(--surface2);border-radius:10px">
+          <strong>${p.name}</strong>
+          <div class="flex" style="flex-wrap:wrap;margin-top:.4rem">
+            <div style="flex:1;min-width:80px"><label>Num</label><input type="number" id="f7n${i}" value="0"></div>
+            <div style="flex:1;min-width:80px"><label>×2</label><select id="f7x${i}"><option value="0">No</option><option value="1">Yes</option></select></div>
+            <div style="flex:1;min-width:80px"><label>Mods</label><input type="number" id="f7m${i}" value="0"></div>
+            <div style="flex:1;min-width:80px"><label>Flip7</label><select id="f7b${i}"><option value="0">No</option><option value="1">+15</option></select></div>
+            <div style="flex:1;min-width:80px"><label>Bust</label><select id="f7bust${i}"><option value="0">No</option><option value="1">Yes</option></select></div>
+          </div>
+        </div>`).join('') + `<button class="btn primary" onclick="submitFlip7()">Score Round</button>`;
+  } else if (type === 'ohhell') {
+    content.innerHTML = `<p class="small">Hand ${currentGame.rounds.length+1}</p>` +
+      currentGame.players.map((p,i)=>`
+        <div class="flex" style="margin:.4rem 0">
+          <span style="width:100px">${p.name}</span>
+          <input type="number" id="ohb${i}" placeholder="Bid" style="width:70px">
+          <input type="number" id="oht${i}" placeholder="Tricks" style="width:70px">
+        </div>`).join('') + `<button class="btn primary" onclick="submitOhHell()">Score Hand</button>`;
+  } else {
+    content.innerHTML = `<p class="small">Enter points for this round</p>` +
+      currentGame.players.map((p,i)=>`
+        <div class="flex"><span style="width:100px">${p.name}</span><input type="number" id="s${i}" value="0"></div>`).join('') +
+      `<button class="btn primary" onclick="submitGeneric()">Add to Scores</button>`;
   }
 }
 
-function startGame() {
-  if (!players.length) { alert('Add at least one player'); return; }
-  currentGame = {
-    type: selectedGame,
-    players: players.map(n => ({ name: n, score: 0 })),
-    startTime: new Date().toISOString()
-  };
-  showView('active');
-  document.getElementById('active-title').textContent = games.find(g => g.id === selectedGame).name;
-  document.getElementById('active-content').innerHTML = currentGame.players.map((p,i) =>
-    `<div class="flex"><span style="width:100px">${p.name}</span><input type="number" id="s${i}" value="0"></div>`
-  ).join('');
-}
-
-function endGame() {
-  currentGame.players.forEach((p,i) => {
-    p.score = parseInt(document.getElementById('s'+i).value) || 0;
+function submitFlip7(){
+  currentGame.players.forEach((p,i)=>{
+    const n = +document.getElementById('f7n'+i).value||0;
+    const x2 = document.getElementById('f7x'+i).value==='1';
+    const m = +document.getElementById('f7m'+i).value||0;
+    const b = document.getElementById('f7b'+i).value==='1'?15:0;
+    const bust = document.getElementById('f7bust'+i).value==='1';
+    p.score += bust ? 0 : (n*(x2?2:1)+m+b);
   });
+  currentGame.rounds.push({});
+  renderActive();
+}
+function submitOhHell(){
+  currentGame.players.forEach((p,i)=>{
+    const bid = +document.getElementById('ohb'+i).value||0;
+    const tricks = +document.getElementById('oht'+i).value||0;
+    p.score += (bid===tricks) ? 10+bid : 0;
+  });
+  currentGame.rounds.push({});
+  renderActive();
+}
+function submitGeneric(){
+  currentGame.players.forEach((p,i)=> p.score += +document.getElementById('s'+i).value||0);
+  currentGame.rounds.push({});
+  renderActive();
+}
+function addRound(){ renderRoundForm(); }
+
+function endGame(){
   currentGame.endTime = new Date().toISOString();
   history.unshift(currentGame);
   saveData();
@@ -209,20 +241,15 @@ function endGame() {
   showView('history');
 }
 
-function renderRecent() {
-  document.getElementById('recent-list').innerHTML = history.slice(0,5).map(g =>
-    `<div>${games.find(x=>x.id===g.type)?.name || g.type} · ${new Date(g.endTime||g.startTime).toLocaleDateString()}</div>`
-  ).join('') || '<p class="small">No games yet</p>';
+function renderRecent(){
+  document.getElementById('recent-list').innerHTML = history.slice(0,5).map(g=>`<div>${games.find(x=>x.id===g.type)?.name||g.type} · ${new Date(g.endTime||Date.now()).toLocaleDateString()}</div>`).join('') || '<p class="small">No games yet</p>';
 }
-
-function renderHistory() {
-  document.getElementById('history-list').innerHTML = history.map(g =>
-    `<div class="card"><strong>${games.find(x=>x.id===g.type)?.name || g.type}</strong><br>${g.players.map(p=>p.name+': '+p.score).join(' · ')}</div>`
-  ).join('') || '<p class="small">No history yet</p>';
+function renderHistory(){
+  document.getElementById('history-list').innerHTML = history.map(g=>`<div class="card"><strong>${games.find(x=>x.id===g.type)?.name||g.type}</strong><br>${g.players.map(p=>p.name+': '+p.score).join(' · ')}</div>`).join('') || '<p class="small">No history</p>';
 }
 
 checkSession();
-sb.auth.onAuthStateChange(() => checkSession());
+sb.auth.onAuthStateChange(()=>checkSession());
 </script>
 </body>
 </html>
