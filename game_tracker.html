@@ -22,7 +22,7 @@ input, select { background:#0b1220; border:1px solid var(--border); color:var(--
 .bottom-nav button { background:none; border:none; color:var(--muted); }
 .bottom-nav button.active { color:var(--accent); }
 .small { color:var(--muted); font-size:.85rem; }
-.flex { display:flex; gap:.5rem; align-items:center; }
+.flex { display:flex; gap:.5rem; align-items:center; flex-wrap:wrap; }
 .key { border-radius:10px; padding:0.85rem 0.3rem; text-align:center; font-weight:700; font-size:1.15rem; cursor:pointer; border:1px solid #334155; }
 .key.active { outline:3px solid var(--accent); }
 .player-row { background:var(--surface2); border-radius:14px; padding:0.9rem 1.1rem; margin:0.45rem 0; display:flex; justify-content:space-between; align-items:center; cursor:pointer; }
@@ -58,7 +58,7 @@ input, select { background:#0b1220; border:1px solid var(--border); color:var(--
       <h2 style="margin-top:0">Choose Game</h2>
       <div class="game-grid" id="game-grid"></div>
       <label class="small">Version</label>
-      <select id="version-select"><option>Standard (to 200)</option></select>
+      <select id="version-select"></select>
       <h3>Players</h3>
       <div id="player-chips" style="margin:.5rem 0"></div>
       <div class="flex">
@@ -107,8 +107,14 @@ let scoringPlayer = null;
 let currentRoundState = null;
 
 const games = [
-  { id:'flip7', name:'Flip 7', img:'flip7.jpg', versions:['Standard (to 200)','With a Vengeance'] },
-  { id:'other', name:'Custom', img:'', versions:['Custom'] }
+  { id:'flip7', name:'Flip 7', img:'flip7.jpg', versions:['Standard (to 200)','With a Vengeance'], theme:'cards' },
+  { id:'7wonders', name:'7 Wonders', img:'7wonders.jpg', versions:['Base','With Leaders','With Cities','With Armada'], theme:'wonders' },
+  { id:'carcassonne', name:'Carcassonne', img:'', versions:['Classic','With Inns & Cathedrals'], theme:'tiles' },
+  { id:'catan', name:'Catan', img:'', versions:['Base (to 10)','Cities & Knights (to 13)'], theme:'hex' },
+  { id:'ohhell', name:'Oh Hell', img:'ohhell.jpg', versions:['Exact = 10+bid','1/trick +10 if exact'], theme:'tricks' },
+  { id:'hearts', name:'Hearts', img:'', versions:['Standard (to 100)','Short (to 50)'], theme:'hearts' },
+  { id:'nertz', name:'Nertz', img:'nertz.png', versions:['Standard','To 100','To 150'], theme:'solitaire' },
+  { id:'other', name:'Custom', img:'', versions:['Custom'], theme:'generic' }
 ];
 
 async function checkSession() {
@@ -186,7 +192,8 @@ function startGame(){
 }
 
 function renderLeaderboard(){
-  document.getElementById('active-title').textContent = 'Flip 7';
+  const g = games.find(x=>x.id===currentGame.type);
+  document.getElementById('active-title').textContent = g.name;
   const sorted = [...currentGame.players].map((p,i)=>({...p,idx:i})).sort((a,b)=>b.score-a.score);
   document.getElementById('leaderboard').innerHTML = sorted.map((p, rank) => `
     <div class="player-row" onclick="openPad(${p.idx})">
@@ -199,8 +206,19 @@ function renderLeaderboard(){
 
 function openPad(idx){
   scoringPlayer = idx;
-  currentRoundState = { numbers: new Set(), x2: false, mods: new Set(), bust: false };
+  const g = games.find(x=>x.id===currentGame.type);
   document.getElementById('pad').classList.remove('hidden');
+  if (g.theme === 'cards') {
+    openFlip7Pad(idx);
+  } else if (g.theme === 'tricks') {
+    openOhHellPad(idx);
+  } else {
+    openGenericPad(idx, g);
+  }
+}
+
+function openFlip7Pad(idx){
+  currentRoundState = { numbers: new Set(), x2: false, mods: new Set(), bust: false };
   const numbers = [0,1,2,3,4,5,6,7,8,9,10,11,12];
   const mods = [2,4,6,8,10];
   document.getElementById('pad').innerHTML = `
@@ -214,15 +232,40 @@ function openPad(idx){
     </div>
     <div class="flex">
       <button class="btn" onclick="toggleBust()">Bust</button>
-      <button class="btn primary" onclick="commitScore()">Add Score</button>
+      <button class="btn primary" onclick="commitFlip7()">Add Score</button>
       <button class="btn" onclick="renderLeaderboard()">Cancel</button>
     </div>
     <div id="preview" class="small" style="margin-top:.6rem"></div>
   `;
-  updatePreview();
+  updateFlip7Preview();
 }
 
-function calculate(st){
+function openOhHellPad(idx){
+  document.getElementById('pad').innerHTML = `
+    <div class="small" style="margin:.6rem 0">Hand for <strong>${currentGame.players[idx].name}</strong></div>
+    <div class="flex">
+      <input type="number" id="oh-bid" placeholder="Bid" style="width:80px">
+      <input type="number" id="oh-tricks" placeholder="Tricks" style="width:80px">
+    </div>
+    <div class="flex" style="margin-top:.6rem">
+      <button class="btn primary" onclick="commitOhHell()">Add</button>
+      <button class="btn" onclick="renderLeaderboard()">Cancel</button>
+    </div>
+  `;
+}
+
+function openGenericPad(idx, g){
+  document.getElementById('pad').innerHTML = `
+    <div class="small" style="margin:.6rem 0">Add points for <strong>${currentGame.players[idx].name}</strong> (${g.name})</div>
+    <input type="number" id="gen-pts" value="0" placeholder="Points">
+    <div class="flex" style="margin-top:.6rem">
+      <button class="btn primary" onclick="commitGeneric()">Add</button>
+      <button class="btn" onclick="renderLeaderboard()">Cancel</button>
+    </div>
+  `;
+}
+
+function calculateFlip7(st){
   if (st.bust) return 0;
   let sum = [...st.numbers].reduce((a,b)=>a+b,0);
   if (st.x2) sum *= 2;
@@ -230,37 +273,51 @@ function calculate(st){
   if (st.numbers.size === 7) extra += 15;
   return sum + extra;
 }
-function updatePreview(){
-  const pts = calculate(currentRoundState);
-  document.getElementById('preview').textContent = `This round: +${pts}` + (currentRoundState.numbers.size===7 ? ' (includes Flip 7 +15)' : '');
+function updateFlip7Preview(){
+  const pts = calculateFlip7(currentRoundState);
+  document.getElementById('preview').textContent = `This round: +${pts}` + (currentRoundState.numbers.size===7 ? ' (Flip 7 +15)' : '');
 }
 function toggleNum(n){
   if (currentRoundState.numbers.has(n)) currentRoundState.numbers.delete(n);
   else currentRoundState.numbers.add(n);
   document.getElementById('n'+n).classList.toggle('active');
-  updatePreview();
+  updateFlip7Preview();
 }
 function toggleX2(){
   currentRoundState.x2 = !currentRoundState.x2;
   document.getElementById('kx2').classList.toggle('active');
-  updatePreview();
+  updateFlip7Preview();
 }
 function toggleMod(m){
   if (currentRoundState.mods.has(m)) currentRoundState.mods.delete(m);
   else currentRoundState.mods.add(m);
   document.getElementById('m'+m).classList.toggle('active');
-  updatePreview();
+  updateFlip7Preview();
 }
 function toggleBust(){
   currentRoundState.bust = !currentRoundState.bust;
-  updatePreview();
+  updateFlip7Preview();
 }
-function commitScore(){
-  currentGame.players[scoringPlayer].score += calculate(currentRoundState);
-  currentGame.rounds.push({ player: scoringPlayer, pts: calculate(currentRoundState) });
+function commitFlip7(){
+  currentGame.players[scoringPlayer].score += calculateFlip7(currentRoundState);
   persistActive();
   renderLeaderboard();
 }
+function commitOhHell(){
+  const bid = +document.getElementById('oh-bid').value || 0;
+  const tricks = +document.getElementById('oh-tricks').value || 0;
+  const pts = (bid === tricks) ? 10 + bid : 0;
+  currentGame.players[scoringPlayer].score += pts;
+  persistActive();
+  renderLeaderboard();
+}
+function commitGeneric(){
+  const pts = +document.getElementById('gen-pts').value || 0;
+  currentGame.players[scoringPlayer].score += pts;
+  persistActive();
+  renderLeaderboard();
+}
+
 function endGame(){
   currentGame.endTime = new Date().toISOString();
   history.unshift(currentGame);
@@ -270,10 +327,10 @@ function endGame(){
   showView('history');
 }
 function renderRecent(){
-  document.getElementById('recent-list').innerHTML = history.slice(0,5).map(g=>`<div>${g.type} · ${new Date(g.endTime||Date.now()).toLocaleDateString()}</div>`).join('') || '<p class="small">No games yet</p>';
+  document.getElementById('recent-list').innerHTML = history.slice(0,5).map(g=>`<div>${games.find(x=>x.id===g.type)?.name||g.type} · ${new Date(g.endTime||Date.now()).toLocaleDateString()}</div>`).join('') || '<p class="small">No games yet</p>';
 }
 function renderHistory(){
-  document.getElementById('history-list').innerHTML = history.map(g=>`<div class="card"><strong>${g.type}</strong><br>${g.players.map(p=>p.name+': '+p.score).join(' · ')}</div>`).join('') || '<p class="small">No history</p>';
+  document.getElementById('history-list').innerHTML = history.map(g=>`<div class="card"><strong>${games.find(x=>x.id===g.type)?.name||g.type}</strong><br>${g.players.map(p=>p.name+': '+p.score).join(' · ')}</div>`).join('') || '<p class="small">No history</p>';
 }
 
 checkSession();
