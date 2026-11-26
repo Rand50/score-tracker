@@ -279,21 +279,19 @@ td, th { padding: 0.6rem 0.4rem; text-align: left; border-bottom: 1px solid var(
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-// ── Supabase config (fill these in after you create a free project) ──
 const SUPABASE_URL = 'YOUR_SUPABASE_URL';
 const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
-
-let supabase = null;
+let supabaseClient = null;
 if (SUPABASE_URL.startsWith('https') && SUPABASE_ANON_KEY.length > 20) {
-  supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 }
 
 async function syncToBackend() {
-  if (!supabase) return;
+  if (!supabaseClient) return;
   try {
     const deviceId = localStorage.getItem('gst_device_id') || (crypto.randomUUID?.() || Date.now().toString());
     localStorage.setItem('gst_device_id', deviceId);
-    await supabase.from('score_history').upsert({
+    await supabaseClient.from('score_history').upsert({
       device_id: deviceId,
       players: players,
       history: history,
@@ -305,11 +303,11 @@ async function syncToBackend() {
 }
 
 async function loadFromBackend() {
-  if (!supabase) return;
+  if (!supabaseClient) return;
   try {
     const deviceId = localStorage.getItem('gst_device_id');
     if (!deviceId) return;
-    const { data } = await supabase.from('score_history').select('*').eq('device_id', deviceId).single();
+    const { data } = await supabaseClient.from('score_history').select('*').eq('device_id', deviceId).single();
     if (data) {
       if (data.players) players = data.players;
       if (data.history) history = data.history;
@@ -573,10 +571,8 @@ function renderStats() {
   const el = document.getElementById('stats-content');
   if (!history.length) { el.innerHTML = '<p class="small">Play some games first.</p>'; return; }
   const wins = {};
-  const gamesPlayed = {};
   history.forEach(g => {
     g.players.forEach(p => {
-      gamesPlayed[p.name] = (gamesPlayed[p.name] || 0) + 1;
       if (g.winner && g.winner.includes(p.name)) wins[p.name] = (wins[p.name] || 0) + 1;
     });
   });
@@ -584,7 +580,7 @@ function renderStats() {
   Object.keys(wins).sort((a,b) => wins[b]-wins[a]).forEach(n => {
     html += `<div>${n}: ${wins[n]}</div>`;
   });
-  el.innerHTML = html;
+  el.innerHTML = html || '<p class="small">No wins yet.</p>';
 }
 
 function exportData() {
@@ -620,14 +616,14 @@ function sendAI() {
   chat.innerHTML += `<div class="ai-msg user">${text}</div>`;
   input.value = '';
   setTimeout(() => {
-    chat.innerHTML += `<div class="ai-msg bot">Got it. Use Custom game for house rules, or describe the scoring and I'll help.</div>`;
+    chat.innerHTML += `<div class="ai-msg bot">Got it. Use the Custom game for house rules.</div>`;
     chat.scrollTop = chat.scrollHeight;
   }, 400);
 }
 
 function applyCustomFromAI() {
   selectedGame = 'other';
-  alert('Switched to Custom. Start a new game.');
+  alert('Switched to Custom.');
   showView('new');
 }
 
