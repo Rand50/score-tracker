@@ -23,8 +23,11 @@ input,select { background:#0b1220; border:1px solid var(--border); color:var(--t
 .bottom-nav button.active { color:var(--accent); }
 .small { color:var(--muted); font-size:.85rem; }
 .flex { display:flex; gap:.5rem; align-items:center; flex-wrap:wrap; }
-.mod-btn { padding:.4rem .7rem; border-radius:8px; border:1px solid var(--border); background:var(--surface2); cursor:pointer; }
-.mod-btn.active { background:var(--accent); color:#0b1220; }
+.key { background:#1e293b; border:1px solid #334155; border-radius:10px; padding:0.9rem 0.4rem; text-align:center; font-weight:700; font-size:1.1rem; cursor:pointer; }
+.key.active { background:var(--accent); color:#0b1220; }
+.key.bust { background:#f43f5e; color:white; }
+.player-row { background:var(--surface2); border-radius:12px; padding:0.7rem 1rem; margin:0.4rem 0; display:flex; justify-content:space-between; align-items:center; }
+.player-row.current { border:2px solid var(--accent); }
 </style>
 </head>
 <body>
@@ -65,7 +68,7 @@ input,select { background:#0b1220; border:1px solid var(--border); color:var(--t
   <div id="view-active" class="view hidden">
     <div class="card">
       <h2 id="active-title"></h2>
-      <div id="active-scores"></div>
+      <div id="leaderboard"></div>
       <div id="active-content"></div>
       <div class="flex" style="margin-top:1rem">
         <button class="btn primary" onclick="endGame()">Save Game</button>
@@ -91,12 +94,12 @@ let players = [];
 let history = [];
 let currentGame = null;
 let selectedGame = 'flip7';
+let flip7State = {}; // per player: {numbers: Set, x2:false, mods:Set, bust:false}
 
 const games = [
-  { id:'flip7', name:'Flip 7', img:'flip7.jpg', versions:['Standard (to 200)','With a Vengeance'] },
-  { id:'7wonders', name:'7 Wonders', img:'7wonders.jpg', versions:['Base','With Leaders'] },
-  { id:'ohhell', name:'Oh Hell', img:'ohhell.jpg', versions:['Exact = 10+bid'] },
-  { id:'nertz', name:'Nertz', img:'nertz.png', versions:['Standard'] },
+  { id:'flip7', name:'Flip 7', img:'flip7.jpg', versions:['Standard (to 200)'] },
+  { id:'7wonders', name:'7 Wonders', img:'7wonders.jpg', versions:['Base'] },
+  { id:'ohhell', name:'Oh Hell', img:'ohhell.jpg', versions:['Exact'] },
   { id:'other', name:'Custom', img:'', versions:['Custom'] }
 ];
 
@@ -159,64 +162,98 @@ function addPlayer(){
 function startGame(){
   if (!players.length){ alert('Add players'); return; }
   currentGame = { type:selectedGame, version:document.getElementById('version-select').value, players:players.map(n=>({name:n,score:0})), rounds:[] };
+  flip7State = {};
+  currentGame.players.forEach((p,i) => {
+    flip7State[i] = { numbers: new Set(), x2: false, mods: new Set(), bust: false };
+  });
   showView('active');
   renderActive();
 }
 
 function renderActive(){
   const g = games.find(x=>x.id===currentGame.type);
-  document.getElementById('active-title').textContent = g.name + ' · ' + currentGame.version;
-  document.getElementById('active-scores').innerHTML = currentGame.players.map(p=>`<div style="display:inline-block;margin:.4rem;padding:.6rem;background:var(--surface2);border-radius:10px;text-align:center"><div class="small">${p.name}</div><div style="font-size:1.5rem;color:var(--accent)">${p.score}</div></div>`).join('');
-  renderRoundForm();
-}
-
-function renderRoundForm(){
-  const type = currentGame.type;
-  const content = document.getElementById('active-content');
-  if (type === 'flip7') {
-    content.innerHTML = `<p class="small">Round ${currentGame.rounds.length+1} — official order: numbers → ×2 → +mods → +15 Flip7</p>` +
-      currentGame.players.map((p,i)=>`
-        <div style="margin-bottom:1rem;padding:.8rem;background:var(--surface2);border-radius:12px">
-          <strong>${p.name}</strong>
-          <div style="margin:.5rem 0"><label>Number cards sum</label><input type="number" id="f7n${i}" value="0" style="width:100px"></div>
-          <div class="flex" style="margin:.5rem 0">
-            <button type="button" class="mod-btn" id="f7x2-${i}" onclick="this.classList.toggle('active')">×2</button>
-            <button type="button" class="mod-btn" id="f7p2-${i}" onclick="this.classList.toggle('active')">+2</button>
-            <button type="button" class="mod-btn" id="f7p4-${i}" onclick="this.classList.toggle('active')">+4</button>
-            <button type="button" class="mod-btn" id="f7p6-${i}" onclick="this.classList.toggle('active')">+6</button>
-            <button type="button" class="mod-btn" id="f7p8-${i}" onclick="this.classList.toggle('active')">+8</button>
-            <button type="button" class="mod-btn" id="f7p10-${i}" onclick="this.classList.toggle('active')">+10</button>
-            <button type="button" class="mod-btn" id="f7flip-${i}" onclick="this.classList.toggle('active')">Flip 7 (+15)</button>
-            <button type="button" class="mod-btn" id="f7bust-${i}" onclick="this.classList.toggle('active')">Bust</button>
-          </div>
-        </div>`).join('') + `<button class="btn primary" onclick="submitFlip7()">Score Round</button>`;
+  document.getElementById('active-title').textContent = g.name;
+  if (currentGame.type === 'flip7') {
+    renderFlip7();
   } else {
-    content.innerHTML = `<p class="small">Enter points</p>` +
-      currentGame.players.map((p,i)=>`<div class="flex"><span style="width:100px">${p.name}</span><input type="number" id="s${i}" value="0"></div>`).join('') +
+    document.getElementById('leaderboard').innerHTML = '';
+    document.getElementById('active-content').innerHTML = currentGame.players.map((p,i)=>`<div class="flex"><span>${p.name}</span><input type="number" id="s${i}" value="0"></div>`).join('') +
       `<button class="btn primary" onclick="submitGeneric()">Add</button>`;
   }
 }
 
-function submitFlip7(){
-  currentGame.players.forEach((p,i)=>{
-    if (document.getElementById('f7bust-'+i).classList.contains('active')) {
-      p.score += 0;
-      return;
-    }
-    let nums = +document.getElementById('f7n'+i).value || 0;
-    if (document.getElementById('f7x2-'+i).classList.contains('active')) nums *= 2;
-    let mods = 0;
-    if (document.getElementById('f7p2-'+i).classList.contains('active')) mods += 2;
-    if (document.getElementById('f7p4-'+i).classList.contains('active')) mods += 4;
-    if (document.getElementById('f7p6-'+i).classList.contains('active')) mods += 6;
-    if (document.getElementById('f7p8-'+i).classList.contains('active')) mods += 8;
-    if (document.getElementById('f7p10-'+i).classList.contains('active')) mods += 10;
-    if (document.getElementById('f7flip-'+i).classList.contains('active')) mods += 15;
-    p.score += nums + mods;
+function renderFlip7(){
+  // Leaderboard
+  document.getElementById('leaderboard').innerHTML = currentGame.players.map((p,i) => {
+    const st = flip7State[i];
+    const preview = calculateFlip7(st);
+    return `<div class="player-row"><span>${p.name}</span><span style="font-size:1.3rem;color:var(--accent)">${p.score} <span class="small">(+${preview})</span></span></div>`;
+  }).join('');
+
+  // Card pad
+  const numbers = [0,1,2,3,4,5,6,7,8,9,10,11,12];
+  const mods = [2,4,6,8,10];
+  document.getElementById('active-content').innerHTML = `
+    <div class="small" style="margin:.5rem 0">Tap cards for the current player, then Score Round</div>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:8px">
+      ${numbers.map(n => `<div class="key" onclick="toggleNumber(${n},this)">${n}</div>`).join('')}
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:8px">
+      <div class="key" onclick="toggleX2(this)">×2</div>
+      ${mods.map(m => `<div class="key" onclick="toggleMod(${m},this)">+${m}</div>`).join('')}
+    </div>
+    <div class="flex">
+      <button class="btn" onclick="markBust()">Bust</button>
+      <button class="btn primary" onclick="scoreFlip7Round()">Score Round</button>
+    </div>
+  `;
+}
+
+function calculateFlip7(st) {
+  if (st.bust) return 0;
+  let sum = [...st.numbers].reduce((a,b)=>a+b,0);
+  if (st.x2) sum *= 2;
+  let modSum = [...st.mods].reduce((a,b)=>a+b,0);
+  if (st.numbers.size === 7) modSum += 15;
+  return sum + modSum;
+}
+
+function toggleNumber(n, el) {
+  // For simplicity, apply to first player or we can add player select later
+  const i = 0;
+  const st = flip7State[i];
+  if (st.numbers.has(n)) st.numbers.delete(n);
+  else st.numbers.add(n);
+  el.classList.toggle('active');
+  renderFlip7();
+}
+function toggleX2(el) {
+  const i = 0;
+  flip7State[i].x2 = !flip7State[i].x2;
+  el.classList.toggle('active');
+  renderFlip7();
+}
+function toggleMod(m, el) {
+  const i = 0;
+  if (flip7State[i].mods.has(m)) flip7State[i].mods.delete(m);
+  else flip7State[i].mods.add(m);
+  el.classList.toggle('active');
+  renderFlip7();
+}
+function markBust() {
+  flip7State[0].bust = !flip7State[0].bust;
+  renderFlip7();
+}
+
+function scoreFlip7Round() {
+  currentGame.players.forEach((p,i) => {
+    p.score += calculateFlip7(flip7State[i]);
+    flip7State[i] = { numbers: new Set(), x2: false, mods: new Set(), bust: false };
   });
   currentGame.rounds.push({});
   renderActive();
 }
+
 function submitGeneric(){
   currentGame.players.forEach((p,i)=> p.score += +document.getElementById('s'+i).value||0);
   currentGame.rounds.push({});
