@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0c0d10">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="score-tracker-build" content="v20.1-clean-header-2026-11-27">
+<meta name="score-tracker-build" content="v21-flow-sessions-2026-11-27">
 <meta name="apple-mobile-web-app-title" content="TallyIt">
 <title>TallyIt — Score Tracker</title>
 <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png">
@@ -6815,10 +6815,705 @@ body.theme-seven-wonders .bottom-nav #nav-social {
 .v20-hmenu-signout svg { color: #f3b4b4; }
 html.v20-standalone .app-header .v20-fs-wrap, html.v20-standalone #btn-fullscreen-toggle, html.v20-standalone #btn-menu-fullscreen { display: none !important; }
 
+
+
+:root {
+  --v21-bg: #0c0d10;
+  --v21-surface: #14161b;
+  --v21-surface-2: #1c1f26;
+  --v21-border: rgba(255, 255, 255, 0.09);
+  --v21-border-hi: rgba(255, 255, 255, 0.16);
+  --v21-text: #f4f1ea;
+  --v21-muted: #989fa9;
+  --v21-brass: #d4a853;
+  --v21-brass-hi: #e4bc6c;
+  --v21-brass-soft: rgba(212, 168, 83, 0.14);
+  --v21-brass-border: rgba(212, 168, 83, 0.38);
+  --v21-danger: #f87171;
+  --v21-danger-soft: rgba(248, 113, 113, 0.12);
+  --v21-danger-border: rgba(248, 113, 113, 0.38);
+  --v21-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+
+.v21-stepper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  margin: 0 0 12px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  border: 1px solid var(--v21-border);
+  background: var(--v21-surface-2);
+  box-sizing: border-box;
+}
+
+.v21-step {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--v21-muted);
+  white-space: nowrap;
+}
+
+.v21-step-num {
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  border: 1px solid var(--v21-border-hi);
+  background: var(--v21-bg);
+  color: var(--v21-muted);
+  font-size: 11px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.v21-step-num svg {
+  width: 12px;
+  height: 12px;
+}
+
+.v21-step.is-active {
+  color: var(--v21-brass);
+}
+
+.v21-step.is-active .v21-step-num {
+  background: var(--v21-brass);
+  border-color: var(--v21-brass);
+  color: var(--v21-bg);
+}
+
+.v21-step.is-done {
+  color: var(--v21-text);
+}
+
+.v21-step.is-done .v21-step-num {
+  background: var(--v21-brass-soft);
+  border-color: var(--v21-brass-border);
+  color: var(--v21-brass);
+}
+
+.v21-step-sep {
+  flex: 1;
+  height: 1px;
+  min-width: 10px;
+  background: var(--v21-border-hi);
+}
+
+
+.v21-choose-sub {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 0 0 10px;
+  font-size: 12.5px;
+  color: var(--v21-muted);
+}
+
+.v21-choose-sub strong {
+  color: var(--v21-text);
+  font-weight: 600;
+}
+
+.v21-tile-cue {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: rgba(12, 13, 16, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: var(--v21-text);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.v21-tile-cue svg {
+  width: 12px;
+  height: 12px;
+}
+
+
+.v21-setup-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--v21-border);
+}
+
+.v21-setup-game-wrap {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.v21-setup-eyebrow {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--v21-brass);
+}
+
+.v21-setup-game-name {
+  margin: 0;
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--v21-text);
+  line-height: 1.15;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.v21-change-game-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 34px;
+  padding: 6px 11px;
+  border-radius: 999px;
+  border: 1px solid var(--v21-border-hi);
+  background: var(--v21-surface-2);
+  color: var(--v21-text);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  flex-shrink: 0;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  transition: border-color 0.14s ease, background 0.14s ease;
+}
+
+.v21-change-game-btn:active {
+  border-color: var(--v21-brass-border);
+  background: var(--v21-brass-soft);
+  color: var(--v21-brass);
+}
+
+.v21-change-game-btn svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+
+.v21-setup-spacer {
+  height: 76px;
+}
+
+.v21-sticky-cta {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: calc(64px + env(safe-area-inset-bottom, 0px));
+  z-index: 90;
+  width: min(520px, 100vw);
+  padding: 10px 14px;
+  background: linear-gradient(180deg, rgba(12, 13, 16, 0.84) 0%, rgba(12, 13, 16, 0.98) 38%);
+  border-top: 1px solid var(--v21-border-hi);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  box-sizing: border-box;
+}
+
+.v21-sticky-cta[hidden],
+.v21-sticky-cta.hidden {
+  display: none !important;
+}
+
+.v21-cta-summary {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.v21-cta-label {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--v21-muted);
+}
+
+.v21-cta-meta {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--v21-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.v21-start-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 44px;
+  padding: 10px 18px;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(180deg, var(--v21-brass-hi) 0%, var(--v21-brass) 100%);
+  color: var(--v21-bg);
+  font-family: inherit;
+  font-size: 14.5px;
+  font-weight: 700;
+  white-space: nowrap;
+  flex-shrink: 0;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  box-shadow: 0 4px 16px rgba(212, 168, 83, 0.28);
+  transition: transform 0.12s ease, filter 0.14s ease;
+}
+
+.v21-start-btn:active {
+  transform: scale(0.98);
+  filter: brightness(0.94);
+}
+
+.v21-start-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.v21-start-btn svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+
+.v21-active-section {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.v21-active-section[hidden],
+.v21-active-section.hidden {
+  display: none !important;
+}
+
+.v21-active-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 0 2px;
+}
+
+.v21-active-heading {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--v21-brass);
+}
+
+.v21-live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--v21-brass);
+  box-shadow: 0 0 0 3px rgba(212, 168, 83, 0.22);
+  flex-shrink: 0;
+}
+
+.v21-active-count {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--v21-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.v21-active-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.v21-active-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 13px;
+  border-radius: 14px;
+  border: 1px solid var(--v21-brass-border);
+  background: linear-gradient(180deg, rgba(212, 168, 83, 0.08) 0%, var(--v21-surface) 100%);
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+.v21-active-info {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.v21-active-title-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.v21-active-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--v21-text);
+  line-height: 1.2;
+}
+
+.v21-active-var {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 7px;
+  border-radius: 999px;
+  border: 1px solid var(--v21-border-hi);
+  background: var(--v21-surface-2);
+  color: var(--v21-muted);
+  font-size: 10.5px;
+  font-weight: 600;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.v21-active-meta {
+  font-size: 12px;
+  color: var(--v21-muted);
+  line-height: 1.35;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.v21-active-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.v21-btn-resume {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-height: 36px;
+  padding: 7px 12px;
+  border-radius: 10px;
+  border: none;
+  background: var(--v21-brass);
+  color: var(--v21-bg);
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+.v21-btn-resume:active {
+  filter: brightness(0.92);
+}
+
+.v21-btn-resume svg {
+  width: 13px;
+  height: 13px;
+}
+
+.v21-btn-discard {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: 10px;
+  border: 1px solid var(--v21-border-hi);
+  background: var(--v21-surface-2);
+  color: var(--v21-muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  transition: color 0.14s ease, border-color 0.14s ease, background 0.14s ease;
+}
+
+.v21-btn-discard:hover,
+.v21-btn-discard:active,
+.v21-btn-discard.is-confirming {
+  color: var(--v21-danger);
+  border-color: var(--v21-danger-border);
+  background: var(--v21-danger-soft);
+}
+
+.v21-btn-discard svg {
+  width: 15px;
+  height: 15px;
+}
+
+
+#v21-end-game-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 260;
+  background: rgba(6, 7, 10, 0.8);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 12px;
+  box-sizing: border-box;
+  font-family: var(--v21-font);
+  color: var(--v21-text);
+}
+
+#v21-end-game-modal[hidden],
+#v21-end-game-modal.hidden {
+  display: none !important;
+}
+
+.v21-modal-sheet {
+  width: 100%;
+  max-width: 440px;
+  border-radius: 20px;
+  border: 1px solid var(--v21-border-hi);
+  background: var(--v21-surface);
+  box-shadow: 0 22px 56px rgba(0, 0, 0, 0.65);
+  padding: 16px 16px calc(16px + env(safe-area-inset-bottom, 0px));
+  color: var(--v21-text);
+  font-family: var(--v21-font);
+  box-sizing: border-box;
+}
+
+.v21-modal-handle {
+  width: 36px;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+  margin: 0 auto 12px;
+}
+
+.v21-modal-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.v21-modal-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--v21-text);
+  line-height: 1.2;
+}
+
+.v21-modal-sub {
+  margin: 4px 0 0;
+  font-size: 12.5px;
+  color: var(--v21-muted);
+  line-height: 1.35;
+}
+
+.v21-modal-close {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  border: 1px solid var(--v21-border);
+  background: var(--v21-surface-2);
+  color: var(--v21-muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+.v21-modal-close svg {
+  width: 16px;
+  height: 16px;
+}
+
+.v21-sheet-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.v21-sheet-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 52px;
+  padding: 11px 14px;
+  border-radius: 13px;
+  border: 1px solid var(--v21-border-hi);
+  background: var(--v21-surface-2);
+  color: var(--v21-text);
+  font-family: var(--v21-font);
+  text-align: left;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  box-sizing: border-box;
+  transition: transform 0.11s ease, background 0.14s ease, border-color 0.14s ease, color 0.14s ease;
+}
+
+.v21-sheet-btn:active {
+  transform: scale(0.985);
+}
+
+.v21-sheet-btn svg {
+  width: 19px;
+  height: 19px;
+  flex-shrink: 0;
+}
+
+.v21-sheet-btn-copy {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.v21-sheet-btn-title {
+  font-size: 14.5px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.v21-sheet-btn-desc {
+  font-size: 11.5px;
+  font-weight: 400;
+  opacity: 0.78;
+  margin-top: 2px;
+}
+
+
+.v21-sheet-btn.is-primary {
+  border: none;
+  background: linear-gradient(180deg, var(--v21-brass-hi) 0%, var(--v21-brass) 100%);
+  color: var(--v21-bg);
+  box-shadow: 0 4px 16px rgba(212, 168, 83, 0.24);
+}
+
+.v21-sheet-btn.is-primary .v21-sheet-btn-desc {
+  color: rgba(12, 13, 16, 0.76);
+  opacity: 1;
+}
+
+
+.v21-sheet-btn.is-pause {
+  border-color: var(--v21-border-hi);
+  background: var(--v21-surface-2);
+  color: var(--v21-text);
+}
+
+.v21-sheet-btn.is-pause svg {
+  color: var(--v21-brass);
+}
+
+
+.v21-sheet-btn.is-danger {
+  border-color: var(--v21-danger-border);
+  background: transparent;
+  color: var(--v21-danger);
+}
+
+.v21-sheet-btn.is-danger .v21-sheet-btn-desc {
+  color: rgba(248, 113, 113, 0.8);
+  opacity: 1;
+}
+
+.v21-sheet-btn.is-danger.is-confirming {
+  border-color: var(--v21-danger);
+  background: var(--v21-danger-soft);
+  color: #fecaca;
+}
+
+.v21-sheet-btn.is-danger.is-confirming .v21-sheet-btn-desc {
+  color: #fca5a5;
+}
+
+
+.v21-sheet-cancel {
+  width: 100%;
+  min-height: 42px;
+  margin-top: 4px;
+  padding: 9px 14px;
+  border-radius: 11px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--v21-muted);
+  font-family: var(--v21-font);
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+.v21-sheet-cancel:active {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--v21-text);
+}
+
+#view-new #v21-choose-header { margin: 0 0 12px; }
+#view-new #v21-setup-header { margin: 0 0 4px; }
+#view-new[data-v21-step="setup"] #version-select { margin-bottom: 2px; }
+.game-card .v21-tile-cue { z-index: 2; }
+html.v21-sheet-open, html.v21-sheet-open body { overscroll-behavior: contain; }
+
 </style>
 </head>
 <body>
-<!-- Build: v20.1-clean-header-2026-11-27 -->
+<!-- Build: v21-flow-sessions-2026-11-27 -->
 
 <!-- Login: starts hidden until getSession() resolves -->
 <section id="login-view" class="auth-hidden" hidden aria-label="Sign in to Score Tracker">
@@ -6918,13 +7613,19 @@ html.v20-standalone .app-header .v20-fs-wrap, html.v20-standalone #btn-fullscree
   <!-- HOME -->
   <section id="view-home" class="view" aria-label="Home">
     <div class="home-stack">
-
-    
-      <button id="btn-resume-game" class="home-resume-card hidden" type="button" hidden onclick="showView('active')">
+<section id="v21-active-games-section" class="v21-active-section hidden" hidden aria-label="Games in progress">
+  <div class="v21-active-head">
+    <span class="v21-active-heading">
+      <span class="v21-live-dot" aria-hidden="true"></span>
+      <span>In Progress</span>
+    </span>
+    <span id="v21-active-games-count" class="v21-active-count">0 open</span>
+  </div>
+  <button id="btn-resume-game" class="home-resume-card hidden" type="button" hidden onclick="resumeGame(this.dataset.sessionId || undefined)">
         <span class="home-resume-left">
           <span class="home-live-dot" aria-hidden="true"></span>
           <span class="home-resume-text">
-            <span class="home-resume-label">In Progress</span>
+            <span class="home-resume-label">Most Recent</span>
             <span class="home-resume-title" id="home-resume-meta">Resume Active Game</span>
           </span>
         </span>
@@ -6935,6 +7636,8 @@ html.v20-standalone .app-header .v20-fs-wrap, html.v20-standalone #btn-fullscree
           </svg>
         </span>
       </button>
+  <div id="v21-active-games-list" class="v21-active-list"></div>
+</section>
 
     
       <div class="home-hero">
@@ -6981,8 +7684,30 @@ html.v20-standalone .app-header .v20-fs-wrap, html.v20-standalone #btn-fullscree
   </section>
 
   <!-- CHOOSE GAME -->
-  <section id="view-new" class="view">
+  <section id="view-new" class="view" data-v21-step="choose">
     <div class="card">
+      <div id="v21-choose-step">
+<div id="v21-choose-header" class="v21-choose-header">
+  <div class="v21-stepper" aria-label="New game progress">
+    <span class="v21-step is-active" aria-current="step">
+      <span class="v21-step-num">1</span>
+      <span>Game</span>
+    </span>
+    <span class="v21-step-sep" aria-hidden="true"></span>
+    <span class="v21-step">
+      <span class="v21-step-num">2</span>
+      <span>Setup</span>
+    </span>
+    <span class="v21-step-sep" aria-hidden="true"></span>
+    <span class="v21-step">
+      <span class="v21-step-num">3</span>
+      <span>Score</span>
+    </span>
+  </div>
+  <p class="v21-choose-sub">
+    <span><strong>Tap any game</strong> to set up players &amp; rules</span>
+  </p>
+</div>
       <h2>Choose Game</h2>
       <div class="game-grid" id="game-grid"></div>
 <div id="v20-request-game-slot" class="v20-req-slot">
@@ -7004,6 +7729,39 @@ html.v20-standalone .app-header .v20-fs-wrap, html.v20-standalone #btn-fullscree
       <polyline points="9 18 15 12 9 6"/>
     </svg>
   </button>
+</div>
+      </div>
+      <div id="v21-setup-step" class="hidden" hidden>
+<div id="v21-setup-header" class="v21-setup-header hidden" hidden>
+  <div class="v21-stepper" aria-label="New game progress">
+    <span class="v21-step is-done">
+      <span class="v21-step-num" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </span>
+      <span>Game</span>
+    </span>
+    <span class="v21-step-sep" aria-hidden="true"></span>
+    <span class="v21-step is-active" aria-current="step">
+      <span class="v21-step-num">2</span>
+      <span>Setup</span>
+    </span>
+    <span class="v21-step-sep" aria-hidden="true"></span>
+    <span class="v21-step">
+      <span class="v21-step-num">3</span>
+      <span>Score</span>
+    </span>
+  </div>
+
+  <div class="v21-setup-head">
+    <div class="v21-setup-game-wrap">
+      <span class="v21-setup-eyebrow">Selected Game</span>
+      <h2 id="v21-setup-game-name" class="v21-setup-game-name">Game Setup</h2>
+    </div>
+    <button type="button" id="btn-v21-change-game" class="v21-change-game-btn" onclick="window.v21BackToGames && v21BackToGames()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+      <span>Change Game</span>
+    </button>
+  </div>
 </div>
       <label class="small" for="version-select">Version / Scoring rules</label>
       <select id="version-select"></select>
@@ -7059,9 +7817,23 @@ html.v20-standalone .app-header .v20-fs-wrap, html.v20-standalone #btn-fullscree
           </div>
         </div>
 
-        <button class="btn primary block" type="button" id="btn-start-game" style="margin-top:1.2rem" onclick="startGame()">Start Playing</button>
+      </div>
       </div>
     </div>
+<div id="v21-setup-spacer" class="v21-setup-spacer hidden" hidden aria-hidden="true"></div>
+<div id="v21-sticky-cta" class="v21-sticky-cta hidden" hidden role="region" aria-label="Start game">
+  <div class="v21-cta-summary">
+    <span class="v21-cta-label">Ready to play</span>
+    <span id="v21-cta-meta" class="v21-cta-meta">Select players</span>
+  </div>
+  <button type="button" id="btn-v21-start-scoring" class="v21-start-btn" onclick="window.startGame && startGame()">
+    <span>Start Scoring</span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <line x1="5" y1="12" x2="19" y2="12"/>
+      <polyline points="12 5 19 12 12 19"/>
+    </svg>
+  </button>
+</div>
   </section>
 
   <!-- ACTIVE GAME -->
@@ -7072,7 +7844,7 @@ html.v20-standalone .app-header .v20-fs-wrap, html.v20-standalone #btn-fullscree
         <div><h2 id="gen-title"></h2><div id="gen-sub" class="small"></div></div>
         <div class="active-head-actions">
           <div id="gen-dice-slot" class="dice-slot"></div>
-          <button class="btn sm" type="button" title="Discard game" onclick="discardGame()">✕</button>
+          <button class="btn sm" type="button" id="gen-leave" title="Finish or leave game" aria-label="Finish or leave game" onclick="openEndGameModal()">✕</button>
         </div>
       </div>
       <div id="gen-leaderboard" style="margin-top:.7rem"></div>
@@ -7080,7 +7852,7 @@ html.v20-standalone .app-header .v20-fs-wrap, html.v20-standalone #btn-fullscree
       <div id="gen-pad" class="hidden"></div>
       <div class="action-bar">
         <button class="btn hidden" id="gen-undo" type="button" hidden onclick="undoLastRound()">Undo</button>
-        <button class="btn success" id="gen-save" type="button" onclick="endGame()">Save Game</button>
+        <button class="btn success" id="gen-save" type="button" onclick="openEndGameModal()">Finish Game</button>
       </div>
     </div>
 
@@ -7102,7 +7874,7 @@ html.v20-standalone .app-header .v20-fs-wrap, html.v20-standalone #btn-fullscree
       </div>
       <div id="f7-board" class="f7-board" role="listbox" aria-label="Players"></div>
       <p class="f7-hint" id="f7-hint">Tap a player to score their round</p>
-      <button type="button" class="f7-finish hidden" id="f7-finish" hidden onclick="endGame()">🏆 Finish &amp; Save Game</button>
+      <button type="button" class="f7-finish hidden" id="f7-finish" hidden onclick="openEndGameModal()">🏆 Finish &amp; Save Game</button>
       <div id="f7-drawer" class="f7-drawer hidden" hidden></div>
       <div id="f7-sheet" class="f7-sheet hidden" hidden onclick="if(event.target===this)f7CloseSheet()"></div>
     </div>
@@ -7146,7 +7918,7 @@ html.v20-standalone .app-header .v20-fs-wrap, html.v20-standalone #btn-fullscree
         <button type="button" class="cc-pill" id="cc-add-player" onclick="ccShowAdd()">+ Player</button>
         <button type="button" class="cc-pill" id="cc-reset" onclick="ccReset()">Reset</button>
       </div>
-      <button type="button" class="cc-finish" id="cc-finish" onclick="endGame()"><span>Finish and Save Game</span></button>
+      <button type="button" class="cc-finish" id="cc-finish" onclick="openEndGameModal()"><span>Finish and Save Game</span></button>
     </div>
 
     <!-- Nertz Midnight Parlor & Gold Foil table: only visible with body.theme-nertz (Solo + unlimited Partners/Teams) -->
@@ -7277,7 +8049,7 @@ html.v20-standalone .app-header .v20-fs-wrap, html.v20-standalone #btn-fullscree
       <button type="button" class="nz-act-btn" id="nz-rounds-toggle" onclick="nzToggleHistory && nzToggleHistory()">Rounds</button>
       <button type="button" class="nz-act-btn" id="nz-add-btn" onclick="nzOpenSheet && nzOpenSheet('add')">+ Add</button>
     </div>
-    <button type="button" class="nz-finish" id="nz-finish" onclick="endGame()">Finish &amp; Save Game</button>
+    <button type="button" class="nz-finish" id="nz-finish" onclick="openEndGameModal()">Finish &amp; Save Game</button>
 
     <!-- EXPANDABLE ROUND HISTORY DRAWER -->
     <div id="nz-history-drawer" class="nz-history-drawer hidden" hidden aria-label="Round history"></div>
@@ -7434,7 +8206,7 @@ html.v20-standalone .app-header .v20-fs-wrap, html.v20-standalone #btn-fullscree
       </div>
     </div>
 
-    <button type="button" id="rk-finish" class="rk-finish-btn" onclick="window.rkFinishGame && rkFinishGame()">Finish &amp; Save Game</button>
+    <button type="button" id="rk-finish" class="rk-finish-btn" onclick="window.openEndGameModal && openEndGameModal()">Finish &amp; Save Game</button>
   </div>
 </div>
 
@@ -7656,7 +8428,7 @@ html.v20-standalone .app-header .v20-fs-wrap, html.v20-standalone #btn-fullscree
         </button>
       </div>
 
-      <button type="button" id="sw-btn-finish" class="sw-finish-btn" onclick="window.swFinishGame && swFinishGame()">
+      <button type="button" id="sw-btn-finish" class="sw-finish-btn" onclick="window.openEndGameModal && openEndGameModal()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M16 20c-4.5-2.5-7-6.8-6.5-12.5.2-1.8.8-3.4 1.8-4.5M9.5 14l3.5-.8M9.5 10.2l3.4.3M10.5 6.8l2.8 1.2"/></svg>
         <span>Finish Game</span>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M8 20c4.5-2.5 7-6.8 6.5-12.5-.2-1.8-.8-3.4-1.8-4.5M14.5 14l-3.5-.8M14.5 10.2l-3.4.3M13.5 6.8l-2.8 1.2"/></svg>
@@ -7715,7 +8487,7 @@ html.v20-standalone .app-header .v20-fs-wrap, html.v20-standalone #btn-fullscree
         <button type="button" class="cg-reset" id="btn-reset-scores" onclick="resetCatanScores()"><span class="cg-reset-ic" aria-hidden="true">↻</span>Reset Scores</button>
         <div class="cg-footer-row">
           <button type="button" class="cg-wood-bar" id="btn-undo" onclick="undoLastRound()">Undo</button>
-          <button type="button" class="cg-wood-bar cg-gold" id="btn-save-catan" onclick="endGame()">Save Game</button>
+          <button type="button" class="cg-wood-bar cg-gold" id="btn-save-catan" onclick="openEndGameModal()">Finish Game</button>
         </div>
       </section>
       <div id="cg-toast" class="cg-toast" role="status" aria-live="polite"></div>
@@ -8195,6 +8967,61 @@ html.v20-standalone .app-header .v20-fs-wrap, html.v20-standalone #btn-fullscree
   <p class="v20-ios-popover-body">
     In Safari, tap <strong>Share</strong> and choose <strong>Add to Home Screen</strong> to launch TallyIt in full screen without browser bars.
   </p>
+</div>
+<div id="v21-end-game-modal" class="hidden" hidden role="dialog" aria-modal="true" aria-labelledby="v21-end-game-title" onclick="if(event.target===this && window.closeEndGameModal) closeEndGameModal()">
+  <div class="v21-modal-sheet">
+    <div class="v21-modal-handle" aria-hidden="true"></div>
+    <header class="v21-modal-head">
+      <div>
+        <h3 id="v21-end-game-title" class="v21-modal-title">Finish or Leave Game?</h3>
+        <p id="v21-end-game-sub" class="v21-modal-sub">Choose how to wrap up this session.</p>
+      </div>
+      <button type="button" class="v21-modal-close" aria-label="Close" onclick="window.closeEndGameModal && closeEndGameModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </header>
+
+    <div class="v21-sheet-actions">
+      <button type="button" id="btn-v21-end-save" class="v21-sheet-btn is-primary" onclick="window.v21ConfirmSaveAndFinish && v21ConfirmSaveAndFinish()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="9"/>
+          <polyline points="8.5 12.5 11 15 15.5 9.5"/>
+        </svg>
+        <span class="v21-sheet-btn-copy">
+          <span class="v21-sheet-btn-title">Save &amp; Finish Game</span>
+          <span class="v21-sheet-btn-desc">Record final scores to History &amp; leaderboards</span>
+        </span>
+      </button>
+
+      <button type="button" id="btn-v21-end-pause" class="v21-sheet-btn is-pause" onclick="window.v21KeepOpenAndLeave && v21KeepOpenAndLeave()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="6" y="5" width="4" height="14" rx="1"/>
+          <rect x="14" y="5" width="4" height="14" rx="1"/>
+        </svg>
+        <span class="v21-sheet-btn-copy">
+          <span class="v21-sheet-btn-title">Keep Open (Pause)</span>
+          <span class="v21-sheet-btn-desc">Return to Home and resume anytime from In Progress</span>
+        </span>
+      </button>
+
+      <button type="button" id="btn-v21-end-discard" class="v21-sheet-btn is-danger" data-confirm-step="0" onclick="window.v21DiscardWithoutSaving && v21DiscardWithoutSaving()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="3 6 5 6 21 6"/>
+          <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+          <path d="M10 11v6M14 11v6"/>
+          <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+        </svg>
+        <span class="v21-sheet-btn-copy">
+          <span id="v21-discard-title" class="v21-sheet-btn-title">End Without Recording</span>
+          <span id="v21-discard-desc" class="v21-sheet-btn-desc">Discard this game without saving to History</span>
+        </span>
+      </button>
+
+      <button type="button" id="btn-v21-end-cancel" class="v21-sheet-cancel" onclick="window.closeEndGameModal && closeEndGameModal()">
+        Keep Playing
+      </button>
+    </div>
+  </div>
 </div>
 
   <nav class="bottom-nav" aria-label="Main navigation">
@@ -13827,6 +14654,638 @@ window.SocialUI = (function () {
 
 </script>
 
+<!-- v21: multi-game sessions (window.TallyItSessions) — loaded before the engine -->
+<script id="v21-sessions">
+/* ==========================================================================
+   TallyIt — Multi-Game Session Manager & Universal End/Pause/Discard (v21)
+   ==========================================================================
+   Zero-dependency UMD module for v3/engine.js & v3/shell.html.
+   Exposes `window.TallyItSessions` in browsers and `module.exports` in Node.
+
+   Features:
+   - Persists multiple simultaneous open games (`activeGames`) in localStorage
+     without clobbering one game when starting or pausing another.
+   - Automatically migrates any legacy single active game (`gst_active`) on
+     first load with zero data loss.
+   - Computes rich per-game summary metadata (`playersSummary`, `leaderText`,
+     `roundLabel`, `versionLabel`, `variationKey`) for Home "In Progress" cards,
+     including low-wins games (Hearts, Rummikub Points Up) and 7 Wonders
+     Treasury coin tiebreakers.
+   - Universal session lifecycle:
+       * listActiveSessions()
+       * getSession(sessionId)
+       * getFocusedSessionId() / getFocusedSession()
+       * createSession(state, opts)
+       * upsertSession(sessionOrState)
+       * saveCurrentSession(state)
+       * resumeSession(sessionId)
+       * pauseCurrentSession(state)
+       * finishSession(sessionId, { record: true | false, onRecord })
+       * deleteSession(sessionId)
+   ========================================================================== */
+
+(function (global) {
+  'use strict';
+
+  const STORAGE_KEY_SESSIONS = 'tallyit_active_sessions_v1';
+  const STORAGE_KEY_FOCUSED  = 'tallyit_focused_session_id_v1';
+  const LEGACY_ACTIVE_KEY    = 'gst_active';
+
+  const GAME_DISPLAY_NAMES = {
+    catan:       'Catan',
+    flip7:       'Flip 7',
+    '7wonders':  '7 Wonders',
+    carcassonne: 'Carcassonne',
+    ohhell:      'Oh Hell',
+    hearts:      'Hearts',
+    nertz:       'Nertz',
+    rummikub:    'Rummikub',
+    other:       'Custom'
+  };
+
+  const DEFAULT_LOW_GAMES = new Set(['hearts', 'rummikub']);
+
+  // Fallback in-memory storage when localStorage is unavailable (e.g. Node tests)
+  function createMemoryStorage() {
+    const map = new Map();
+    return {
+      getItem(k) { return map.has(k) ? map.get(k) : null; },
+      setItem(k, v) { map.set(k, String(v)); },
+      removeItem(k) { map.delete(k); },
+      clear() { map.clear(); }
+    };
+  }
+
+  let customStorage = null;
+  const fallbackMem = createMemoryStorage();
+
+  function getStorage() {
+    if (customStorage) return customStorage;
+    try {
+      if (global && global.localStorage) {
+        const testKey = '__tallyit_sess_probe__';
+        global.localStorage.setItem(testKey, '1');
+        global.localStorage.removeItem(testKey);
+        return global.localStorage;
+      }
+    } catch (_) {
+      // Private browsing / quota / Node environment
+    }
+    return fallbackMem;
+  }
+
+  function configure(opts) {
+    if (opts && Object.prototype.hasOwnProperty.call(opts, 'storage')) {
+      customStorage = opts.storage || null;
+    }
+  }
+
+  // ---------------- Utilities ----------------
+  function uid(prefix) {
+    return (prefix || 'sess') + '_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 7);
+  }
+
+  function nowIso() {
+    return new Date().toISOString();
+  }
+
+  function deepClone(obj) {
+    if (obj === null || obj === undefined) return obj;
+    try {
+      return JSON.parse(JSON.stringify(obj));
+    } catch (_) {
+      return obj;
+    }
+  }
+
+  function cleanStr(v) {
+    return String(v ?? '').trim();
+  }
+
+  function normalizeGameKey(raw) {
+    const k = cleanStr(raw).toLowerCase();
+    if (!k) return 'other';
+    if (global.TallyItVariations && typeof global.TallyItVariations.normalizeGameKey === 'function') {
+      return global.TallyItVariations.normalizeGameKey(k);
+    }
+    if (k === 'seven_wonders' || k === 'seven-wonders') return '7wonders';
+    if (k === 'flip_7' || k === 'flip-7') return 'flip7';
+    if (k === 'oh_hell' || k === 'oh-hell') return 'ohhell';
+    if (k === 'custom') return 'other';
+    return k;
+  }
+
+  function isLowWinsGame(state, gameKey) {
+    if (state && typeof state.low === 'boolean') return state.low;
+    if (gameKey === 'rummikub') {
+      return state && state.rkScoringMode === 'classic' ? false : true;
+    }
+    if (state && state.meta && typeof state.meta.low === 'boolean') return state.meta.low;
+    return DEFAULT_LOW_GAMES.has(gameKey);
+  }
+
+  function resolveVariationMeta(gameKey, state) {
+    const rawVersion = cleanStr(state && (state.versionLabel || state.version || state.variant));
+    const rawVarKey = cleanStr(state && (state.variationKey || state.variation_key));
+    const V = global.TallyItVariations;
+    if (V && typeof V.getVariation === 'function') {
+      const hit = (rawVarKey && V.getVariation(gameKey, rawVarKey)) ||
+                  (rawVersion && V.getVariation(gameKey, rawVersion)) ||
+                  (typeof V.getDefaultVariation === 'function' ? V.getDefaultVariation(gameKey) : null);
+      if (hit) {
+        return {
+          versionLabel: rawVersion || hit.versionLabel || hit.name,
+          variationKey: hit.key
+        };
+      }
+    }
+    return {
+      versionLabel: rawVersion || null,
+      variationKey: rawVarKey || null
+    };
+  }
+
+  function buildPlayersSummary(players) {
+    const list = Array.isArray(players) ? players : [];
+    const names = list
+      .map((p) => (typeof p === 'string' ? cleanStr(p) : cleanStr(p && p.name)))
+      .filter(Boolean);
+    if (!names.length) return 'No players';
+    if (names.length <= 3) return names.join(', ');
+    return `${names.slice(0, 3).join(', ')} +${names.length - 3} more`;
+  }
+
+  function buildLeaderText(state, gameKey) {
+    const players = Array.isArray(state && state.players) ? state.players : [];
+    if (!players.length) return 'No scores yet';
+
+    const scores = players.map((p) => Number(p && p.score) || 0);
+    const anyNonZero = scores.some((s) => s !== 0);
+    const hasRounds = Array.isArray(state && state.rounds) && state.rounds.length > 0;
+    const isSw = gameKey === '7wonders';
+
+    if (!anyNonZero && !hasRounds && !isSw) {
+      return 'Not started · 0 pts';
+    }
+
+    const low = isLowWinsGame(state, gameKey);
+    const best = low ? Math.min(...scores) : Math.max(...scores);
+    let leaders = players.filter((p) => (Number(p && p.score) || 0) === best);
+
+    // 7 Wonders official coin tiebreaker
+    if (isSw && leaders.length > 1) {
+      const maxCoins = Math.max(...leaders.map((p) => Number(p && (p.coins ?? p.tiebreakCoins ?? (p.scores && p.scores.treasury))) || 0));
+      const coinLeaders = leaders.filter((p) => (Number(p && (p.coins ?? p.tiebreakCoins ?? (p.scores && p.scores.treasury))) || 0) === maxCoins);
+      if (coinLeaders.length) leaders = coinLeaders;
+    }
+
+    const unit = gameKey === 'catan' || gameKey === '7wonders' ? 'VP' : 'pts';
+    if (leaders.length === 1) {
+      const name = cleanStr(leaders[0].name) || 'Player';
+      return `${name} leads (${best} ${unit})`;
+    }
+    if (leaders.length === players.length) {
+      return `All tied at ${best} ${unit}`;
+    }
+    return `${leaders.length}-way tie at ${best} ${unit}`;
+  }
+
+  function buildRoundLabel(state, gameKey) {
+    const rounds = Array.isArray(state && state.rounds) ? state.rounds : [];
+    if (gameKey === '7wonders') {
+      const cat = cleanStr(state && state.activeCategory) || 'military';
+      const catLabel = cat.charAt(0).toUpperCase() + cat.slice(1);
+      const done = Array.isArray(state && state.swDone) ? state.swDone.length : 0;
+      const exp = (state && state.expansions) || {};
+      const totalCats = 7 + (exp.leaders ? 1 : 0) + (exp.cities ? 1 : 0) + (exp.armada ? 1 : 0);
+      return done > 0 ? `${catLabel} · ${done}/${totalCats} done` : `Category: ${catLabel}`;
+    }
+    if (gameKey === 'catan') {
+      const target = state && (state.targetVp || state.target) || 10;
+      return rounds.length > 0 ? `${rounds.length} updates · to ${target} VP` : `To ${target} VP`;
+    }
+    if (gameKey === 'carcassonne') {
+      return rounds.length > 0 ? `${rounds.length} ${rounds.length === 1 ? 'entry' : 'entries'}` : 'In progress';
+    }
+    if (rounds.length === 0) {
+      const target = state && state.target;
+      return target ? `Round 1 · to ${target}` : 'Round 1';
+    }
+    const target = state && state.target;
+    return target ? `Round ${rounds.length + 1} · to ${target}` : `Round ${rounds.length + 1}`;
+  }
+
+  /**
+   * Builds a normalized session envelope from either a raw game `state` object
+   * or an existing session envelope `{ id, ..., snapshot }`.
+   */
+  function buildSessionEnvelope(input, existingSession, forceUpdatedAt) {
+    const isEnvelope = input && typeof input === 'object' && input.snapshot && typeof input.snapshot === 'object';
+    const rawState = isEnvelope ? input.snapshot : input;
+    if (!rawState || typeof rawState !== 'object') return null;
+
+    const snapshot = deepClone(rawState);
+    const id = cleanStr(
+      (isEnvelope && input.id) ||
+      snapshot.sessionId ||
+      snapshot.id ||
+      (existingSession && existingSession.id)
+    ) || uid('sess');
+
+    snapshot.id = id;
+    snapshot.sessionId = id;
+
+    const gameKey = normalizeGameKey(
+      (isEnvelope && input.gameKey) ||
+      snapshot.type ||
+      snapshot.game_type ||
+      snapshot.gameKey
+    );
+    const gameName = cleanStr(
+      (isEnvelope && input.gameName) ||
+      snapshot.gameName ||
+      GAME_DISPLAY_NAMES[gameKey] ||
+      gameKey
+    );
+    const varMeta = resolveVariationMeta(gameKey, {
+      ...snapshot,
+      ...(isEnvelope ? { versionLabel: input.versionLabel, variationKey: input.variationKey } : {})
+    });
+
+    const now = forceUpdatedAt || nowIso();
+    const startedAt =
+      (existingSession && existingSession.startedAt) ||
+      (isEnvelope && input.startedAt) ||
+      snapshot.startTime ||
+      now;
+
+    if (!snapshot.startTime) snapshot.startTime = startedAt;
+
+    return {
+      id,
+      gameKey,
+      gameName,
+      versionLabel: varMeta.versionLabel,
+      variationKey: varMeta.variationKey,
+      startedAt,
+      updatedAt: now,
+      playersSummary: buildPlayersSummary(snapshot.players),
+      leaderText: buildLeaderText(snapshot, gameKey),
+      roundLabel: buildRoundLabel(snapshot, gameKey),
+      snapshot
+    };
+  }
+
+  // ---------------- Storage Read / Write ----------------
+  function readRawSessions() {
+    const st = getStorage();
+    try {
+      const raw = st.getItem(STORAGE_KEY_SESSIONS);
+      if (!raw) return [];
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed.filter((s) => s && s.id && s.snapshot) : [];
+    } catch (_) {
+      return [];
+    }
+  }
+
+  function writeRawSessions(list) {
+    const st = getStorage();
+    const sorted = (Array.isArray(list) ? list : [])
+      .filter((s) => s && s.id && s.snapshot)
+      .sort((a, b) => Date.parse(b.updatedAt || 0) - Date.parse(a.updatedAt || 0));
+    try {
+      st.setItem(STORAGE_KEY_SESSIONS, JSON.stringify(sorted));
+    } catch (e) {
+      console.warn('[TallyItSessions] write failed', e);
+    }
+    return sorted;
+  }
+
+  function readFocusedId() {
+    try {
+      return cleanStr(getStorage().getItem(STORAGE_KEY_FOCUSED)) || null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function writeFocusedId(sessionId) {
+    const st = getStorage();
+    try {
+      if (sessionId) st.setItem(STORAGE_KEY_FOCUSED, String(sessionId));
+      else st.removeItem(STORAGE_KEY_FOCUSED);
+    } catch (_) {}
+  }
+
+  function clearLegacyActiveKey() {
+    try {
+      getStorage().removeItem(LEGACY_ACTIVE_KEY);
+    } catch (_) {}
+  }
+
+  // ---------------- Legacy Single-Game Migration ----------------
+  /**
+   * Migrates any legacy single active game stored in `gst_active` into
+   * `tallyit_active_sessions_v1` without losing data, then clears `gst_active`.
+   */
+  function migrateLegacyIfNeeded() {
+    const st = getStorage();
+    let rawLegacy = null;
+    try {
+      rawLegacy = st.getItem(LEGACY_ACTIVE_KEY);
+    } catch (_) {
+      return null;
+    }
+    if (!rawLegacy) return null;
+
+    try {
+      const legacyGame = JSON.parse(rawLegacy);
+      if (!legacyGame || typeof legacyGame !== 'object' || !Array.isArray(legacyGame.players)) {
+        clearLegacyActiveKey();
+        return null;
+      }
+
+      const existing = readRawSessions();
+      const legacyId = cleanStr(legacyGame.sessionId || legacyGame.id);
+      const already = legacyId ? existing.find((s) => s.id === legacyId) : null;
+      let migrated = already;
+
+      if (!already) {
+        migrated = buildSessionEnvelope(legacyGame, null, legacyGame.updatedAt || legacyGame.startTime || nowIso());
+        if (migrated) {
+          existing.push(migrated);
+          writeRawSessions(existing);
+        }
+      }
+
+      if (migrated && !readFocusedId()) {
+        writeFocusedId(migrated.id);
+      }
+      clearLegacyActiveKey();
+      return migrated ? deepClone(migrated) : null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  // ---------------- Public Session API ----------------
+  /**
+   * Returns all open games sorted by `updatedAt` descending.
+   */
+  function listActiveSessions() {
+    migrateLegacyIfNeeded();
+    return readRawSessions()
+      .sort((a, b) => Date.parse(b.updatedAt || 0) - Date.parse(a.updatedAt || 0))
+      .map(deepClone);
+  }
+
+  function getSession(sessionId) {
+    migrateLegacyIfNeeded();
+    const id = cleanStr(sessionId);
+    if (!id) return null;
+    const found = readRawSessions().find((s) => s.id === id);
+    return found ? deepClone(found) : null;
+  }
+
+  function getFocusedSessionId() {
+    migrateLegacyIfNeeded();
+    const fid = readFocusedId();
+    if (!fid) return null;
+    const exists = readRawSessions().some((s) => s.id === fid);
+    if (!exists) {
+      writeFocusedId(null);
+      return null;
+    }
+    return fid;
+  }
+
+  function getFocusedSession() {
+    const fid = getFocusedSessionId();
+    return fid ? getSession(fid) : null;
+  }
+
+  /**
+   * Inserts or updates a session in `activeGames` by `id`.
+   */
+  function upsertSession(sessionOrState) {
+    migrateLegacyIfNeeded();
+    if (!sessionOrState || typeof sessionOrState !== 'object') return null;
+
+    const sessions = readRawSessions();
+    const probeId = cleanStr(
+      sessionOrState.id ||
+      (sessionOrState.snapshot && (sessionOrState.snapshot.sessionId || sessionOrState.snapshot.id)) ||
+      sessionOrState.sessionId
+    );
+    const idx = probeId ? sessions.findIndex((s) => s.id === probeId) : -1;
+    const existing = idx >= 0 ? sessions[idx] : null;
+
+    const next = buildSessionEnvelope(sessionOrState, existing);
+    if (!next) return null;
+
+    if (idx >= 0) sessions[idx] = next;
+    else sessions.push(next);
+
+    writeRawSessions(sessions);
+    return deepClone(next);
+  }
+
+  /**
+   * Auto-saves the currently active game on every score change and marks it focused.
+   */
+  function saveCurrentSession(state) {
+    migrateLegacyIfNeeded();
+    if (!state || typeof state !== 'object') return null;
+    const saved = upsertSession(state);
+    if (saved) {
+      // Keep caller's state id in sync so subsequent saves update the same session
+      state.id = saved.id;
+      state.sessionId = saved.id;
+      writeFocusedId(saved.id);
+      clearLegacyActiveKey();
+    }
+    return saved;
+  }
+
+  /**
+   * Starts a brand-new open game with a unique `id` WITHOUT clobbering any
+   * other open games in `activeGames`.
+   */
+  function createSession(state, opts) {
+    migrateLegacyIfNeeded();
+    if (!state || typeof state !== 'object') return null;
+    const options = opts || {};
+    const sessions = readRawSessions();
+    const existingIds = new Set(sessions.map((s) => s.id));
+
+    const clone = deepClone(state);
+    let id = cleanStr(clone.sessionId || clone.id);
+    if (!id || existingIds.has(id)) {
+      id = uid('sess');
+      while (existingIds.has(id)) id = uid('sess');
+    }
+    clone.id = id;
+    clone.sessionId = id;
+    if (!clone.startTime) clone.startTime = nowIso();
+
+    const env = buildSessionEnvelope(clone, null);
+    if (!env) return null;
+
+    sessions.push(env);
+    writeRawSessions(sessions);
+
+    state.id = env.id;
+    state.sessionId = env.id;
+
+    if (options.focus !== false) {
+      writeFocusedId(env.id);
+    }
+    clearLegacyActiveKey();
+    return deepClone(env);
+  }
+
+  /**
+   * Restores a specific open session's `snapshot` and sets it as the currently
+   * focused game.
+   */
+  function resumeSession(sessionId) {
+    migrateLegacyIfNeeded();
+    const id = cleanStr(sessionId);
+    if (!id) return { ok: false, error: 'Missing sessionId' };
+
+    const sessions = readRawSessions();
+    const idx = sessions.findIndex((s) => s.id === id);
+    if (idx < 0) return { ok: false, error: 'Session not found' };
+
+    // Touch updatedAt so resumed game rises to top of open games
+    sessions[idx].updatedAt = nowIso();
+    writeRawSessions(sessions);
+    writeFocusedId(id);
+    clearLegacyActiveKey();
+
+    const session = deepClone(sessions[idx]);
+    return {
+      ok: true,
+      session,
+      snapshot: deepClone(session.snapshot)
+    };
+  }
+
+  /**
+   * Saves the current game state into `activeGames`, clears the focused game
+   * pointer (so the app can return to Home cleanly), and keeps the game open.
+   */
+  function pauseCurrentSession(state) {
+    migrateLegacyIfNeeded();
+    let saved = null;
+    if (state && typeof state === 'object') {
+      saved = upsertSession(state);
+      if (saved) {
+        state.id = saved.id;
+        state.sessionId = saved.id;
+      }
+    }
+    writeFocusedId(null);
+    clearLegacyActiveKey();
+    return {
+      ok: true,
+      session: saved,
+      activeCount: readRawSessions().length
+    };
+  }
+
+  /**
+   * Ends an open session either WITH recording (`record: true`) or WITHOUT
+   * recording / Discard (`record: false`).
+   *
+   * - `record: true`: runs optional `onRecord(snapshot, session)` callback
+   *   (letting standard `endGame()` / History / Supabase shared save execute),
+   *   then removes `sessionId` from `activeGames` and clears focus if matched.
+   * - `record: false`: removes `sessionId` from `activeGames` and clears focus
+   *   WITHOUT writing to History, local stats, Supabase, or leaderboards.
+   */
+  function finishSession(sessionId, options) {
+    migrateLegacyIfNeeded();
+    const opts = options || {};
+    const record = Boolean(opts.record);
+    const id = cleanStr(sessionId) || readFocusedId();
+    if (!id) {
+      writeFocusedId(null);
+      clearLegacyActiveKey();
+      return { ok: false, recorded: false, discarded: !record, error: 'No session specified' };
+    }
+
+    const sessions = readRawSessions();
+    const idx = sessions.findIndex((s) => s.id === id);
+    const target = idx >= 0 ? deepClone(sessions[idx]) : null;
+
+    let recordResult = null;
+    if (record && typeof opts.onRecord === 'function') {
+      recordResult = opts.onRecord(target ? deepClone(target.snapshot) : null, target);
+    }
+
+    const remaining = sessions.filter((s) => s.id !== id);
+    writeRawSessions(remaining);
+
+    if (readFocusedId() === id) {
+      writeFocusedId(null);
+    }
+    clearLegacyActiveKey();
+
+    return {
+      ok: true,
+      recorded: record,
+      discarded: !record,
+      removedId: id,
+      session: target,
+      recordResult,
+      remainingCount: remaining.length
+    };
+  }
+
+  function deleteSession(sessionId) {
+    return finishSession(sessionId, { record: false });
+  }
+
+  function clearAllSessions() {
+    const st = getStorage();
+    try {
+      st.removeItem(STORAGE_KEY_SESSIONS);
+      st.removeItem(STORAGE_KEY_FOCUSED);
+      st.removeItem(LEGACY_ACTIVE_KEY);
+    } catch (_) {}
+  }
+
+  // ---------------- Exports ----------------
+  const api = {
+    STORAGE_KEY_SESSIONS,
+    STORAGE_KEY_FOCUSED,
+    LEGACY_ACTIVE_KEY,
+    configure,
+    migrateLegacyIfNeeded,
+    listActiveSessions,
+    getSession,
+    getFocusedSessionId,
+    getFocusedSession,
+    createSession,
+    upsertSession,
+    saveCurrentSession,
+    resumeSession,
+    pauseCurrentSession,
+    finishSession,
+    deleteSession,
+    clearAllSessions
+  };
+
+  global.TallyItSessions = api;
+  if (typeof module !== 'undefined' && module.exports) {
+    module.exports = api;
+  }
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+
 <!-- App engine: defines window.onAuthReady / window.onAuthSignedOut before auth init -->
 <script id="score-engine">
 /* Score Tracker engine — 7 Wonders Illuminated Papyrus Ledger (3–7p, category-by-category, auto Science, coin tiebreaker), Rummikub Classic Blue & Ivory Rack (2–6p, Points Up / Classic +/−, tile calculator), social layer (you, friends, groups, shared history), game-agnostic shell, per-game scoring, Catan wood/parchment theme, Flip 7 coastal card theme, Carcassonne sunlit meadow tally, Nertz Midnight Parlor & Gold Foil (Solo + unlimited Partners/Teams). */
@@ -13907,15 +15366,33 @@ window.SocialUI = (function () {
   const isCarc = () => !!(currentGame && currentGame.type === 'carcassonne');
 
   // ---------------- Persistence ----------------
+  // v21: every open game lives in window.TallyItSessions (multi-session); gst_active is legacy (auto-migrated)
+  const SESS = () => global.TallyItSessions || null;
   function persistActive() {
-    try { currentGame ? localStorage.setItem(KEY_ACTIVE, JSON.stringify(currentGame)) : localStorage.removeItem(KEY_ACTIVE); }
+    try {
+      const S = SESS();
+      if (S) { if (currentGame) S.saveCurrentSession(currentGame); return; }
+      currentGame ? localStorage.setItem(KEY_ACTIVE, JSON.stringify(currentGame)) : localStorage.removeItem(KEY_ACTIVE);
+    }
     catch (e) { console.warn('[tracker] persist failed', e); }
   }
   function loadActive() {
     try {
+      const S = SESS();
+      if (S) { const f = S.getFocusedSession(); return f ? normalizeLoadedGame(f.snapshot) : null; }
       const raw = localStorage.getItem(KEY_ACTIVE);
-      if (!raw) return null;
-      const g = JSON.parse(raw);
+      return raw ? normalizeLoadedGame(JSON.parse(raw)) : null;
+    } catch (_) { return null; }
+  }
+  // strict: only the focused game; otherwise the focused game or the most recently paused one (what Home's Resume card shows)
+  function persistedActiveRaw(strict) {
+    const S = SESS();
+    if (!S) return localStorage.getItem(KEY_ACTIVE);
+    const f = S.getFocusedSession() || (strict ? null : (S.listActiveSessions()[0] || null));
+    return f ? JSON.stringify(f.snapshot) : null;
+  }
+  function normalizeLoadedGame(g) {
+    try {
       if (!g || !Array.isArray(g.players)) return null;
       g.rounds = Array.isArray(g.rounds) ? g.rounds : [];
       g.players.forEach((p) => { p.score = Number(p.score) || 0; if (g.type === 'catan') p.breakdown = { ...emptyBreakdown(), ...(p.breakdown || {}) }; if (g.type === 'flip7') p.flip7Count = Number(p.flip7Count) || 0; });
@@ -14054,6 +15531,11 @@ window.SocialUI = (function () {
   }
   function showView(v) {
     if (!byId('view-' + v)) v = 'home';
+    if (v === 'new' && !v21HoldStep) v21Step = 'choose';
+    // v21: leaving a game for Home / Play never traps you in it: the game auto-pauses into In Progress
+    if ((v === 'home' || v === 'new') && currentView === 'active' && currentGame && SESS()) v21ParkCurrent();
+    // v21: the Tracker tab with nothing focused reopens the most recent open game
+    if (v === 'active' && !currentGame && SESS()) { const hg = v21HomeGame(); if (hg) { resumeGame(hg.id); return; } }
     currentView = v;
     document.querySelectorAll('#app-shell .view').forEach((el) => el.classList.toggle('active', el.id === 'view-' + v));
     document.querySelectorAll('.bottom-nav button').forEach((b) => b.classList.toggle('active', b.id === 'nav-' + v));
@@ -14074,11 +15556,13 @@ window.SocialUI = (function () {
     return `${gameLabel(g)} · ${n} ${teams ? (n === 1 ? 'team' : 'teams') : (n === 1 ? 'player' : 'players')}`;
   }
   function renderHome() {
-    const rb = byId('btn-resume-game');
-    setHidden(rb, !currentGame);
+    const rb = byId('btn-resume-game'), hg = v21HomeGame(), hgame = hg ? hg.g : null;
+    setHidden(rb, !hgame);
+    if (rb) rb.dataset.sessionId = hg ? hg.id : '';
     const meta = byId('home-resume-meta');
-    if (meta) meta.textContent = resumeMeta(currentGame);
-    if (rb) rb.setAttribute('aria-label', currentGame ? 'Resume ' + resumeMeta(currentGame) : 'Resume Active Game');
+    if (meta) meta.textContent = resumeMeta(hgame);
+    if (rb) rb.setAttribute('aria-label', hgame ? 'Resume ' + resumeMeta(hgame) : 'Resume Active Game');
+    v21RenderActiveGames(hg ? hg.id : null);
     const el = byId('recent-list');
     if (!el) return;
     el.innerHTML = history.length
@@ -14087,31 +15571,104 @@ window.SocialUI = (function () {
       : '<p class="small">No games yet — tap Play to start.</p>';
   }
 
+  // v21: In Progress list (every open game except the one featured in the Resume card above)
+  const V21_ICO_PLAY = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>';
+  const V21_ICO_TRASH = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>';
+  function v21ShortVersion(v) { return String(v || '').replace(/\s*\((current scoring|to \d+( VP)?|lowest wins)\)\s*/i, '').trim() || String(v || ''); }
+  function v21RenderActiveGames(featuredId) {
+    const sec = byId('v21-active-games-section'), list = byId('v21-active-games-list');
+    if (!sec || !list) return;
+    if (featuredId === undefined) { const hg = v21HomeGame(); featuredId = hg ? hg.id : null; }
+    const all = listOpenGames();
+    const shown = all.filter((s) => s.id !== featuredId);
+    const cnt = byId('v21-active-games-count');
+    if (cnt) cnt.textContent = all.length + ' open';
+    setHidden(sec, !all.length && !featuredId);
+    setHidden(list, !shown.length);
+    list.innerHTML = shown.map((s) => {
+      const g = s.snapshot || {}, name = s.gameName || gameById(s.gameKey || g.type).name;
+      const ver = v21ShortVersion(s.versionLabel || g.version);
+      const meta = [s.playersSummary, s.leaderText, s.roundLabel].filter(Boolean).join(' · ');
+      const sid = esc(s.id);
+      return `<div class="v21-active-card" data-session-id="${sid}" data-game="${esc(s.gameKey || g.type || '')}">
+          <div class="v21-active-info">
+            <div class="v21-active-title-row"><span class="v21-active-name">${esc(name)}</span>${ver ? `<span class="v21-active-var">${esc(ver)}</span>` : ''}</div>
+            <div class="v21-active-meta">${esc(meta)}</div>
+          </div>
+          <div class="v21-active-actions">
+            <button type="button" class="v21-btn-resume" onclick="resumeGame('${sid}')" aria-label="Resume ${esc(name)}"><span>Resume</span>${V21_ICO_PLAY}</button>
+            <button type="button" class="v21-btn-discard" onclick="v21DiscardSession('${sid}', this)" aria-label="Discard ${esc(name)} without recording" title="Discard without recording">${V21_ICO_TRASH}</button>
+          </div>
+        </div>`;
+    }).join('');
+  }
+  let v21DiscardTimer = null;
+  function v21DiscardSession(id, btn) {
+    if (!id) return false;
+    if (btn && !btn.classList.contains('is-confirming')) {
+      document.querySelectorAll('.v21-btn-discard.is-confirming').forEach((b) => { b.classList.remove('is-confirming'); b.setAttribute('aria-label', 'Discard without recording'); });
+      btn.classList.add('is-confirming'); btn.setAttribute('aria-label', 'Tap again to discard without saving'); btn.title = 'Tap again to discard without saving';
+      clearTimeout(v21DiscardTimer);
+      v21DiscardTimer = setTimeout(() => { if (btn.isConnected) { btn.classList.remove('is-confirming'); btn.title = 'Discard without recording'; } }, 3500);
+      return false;
+    }
+    clearTimeout(v21DiscardTimer);
+    return discardGame(id);
+  }
+
   // ---------------- Choose game ----------------
+  // v21 guided flow: step 'choose' (tap a tile) -> step 'setup' (variation + players + sticky Start Scoring)
+  let v21Step = 'choose', v21HoldStep = false;
+  function v21ApplyStep() {
+    const setup = v21Step === 'setup';
+    const viewNew = byId('view-new'); if (viewNew) viewNew.dataset.v21Step = v21Step;
+    setHidden(byId('v21-choose-step'), setup);
+    setHidden(byId('v21-setup-step'), !setup);
+    ['v21-setup-header', 'v21-setup-spacer', 'v21-sticky-cta'].forEach((id) => setHidden(byId(id), !setup));
+    const nm = byId('v21-setup-game-name'); if (nm) nm.textContent = gameById(selectedGame).name;
+    v21UpdateSetupMeta();
+  }
+  function v21UpdateSetupMeta() {
+    const el = byId('v21-cta-meta'); if (!el) return;
+    const n = setupParticipants().length, g = gameById(selectedGame);
+    const ver = v21ShortVersion(selectedVersion || g.versions[0]);
+    el.textContent = n ? `${n} ${n === 1 ? 'player' : 'players'} · ${ver}` : `Add players · ${ver}`;
+  }
+  function v21BackToGames() {
+    v21Step = 'choose'; renderNew(); window.scrollTo(0, 0);
+    const card = document.querySelector(`#game-grid .game-card[data-game="${selectedGame}"]`);
+    if (card && card.scrollIntoView) card.scrollIntoView({ block: 'nearest' });
+  }
   function renderNew() {
     const grid = byId('game-grid');
     grid.innerHTML = GAMES.map((g) => `
       <div class="game-card ${g.id === selectedGame ? 'selected' : ''}" data-game="${g.id}" role="button" tabindex="0" onclick="selectGame('${g.id}')">
         ${g.img ? (g.fit === 'contain' ? `<img class="game-art-bg" src="${g.img}" alt="" aria-hidden="true" draggable="false">` : '') + `<img class="game-art${g.fit === 'contain' ? ' contain' : ''}" src="${g.img}" alt="" draggable="false" decoding="async">` : `<div class="game-icon" aria-hidden="true">${g.icon}</div>`}
         <div class="overlay">${esc(g.name)}</div>
+        <span class="v21-tile-cue" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>
       </div>`).join('');
     const g = gameById(selectedGame);
     if (!selectedVersion || !g.versions.includes(selectedVersion)) selectedVersion = g.versions[0];
     const sel = byId('version-select');
     sel.innerHTML = g.versions.map((v) => `<option ${v === selectedVersion ? 'selected' : ''}>${esc(v)}</option>`).join('');
-    sel.onchange = () => { selectedVersion = sel.value; if (V20() && V20().onSetupRendered) V20().onSetupRendered(selectedGame, selectedVersion); };
+    sel.onchange = () => { selectedVersion = sel.value; v21UpdateSetupMeta(); if (V20() && V20().onSetupRendered) V20().onSetupRendered(selectedGame, selectedVersion); };
     renderSetupPlayers();
     if (V20() && V20().onSetupRendered) { try { V20().onSetupRendered(selectedGame, selectedVersion); } catch (_) {} }
+    v21ApplyStep();
   }
-  function selectGame(id) { selectedGame = id; selectedVersion = null; renderNew(); }
+  // v21: tapping a tile selects it AND jumps straight to Guided Setup
+  function selectGame(id) {
+    if (gameById(id).id !== id) return;
+    selectedGame = id; selectedVersion = null; v21Step = 'setup';
+    if (currentView === 'new') { renderNew(); window.scrollTo(0, 0); } else v21OpenSetup();
+  }
+  function v21OpenSetup() { v21Step = 'setup'; v21HoldStep = true; try { showView('new'); } finally { v21HoldStep = false; } }
   function quickStart(id) {
     if (!gameById(id) || gameById(id).id !== id) id = selectedGame;
     selectedGame = id; selectedVersion = null;
-    showView('new');
-    const card = document.querySelector(`#game-grid .game-card[data-game="${id}"]`);
-    if (card && card.scrollIntoView) card.scrollIntoView({ block: 'nearest' });
+    v21OpenSetup();
   }
-  function togglePlayer(i, on) { const n = players[i]; if (n === undefined) return; on ? deselected.delete(n) : deselected.add(n); }
+  function togglePlayer(i, on) { const n = players[i]; if (n === undefined) return; on ? deselected.delete(n) : deselected.add(n); v21UpdateSetupMeta(); }
   function addPlayer() {
     const input = byId('new-player-name');
     const name = (input.value || '').trim();
@@ -14129,7 +15686,12 @@ window.SocialUI = (function () {
     const gMax = gameById(selectedGame).maxPlayers, gMin = gameById(selectedGame).id === '7wonders' ? gameById(selectedGame).minPlayers : 0;
     if (gMin && chosen.length < gMin) { alert(`${gameById(selectedGame).name} needs at least ${gMin} players — add ${gMin - chosen.length} more to start.`); return null; }
     if (gMax && chosen.length > gMax) { alert(`${gameById(selectedGame).name} supports up to ${gMax} players — deselect ${chosen.length - gMax} to start.`); return null; }
-    if (currentGame && !confirm('Replace the current ' + gameLabel(currentGame) + ' game?')) return null;
+    if (currentGame) {
+      // v21: starting another game never replaces the open one; it stays in In Progress
+      const S = SESS();
+      if (S) S.pauseCurrentSession(currentGame);
+      closeDiceModal(); v21ResetTransient(); currentGame = null;
+    }
     const g = gameById(selectedGame);
     const version = selectedVersion || g.versions[0];
     currentGame = {
@@ -14155,15 +15717,76 @@ window.SocialUI = (function () {
     if (g.id === '7wonders' && SWL()) swStartGame();
     scoringPlayer = null; padMode = 'simple'; f7 = null;
     currentGame.v20Recorded = true;
+    if (SESS()) SESS().createSession(currentGame);
     persistActive();
     if (V20() && V20().onGameStarted) { try { V20().onGameStarted(currentGame); } catch (_) {} }
     showView('active');
     return currentGame;
   }
-  function discardGame() {
-    if (!currentGame || !confirm('Discard this game without saving?')) return;
-    closeDiceModal(); currentGame = null; scoringPlayer = null; f7 = null; persistActive(); showView('home');
+  // v21: End Without Recording (UI guards with the 2-tap sheet / card). Never touches history, saveData() or shareFinishedGame().
+  function discardGame(sessionId) {
+    const S = SESS();
+    const hg = (typeof sessionId === 'string' && sessionId) || currentGame ? null : v21HomeGame();
+    const id = (typeof sessionId === 'string' && sessionId) || (currentGame && currentGame.id) || (hg && hg.id) || null;
+    if (!id) return false;
+    const focused = !!(currentGame && currentGame.id === id);
+    if (S) S.finishSession(id, { record: false });
+    if (focused) {
+      if (isNertz()) { nzCloseSheet(); nzPopIdx = -1; }
+      if (isCarc()) ccHideAdd();
+      closeDiceModal(); v21ResetTransient(); currentGame = null;
+      if (!S) { try { localStorage.removeItem(KEY_ACTIVE); } catch (_) {} }
+      showView('home');
+    } else if (currentView === 'home') renderHome();
+    return true;
   }
+  function v21ResetTransient() {
+    scoringPlayer = null; f7 = null; flip = null; padMode = 'simple';
+    swExpOpen = false; swEditKey = null; rkCalcOpen = false; rkCalcExpr = ''; nzSheetKind = null; nzPopIdx = -1;
+  }
+  // v21: park the focused game in In Progress (saved, focus cleared) without navigating
+  function v21ParkCurrent() {
+    const S = SESS();
+    if (!currentGame || !S) return null;
+    if (isCarc()) { const a = document.activeElement; if (a && a.classList && a.classList.contains('cc-score')) ccInput(Number(a.dataset.idx), a); ccHideAdd(); }
+    if (isNertz()) { nzCloseSheet(); nzPopIdx = -1; }
+    const id = currentGame.id;
+    S.pauseCurrentSession(currentGame);
+    closeDiceModal(); v21ResetTransient(); currentGame = null;
+    return id;
+  }
+  // v21: Keep Open (Pause) -> game stays in In Progress, focus cleared, back to Home
+  function pauseGame() {
+    if (!currentGame) { showView('home'); return null; }
+    if (!SESS()) { const id = currentGame.id; persistActive(); showView('home'); return id; }
+    const id = v21ParkCurrent();
+    showView('home');
+    return id;
+  }
+  // The game Home's Resume card points at: the focused game, else the most recently paused one
+  function v21HomeGame() {
+    if (currentGame) return { id: currentGame.id, g: currentGame };
+    const S = SESS(); const top = S ? S.listActiveSessions()[0] : null;
+    return top ? { id: top.id, g: top.snapshot } : null;
+  }
+  // v21: Resume any open game (restores its exact snapshot); the currently focused game (if different) is paused, never lost
+  function resumeGame(sessionId) {
+    const S = SESS();
+    if (!S) { if (currentGame) showView('active'); return currentGame; }
+    const hg = v21HomeGame();
+    const id = (typeof sessionId === 'string' && sessionId) || (currentGame && currentGame.id) || S.getFocusedSessionId() || (hg && hg.id);
+    if (!id) return null;
+    if (currentGame && currentGame.id === id) { persistActive(); showView('active'); return currentGame; }
+    if (currentGame) { S.pauseCurrentSession(currentGame); closeDiceModal(); currentGame = null; }
+    const res = S.resumeSession(id);
+    const g = res && res.ok ? normalizeLoadedGame(res.snapshot) : null;
+    if (!g) { if (currentView === 'home') renderHome(); return null; }
+    v21ResetTransient();
+    currentGame = g;
+    showView('active');
+    return currentGame;
+  }
+  function listOpenGames() { const S = SESS(); return S ? S.listActiveSessions() : (currentGame ? [{ id: currentGame.id, gameKey: currentGame.type, snapshot: currentGame }] : []); }
 
   // ---------------- Rounds (shared by every game) ----------------
   function commitRound(deltas, mode, detail) {
@@ -14212,6 +15835,7 @@ window.SocialUI = (function () {
   }
   function endGame() {
     if (!currentGame) return null;
+    const v21SessionId = currentGame.id;
     if (isCarc()) { const a = document.activeElement; if (a && a.classList && a.classList.contains('cc-score')) ccInput(Number(a.dataset.idx), a); ccHideAdd(); }
     let finished;
     if (isNertz()) {
@@ -14237,10 +15861,13 @@ window.SocialUI = (function () {
     if (diceStats) finished.meta = { ...(finished.meta || {}), diceStats };
     delete finished.diceRolls;
     if (currentGame.v20Recorded) finished.v20Recorded = true;
+    delete finished.sessionId;
     closeDiceModal();
     history.unshift(finished);
+    if (SESS()) SESS().finishSession(v21SessionId, { record: true });
     currentGame = null; scoringPlayer = null; f7 = null;
     persistActive();
+    if (!SESS()) { try { localStorage.removeItem(KEY_ACTIVE); } catch (_) {} }
     saveCache(true);
     showView('history');
     saveData();
@@ -14614,9 +16241,9 @@ window.SocialUI = (function () {
           <h3>Game Options</h3>
           <div class="f7-sheet-lbl">Target score</div>
           <div class="f7-targets">${F7_TARGETS.map((v) => `<button type="button" class="f7-tgt${v === t ? ' on' : ''}" id="f7-tgt-${v}" onclick="f7SetTarget(${v})">${v}</button>`).join('')}</div>
-          <button type="button" class="f7-sbtn primary" id="f7-opt-finish" onclick="f7CloseSheet();endGame()">🏆 Finish &amp; Save Game</button>
+          <button type="button" class="f7-sbtn primary" id="f7-opt-finish" onclick="f7CloseSheet();openEndGameModal()">🏆 Finish &amp; Save Game</button>
           <button type="button" class="f7-sbtn danger" id="f7-opt-reset" onclick="f7ResetScores()">↻ Reset Scores</button>
-          <button type="button" class="f7-sbtn danger" id="f7-opt-discard" onclick="f7CloseSheet();discardGame()">Discard Game</button>
+          <button type="button" class="f7-sbtn danger" id="f7-opt-discard" onclick="f7CloseSheet();openEndGameModal()">Discard Game</button>
           <button type="button" class="f7-sbtn" onclick="f7CloseSheet()">Close</button>
         </div>`;
     }
@@ -15984,6 +17611,7 @@ window.SocialUI = (function () {
     });
     if (selfPlayer && !selfIncluded) chips.push(`<button type="button" class="soc-friend-pick soc-add-self" id="btn-add-self" onclick="addSelf()"><span>+</span><span>Add me (${esc(selfPlayer.name)})</span></button>`);
     chipsEl.innerHTML = chips.length ? chips.join('') : '<span class="small">Add players below</span>';
+    v21UpdateSetupMeta();
     const note = byId('setup-active-group-note');
     setHidden(note, !setupGroup);
     if (setupGroup && byId('setup-active-group-label')) byId('setup-active-group-label').textContent = '👥 Playing as group: ' + setupGroup.name;
@@ -16035,7 +17663,7 @@ window.SocialUI = (function () {
     return setupGroup;
   }
   function clearSetupGroup() { setupGroup = null; renderSetupPlayers(); }
-  function startGameWithGroup(groupId) { if (applyGroupPreset(groupId)) showView('new'); }
+  function startGameWithGroup(groupId) { if (applyGroupPreset(groupId)) v21OpenSetup(); }
 
   // ----- Friends & Groups view -----
   function socMsg(id, text, tone) { const el = byId(id); if (el) { el.textContent = text || ''; el.dataset.tone = tone || ''; } }
@@ -16461,6 +18089,7 @@ window.SocialUI = (function () {
 
   Object.assign(global, {
     onAuthReady, onAuthSignedOut, showView, selectGame, quickStart, togglePlayer, addPlayer, removePlayer, startGame, discardGame,
+    pauseGame, resumeGame, v21BackToGames, v21DiscardSession, v21RenderActiveGames,
     openPad, setPadMode, closePad, flipToggle, updateGenericPreview, commitSimplePoints, commitGenericDetailed,
     selectCatanPlayer, catanStep, catanAction, resetCatanScores,
     f7Select, f7Toggle, f7SetMode, f7Num, f7Close, f7Confirm, f7Undo, f7ToggleSort, f7OpenSheet, f7CloseSheet, f7SetTarget, f7AddPlayer, f7ResetScores,
@@ -16478,7 +18107,7 @@ window.SocialUI = (function () {
     addGroupModalGuest, removeGroupModalGuest, createGroupFromModal, deleteGroup, setHistoryFilter, setGroupLbFilter, refreshSocial,
     getMyFriendShareUrl, handleScannedFriendQr, consumePendingFriendInvite,
     openMyQrModal, closeMyQrModal, copyFriendInviteLink, shareFriendInviteLink, openScanQrModal, closeScanQrModal, handleScanQrFile, submitScannedFriend,
-    ScoreTracker: { GAMES, getSetup: () => ({ game: selectedGame, version: selectedVersion }), getState: () => ({ players: [...players], history: [...history], currentGame, currentView, scoringPlayer, padMode, pendingSync,
+    ScoreTracker: { GAMES, getSetup: () => ({ game: selectedGame, version: selectedVersion, step: v21Step }), persistedActive: persistedActiveRaw, listOpenGames, getState: () => ({ players: [...players], history: [...history], currentGame, currentView, scoringPlayer, padMode, pendingSync,
       selfPlayer, selfIncluded, setupFriends: [...setupFriends], setupGroup, historyFilter, social }) }
   });
 })(window);
@@ -18483,6 +20112,96 @@ window.SocialUI = (function () {
   global.TallyItV20 = api;
   Object.assign(global, { openRequestGameModal, closeRequestGameModal, submitGameRequest, resetRequestGameForm, openVariationsModal, closeVariationsModal,
     openAdminScreen, closeAdminScreen, loadAdminStats, setAdminRequestFilter, toggleFullscreen, closeIosFullscreenHint, openHeaderMenu, closeHeaderMenu, toggleHeaderMenu });
+})(window);
+
+</script>
+<!-- v21: universal End / Leave Game sheet (window.TallyItV21) -->
+<script id="v21-controller">
+/* TallyIt v21 controller (window.TallyItV21): universal End / Leave Game sheet shared by EVERY game screen.
+   Save & Finish -> endGame() (History + leaderboards, session removed)
+   Keep Open (Pause) -> pauseGame() (stays in Home "In Progress")
+   End Without Recording -> 2-tap guard -> discardGame() (never touches History / saveData / shareFinishedGame) */
+(function (global) {
+  'use strict';
+  const byId = (id) => document.getElementById(id);
+  const DISCARD_TITLE = 'End Without Recording', DISCARD_DESC = 'Discard this game without saving to History';
+  const CONFIRM_TITLE = 'Tap again to discard without saving', CONFIRM_DESC = 'This game will not be recorded anywhere';
+  let confirmTimer = null, lastFocus = null;
+
+  function setHidden(el, hide) { if (!el) return; el.hidden = !!hide; el.classList.toggle('hidden', !!hide); }
+  function state() { try { return global.ScoreTracker && global.ScoreTracker.getState ? global.ScoreTracker.getState() : null; } catch (_) { return null; } }
+  function gameName(g) {
+    const games = (global.ScoreTracker && global.ScoreTracker.GAMES) || [];
+    const m = games.find((x) => x.id === g.type);
+    return m ? m.name : 'Game';
+  }
+  function roundsOf(g) {
+    if (g.type === '7wonders') return null;
+    return Array.isArray(g.rounds) ? g.rounds.length : 0;
+  }
+  function summary(g) {
+    const n = (g.players || []).length, teams = g.type === 'nertz' && g.nertzMode === 'teams';
+    const parts = [`${n} ${teams ? (n === 1 ? 'team' : 'teams') : (n === 1 ? 'player' : 'players')}`];
+    const r = roundsOf(g);
+    if (r) parts.push(`${r} ${r === 1 ? 'round' : 'rounds'} scored`);
+    return parts.join(' · ');
+  }
+  function resetDiscard() {
+    clearTimeout(confirmTimer); confirmTimer = null;
+    const b = byId('btn-v21-end-discard'); if (!b) return;
+    b.classList.remove('is-confirming'); b.dataset.confirmStep = '0';
+    const t = byId('v21-discard-title'), d = byId('v21-discard-desc');
+    if (t) t.textContent = DISCARD_TITLE; if (d) d.textContent = DISCARD_DESC;
+  }
+  function isOpen() { const m = byId('v21-end-game-modal'); return !!(m && !m.hidden); }
+
+  function openEndGameModal() {
+    const s = state(), g = s && s.currentGame;
+    const m = byId('v21-end-game-modal');
+    if (!g || !m) return false;
+    const t = byId('v21-end-game-title'), sub = byId('v21-end-game-sub');
+    if (t) t.textContent = 'Finish or Leave ' + gameName(g) + '?';
+    if (sub) sub.textContent = summary(g);
+    resetDiscard();
+    lastFocus = document.activeElement;
+    setHidden(m, false);
+    document.documentElement.classList.add('v21-sheet-open');
+    const first = byId('btn-v21-end-save'); if (first && first.focus) { try { first.focus({ preventScroll: true }); } catch (_) {} }
+    return true;
+  }
+  function closeEndGameModal() {
+    const m = byId('v21-end-game-modal');
+    resetDiscard();
+    setHidden(m, true);
+    document.documentElement.classList.remove('v21-sheet-open');
+    if (lastFocus && lastFocus.isConnected && lastFocus.focus) { try { lastFocus.focus({ preventScroll: true }); } catch (_) {} }
+    lastFocus = null;
+  }
+  function v21ConfirmSaveAndFinish() {
+    lastFocus = null; closeEndGameModal();
+    return typeof global.endGame === 'function' ? global.endGame() : null;
+  }
+  function v21KeepOpenAndLeave() {
+    lastFocus = null; closeEndGameModal();
+    return typeof global.pauseGame === 'function' ? global.pauseGame() : null;
+  }
+  function v21DiscardWithoutSaving() {
+    const b = byId('btn-v21-end-discard');
+    if (b && b.dataset.confirmStep !== '1') {
+      b.dataset.confirmStep = '1'; b.classList.add('is-confirming');
+      const t = byId('v21-discard-title'), d = byId('v21-discard-desc');
+      if (t) t.textContent = CONFIRM_TITLE; if (d) d.textContent = CONFIRM_DESC;
+      clearTimeout(confirmTimer); confirmTimer = setTimeout(resetDiscard, 4000);
+      return false;
+    }
+    lastFocus = null; closeEndGameModal();
+    return typeof global.discardGame === 'function' ? global.discardGame() : false;
+  }
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && isOpen()) closeEndGameModal(); });
+
+  const api = { openEndGameModal, closeEndGameModal, v21ConfirmSaveAndFinish, v21KeepOpenAndLeave, v21DiscardWithoutSaving, isEndGameModalOpen: isOpen };
+  global.TallyItV21 = api;
+  Object.assign(global, { openEndGameModal, closeEndGameModal, v21ConfirmSaveAndFinish, v21KeepOpenAndLeave, v21DiscardWithoutSaving });
 })(window);
 
 </script>
