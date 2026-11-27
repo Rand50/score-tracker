@@ -646,3 +646,38 @@ grant execute on function public.lookup_profile(text) to authenticated;
 
 revoke all on function public.send_friend_request(text) from public;
 grant execute on function public.send_friend_request(text) to authenticated;
+
+-- -----------------------------------------------------------------------------
+-- 9. Explicit table grants & RLS for legacy score_history (prevents 42501)
+-- -----------------------------------------------------------------------------
+grant usage on schema public to authenticated;
+grant select, insert, update, delete on public.score_history to authenticated;
+grant select, insert, update, delete on public.profiles to authenticated;
+grant select, insert, update, delete on public.friendships to authenticated;
+grant select, insert, update, delete on public.groups to authenticated;
+grant select, insert, update, delete on public.group_members to authenticated;
+grant select, insert, update, delete on public.games to authenticated;
+grant select, insert, update, delete on public.game_participants to authenticated;
+
+alter table public.score_history enable row level security;
+
+drop policy if exists "score_history_select_own" on public.score_history;
+create policy "score_history_select_own" on public.score_history
+  for select to authenticated
+  using (user_id = auth.uid());
+
+drop policy if exists "score_history_insert_own" on public.score_history;
+create policy "score_history_insert_own" on public.score_history
+  for insert to authenticated
+  with check (user_id = auth.uid());
+
+drop policy if exists "score_history_update_own" on public.score_history;
+create policy "score_history_update_own" on public.score_history
+  for update to authenticated
+  using (user_id = auth.uid())
+  with check (user_id = auth.uid());
+
+drop policy if exists "score_history_delete_own" on public.score_history;
+create policy "score_history_delete_own" on public.score_history
+  for delete to authenticated
+  using (user_id = auth.uid());
