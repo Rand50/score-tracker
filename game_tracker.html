@@ -6,14 +6,14 @@
 <meta name="theme-color" content="#0b1220">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="score-tracker-build" content="v6-no-tap-zoom-2026-11-26">
+<meta name="score-tracker-build" content="v7-flip7-theme-2026-11-26">
 <title>Score Tracker</title>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon-512.jpg" type="image/jpeg">
 <link rel="apple-touch-icon" href="icon-512.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Marcellus&family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Cinzel:wght@600;700;800&family=Marcellus&family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
 
 <!-- ===================== NEUTRAL (GAME-AGNOSTIC) THEME ===================== -->
 <style id="neutral-theme">
@@ -151,6 +151,8 @@ body.theme-catan #catan-board { display: block; }
 body.theme-catan #generic-board { display: none; }
 body.theme-catan .app-header { display: none; }
 #nav-active { display: none; }
+/* Flip 7 board is only shown when theme-flip7 is on */
+#flip7-board { display: none; }
 </style>
 
 <!-- ===================== CATAN THEME (scoped to body.theme-catan) ===================== -->
@@ -304,9 +306,146 @@ body.theme-catan #catan-board .cg-row[data-color="blue"] .cg-name { color: #1e36
 body.theme-catan #catan-board .cg-row[data-color="purple"] .cg-name { color: #4b2c5c; }
 
 </style>
+
+<!-- ===================== FLIP 7 THEME (scoped to body.theme-flip7) ===================== -->
+<style id="flip7-theme">
+
+body.theme-flip7 {
+  --f7-ink: #223266; --f7-ink2: #2e3c7e; --f7-cream: #f1ece0; --f7-tile: #f5f1e4; --f7-gold: #ffc815; --f7-gold2: #ffd000;
+  --f7-berry: #d9269e; --f7-blue: #1875d1; --f7-coral: #f97316; --f7-coral2: #ff6b35; --f7-terra: #c84b31;
+  --f7-caps: 'Barlow Condensed', 'Arial Narrow', 'Helvetica Neue', Arial, sans-serif;
+  background: linear-gradient(170deg, #52c6c0 0%, #3aa9a6 100%) fixed; background-color: #3aa9a6; color: var(--f7-ink);
+  font-family: var(--f7-caps);
+}
+body.theme-flip7 .app-header, body.theme-flip7 #generic-board { display: none; }
+body.theme-flip7 #flip7-board { display: block; }
+body.theme-flip7 #view-active { padding: 0 .85rem 1rem; max-width: 520px; }
+body.theme-flip7 #flip7-board, body.theme-flip7 #flip7-board button, body.theme-flip7 .f7-sheet, body.theme-flip7 .f7-sheet button { font-family: var(--f7-caps); }
+body.theme-flip7 #flip7-board button, body.theme-flip7 #flip7-board [role="button"], body.theme-flip7 .f7-sheet button, body.theme-flip7 .f7-row, body.theme-flip7 .f7-key, body.theme-flip7 .f7-num {
+  touch-action: manipulation; -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; cursor: pointer; }
+
+
+body.theme-flip7 .f7-top { display: flex; align-items: center; justify-content: space-between; padding: calc(.75rem + env(safe-area-inset-top, 0px)) 0 .55rem; }
+body.theme-flip7 .f7-top-l, body.theme-flip7 .f7-top-r { display: flex; align-items: center; gap: .5rem; }
+body.theme-flip7 .f7-circ { width: 42px; height: 42px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; padding: 0;
+  background: rgba(255,255,255,0.45); border: 1.5px solid rgba(34,50,102,0.22); color: var(--f7-ink); box-shadow: 0 2px 6px rgba(20,60,70,.12); transition: transform .08s; }
+body.theme-flip7 .f7-circ svg { width: 21px; height: 21px; }
+body.theme-flip7 .f7-circ:active { transform: scale(.94); }
+body.theme-flip7 .f7-circ:disabled { opacity: .45; cursor: default; }
+body.theme-flip7 .f7-pill { height: 34px; padding: 0 .85rem; border-radius: 999px; display: inline-flex; align-items: center; gap: .3rem;
+  background: rgba(255,255,255,0.45); border: 1.5px solid rgba(34,50,102,0.22); color: var(--f7-ink); font: 800 1rem var(--f7-caps); letter-spacing: .6px; }
+body.theme-flip7 .f7-pill small { font-size: .74rem; font-weight: 700; opacity: .75; }
+
+
+body.theme-flip7 .f7-sub { display: flex; justify-content: space-between; align-items: center; margin: .2rem .15rem .55rem; font: 800 1.02rem var(--f7-caps); letter-spacing: .6px; color: var(--f7-ink); text-transform: uppercase; }
+body.theme-flip7 .f7-sort { background: none; border: none; color: var(--f7-ink); font: 800 1rem var(--f7-caps); letter-spacing: .6px; padding: .3rem .1rem; text-transform: uppercase; }
+body.theme-flip7 .f7-sort span { display: inline-block; margin-right: .2rem; }
+
+
+body.theme-flip7 .f7-board { display: flex; flex-direction: column; gap: .5rem; }
+body.theme-flip7 .f7-row { position: relative; display: flex; align-items: center; gap: .55rem; padding: .6rem .8rem .8rem .55rem; min-height: 60px;
+  background: var(--f7-cream); border: 2px solid var(--f7-ink); border-radius: 12px; box-shadow: 0 3px 0 rgba(34,50,102,0.22); overflow: hidden;
+  transition: transform .12s ease, background-color .15s ease, box-shadow .12s ease; }
+body.theme-flip7 .f7-row:active { transform: translateY(1px); }
+body.theme-flip7 .f7-row.selected { background: var(--f7-gold); border-color: var(--f7-ink); transform: translateY(-2px); box-shadow: 0 5px 0 rgba(34,50,102,0.3); }
+body.theme-flip7 .f7-rank { position: relative; flex: 0 0 40px; width: 40px; height: 36px; display: flex; align-items: center; justify-content: center; color: var(--f7-ink); }
+body.theme-flip7 .f7-rank svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+body.theme-flip7 .f7-rank b { position: relative; font: 800 1.05rem var(--f7-caps); line-height: 1; }
+body.theme-flip7 .f7-rank.plain b { font-size: 1.3rem; }
+body.theme-flip7 .f7-name { flex: 1; min-width: 0; font: 800 1.35rem var(--f7-caps); letter-spacing: .5px; text-transform: uppercase; color: var(--f7-ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+body.theme-flip7 .f7-right { display: flex; align-items: center; gap: .45rem; }
+body.theme-flip7 .f7-sevens { display: inline-flex; align-items: center; gap: .2rem; font: 800 1.05rem var(--f7-caps); color: var(--f7-ink); }
+body.theme-flip7 .f7-seven { width: 24px; height: 24px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
+  background: radial-gradient(circle at 35% 30%, var(--f7-coral2), var(--f7-coral)); color: #fff; font: 800 .95rem var(--f7-caps); border: 1.5px solid var(--f7-ink); }
+body.theme-flip7 .f7-div { width: 2px; height: 26px; background: rgba(34,50,102,.35); border-radius: 2px; }
+body.theme-flip7 .f7-score { min-width: 54px; text-align: right; font: 800 2rem var(--f7-caps); line-height: 1; color: var(--f7-blue); font-variant-numeric: tabular-nums; }
+body.theme-flip7 .f7-score.won { color: var(--f7-berry); }
+body.theme-flip7 .f7-bar { position: absolute; left: .7rem; right: .7rem; bottom: 6px; height: 4px; border-radius: 4px; background: rgba(34,50,102,0.12); overflow: hidden; }
+body.theme-flip7 .f7-bar i { display: block; height: 100%; border-radius: 4px; background: #64749c; transition: width .35s ease; }
+body.theme-flip7 .f7-bar i.full { background: var(--f7-berry); }
+body.theme-flip7 .f7-hint { text-align: center; margin: .7rem 0 0; font: 700 .9rem var(--f7-caps); letter-spacing: 1px; text-transform: uppercase; color: rgba(34,50,102,.7); }
+body.theme-flip7 .f7-finish { display: flex; margin: .8rem auto 0; height: 40px; padding: 0 1.3rem; border-radius: 999px; align-items: center; gap: .4rem;
+  background: var(--f7-ink2); color: #fff; border: none; font: 800 1.02rem var(--f7-caps); letter-spacing: 1px; text-transform: uppercase; box-shadow: 0 3px 0 rgba(20,30,70,.35); }
+
+
+body.theme-flip7 .f7-board.scoring { gap: .38rem; }
+body.theme-flip7 .f7-board.scoring .f7-row { min-height: 46px; padding: .35rem .75rem .55rem .5rem; }
+body.theme-flip7 .f7-board.scoring .f7-name { font-size: 1.15rem; }
+body.theme-flip7 .f7-board.scoring .f7-score { font-size: 1.55rem; }
+body.theme-flip7 .f7-board.scoring .f7-rank { height: 30px; }
+body.theme-flip7 .f7-board.scoring .f7-bar { bottom: 4px; height: 3px; }
+
+
+body.theme-flip7 .f7-drawer { margin-top: .8rem; display: flex; flex-direction: column; gap: .6rem; animation: f7-up .18s ease-out; }
+@keyframes f7-up { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+body.theme-flip7 .f7-preview { background: rgba(232,251,250,0.82); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border-radius: 18px; padding: .7rem .9rem; border: 1.5px solid rgba(34,50,102,.14); }
+body.theme-flip7 .f7-pv-top { display: flex; justify-content: space-between; align-items: center; gap: .5rem; }
+body.theme-flip7 .f7-pv-name { font: 800 1.3rem var(--f7-caps); text-transform: uppercase; letter-spacing: .5px; color: var(--f7-ink); line-height: 1.05; }
+body.theme-flip7 .f7-pv-trans { font: 700 1rem var(--f7-caps); color: rgba(34,50,102,.8); display: flex; align-items: center; gap: .25rem; }
+body.theme-flip7 .f7-pv-trans svg { width: 16px; height: 16px; }
+body.theme-flip7 .f7-pv-total { font: 800 2.6rem var(--f7-caps); line-height: 1; color: var(--f7-ink); font-variant-numeric: tabular-nums; }
+body.theme-flip7 .f7-pv-total.bust { font-size: 1.9rem; color: var(--f7-terra); }
+body.theme-flip7 .f7-pv-cards { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin-top: .45rem; min-height: 36px; }
+body.theme-flip7 .f7-minis { display: inline-flex; padding-left: 4px; }
+body.theme-flip7 .f7-mini { width: 26px; height: 36px; margin-left: -4px; border-radius: 5px; border: 1.5px solid var(--f7-ink); background: #fffdf6;
+  display: inline-flex; align-items: center; justify-content: center; font: 800 .95rem var(--f7-caps); box-shadow: 1px 1px 0 rgba(34,50,102,.2); }
+body.theme-flip7 .f7-mini:nth-child(odd) { transform: rotate(-3deg); }
+body.theme-flip7 .f7-mini:nth-child(even) { transform: rotate(2deg); }
+body.theme-flip7 .f7-chip { height: 26px; padding: 0 .55rem; border-radius: 999px; display: inline-flex; align-items: center; font: 800 .9rem var(--f7-caps); background: #fffdf6; border: 1.5px solid var(--f7-ink); color: var(--f7-ink); }
+body.theme-flip7 .f7-chip.mod { color: var(--f7-terra); }
+body.theme-flip7 .f7-chip.flip7 { background: linear-gradient(135deg, var(--f7-coral2), var(--f7-coral)); color: #fff; border-color: #b4410e; box-shadow: 0 0 10px rgba(249,115,22,.65); letter-spacing: .5px; }
+body.theme-flip7 .f7-pv-empty { font: 700 .9rem var(--f7-caps); letter-spacing: 1px; color: rgba(34,50,102,.55); text-transform: uppercase; }
+
+body.theme-flip7 .f7-pad { background: rgba(195,245,243,0.72); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border-radius: 22px; padding: 12px; border: 1.5px solid rgba(34,50,102,.12); }
+body.theme-flip7 .f7-pad-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+body.theme-flip7 .f7-pad-mid { display: flex; gap: .4rem; }
+body.theme-flip7 .f7-x { width: 40px; height: 40px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; padding: 0;
+  background: rgba(255,255,255,.55); border: 1.5px solid rgba(34,50,102,.25); color: var(--f7-ink); font: 800 1.15rem var(--f7-caps); }
+body.theme-flip7 .f7-ok { width: 44px; height: 44px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; padding: 0; background: var(--f7-ink2); border: none; color: #fff; box-shadow: 0 3px 0 rgba(20,30,70,.35); }
+body.theme-flip7 .f7-ok svg { width: 22px; height: 22px; }
+body.theme-flip7 .f7-tog { height: 34px; padding: 0 .9rem; border-radius: 999px; background: #fffdf6; border: 2px solid var(--f7-ink); color: var(--f7-ink); font: 800 .98rem var(--f7-caps); letter-spacing: 1px; }
+body.theme-flip7 .f7-tog.bust { color: var(--f7-terra); }
+body.theme-flip7 .f7-tog.bust.on { background: var(--f7-terra); color: #fff; border-color: var(--f7-ink); }
+body.theme-flip7 .f7-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+body.theme-flip7 .f7-key { height: 50px; border-radius: 10px; background: var(--f7-tile); border: 2px solid var(--f7-ink); box-shadow: 0 2px 0 rgba(34,50,102,0.28);
+  font: 800 1.5rem var(--f7-caps); line-height: 1; padding: 0; transition: transform .1s ease, background-color .12s ease; }
+body.theme-flip7 .f7-key.wide { grid-column: span 2; color: var(--f7-ink); }
+body.theme-flip7 .f7-key.mod { height: 38px; font-size: 1.15rem; color: var(--f7-terra); }
+body.theme-flip7 .f7-key.on { background: var(--f7-gold2); color: #111827 !important; border-width: 3px; border-color: #1a2550; transform: rotate(-2deg); box-shadow: 0 3px 0 rgba(34,50,102,0.4); }
+body.theme-flip7 .f7-key.dim { opacity: .45; }
+body.theme-flip7 .f7-nums { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+body.theme-flip7 .f7-num { height: 52px; border-radius: 12px; background: var(--f7-tile); border: 2px solid var(--f7-ink); box-shadow: 0 2px 0 rgba(34,50,102,0.28); color: var(--f7-ink); font: 800 1.55rem var(--f7-caps); padding: 0; }
+body.theme-flip7 .f7-num.fn { color: var(--f7-terra); font-size: 1.3rem; }
+body.theme-flip7 .f7-num:active, body.theme-flip7 .f7-key:active { transform: translateY(1px); }
+
+
+body.theme-flip7 .f7-sheet { position: fixed; inset: 0; z-index: 80; display: flex; align-items: flex-end; justify-content: center; background: rgba(20,40,60,.35); }
+body.theme-flip7 .f7-sheet-card { width: 100%; max-width: 480px; margin: 0 .6rem calc(.6rem + env(safe-area-inset-bottom, 0px)); padding: 1rem 1rem 1.1rem; border-radius: 22px;
+  background: #e8fbfa; border: 2px solid var(--f7-ink); color: var(--f7-ink); box-shadow: 0 10px 30px rgba(20,40,60,.35); animation: f7-up .18s ease-out; }
+body.theme-flip7 .f7-sheet h3 { margin: 0 0 .7rem; font: 800 1.35rem var(--f7-caps); letter-spacing: 1px; text-transform: uppercase; }
+body.theme-flip7 .f7-sheet-lbl { font: 700 .85rem var(--f7-caps); letter-spacing: 1.2px; text-transform: uppercase; opacity: .75; margin: .2rem 0 .4rem; }
+body.theme-flip7 .f7-targets { display: grid; grid-template-columns: repeat(3, 1fr); gap: .5rem; margin-bottom: .9rem; }
+body.theme-flip7 .f7-tgt { height: 44px; border-radius: 12px; background: var(--f7-tile); border: 2px solid var(--f7-ink); color: var(--f7-ink); font: 800 1.2rem var(--f7-caps); }
+body.theme-flip7 .f7-tgt.on { background: var(--f7-gold); }
+body.theme-flip7 .f7-sbtn { width: 100%; height: 46px; margin-top: .5rem; border-radius: 14px; border: 2px solid var(--f7-ink); background: var(--f7-tile); color: var(--f7-ink); font: 800 1.08rem var(--f7-caps); letter-spacing: 1px; text-transform: uppercase; }
+body.theme-flip7 .f7-sbtn.primary { background: var(--f7-ink2); color: #fff; }
+body.theme-flip7 .f7-sbtn.danger { color: var(--f7-terra); }
+body.theme-flip7 .f7-sheet input { background: #fffdf6; color: var(--f7-ink); border: 2px solid var(--f7-ink); border-radius: 12px; font-family: var(--f7-caps); font-weight: 700; }
+
+
+body.theme-flip7 .bottom-nav { left: 50%; right: auto; bottom: calc(10px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); width: calc(100% - 28px); max-width: 340px;
+  padding: .35rem; border-radius: 999px; border: 1.5px solid rgba(34,50,102,.18); background: rgba(210,248,246,0.78); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+  box-shadow: 0 8px 24px rgba(20,60,70,.22); gap: .2rem; }
+body.theme-flip7 .bottom-nav button { flex: 1; min-width: 0; padding: .35rem .2rem; border-radius: 999px; color: var(--f7-ink); font: 700 .74rem var(--f7-caps); letter-spacing: 1px; text-transform: uppercase; opacity: .78; }
+body.theme-flip7 .bottom-nav button.active { opacity: 1; background: rgba(82,198,192,.38); box-shadow: inset 0 0 0 1.5px rgba(34,50,102,.18); }
+body.theme-flip7 .bottom-nav button .icon { font-size: 1.1rem; filter: saturate(.6); }
+body.theme-flip7 .bottom-nav #nav-new { display: none; }
+body.theme-flip7 .bottom-nav #nav-active { display: flex; }
+
+</style>
 </head>
 <body>
-<!-- Build: v6-no-tap-zoom-2026-11-26 -->
+<!-- Build: v7-flip7-theme-2026-11-26 -->
 
 <!-- Login: starts hidden until getSession() resolves -->
 <section id="login-view" class="auth-hidden" hidden aria-label="Sign in to Score Tracker">
@@ -388,6 +527,29 @@ body.theme-catan #catan-board .cg-row[data-color="purple"] .cg-name { color: #4b
       </div>
     </div>
 
+    <!-- Flip 7 board: only visible with body.theme-flip7 -->
+    <div id="flip7-board">
+      <header class="f7-top">
+        <div class="f7-top-l">
+          <button type="button" class="f7-circ" id="f7-undo" aria-label="Undo last score" onclick="f7Undo()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></button>
+          <button type="button" class="f7-circ" id="f7-options" aria-label="Game options" onclick="f7OpenSheet('options')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
+        </div>
+        <div class="f7-top-r">
+          <button type="button" class="f7-pill" id="f7-target" onclick="f7OpenSheet('options')" aria-label="Target score">200 <small>PTS</small></button>
+          <button type="button" class="f7-circ" id="f7-add-player" aria-label="Add player" onclick="f7OpenSheet('add')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+        </div>
+      </header>
+      <div class="f7-sub">
+        <span id="f7-date">—</span>
+        <button type="button" class="f7-sort" id="f7-sort" onclick="f7ToggleSort()"><span>⇅</span>Top Score</button>
+      </div>
+      <div id="f7-board" class="f7-board" role="listbox" aria-label="Players"></div>
+      <p class="f7-hint" id="f7-hint">Tap a player to score their round</p>
+      <button type="button" class="f7-finish hidden" id="f7-finish" hidden onclick="endGame()">🏆 Finish &amp; Save Game</button>
+      <div id="f7-drawer" class="f7-drawer hidden" hidden></div>
+      <div id="f7-sheet" class="f7-sheet hidden" hidden onclick="if(event.target===this)f7CloseSheet()"></div>
+    </div>
+
     <!-- Catan board: only visible with body.theme-catan (layout from the approved rendering) -->
     <div id="catan-board">
       <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
@@ -461,7 +623,7 @@ body.theme-catan #catan-board .cg-row[data-color="purple"] .cg-name { color: #4b
 
 <!-- App engine: defines window.onAuthReady / window.onAuthSignedOut before auth init -->
 <script id="score-engine">
-/* Score Tracker engine — game-agnostic shell, per-game scoring, Catan-only wood/parchment theme. */
+/* Score Tracker engine — game-agnostic shell, per-game scoring, Catan wood/parchment theme, Flip 7 coastal card theme. */
 (function (global) {
   'use strict';
 
@@ -540,7 +702,7 @@ body.theme-catan #catan-board .cg-row[data-color="purple"] .cg-name { color: #4b
       const g = JSON.parse(raw);
       if (!g || !Array.isArray(g.players)) return null;
       g.rounds = Array.isArray(g.rounds) ? g.rounds : [];
-      g.players.forEach((p) => { p.score = Number(p.score) || 0; if (g.type === 'catan') p.breakdown = { ...emptyBreakdown(), ...(p.breakdown || {}) }; });
+      g.players.forEach((p) => { p.score = Number(p.score) || 0; if (g.type === 'catan') p.breakdown = { ...emptyBreakdown(), ...(p.breakdown || {}) }; if (g.type === 'flip7') p.flip7Count = Number(p.flip7Count) || 0; });
       if (g.type === 'catan' && !g.targetVp) g.targetVp = gameById('catan').target(g.version);
       return g;
     } catch (_) { return null; }
@@ -615,17 +777,20 @@ body.theme-catan #catan-board .cg-row[data-color="purple"] .cg-name { color: #4b
   function onAuthSignedOut() {
     currentUser = null; initializedUserId = null; players = []; history = []; currentGame = null; pendingSync = false;
     scoringPlayer = null; currentView = 'home';
-    document.body.classList.remove('theme-catan');
+    document.body.classList.remove('theme-catan', 'theme-flip7'); f7 = null;
     document.querySelectorAll('#app-shell .view').forEach((el) => el.classList.remove('active'));
-    ['gen-leaderboard', 'gen-pad', 'leaderboard', 'score-form', 'history-list', 'recent-list', 'player-chips'].forEach((id) => { const el = byId(id); if (el) el.innerHTML = ''; });
+    ['gen-leaderboard', 'gen-pad', 'leaderboard', 'score-form', 'history-list', 'recent-list', 'player-chips', 'f7-board', 'f7-drawer'].forEach((id) => { const el = byId(id); if (el) el.innerHTML = ''; });
   }
 
   // ---------------- Theme + navigation ----------------
   function applyTheme() {
     const on = currentView === 'active' && isCatan();
+    const f7on = currentView === 'active' && isFlip7();
     document.body.classList.toggle('theme-catan', on);
+    document.body.classList.toggle('theme-flip7', f7on);
+    if (!f7on) { const s = byId('f7-sheet'); if (s && !s.hidden) { setHidden(s, true); s.innerHTML = ''; } }
     const meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.setAttribute('content', on ? '#180f08' : '#0b1220');
+    if (meta) meta.setAttribute('content', on ? '#180f08' : f7on ? '#4bbdb8' : '#0b1220');
   }
   function showView(v) {
     if (!byId('view-' + v)) v = 'home';
@@ -692,18 +857,18 @@ body.theme-catan #catan-board .cg-row[data-color="purple"] .cg-name { color: #4b
     currentGame = {
       id: g.id + '_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
       type: g.id, version, target: g.target(version), startTime: new Date().toISOString(), endTime: null, winner: null,
-      players: chosen.map((name) => (g.id === 'catan' ? { name, score: 0, breakdown: emptyBreakdown() } : { name, score: 0 })),
+      players: chosen.map((name) => (g.id === 'catan' ? { name, score: 0, breakdown: emptyBreakdown() } : g.id === 'flip7' ? { name, score: 0, flip7Count: 0 } : { name, score: 0 })),
       rounds: []
     };
     if (g.id === 'catan') currentGame.targetVp = currentGame.target;
-    scoringPlayer = null; padMode = 'simple';
+    scoringPlayer = null; padMode = 'simple'; f7 = null;
     persistActive();
     showView('active');
     return currentGame;
   }
   function discardGame() {
     if (!currentGame || !confirm('Discard this game without saving?')) return;
-    currentGame = null; scoringPlayer = null; persistActive(); showView('home');
+    currentGame = null; scoringPlayer = null; f7 = null; persistActive(); showView('home');
   }
 
   // ---------------- Rounds (shared by every game) ----------------
@@ -725,14 +890,15 @@ body.theme-catan #catan-board .cg-row[data-color="purple"] .cg-name { color: #4b
   function undoLastRound() {
     if (!currentGame || !currentGame.rounds.length) return null;
     const r = currentGame.rounds.pop();
-    currentGame.players.forEach((p, i) => { p.score = Array.isArray(r.prev) ? r.prev[i] : p.score - (r.deltas[i] || 0); });
+    currentGame.players.forEach((p, i) => { p.score = Array.isArray(r.prev) && r.prev[i] !== undefined ? r.prev[i] : p.score - ((r.deltas || [])[i] || 0); });
+    if (Array.isArray(r.prevF7)) currentGame.players.forEach((p, i) => { if (r.prevF7[i] !== undefined) p.flip7Count = r.prevF7[i]; });
     if (isCatan() && Array.isArray(r.prevBd)) {
       currentGame.players.forEach((p, i) => { p.breakdown = { ...emptyBreakdown(), ...(r.prevBd[i] || {}) }; });
     } else if (isCatan() && r.detail && r.detail.breakdown) {
       const p = currentGame.players[r.detail.player];
       CATAN_CATS.forEach((c) => { p.breakdown[c.key] = Math.max(0, (p.breakdown[c.key] || 0) - (r.detail.breakdown[c.key] || 0)); });
     }
-    if (!isCatan()) scoringPlayer = null;
+    if (!isCatan()) { scoringPlayer = null; f7 = null; }
     persistActive();
     renderActive();
     if (isCatan()) cgFeedback(['.cg-vp']);
@@ -752,7 +918,7 @@ body.theme-catan #catan-board .cg-row[data-color="purple"] .cg-name { color: #4b
     const finished = { ...currentGame, endTime: new Date().toISOString() };
     finished.winner = computeWinner(finished);
     history.unshift(finished);
-    currentGame = null; scoringPlayer = null;
+    currentGame = null; scoringPlayer = null; f7 = null;
     persistActive();
     saveCache(true);
     showView('history');
@@ -770,7 +936,7 @@ body.theme-catan #catan-board .cg-row[data-color="purple"] .cg-name { color: #4b
       setHidden(byId('gen-pad'), true); setHidden(byId('gen-undo'), true);
       return;
     }
-    if (isCatan()) renderCatan(); else renderGeneric();
+    if (isCatan()) renderCatan(); else if (isFlip7()) renderFlip7(); else renderGeneric();
   }
 
   // ----- Generic (neutral) games -----
@@ -793,6 +959,7 @@ body.theme-catan #catan-board .cg-row[data-color="purple"] .cg-name { color: #4b
     if (!currentGame || !currentGame.players[idx]) return;
     scoringPlayer = idx;
     if (isCatan()) { selectCatanPlayer(idx); return; }
+    if (isFlip7()) { f7Select(idx); return; }
     renderGeneric();
     const g = gameById(currentGame.type);
     const pad = byId('gen-pad');
@@ -935,6 +1102,224 @@ body.theme-catan #catan-board .cg-row[data-color="purple"] .cg-name { color: #4b
     if (currentGame && currentGame.target && currentGame.players.some((p) => p.score >= currentGame.target)) {
       const t = byId('gen-sub'); if (t) t.textContent += g.low ? ' · Target reached — lowest score wins' : ' · Target reached!';
     }
+  }
+
+  // ----- Flip 7 (coastal teal + cream card theme, modeled on the Flip 7 app) -----
+  const F7_COLORS = { 0: '#111827', 1: '#a68a6d', 2: '#d4c23a', 3: '#d93855', 4: '#5fa89d', 5: '#4ea649', 6: '#8b2c7c',
+    7: '#b84a48', 8: '#7fb539', 9: '#e68a2e', 10: '#cf3327', 11: '#6a93b8', 12: '#8b7a5e' };
+  const F7_MODS = [2, 4, 6, 8, 10];
+  const F7_TARGETS = [150, 200, 300];
+  const isFlip7 = () => !!(currentGame && currentGame.type === 'flip7');
+  let f7 = null; // drawer state: { numbers:[], x2, mods:[], bust, mode:'cards'|'num', manual:'' }
+  const f7Laurel = (() => {
+    const leaves = (side) => {
+      const out = [];
+      for (let k = 0; k < 5; k++) {
+        const a = (200 + k * 28) * Math.PI / 180, r = 14.5;
+        const x = 20 + side * Math.cos(a) * r * -1, y = 19 - Math.sin(a) * r * -1;
+        const rot = side > 0 ? (k * 28 - 60) : (60 - k * 28);
+        out.push(`<ellipse cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" rx="2.1" ry="4.3" transform="rotate(${rot} ${x.toFixed(1)} ${y.toFixed(1)})"/>`);
+      }
+      return out.join('');
+    };
+    return `<svg viewBox="0 0 40 36" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M14 32.5C7 30 4 23.5 5.5 15.5"/><path d="M26 32.5C33 30 36 23.5 34.5 15.5"/></g><g fill="currentColor">${leaves(-1)}${leaves(1)}</g></svg>`;
+  })();
+  const f7Trophy = '<svg viewBox="0 0 24 24" aria-label="Reaches target"><path d="M7 3h10v3h3v2a4 4 0 0 1-4 4h-.4A5 5 0 0 1 13 14.8V17h3v3H8v-3h3v-2.2A5 5 0 0 1 8.4 12H8a4 4 0 0 1-4-4V6h3zm0 5V8H6a2 2 0 0 0 1 1.7zm10 0v1.7A2 2 0 0 0 18 8z" fill="#f97316" stroke="#223266" stroke-width=".9"/></svg>';
+  const f7Check = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+  function f7Target() { return Number(currentGame && currentGame.target) || 200; }
+  function f7Ranks() {
+    const ps = currentGame.players;
+    return ps.map((p) => 1 + ps.filter((q) => q.score > p.score).length);
+  }
+  function f7Round() {
+    const n = currentGame.players.length; if (!n) return 1;
+    const counts = currentGame.players.map((_, i) => currentGame.rounds.filter((r) => r.mode === 'flip7' && r.detail && r.detail.player === i).length);
+    return Math.min(...counts) + 1;
+  }
+  function renderFlip7() {
+    const t = f7Target();
+    currentGame.players.forEach((p) => { p.flip7Count = Number(p.flip7Count) || 0; });
+    byId('f7-target').innerHTML = `${t} <small>PTS</small>`;
+    const d = new Date(currentGame.startTime || Date.now());
+    byId('f7-date').textContent = `${d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).toUpperCase()} · RD ${f7Round()}`;
+    const sortTurn = currentGame.f7sort === 'turn';
+    byId('f7-sort').innerHTML = `<span>⇅</span>${sortTurn ? 'Turn Order' : 'Top Score'}`;
+    byId('f7-sort').dataset.sort = sortTurn ? 'turn' : 'score';
+    byId('f7-undo').disabled = !currentGame.rounds.length;
+    const ranks = f7Ranks();
+    const list = currentGame.players.map((p, idx) => ({ ...p, idx, rank: ranks[idx] }));
+    if (!sortTurn) list.sort((a, b) => (b.score - a.score) || (a.idx - b.idx));
+    byId('f7-board').innerHTML = list.map((p) => {
+      const sel = p.idx === scoringPlayer, won = p.score >= t, pct = Math.max(0, Math.min(100, p.score / t * 100));
+      const laurel = p.rank <= 3 && p.score > 0;
+      return `<div class="f7-row${sel ? ' selected' : ''}" data-player-idx="${p.idx}" role="option" aria-selected="${sel}" tabindex="0"
+          onclick="f7Select(${p.idx})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();f7Select(${p.idx})}">
+          <div class="f7-rank${laurel ? ' laurel' : ' plain'}" data-rank="${p.rank}">${laurel ? f7Laurel : ''}<b>${p.rank}</b></div>
+          <div class="f7-name">${esc(p.name)}</div>
+          <div class="f7-right">
+            ${p.flip7Count > 0 ? `<span class="f7-sevens" aria-label="${p.flip7Count} Flip 7 bonuses"><span class="f7-seven">7</span>× ${p.flip7Count}</span><span class="f7-div" aria-hidden="true"></span>` : ''}
+            <span class="f7-score${won ? ' won' : ''}">${p.score}</span>
+          </div>
+          <div class="f7-bar" aria-hidden="true"><i class="${pct >= 100 ? 'full' : ''}" style="width:${pct.toFixed(1)}%"></i></div>
+        </div>`;
+    }).join('');
+    const anyWon = currentGame.players.some((p) => p.score >= t);
+    setHidden(byId('f7-finish'), !anyWon || scoringPlayer !== null);
+    byId('f7-board').classList.toggle('scoring', scoringPlayer !== null);
+    setHidden(byId('f7-hint'), scoringPlayer !== null);
+    renderF7Drawer();
+  }
+  function f7Select(idx) {
+    if (!isFlip7() || !currentGame.players[idx]) return;
+    if (scoringPlayer !== idx || !f7) f7 = { numbers: [], x2: false, mods: [], bust: false, mode: (f7 && f7.mode) || 'cards', manual: '' };
+    scoringPlayer = idx;
+    renderFlip7();
+    try { if (navigator.vibrate) navigator.vibrate(6); } catch (e) { /* ignore */ }
+    requestAnimationFrame(() => { const d = byId('f7-drawer'); if (d && d.scrollIntoView) d.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); });
+  }
+  function f7Calc() {
+    if (!f7) return { total: 0, numberSum: 0, multiplied: 0, modSum: 0, flip7Bonus: 0 };
+    if (f7.mode === 'num') { const v = Number(f7.manual) || 0; return { total: f7.bust ? 0 : v, manual: v, numberSum: 0, multiplied: 0, modSum: 0, flip7Bonus: 0 }; }
+    const numberSum = f7.numbers.reduce((a, b) => a + b, 0);
+    const multiplied = f7.x2 ? numberSum * 2 : numberSum;
+    const modSum = f7.mods.reduce((a, b) => a + b, 0);
+    const flip7Bonus = new Set(f7.numbers).size >= 7 ? 15 : 0;
+    return { total: f7.bust ? 0 : multiplied + modSum + flip7Bonus, numberSum, multiplied, modSum, flip7Bonus };
+  }
+  function renderF7Preview() {
+    const el = byId('f7-preview'); if (!el || scoringPlayer === null || !f7) return;
+    const p = currentGame.players[scoringPlayer], c = f7Calc(), next = p.score + c.total;
+    const minis = f7.mode === 'cards' ? [...f7.numbers].sort((a, b) => a - b).map((n) => `<span class="f7-mini" style="color:${F7_COLORS[n]}">${n}</span>`).join('') : '';
+    const chips = f7.mode === 'cards'
+      ? (f7.x2 ? '<span class="f7-chip">×2</span>' : '') + [...f7.mods].sort((a, b) => a - b).map((m) => `<span class="f7-chip mod">+${m}</span>`).join('') + (c.flip7Bonus && !f7.bust ? '<span class="f7-chip flip7" id="f7-bonus">FLIP 7 +15!</span>' : '')
+      : (f7.manual !== '' ? `<span class="f7-chip">Manual ${esc(f7.manual)}</span>` : '');
+    el.innerHTML = `
+      <div class="f7-pv-top">
+        <div><div class="f7-pv-name">${esc(p.name)}</div>
+          <div class="f7-pv-trans" id="f7-pv-trans">${p.score} → ${next}${next >= f7Target() ? f7Trophy : ''}</div></div>
+        <div class="f7-pv-total${f7.bust ? ' bust' : ''}" id="f7-preview-total">${f7.bust ? 'BUST · 0' : '+' + c.total}</div>
+      </div>
+      <div class="f7-pv-cards">${minis ? `<span class="f7-minis">${minis}</span>` : ''}${chips}${!minis && !chips ? `<span class="f7-pv-empty">${f7.mode === 'cards' ? 'Tap the cards they flipped' : 'Type the round score'}</span>` : ''}</div>`;
+  }
+  function renderF7Drawer() {
+    const d = byId('f7-drawer');
+    if (scoringPlayer === null || !currentGame.players[scoringPlayer]) { setHidden(d, true); d.innerHTML = ''; return; }
+    if (!f7) f7 = { numbers: [], x2: false, mods: [], bust: false, mode: 'cards', manual: '' };
+    setHidden(d, false);
+    const cards = f7.mode === 'cards';
+    const key = (id, label, cls, color, on, fn) => `<button type="button" class="f7-key${cls ? ' ' + cls : ''}${on ? ' on' : ''}" id="${id}" style="color:${color}" aria-pressed="${on}" onclick="${fn}">${label}</button>`;
+    const grid = cards
+      ? `<div class="f7-grid" id="f7-cards">
+          ${Object.keys(F7_COLORS).map(Number).map((n) => key('f7-key-n' + n, n, '', F7_COLORS[n], f7.numbers.includes(n), `f7Toggle('n',${n})`)).join('')}
+          ${key('f7-key-x2', '×2', 'wide', '#223266', f7.x2, "f7Toggle('x2')")}
+          ${F7_MODS.map((m) => key('f7-key-m' + m, '+' + m, 'mod', '#c84b31', f7.mods.includes(m), `f7Toggle('m',${m})`)).join('')}
+        </div>`
+      : `<div class="f7-nums" id="f7-numpad">${['1', '2', '3', '4', '5', '6', '7', '8', '9', 'C', '0', '⌫'].map((k) =>
+          `<button type="button" class="f7-num${/\d/.test(k) ? '' : ' fn'}" id="f7-num-${k === '⌫' ? 'back' : k}" onclick="f7Num('${k}')">${k}</button>`).join('')}</div>`;
+    d.innerHTML = `
+      <div class="f7-preview" id="f7-preview" aria-live="polite"></div>
+      <div class="f7-pad">
+        <div class="f7-pad-head">
+          <button type="button" class="f7-x" id="f7-cancel" aria-label="Cancel" onclick="f7Close()">✕</button>
+          <div class="f7-pad-mid">
+            <button type="button" class="f7-tog" id="f7-mode" onclick="f7SetMode('${cards ? 'num' : 'cards'}')">${cards ? '123' : 'CARDS'}</button>
+            <button type="button" class="f7-tog bust${f7.bust ? ' on' : ''}" id="f7-bust" aria-pressed="${f7.bust}" onclick="f7Toggle('bust')">BUST</button>
+          </div>
+          <button type="button" class="f7-ok" id="f7-confirm" aria-label="Confirm round score" onclick="f7Confirm()">${f7Check}</button>
+        </div>
+        ${grid}
+      </div>`;
+    renderF7Preview();
+  }
+  function f7Toggle(kind, val) {
+    if (!f7) return;
+    const tog = (arr, x) => { const i = arr.indexOf(x); i >= 0 ? arr.splice(i, 1) : arr.push(x); };
+    if (kind === 'n') tog(f7.numbers, val);
+    if (kind === 'm') tog(f7.mods, val);
+    if (kind === 'x2') f7.x2 = !f7.x2;
+    if (kind === 'bust') f7.bust = !f7.bust;
+    const set = (id, on) => { const b = byId(id); if (b) { b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on)); } };
+    if (kind === 'n') set('f7-key-n' + val, f7.numbers.includes(val));
+    if (kind === 'm') set('f7-key-m' + val, f7.mods.includes(val));
+    if (kind === 'x2') set('f7-key-x2', f7.x2);
+    if (kind === 'bust') set('f7-bust', f7.bust);
+    try { if (navigator.vibrate) navigator.vibrate(4); } catch (e) { /* ignore */ }
+    renderF7Preview();
+  }
+  function f7SetMode(m) { if (!f7) return; f7.mode = m === 'num' ? 'num' : 'cards'; renderF7Drawer(); }
+  function f7Num(k) {
+    if (!f7) return;
+    if (k === 'C') f7.manual = '';
+    else if (k === '⌫') f7.manual = f7.manual.slice(0, -1);
+    else if (f7.manual.length < 3) f7.manual = (f7.manual === '0' ? '' : f7.manual) + k;
+    renderF7Preview();
+  }
+  function f7Close() { scoringPlayer = null; f7 = null; renderFlip7(); }
+  function f7Snapshot() { return currentGame.players.map((p) => Number(p.flip7Count) || 0); }
+  function f7Confirm() {
+    if (!isFlip7() || scoringPlayer === null || !f7) return null;
+    const idx = scoringPlayer, c = f7Calc();
+    const detail = f7.mode === 'num'
+      ? { player: idx, manual: true, value: c.manual, bust: f7.bust, total: c.total, flip7: false }
+      : { player: idx, numbers: [...f7.numbers].sort((a, b) => a - b), x2: f7.x2, mods: [...f7.mods].sort((a, b) => a - b), bust: f7.bust,
+          numberSum: c.numberSum, modSum: c.modSum, flip7Bonus: f7.bust ? 0 : c.flip7Bonus, total: c.total, flip7: !f7.bust && c.flip7Bonus > 0 };
+    const prev = currentGame.players.map((p) => p.score), prevF7 = f7Snapshot();
+    currentGame.players[idx].score += c.total;
+    if (detail.flip7) currentGame.players[idx].flip7Count = (Number(currentGame.players[idx].flip7Count) || 0) + 1;
+    currentGame.rounds.push({ ts: new Date().toISOString(), by: idx, mode: 'flip7', prev, prevF7, deltas: currentGame.players.map((p, i) => p.score - prev[i]), detail });
+    scoringPlayer = null; f7 = null;
+    persistActive(); saveCache();
+    renderFlip7();
+    return detail;
+  }
+  function f7Undo() { const r = undoLastRound(); return r; }
+  function f7ToggleSort() { if (!isFlip7()) return; currentGame.f7sort = currentGame.f7sort === 'turn' ? 'score' : 'turn'; persistActive(); renderFlip7(); }
+  function f7OpenSheet(kind) {
+    if (!isFlip7()) return;
+    const s = byId('f7-sheet'), t = f7Target();
+    if (kind === 'add') {
+      s.innerHTML = `<div class="f7-sheet-card" role="dialog" aria-label="Add player">
+          <h3>Add Player</h3>
+          <input type="text" id="f7-new-player" placeholder="Player name" autocomplete="off" maxlength="24" onkeydown="if(event.key==='Enter'){event.preventDefault();f7AddPlayer()}">
+          <button type="button" class="f7-sbtn primary" id="f7-add-confirm" onclick="f7AddPlayer()">Add to game</button>
+          <button type="button" class="f7-sbtn" onclick="f7CloseSheet()">Cancel</button>
+        </div>`;
+    } else {
+      s.innerHTML = `<div class="f7-sheet-card" role="dialog" aria-label="Game options">
+          <h3>Game Options</h3>
+          <div class="f7-sheet-lbl">Target score</div>
+          <div class="f7-targets">${F7_TARGETS.map((v) => `<button type="button" class="f7-tgt${v === t ? ' on' : ''}" id="f7-tgt-${v}" onclick="f7SetTarget(${v})">${v}</button>`).join('')}</div>
+          <button type="button" class="f7-sbtn primary" id="f7-opt-finish" onclick="f7CloseSheet();endGame()">🏆 Finish &amp; Save Game</button>
+          <button type="button" class="f7-sbtn danger" id="f7-opt-reset" onclick="f7ResetScores()">↻ Reset Scores</button>
+          <button type="button" class="f7-sbtn danger" id="f7-opt-discard" onclick="f7CloseSheet();discardGame()">Discard Game</button>
+          <button type="button" class="f7-sbtn" onclick="f7CloseSheet()">Close</button>
+        </div>`;
+    }
+    setHidden(s, false);
+    if (kind === 'add') setTimeout(() => { const i = byId('f7-new-player'); if (i) i.focus(); }, 30);
+  }
+  function f7CloseSheet() { const s = byId('f7-sheet'); if (s) { setHidden(s, true); s.innerHTML = ''; } }
+  function f7SetTarget(v) {
+    if (!isFlip7() || !F7_TARGETS.includes(v)) return;
+    currentGame.target = v; persistActive(); renderFlip7();
+    document.querySelectorAll('#f7-sheet .f7-tgt').forEach((b) => b.classList.toggle('on', b.id === 'f7-tgt-' + v));
+  }
+  function f7AddPlayer() {
+    const i = byId('f7-new-player'); const name = ((i && i.value) || '').trim();
+    if (!name || !isFlip7()) return;
+    if (currentGame.players.some((p) => p.name.toLowerCase() === name.toLowerCase())) { i.value = ''; i.placeholder = 'Already playing'; return; }
+    currentGame.players.push({ name, score: 0, flip7Count: 0 });
+    if (!players.some((p) => p.toLowerCase() === name.toLowerCase())) { players.push(name); saveData(); }
+    persistActive(); f7CloseSheet(); renderFlip7();
+  }
+  function f7ResetScores() {
+    if (!isFlip7()) return;
+    if (!currentGame.players.some((p) => p.score || p.flip7Count)) { f7CloseSheet(); return; }
+    if (!confirm('Reset every player to 0? (You can Undo this.)')) return;
+    const prev = currentGame.players.map((p) => p.score), prevF7 = f7Snapshot();
+    currentGame.players.forEach((p) => { p.score = 0; p.flip7Count = 0; });
+    currentGame.rounds.push({ ts: new Date().toISOString(), by: null, mode: 'reset', prev, prevF7, deltas: prev.map((s) => -s), detail: { reset: true } });
+    scoringPlayer = null; f7 = null; persistActive(); f7CloseSheet(); renderFlip7();
   }
 
   // ----- Catan (wood + parchment theme, layout from the approved rendering) -----
@@ -1086,6 +1471,7 @@ body.theme-catan #catan-board .cg-row[data-color="purple"] .cg-name { color: #4b
     onAuthReady, onAuthSignedOut, showView, selectGame, togglePlayer, addPlayer, removePlayer, startGame, discardGame,
     openPad, setPadMode, closePad, flipToggle, updateGenericPreview, commitSimplePoints, commitGenericDetailed,
     selectCatanPlayer, catanStep, catanAction, resetCatanScores,
+    f7Select, f7Toggle, f7SetMode, f7Num, f7Close, f7Confirm, f7Undo, f7ToggleSort, f7OpenSheet, f7CloseSheet, f7SetTarget, f7AddPlayer, f7ResetScores,
     undoLastRound, undoLastAction: undoLastRound, endGame, deleteGame,
     ScoreTracker: { GAMES, getState: () => ({ players: [...players], history: [...history], currentGame, currentView, scoringPlayer, padMode, pendingSync }) }
   });
@@ -1182,7 +1568,7 @@ body.theme-catan #catan-board .cg-row[data-color="purple"] .cg-name { color: #4b
   }
 
   function showSignedOutUI() {
-    document.body.classList.remove('theme-catan');
+    document.body.classList.remove('theme-catan', 'theme-flip7');
     const { loginView, appShell } = getEls();
     if (appShell) {
       appShell.hidden = true;
