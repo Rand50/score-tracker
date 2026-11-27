@@ -5,91 +5,89 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Score Tracker</title>
 <style>
-:root { --bg:#1a120b; --surface:#2a1f14; --surface2:#3a2a1c; --text:#f5f0e8; --muted:#c4b8a8; --accent:#e67e22; --accent-dim:#d35400; --border:rgba(230,126,34,0.2); }
-body { margin:0; font-family:system-ui,sans-serif; background:var(--bg); color:var(--text); padding-bottom:80px; background-image:radial-gradient(circle at 20% 20%, rgba(230,126,34,0.05) 1px, transparent 1px), radial-gradient(circle at 80% 40%, rgba(230,126,34,0.03) 1px, transparent 1px); background-size:40px 40px; }
-.view { padding:0 1rem; max-width:900px; margin:0 auto; }
+:root { --bg:#2a1f14; --parchment:#f5e6c8; --parchment-dark:#e8d4a8; --text:#3d2914; --gold:#b8860b; --border:#8b6914; }
+body { margin:0; font-family:Georgia, serif; background:#1a120b; color:var(--text); padding-bottom:80px; }
+.view { padding:0.8rem; max-width:500px; margin:0 auto; }
 .hidden { display:none !important; }
-.card { background:var(--surface); border-radius:16px; padding:1.25rem; margin-bottom:1rem; border:1px solid var(--border); }
-.btn { background:var(--surface2); color:var(--text); border:1px solid var(--border); padding:0.7rem 1.2rem; border-radius:12px; font-weight:600; cursor:pointer; }
-.btn.primary { background:linear-gradient(135deg,var(--accent),var(--accent-dim)); color:#1a120b; border:none; }
-.btn.google { background:#fff; color:#333; border:none; }
-input, select { background:#1a120b; border:1px solid var(--border); color:var(--text); padding:0.7rem; border-radius:10px; width:100%; font-size:1rem; }
-.game-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:0.75rem; margin:1rem 0; }
-.game-card { background:var(--surface2); border-radius:14px; height:180px; cursor:pointer; position:relative; background-size:contain; background-repeat:no-repeat; background-position:center; border:2px solid transparent; }
-.game-card.selected { border-color:var(--accent); }
-.game-card .overlay { position:absolute; bottom:0; left:0; right:0; background:linear-gradient(transparent,rgba(0,0,0,.85)); padding:.6rem; color:white; font-weight:600; }
-.bottom-nav { position:fixed; bottom:0; left:0; right:0; background:rgba(26,18,11,.95); display:flex; justify-content:space-around; padding:.6rem 0; }
-.bottom-nav button { background:none; border:none; color:var(--muted); }
-.bottom-nav button.active { color:var(--accent); }
-.small { color:var(--muted); font-size:.85rem; }
-.flex { display:flex; gap:.5rem; align-items:center; flex-wrap:wrap; }
-.player-row { background:var(--surface2); border-radius:14px; padding:0.9rem 1.1rem; margin:0.45rem 0; display:flex; justify-content:space-between; align-items:center; cursor:pointer; border:1px solid var(--border); }
-.rank { width:28px; font-weight:700; color:var(--muted); }
-.mode-toggle { display:flex; gap:.5rem; margin:.6rem 0; }
-.mode-toggle button { flex:1; }
-.mode-toggle button.active { background:var(--accent); color:#1a120b; }
-.res-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:6px; margin:.6rem 0; }
-.res-btn { padding:.7rem .3rem; border-radius:10px; border:none; font-weight:700; color:white; cursor:pointer; font-size:.8rem; }
-.vp-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:6px; margin:.6rem 0; }
-.vp-btn { padding:.6rem; border-radius:10px; border:1px solid var(--border); background:var(--surface2); color:var(--text); cursor:pointer; font-weight:600; }
+.parchment { background:var(--parchment); border:3px solid var(--border); border-radius:8px; padding:1rem; margin-bottom:0.8rem; box-shadow:inset 0 0 20px rgba(0,0,0,0.05); }
+.header-title { text-align:center; font-size:1.6rem; font-weight:bold; color:#3d2914; margin:0; letter-spacing:1px; }
+.header-sub { text-align:center; font-size:0.75rem; letter-spacing:2px; color:#8b6914; margin:0.3rem 0 0; }
+.section-title { text-align:center; font-size:0.9rem; letter-spacing:2px; color:#8b6914; margin:0.5rem 0; font-weight:bold; }
+.player-row { display:flex; align-items:center; padding:0.6rem 0; border-bottom:1px dashed #c4a574; }
+.player-row:last-child { border-bottom:none; }
+.shield { width:36px; height:36px; border-radius:6px; margin-right:0.7rem; display:flex; align-items:center; justify-content:center; font-size:1.2rem; }
+.player-name { flex:1; font-weight:600; }
+.stars { color:#b8860b; letter-spacing:2px; font-size:0.9rem; }
+.vp-num { font-size:1.4rem; font-weight:bold; color:#8b6914; min-width:30px; text-align:right; }
+.adjust-box { display:flex; align-items:center; justify-content:center; gap:1rem; padding:0.6rem; }
+.adj-btn { width:40px; height:40px; border-radius:6px; border:2px solid #8b6914; background:#3d2914; color:#f5e6c8; font-size:1.3rem; cursor:pointer; }
+.adj-val { font-size:1.5rem; font-weight:bold; min-width:40px; text-align:center; }
+.cat-row { display:flex; align-items:center; padding:0.7rem; background:#faf3e0; border:1px solid #c4a574; border-radius:6px; margin:0.4rem 0; cursor:pointer; }
+.cat-icon { width:40px; height:40px; border-radius:6px; margin-right:0.7rem; display:flex; align-items:center; justify-content:center; font-size:1.3rem; }
+.cat-text { flex:1; }
+.cat-text strong { display:block; }
+.cat-text span { font-size:0.8rem; color:#8b6914; }
+.btn { background:#3d2914; color:#f5e6c8; border:none; padding:0.7rem 1.2rem; border-radius:6px; font-weight:600; cursor:pointer; width:100%; margin-top:0.5rem; }
+.btn.gold { background:linear-gradient(135deg,#b8860b,#8b6914); }
+.mode-toggle { display:flex; gap:0.5rem; margin:0.5rem 0; }
+.mode-toggle button { flex:1; background:#e8d4a8; border:1px solid #8b6914; padding:0.5rem; border-radius:6px; cursor:pointer; }
+.mode-toggle button.active { background:#8b6914; color:#f5e6c8; }
+input { background:#faf3e0; border:1px solid #c4a574; padding:0.6rem; border-radius:6px; width:100%; font-size:1rem; }
+.bottom-nav { position:fixed; bottom:0; left:0; right:0; background:#2a1f14; display:flex; justify-content:space-around; padding:0.6rem 0; }
+.bottom-nav button { background:none; border:none; color:#c4a574; }
+.bottom-nav button.active { color:#b8860b; }
+.login-card { background:#f5e6c8; border:3px solid #8b6914; border-radius:8px; padding:2rem; max-width:400px; margin:4rem auto; text-align:center; }
 </style>
 </head>
 <body>
 <div id="login-view" class="view">
-  <div class="card" style="max-width:400px;margin:4rem auto;text-align:center">
-    <h1>Score Tracker</h1>
-    <button class="btn google" style="width:100%" onclick="signInWithGoogle()">Continue with Google</button>
+  <div class="login-card">
+    <h1 class="header-title">Score Tracker</h1>
+    <button class="btn" style="background:#fff;color:#333;margin-top:1rem" onclick="signInWithGoogle()">Continue with Google</button>
     <input type="email" id="email" placeholder="Or email" style="margin-top:1rem">
-    <button class="btn primary" style="width:100%;margin-top:.8rem" onclick="signInWithEmail()">Send magic link</button>
-    <p id="login-msg" class="small"></p>
+    <button class="btn gold" style="margin-top:0.8rem" onclick="signInWithEmail()">Send magic link</button>
+    <p id="login-msg" style="font-size:0.85rem;color:#8b6914"></p>
   </div>
 </div>
 
 <div id="app-view" class="hidden">
-  <header style="padding:1rem;display:flex;justify-content:space-between;align-items:center">
-    <h1 style="margin:0">Score Tracker</h1>
-    <button class="btn" onclick="signOut()">Sign out</button>
-  </header>
-  <div id="view-home" class="view">
-    <div class="card" style="text-align:center">
-      <div style="font-size:3rem">🎲</div>
-      <h2>Ready to play?</h2>
-      <button class="btn primary" style="width:100%;max-width:280px" onclick="showView('new')">Start a Game</button>
+  <div class="view">
+    <div class="parchment">
+      <h1 class="header-title">Score Tracker</h1>
+      <p class="header-sub">FIRST TO 10 VICTORY POINTS</p>
     </div>
-    <div class="card"><h3>Recent</h3><div id="recent-list"></div></div>
-  </div>
-  <div id="view-new" class="view hidden">
-    <div class="card">
-      <h2 style="margin-top:0">Choose Game</h2>
-      <div class="game-grid" id="game-grid"></div>
-      <label class="small">Version</label>
-      <select id="version-select"></select>
-      <h3>Players</h3>
-      <div id="player-chips" style="margin:.5rem 0"></div>
-      <div class="flex">
-        <input id="new-player-name" placeholder="Add player" style="flex:1">
-        <button class="btn" onclick="addPlayer()">+</button>
-      </div>
-      <button class="btn primary" style="width:100%;margin-top:1.2rem" onclick="startGame()">Start Playing</button>
-    </div>
-  </div>
-  <div id="view-active" class="view hidden">
-    <div class="card">
-      <h2 id="active-title" style="margin-top:0">🏝️ Catan</h2>
+    <div class="parchment">
+      <div class="section-title">VICTORY POINTS</div>
       <div id="leaderboard"></div>
-      <div id="pad" class="hidden"></div>
-      <div class="flex" style="margin-top:1rem">
-        <button class="btn primary" onclick="endGame()">Save Game</button>
-      </div>
     </div>
+    <div class="parchment" id="pad" class="hidden">
+      <div class="section-title">ADJUST VICTORY POINTS</div>
+      <div class="mode-toggle">
+        <button id="mode-simple" class="active" onclick="setMode('simple')">Simple</button>
+        <button id="mode-detailed" onclick="setMode('detailed')">Detailed</button>
+      </div>
+      <div id="score-form"></div>
+    </div>
+    <button class="btn" onclick="endGame()">Save Game</button>
+    <button class="btn" onclick="signOut()" style="background:#5a3d1a">Sign out</button>
   </div>
-  <div id="view-history" class="view hidden"><div class="card"><h2>History</h2><div id="history-list"></div></div></div>
   <nav class="bottom-nav">
     <button onclick="showView('home')" id="nav-home" class="active">Home</button>
     <button onclick="showView('new')" id="nav-new">Play</button>
     <button onclick="showView('history')" id="nav-history">History</button>
   </nav>
 </div>
+
+<div id="view-home" class="view hidden"><div class="parchment"><button class="btn gold" onclick="showView('new')">Start a Game</button></div></div>
+<div id="view-new" class="view hidden">
+  <div class="parchment">
+    <h2 class="section-title">Players</h2>
+    <div id="player-chips"></div>
+    <div style="display:flex;gap:0.5rem;margin-top:0.5rem"><input id="new-player-name" placeholder="Add player"><button class="btn" style="width:auto" onclick="addPlayer()">+</button></div>
+    <button class="btn gold" style="margin-top:1rem" onclick="startGame()">Start Playing</button>
+  </div>
+</div>
+<div id="view-history" class="view hidden"><div class="parchment"><div id="history-list"></div></div></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
@@ -98,18 +96,13 @@ const SUPABASE_ANON_KEY = 'sb_publishable_HEGO45Fw5dl1s8sAbFnSkg_VzWU_guj';
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const REDIRECT = 'https://rand50.github.io/score-tracker/game_tracker.html';
 
+const SHIELDS = ['#c0392b','#27ae60','#2980b9','#8e44ad','#d35400','#16a085'];
 let players = [];
 let history = [];
 let currentGame = null;
-let selectedGame = 'catan';
 let scoringPlayer = null;
-let catanMode = 'simple';
-
-const games = [
-  { id:'catan', name:'Catan', img:'', versions:['Base (to 10)','Cities & Knights'], theme:'catan' },
-  { id:'flip7', name:'Flip 7', img:'flip7.jpg', versions:['Standard'], theme:'other' },
-  { id:'other', name:'Custom', img:'', versions:['Custom'], theme:'other' }
-];
+let mode = 'simple';
+let adjVal = 1;
 
 async function checkSession() {
   const { data: { session } } = await sb.auth.getSession();
@@ -117,13 +110,11 @@ async function checkSession() {
     document.getElementById('login-view').classList.add('hidden');
     document.getElementById('app-view').classList.remove('hidden');
     await loadData();
-    restoreActiveGame();
+    restoreActive();
     showView(currentGame ? 'active' : 'home');
   }
 }
-async function signInWithGoogle() {
-  await sb.auth.signInWithOAuth({ provider:'google', options:{ redirectTo:REDIRECT } });
-}
+async function signInWithGoogle() { await sb.auth.signInWithOAuth({ provider:'google', options:{ redirectTo:REDIRECT } }); }
 async function signInWithEmail() {
   const email = document.getElementById('email').value;
   const { error } = await sb.auth.signInWithOtp({ email, options:{ emailRedirectTo:REDIRECT } });
@@ -142,125 +133,88 @@ async function saveData() {
   if (!user) return;
   await sb.from('score_history').upsert({ user_id:user.id, players, history, updated_at:new Date().toISOString() });
 }
-
-function persistActive() {
-  if (currentGame) localStorage.setItem('gst_active', JSON.stringify(currentGame));
-  else localStorage.removeItem('gst_active');
-}
-function restoreActiveGame() {
-  const saved = localStorage.getItem('gst_active');
-  if (saved) try { currentGame = JSON.parse(saved); } catch(e) {}
-}
+function persistActive() { if (currentGame) localStorage.setItem('gst_active', JSON.stringify(currentGame)); else localStorage.removeItem('gst_active'); }
+function restoreActive() { const s = localStorage.getItem('gst_active'); if (s) try { currentGame = JSON.parse(s); } catch(e){} }
 
 function showView(v) {
   document.querySelectorAll('.view').forEach(el => el.classList.add('hidden'));
-  document.getElementById('view-'+v).classList.remove('hidden');
+  if (v === 'home') document.getElementById('view-home').classList.remove('hidden');
+  else if (v === 'new') { document.getElementById('view-new').classList.remove('hidden'); renderNew(); }
+  else if (v === 'history') { document.getElementById('view-history').classList.remove('hidden'); renderHistory(); }
+  else if (v === 'active' && currentGame) { document.getElementById('app-view').classList.remove('hidden'); renderLeaderboard(); }
   document.querySelectorAll('.bottom-nav button').forEach(b => b.classList.remove('active'));
   document.getElementById('nav-'+v)?.classList.add('active');
-  if (v==='home') renderRecent();
-  if (v==='new') renderNew();
-  if (v==='history') renderHistory();
-  if (v==='active' && currentGame) renderLeaderboard();
 }
 
 function renderNew() {
-  document.getElementById('game-grid').innerHTML = games.map(g => `
-    <div class="game-card ${g.id===selectedGame?'selected':''}" onclick="selectGame('${g.id}')"
-         style="${g.img?`background-image:url('${g.img}')`:''}"><div class="overlay">${g.name}</div></div>
-  `).join('');
-  document.getElementById('player-chips').innerHTML = players.map(p=>`<span class="small">${p} </span>`).join('') || '<span class="small">Add players below</span>';
+  document.getElementById('player-chips').innerHTML = players.map(p=>`<span>${p} </span>`).join('') || 'Add players';
 }
-function selectGame(id){ selectedGame=id; renderNew(); }
-function addPlayer(){
+function addPlayer() {
   const name = document.getElementById('new-player-name').value.trim();
   if (name && !players.includes(name)) { players.push(name); document.getElementById('new-player-name').value=''; saveData(); renderNew(); }
 }
-
-function startGame(){
-  if (!players.length){ alert('Add players'); return; }
-  currentGame = { type:selectedGame, players:players.map(n=>({name:n,score:0})), rounds:[] };
+function startGame() {
+  if (!players.length) { alert('Add players'); return; }
+  currentGame = { type:'catan', players:players.map(n=>({name:n,score:0})), rounds:[] };
   persistActive();
   showView('active');
 }
 
-function renderLeaderboard(){
+function renderLeaderboard() {
   const sorted = [...currentGame.players].map((p,i)=>({...p,idx:i})).sort((a,b)=>b.score-a.score);
   document.getElementById('leaderboard').innerHTML = sorted.map((p, rank) => `
     <div class="player-row" onclick="openPad(${p.idx})">
-      <div class="flex"><span class="rank">${rank+1}</span><strong>${p.name}</strong></div>
-      <div style="font-size:1.5rem;color:var(--accent)">${p.score}</div>
+      <div class="shield" style="background:${SHIELDS[p.idx % SHIELDS.length]}">🏰</div>
+      <div class="player-name">${p.name}</div>
+      <div class="stars">${'★'.repeat(Math.min(p.score,10))}</div>
+      <div class="vp-num">${p.score}</div>
     </div>
   `).join('');
   document.getElementById('pad').classList.add('hidden');
 }
 
-function openPad(idx){
+function openPad(idx) {
   scoringPlayer = idx;
   document.getElementById('pad').classList.remove('hidden');
-  document.getElementById('pad').innerHTML = `
-    <div class="mode-toggle">
-      <button class="btn ${catanMode==='simple'?'active':''}" onclick="setCatanMode('simple')">Simple VPs</button>
-      <button class="btn ${catanMode==='detailed'?'active':''}" onclick="setCatanMode('detailed')">Detailed</button>
-    </div>
-    <div id="catan-form"></div>
-  `;
-  setCatanMode(catanMode);
+  setMode(mode);
 }
 
-function setCatanMode(mode){
-  catanMode = mode;
-  const form = document.getElementById('catan-form');
+function setMode(m) {
+  mode = m;
+  document.getElementById('mode-simple').classList.toggle('active', m==='simple');
+  document.getElementById('mode-detailed').classList.toggle('active', m==='detailed');
+  const form = document.getElementById('score-form');
   const name = currentGame.players[scoringPlayer].name;
-  if (mode === 'simple') {
+  if (m === 'simple') {
     form.innerHTML = `
-      <div class="small" style="margin:.4rem 0">Enter VPs for <strong>${name}</strong></div>
-      <input type="number" id="catan-simple" value="0" placeholder="Victory Points">
-      <button class="btn primary" style="margin-top:.6rem;width:100%" onclick="commitCatanSimple()">Add VPs</button>
+      <div class="adjust-box">
+        <button class="adj-btn" onclick="adj(-1)">−</button>
+        <div class="adj-val" id="adj-val">1</div>
+        <button class="adj-btn" onclick="adj(1)">+</button>
+      </div>
+      <button class="btn gold" onclick="commitSimple()">Add ${adjVal} VP to ${name}</button>
     `;
+    adjVal = 1;
   } else {
     form.innerHTML = `
-      <div class="small" style="margin:.4rem 0">Detailed · ${name}</div>
-      <div class="res-grid">
-        <button class="res-btn" style="background:#8B4513" onclick="addRes(1)">🪵 Wood</button>
-        <button class="res-btn" style="background:#27ae60" onclick="addRes(1)">🐑 Sheep</button>
-        <button class="res-btn" style="background:#f4d03f;color:#1a120b" onclick="addRes(1)">🌾 Wheat</button>
-        <button class="res-btn" style="background:#c0392b" onclick="addRes(1)">🧱 Brick</button>
-        <button class="res-btn" style="background:#7f8c8d" onclick="addRes(1)">⛰️ Ore</button>
-      </div>
-      <div class="vp-grid">
-        <button class="vp-btn" onclick="addVP(1)">🏠 Settlement +1</button>
-        <button class="vp-btn" onclick="addVP(2)">🏙️ City +2</button>
-        <button class="vp-btn" onclick="addVP(2)">🛣️ Longest Road +2</button>
-        <button class="vp-btn" onclick="addVP(2)">⚔️ Largest Army +2</button>
-      </div>
-      <div class="small" id="catan-preview">Round total: 0</div>
-      <button class="btn primary" style="margin-top:.6rem;width:100%" onclick="commitCatanDetailed()">Add to Score</button>
+      <div class="cat-row" onclick="addCat(1)"><div class="cat-icon" style="background:#c0392b">🏠</div><div class="cat-text"><strong>Settlements</strong><span>+1 VP</span></div></div>
+      <div class="cat-row" onclick="addCat(2)"><div class="cat-icon" style="background:#b8860b">🏙️</div><div class="cat-text"><strong>Cities</strong><span>+2 VP</span></div></div>
+      <div class="cat-row" onclick="addCat(2)"><div class="cat-icon" style="background:#27ae60">🛤️</div><div class="cat-text"><strong>Longest Road</strong><span>+2 VP</span></div></div>
+      <div class="cat-row" onclick="addCat(2)"><div class="cat-icon" style="background:#8e44ad">⚔️</div><div class="cat-text"><strong>Largest Army</strong><span>+2 VP</span></div></div>
+      <div class="cat-row" onclick="addCat(1)"><div class="cat-icon" style="background:#d4a017">📜</div><div class="cat-text"><strong>VP Card</strong><span>+1 VP</span></div></div>
+      <div id="cat-total" style="text-align:center;margin:0.5rem 0">Round: 0</div>
+      <button class="btn gold" onclick="commitDetailed()">Add to Score</button>
     `;
-    window._catanRound = 0;
+    window._round = 0;
   }
 }
 
-let _catanRound = 0;
-function addRes(n){ _catanRound += n; updateCatanPreview(); }
-function addVP(n){ _catanRound += n; updateCatanPreview(); }
-function updateCatanPreview(){
-  const el = document.getElementById('catan-preview');
-  if (el) el.textContent = 'Round total: ' + _catanRound;
-}
+function adj(n) { adjVal = Math.max(1, adjVal + n); document.getElementById('adj-val').textContent = adjVal; document.querySelector('#score-form .btn.gold').textContent = `Add ${adjVal} VP to ${currentGame.players[scoringPlayer].name}`; }
+function addCat(n) { window._round = (window._round||0) + n; document.getElementById('cat-total').textContent = 'Round: ' + window._round; }
+function commitSimple() { currentGame.players[scoringPlayer].score += adjVal; persistActive(); renderLeaderboard(); }
+function commitDetailed() { currentGame.players[scoringPlayer].score += window._round||0; window._round=0; persistActive(); renderLeaderboard(); }
 
-function commitCatanSimple(){
-  currentGame.players[scoringPlayer].score += +document.getElementById('catan-simple').value || 0;
-  persistActive();
-  renderLeaderboard();
-}
-function commitCatanDetailed(){
-  currentGame.players[scoringPlayer].score += _catanRound;
-  _catanRound = 0;
-  persistActive();
-  renderLeaderboard();
-}
-
-function endGame(){
+function endGame() {
   currentGame.endTime = new Date().toISOString();
   history.unshift(currentGame);
   saveData();
@@ -268,11 +222,8 @@ function endGame(){
   currentGame = null;
   showView('history');
 }
-function renderRecent(){
-  document.getElementById('recent-list').innerHTML = history.slice(0,5).map(g=>`<div>${g.type} · ${new Date(g.endTime||Date.now()).toLocaleDateString()}</div>`).join('') || '<p class="small">No games yet</p>';
-}
-function renderHistory(){
-  document.getElementById('history-list').innerHTML = history.map(g=>`<div class="card"><strong>${g.type}</strong><br>${g.players.map(p=>p.name+': '+p.score).join(' · ')}</div>`).join('') || '<p class="small">No history</p>';
+function renderHistory() {
+  document.getElementById('history-list').innerHTML = history.map(g=>`<div>${g.type}: ${g.players.map(p=>p.name+':'+p.score).join(', ')}</div>`).join('') || 'No history';
 }
 
 checkSession();
