@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0b1220">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="score-tracker-build" content="v11-nertz-midnight-parlor-2026-11-26">
+<meta name="score-tracker-build" content="v12-nertz-streamlined-2026-11-26">
 <title>Score Tracker</title>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon-512.jpg" type="image/jpeg">
@@ -1475,6 +1475,31 @@ body.theme-nertz .nz-row.selected {
     inset 0 1px 0 rgba(255, 255, 255, 0.92);
 }
 body.theme-nertz .nz-row.leader .nz-score { color: #7a4e08; }
+body.theme-nertz .nz-row.is-nertz-caller {
+  border-color: #f6e19e;
+  background: linear-gradient(180deg, #fff9e6 0%, #f3e2b2 100%);
+  box-shadow:
+    0 0 0 2px rgba(230, 198, 119, 0.78),
+    0 8px 22px rgba(230, 198, 119, 0.28),
+    inset 0 0 18px rgba(230, 198, 119, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.94);
+}
+body.theme-nertz .nz-nertz-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #efd282 0%, #c89c42 100%);
+  border: 1px solid #9c7224;
+  color: #091426;
+  font: 700 0.66rem/1.1 var(--nz-serif);
+  letter-spacing: 0.9px;
+  text-transform: uppercase;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.24), inset 0 1px 0 rgba(255, 250, 224, 0.75);
+  flex-shrink: 0;
+  white-space: nowrap;
+}
 
 
 body.theme-nertz .nz-deck-btn {
@@ -1668,152 +1693,125 @@ body.theme-nertz .nz-scorer-who {
   color: var(--nz-gold-hi);
   white-space: nowrap;
 }
-body.theme-nertz .nz-entry-tabs {
+
+body.theme-nertz .nz-delta-wrap {
+  padding: 10px 9px 11px;
+  border-radius: 12px;
+  background: rgba(4, 11, 22, 0.76);
+  border: 1px solid rgba(214, 179, 101, 0.44);
+}
+body.theme-nertz .nz-delta-row {
   display: flex;
-  justify-content: center;
-  gap: 6px;
-  margin-bottom: 10px;
+  align-items: center;
+  gap: 9px;
 }
-body.theme-nertz .nz-entry-tab {
-  padding: 4px 11px;
-  border-radius: 999px;
-  background: transparent;
-  border: 1px solid rgba(214, 179, 101, 0.3);
-  color: rgba(230, 198, 119, 0.72);
-  font: 600 0.72rem/1.2 var(--nz-serif);
-  letter-spacing: 0.9px;
-  text-transform: uppercase;
-}
-body.theme-nertz .nz-entry-tab.active {
-  background: rgba(214, 179, 101, 0.18);
-  border-color: var(--nz-gold);
-  color: var(--nz-gold-hi);
-}
-
-
-body.theme-nertz .nz-entry-grid {
-  display: grid;
+body.theme-nertz .nz-sign-toggle {
+  display: inline-grid;
   grid-template-columns: 1fr 1fr;
-  gap: 8px;
-}
-body.theme-nertz .nz-entry-grid[hidden],
-body.theme-nertz .nz-net-wrap[hidden] { display: none !important; }
-body.theme-nertz .nz-box {
+  padding: 3px;
   border-radius: 11px;
-  padding: 9px 7px 10px;
-  background: rgba(4, 11, 22, 0.72);
-  border: 1px solid rgba(214, 179, 101, 0.48);
-  text-align: center;
+  background: rgba(7, 18, 34, 0.95);
+  border: 1px solid rgba(214, 179, 101, 0.44);
+  flex-shrink: 0;
 }
-body.theme-nertz .nz-box-label {
-  font: 600 0.72rem/1.1 var(--nz-serif);
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  color: var(--nz-gold-hi);
-  margin-bottom: 7px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-}
-body.theme-nertz .nz-stepper {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 4px;
-}
-body.theme-nertz .nz-circ {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  background: rgba(214, 179, 101, 0.08);
-  border: 1.5px solid var(--nz-gold);
-  color: var(--nz-gold-hi);
-  font: 600 1.35rem/1 var(--nz-body);
+body.theme-nertz .nz-sign-btn {
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: rgba(230, 198, 119, 0.65);
+  font: 700 1.55rem/1 var(--nz-body);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
+  transition: background 0.14s, color 0.14s, transform 0.08s;
 }
-body.theme-nertz .nz-circ:active { transform: scale(0.92); background: rgba(214, 179, 101, 0.22); }
-body.theme-nertz .nz-box-num {
-  width: 52px;
-  min-width: 0;
-  padding: 2px 0;
-  background: transparent;
-  border: none;
-  border-bottom: 1px dashed rgba(214, 179, 101, 0.32);
-  border-radius: 0;
-  color: var(--nz-gold-hi);
-  font: 700 1.65rem/1 var(--nz-body);
-  text-align: center;
-  font-variant-numeric: lining-nums tabular-nums;
-  -moz-appearance: textfield;
-  appearance: textfield;
+body.theme-nertz .nz-sign-btn:active { transform: scale(0.94); }
+body.theme-nertz .nz-sign-btn.is-plus.active {
+  background: linear-gradient(180deg, #efd282 0%, #c89c42 100%);
+  color: #071222;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
 }
-body.theme-nertz .nz-box-num::-webkit-outer-spin-button,
-body.theme-nertz .nz-box-num::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-body.theme-nertz .nz-box-num.is-neg { color: var(--nz-crimson); }
-body.theme-nertz .nz-box-sub {
-  margin-top: 5px;
-  font-size: 0.72rem;
-  color: rgba(230, 198, 119, 0.65);
-}
-
-
-body.theme-nertz .nz-net-wrap {
-  padding: 10px 8px;
-  border-radius: 11px;
-  background: rgba(4, 11, 22, 0.72);
-  border: 1px solid rgba(214, 179, 101, 0.45);
-}
-body.theme-nertz .nz-net-row {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
+body.theme-nertz .nz-sign-btn.is-minus.active {
+  background: linear-gradient(180deg, #d94141 0%, #9f1d22 100%);
+  color: #fff8ec;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
 }
 body.theme-nertz .nz-net-input {
-  width: 88px;
-  height: 44px;
+  flex: 1;
+  min-width: 0;
+  height: 52px;
+  padding: 0 12px;
   text-align: center;
-  background: rgba(8, 22, 42, 0.9);
+  background: rgba(8, 22, 42, 0.94);
   border: 1.5px solid var(--nz-gold);
-  border-radius: 10px;
+  border-radius: 11px;
   color: var(--nz-gold-hi);
-  font: 700 1.4rem/1 var(--nz-body);
+  font: 700 1.8rem/1 var(--nz-body);
+  font-variant-numeric: lining-nums tabular-nums;
+  font-size: 26px !important;
+  outline: none;
+}
+body.theme-nertz .nz-net-input::placeholder { color: rgba(230, 198, 119, 0.36); }
+body.theme-nertz .nz-net-input:focus {
+  border-color: var(--nz-gold-hi);
+  box-shadow: 0 0 0 3px rgba(230, 198, 119, 0.22);
+}
+body.theme-nertz .nz-net-input.is-neg {
+  color: #f87171;
+  border-color: rgba(209, 56, 56, 0.78);
+}
+body.theme-nertz .nz-quick-row {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 5px;
+  margin-top: 9px;
 }
 body.theme-nertz .nz-net-step {
-  padding: 0 10px;
-  height: 40px;
-  border-radius: 9px;
-  background: rgba(214, 179, 101, 0.12);
-  border: 1px solid rgba(214, 179, 101, 0.48);
+  height: 38px;
+  padding: 0 2px;
+  border-radius: 8px;
+  background: rgba(214, 179, 101, 0.11);
+  border: 1px solid rgba(214, 179, 101, 0.42);
   color: var(--nz-gold-hi);
-  font: 700 0.88rem/1 var(--nz-serif);
+  font: 700 0.82rem/1 var(--nz-serif);
+  font-variant-numeric: lining-nums tabular-nums;
+  transition: transform 0.08s, background 0.12s;
 }
-body.theme-nertz .nz-net-step:active { transform: scale(0.95); }
+body.theme-nertz .nz-net-step.is-neg {
+  background: rgba(209, 56, 56, 0.12);
+  border-color: rgba(209, 56, 56, 0.42);
+  color: #fca5a5;
+}
+body.theme-nertz .nz-net-step:active { transform: scale(0.94); }
 
 
-body.theme-nertz .nz-bonus-row {
-  display: flex;
-  justify-content: center;
-  margin-top: 8px;
-}
-body.theme-nertz .nz-bonus-chip {
-  padding: 5px 12px;
-  border-radius: 999px;
+body.theme-nertz .nz-got-nertz {
+  width: 100%;
+  margin-top: 10px;
+  height: 42px;
+  border-radius: 10px;
   background: rgba(214, 179, 101, 0.08);
-  border: 1px solid rgba(214, 179, 101, 0.38);
-  color: rgba(230, 198, 119, 0.82);
-  font: 600 0.76rem/1.2 var(--nz-serif);
-  letter-spacing: 0.7px;
+  border: 1.5px dashed rgba(214, 179, 101, 0.52);
+  color: var(--nz-gold);
+  font: 700 0.84rem/1 var(--nz-serif);
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  transition: background 0.14s, color 0.14s, border-color 0.14s, box-shadow 0.14s, transform 0.08s;
 }
-body.theme-nertz .nz-bonus-chip.active {
-  background: rgba(230, 198, 119, 0.24);
-  border-color: var(--nz-gold-hi);
-  color: var(--nz-gold-hi);
+body.theme-nertz .nz-got-nertz:active { transform: scale(0.98); }
+body.theme-nertz .nz-got-nertz.is-active {
+  background: linear-gradient(180deg, #f5dc8d 0%, #cfa042 100%);
+  border: 1.5px solid #fff3c4;
+  color: #071222;
+  box-shadow: 0 0 16px rgba(230, 198, 119, 0.42), inset 0 1px 0 rgba(255, 252, 232, 0.85);
 }
+body.theme-nertz .nz-got-nertz-ic { font-size: 1rem; line-height: 1; }
 
 
 body.theme-nertz .nz-preview-wrap {
@@ -2123,7 +2121,7 @@ body.theme-nertz .nz-move-sel {
   color: var(--nz-gold-hi);
   font-size: 0.74rem !important;
 }
-body.theme-nertz .nz-quick-row {
+body.theme-nertz .nz-sheet .nz-quick-row {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
@@ -2157,11 +2155,14 @@ body.theme-nertz .nz-sub-line {
 body.theme-nertz .nz-sub-line .nz-partners { margin-top: 0; min-width: 0; flex: 1; }
 body.theme-nertz .nz-sub-line .nz-round-tag,
 body.theme-nertz .nz-sub-line .nz-called-badge { margin-left: 0; flex-shrink: 0; }
+body.theme-nertz .nz-hist-row.is-nertz-caller { color: var(--nz-gold-hi); }
+body.theme-nertz .nz-hist-row .nz-nertz-badge { margin-left: 6px; vertical-align: 1px; }
+body.theme-nertz #nz-shell .nz-net-input { font-size: 28px !important; letter-spacing: 0.5px; }
 
 </style>
 </head>
 <body>
-<!-- Build: v11-nertz-midnight-parlor-2026-11-26 -->
+<!-- Build: v12-nertz-streamlined-2026-11-26 -->
 
 <!-- Login: starts hidden until getSession() resolves -->
 <section id="login-view" class="auth-hidden" hidden aria-label="Sign in to Score Tracker">
@@ -2379,7 +2380,6 @@ body.theme-nertz .nz-sub-line .nz-called-badge { margin-left: 0; flex-shrink: 0;
             <rect x="122" y="12" width="30" height="40" rx="2" transform="rotate(12 137 32)"/>
             <rect x="68" y="12" width="30" height="40" rx="2" transform="rotate(-12 83 32)"/>
           </g>
-          <!-- Center gold spade crest -->
           <path d="M110 20c-2 6-10 11-10 17 0 4 3 6.5 6.5 6.5 1.8 0 3-.8 3.5-1.8-.3 2.5-1.5 4.3-3.5 5.3h7c-2-1-3.2-2.8-3.5-5.3.5 1 1.7 1.8 3.5 1.8 3.5 0 6.5-2.5 6.5-6.5 0-6-8-11-10-17z" fill="url(#nz-gold-grad)" stroke="#071222" stroke-width="1"/>
         </svg>
       </div>
@@ -2415,65 +2415,45 @@ body.theme-nertz .nz-sub-line .nz-called-badge { margin-left: 0; flex-shrink: 0;
       </div>
     </header>
 
-    <!-- PLAYER / TEAM ROSTER (Ivory Playing-Card Rows) -->
+    <!-- PLAYER / TEAM ROSTER (Ivory Playing-Card Rows; .is-nertz-caller highlights caller) -->
     <div id="nz-roster" class="nz-roster" role="listbox" aria-label="Players or teams"></div>
 
-    <!-- ROUND SCORING PANEL -->
+    <!-- STREAMLINED ROUND SCORING PANEL (Addition / Subtraction + Got Nertz! Highlight) -->
     <section id="nz-scorer" class="nz-scorer" aria-label="Round scoring">
       <div class="nz-scorer-head">
         <span class="nz-scorer-who" id="nz-scorer-who">ROUND SCORING • —</span>
       </div>
 
-      <!-- Split (Lake +1 / Nertz Left -2) vs Quick Net toggle -->
-      <div class="nz-entry-tabs" role="tablist" aria-label="Round entry style">
-        <button type="button" class="nz-entry-tab active" id="nz-entry-split" role="tab" aria-selected="true" onclick="nzSetEntryMode && nzSetEntryMode('split')">Lake &amp; Nertz</button>
-        <button type="button" class="nz-entry-tab" id="nz-entry-net" role="tab" aria-selected="false" onclick="nzSetEntryMode && nzSetEntryMode('net')">Quick Net</button>
-      </div>
-
-      <!-- Lake (+1) & Nertz Left (-2) Steppers -->
-      <div id="nz-split-wrap" class="nz-entry-grid">
-        <div class="nz-box">
-          <div class="nz-box-label"><span aria-hidden="true">♠</span> LAKE</div>
-          <div class="nz-stepper">
-            <button type="button" class="nz-circ" id="nz-lake-minus" aria-label="Decrease Lake cards" onclick="nzStepLake && nzStepLake(-1)">−</button>
-            <input type="number" inputmode="numeric" min="0" max="52" class="nz-box-num" id="nz-lake-val" value="0" aria-label="Lake cards played" oninput="nzSyncPreview && nzSyncPreview()">
-            <button type="button" class="nz-circ" id="nz-lake-plus" aria-label="Increase Lake cards" onclick="nzStepLake && nzStepLake(1)">+</button>
+      <div id="nz-delta-wrap" class="nz-delta-wrap">
+        <!-- Prominent - / + sign toggle + large tabular score input -->
+        <div class="nz-delta-row">
+          <div class="nz-sign-toggle" role="group" aria-label="Add or subtract points">
+            <button type="button" class="nz-sign-btn is-minus" id="nz-sign-minus" aria-pressed="false" aria-label="Subtract points" onclick="nzSetSign && nzSetSign(-1)">−</button>
+            <button type="button" class="nz-sign-btn is-plus active" id="nz-sign-plus" aria-pressed="true" aria-label="Add points" onclick="nzSetSign && nzSetSign(1)">+</button>
           </div>
-          <div class="nz-box-sub">+1 per card</div>
+          <input type="text" inputmode="numeric" pattern="-?[0-9]*" class="nz-net-input" id="nz-net-input" value="" placeholder="0" aria-label="Round points to add or subtract" oninput="nzSyncPreview && nzSyncPreview()" onfocus="this.select()">
         </div>
 
-        <div class="nz-box">
-          <div class="nz-box-label"><span aria-hidden="true">♠</span> NERTZ LEFT</div>
-          <div class="nz-stepper">
-            <button type="button" class="nz-circ" id="nz-nertz-minus" aria-label="Decrease Nertz pile left" onclick="nzStepNertz && nzStepNertz(-1)">−</button>
-            <input type="number" inputmode="numeric" min="0" max="13" class="nz-box-num is-neg" id="nz-nertz-val" value="0" aria-label="Nertz cards remaining" oninput="nzSyncPreview && nzSyncPreview()">
-            <button type="button" class="nz-circ" id="nz-nertz-plus" aria-label="Increase Nertz pile left" onclick="nzStepNertz && nzStepNertz(1)">+</button>
-          </div>
-          <div class="nz-box-sub">−2 per card</div>
-        </div>
-      </div>
-
-      <!-- Quick Net Entry (hidden until Quick Net tab active) -->
-      <div id="nz-net-wrap" class="nz-net-wrap hidden" hidden>
-        <div class="nz-net-row">
-          <button type="button" class="nz-net-step" onclick="nzStepNet && nzStepNet(-5)">−5</button>
-          <button type="button" class="nz-net-step" onclick="nzStepNet && nzStepNet(-1)">−1</button>
-          <input type="number" inputmode="numeric" class="nz-net-input" id="nz-net-input" value="0" aria-label="Net round score" oninput="nzSyncPreview && nzSyncPreview()">
+        <!-- Quick +/- steppers for one-tap mobile entry -->
+        <div class="nz-quick-row" aria-label="Quick point adjustments">
+          <button type="button" class="nz-net-step is-neg" onclick="nzStepNet && nzStepNet(-10)">−10</button>
+          <button type="button" class="nz-net-step is-neg" onclick="nzStepNet && nzStepNet(-5)">−5</button>
+          <button type="button" class="nz-net-step is-neg" onclick="nzStepNet && nzStepNet(-1)">−1</button>
           <button type="button" class="nz-net-step" onclick="nzStepNet && nzStepNet(1)">+1</button>
           <button type="button" class="nz-net-step" onclick="nzStepNet && nzStepNet(5)">+5</button>
+          <button type="button" class="nz-net-step" onclick="nzStepNet && nzStepNet(10)">+10</button>
         </div>
-      </div>
 
-      <!-- Optional Nertz-Out Caller Bonus -->
-      <div class="nz-bonus-row hidden" id="nz-bonus-row" hidden>
-        <button type="button" class="nz-bonus-chip" id="nz-bonus-toggle" aria-pressed="false" onclick="nzToggleBonus && nzToggleBonus()">
-          ★ Called Nertz (+10 bonus)
+        <!-- Tactile gold-foil "Got Nertz!" highlight toggle -->
+        <button type="button" class="nz-got-nertz" id="nz-got-nertz-btn" aria-pressed="false" onclick="nzToggleGotNertz && nzToggleGotNertz()">
+          <span class="nz-got-nertz-ic" aria-hidden="true">♠</span>
+          <span>Got Nertz!</span>
         </button>
       </div>
 
-      <!-- Live Preview + Confirm -->
+      <!-- Live Signed Preview + Gold Foil Confirm -->
       <div class="nz-preview-wrap">
-        <div class="nz-preview-label">ROUND TOTAL (LIVE PREVIEW)</div>
+        <div class="nz-preview-label">ROUND SCORE (LIVE PREVIEW)</div>
         <div class="nz-preview-val" id="nz-preview" aria-live="polite">+0</div>
         <button type="button" class="nz-confirm" id="nz-confirm" onclick="nzConfirmRound && nzConfirmRound()">
           <span aria-hidden="true">♠</span>
@@ -4804,14 +4784,14 @@ window.SocialUI = (function () {
    - Solo mode (unlimited players; auto-seeds signed-in user as Player 1)
    - Partners / Teams mode (unlimited teams, each with 2+ editable partners;
      auto-pairs Social Group members when started from a group)
-   - Round scoring via Lake (+1) & Nertz Pile Left (-2, 0 = "Nertz!" badge)
-     with live signed net delta (can go negative)
-   - Direct net entry mode (e.g. +14 or -6)
+   - Pure round-by-round signed delta scoring (+14, -6, 0) — no Lake / Nertz split
+   - Per-round Nertz caller highlight (`nertzDraftCallerIdx` + `nzToggleNertzCaller`)
+     tracking `calledNertz` per round and running `nertzCalls` count
    - Running totals (can go negative), Undo Last Round, expandable round log
    - 8 parlor deck-back colors per player/team, editable Target Score (100)
    - Leader & target-reached winner banner state
    - History + Supabase `games` / `game_participants` + Group Leaderboard
-     compatibility (including partner expansion in Teams mode)
+     compatibility (`members` array + partner expansion in Teams mode)
    ========================================================================== */
 
 (function (global) {
@@ -4837,12 +4817,6 @@ window.SocialUI = (function () {
 
   function cleanStr(v) {
     return String(v ?? '').trim();
-  }
-
-  function clampNonNegInt(v) {
-    const n = parseInt(String(v ?? '').trim(), 10);
-    if (!Number.isFinite(n) || n < 0) return 0;
-    return Math.min(999, n);
   }
 
   function parseSignedInt(v) {
@@ -4912,7 +4886,18 @@ window.SocialUI = (function () {
   }
 
   function emptyDraftEntry() {
-    return { lake: 0, nertzLeft: 0, direct: 0, touched: false };
+    return { delta: 0, touched: false };
+  }
+
+  function normalizeCallerIdx(game) {
+    const len = Array.isArray(game.players) ? game.players.length : 0;
+    const raw = game.nertzDraftCallerIdx;
+    if (Number.isInteger(raw) && raw >= 0 && raw < len) {
+      game.nertzDraftCallerIdx = raw;
+    } else {
+      game.nertzDraftCallerIdx = null;
+    }
+    return game.nertzDraftCallerIdx;
   }
 
   function ensureDraft(game) {
@@ -4922,27 +4907,19 @@ window.SocialUI = (function () {
     const next = {};
     (game.players || []).forEach((_, idx) => {
       const cur = game.nertzDraft[idx];
-      next[idx] = cur && typeof cur === 'object'
-        ? {
-            lake: clampNonNegInt(cur.lake),
-            nertzLeft: clampNonNegInt(cur.nertzLeft),
-            direct: parseSignedInt(cur.direct),
-            touched: Boolean(cur.touched)
-          }
-        : emptyDraftEntry();
+      if (cur && typeof cur === 'object') {
+        const rawDelta = cur.delta !== undefined ? cur.delta : cur.direct;
+        next[idx] = {
+          delta: parseSignedInt(rawDelta),
+          touched: Boolean(cur.touched)
+        };
+      } else {
+        next[idx] = emptyDraftEntry();
+      }
     });
     game.nertzDraft = next;
+    normalizeCallerIdx(game);
     return game.nertzDraft;
-  }
-
-  // ---------------- Core Math ----------------
-  function nzCalcCardNet(lake, nertzLeft) {
-    return clampNonNegInt(lake) - 2 * clampNonNegInt(nertzLeft);
-  }
-
-  function nzIsNertzCall(entry) {
-    if (!entry) return false;
-    return Boolean(entry.touched) && clampNonNegInt(entry.nertzLeft) === 0;
   }
 
   // ---------------- Initialization & Normalization ----------------
@@ -4958,7 +4935,7 @@ window.SocialUI = (function () {
     game.type = 'nertz';
     game.target = clampTarget(game.target ?? DEFAULT_TARGET);
     game.nertzMode = game.nertzMode === 'teams' ? 'teams' : 'solo';
-    game.nertzEntryMode = game.nertzEntryMode === 'direct' ? 'direct' : 'cards';
+    delete game.nertzEntryMode;
     game.nertzLogOpen = Boolean(game.nertzLogOpen);
     game.rounds = Array.isArray(game.rounds) ? game.rounds : [];
     game.players = Array.isArray(game.players) ? game.players : [];
@@ -5080,7 +5057,6 @@ window.SocialUI = (function () {
     const existingColors = (game.players || []).map((p) => p.color);
 
     if (nextMode === 'teams') {
-      // Snapshot solo players before converting
       const soloList = (game.players || []).map((p) => ({
         name: p.name,
         userId: p.userId ?? null,
@@ -5094,7 +5070,6 @@ window.SocialUI = (function () {
       game.nertzMode = 'teams';
       game.players = pairIntoTeams(sourceMembers, existingColors);
     } else {
-      // Flatten team partners back to solo players (fallback to soloRoster)
       const fromTeams = (game.players || []).flatMap((t) => Array.isArray(t.partners) ? t.partners : []);
       const restored = dedupePartners(fromTeams.length ? fromTeams : (game.soloRoster || []));
 
@@ -5114,6 +5089,7 @@ window.SocialUI = (function () {
     game.rounds = [];
     game.winner = null;
     game.nertzDraft = {};
+    game.nertzDraftCallerIdx = null;
     nzNormalize(game, options);
     return { ok: true, changed: true, mode: nextMode };
   }
@@ -5146,6 +5122,7 @@ window.SocialUI = (function () {
     if (game.players.length <= 1) return false;
     game.players.splice(idx, 1);
     game.nertzDraft = {};
+    game.nertzDraftCallerIdx = null;
     ensureDraft(game);
     return true;
   }
@@ -5173,6 +5150,7 @@ window.SocialUI = (function () {
     if (game.players.length <= 1) return false;
     game.players.splice(teamIdx, 1);
     game.nertzDraft = {};
+    game.nertzDraftCallerIdx = null;
     ensureDraft(game);
     return true;
   }
@@ -5259,78 +5237,83 @@ window.SocialUI = (function () {
     return game.target;
   }
 
-  // ---------------- Round Scoring Draft & Apply ----------------
-  function nzSetEntryMode(game, entryMode) {
-    if (!game || (entryMode !== 'cards' && entryMode !== 'direct')) return false;
-    game.nertzEntryMode = entryMode;
+  // ---------------- Round Scoring Draft, Nertz Caller & Apply ----------------
+  /**
+   * Toggles which player/team called Nertz this round (at most one per round;
+   * tapping the same idx clears it back to null).
+   */
+  function nzToggleNertzCaller(game, idx) {
+    if (!game || !Array.isArray(game.players)) return null;
     ensureDraft(game);
-    return true;
+    if (!Number.isInteger(idx) || idx < 0 || idx >= game.players.length) {
+      game.nertzDraftCallerIdx = null;
+      return null;
+    }
+    game.nertzDraftCallerIdx = game.nertzDraftCallerIdx === idx ? null : idx;
+    return game.nertzDraftCallerIdx;
   }
 
-  function nzSetDraftField(game, idx, field, value) {
+  /**
+   * Sets a player/team's signed integer round delta (+14, -6, 0).
+   */
+  function nzSetDraftDelta(game, idx, value) {
     if (!game || !game.players[idx]) return null;
     ensureDraft(game);
     const d = game.nertzDraft[idx];
-    if (field === 'lake') {
-      d.lake = clampNonNegInt(value);
-      d.touched = true;
-    } else if (field === 'nertzLeft') {
-      d.nertzLeft = clampNonNegInt(value);
-      d.touched = true;
-    } else if (field === 'direct') {
-      d.direct = parseSignedInt(value);
-      d.touched = true;
-    }
-    const net = game.nertzEntryMode === 'direct' ? d.direct : nzCalcCardNet(d.lake, d.nertzLeft);
+    d.delta = parseSignedInt(value);
+    d.touched = true;
+    const p = game.players[idx];
     return {
-      ...d,
-      net,
-      calledNertz: game.nertzEntryMode === 'cards' && nzIsNertzCall(d)
+      delta: d.delta,
+      net: d.delta,
+      touched: d.touched,
+      calledNertz: game.nertzDraftCallerIdx === idx,
+      projectedTotal: (Number(p.score) || 0) + d.delta
     };
   }
 
-  function nzStepDraftField(game, idx, field, delta) {
+  /**
+   * Adjusts a player/team's signed round delta by `step` (e.g. +1, -1, +5, -5).
+   */
+  function nzStepDraftDelta(game, idx, step) {
     if (!game || !game.players[idx]) return null;
     ensureDraft(game);
     const d = game.nertzDraft[idx];
-    const step = Number(delta) || 0;
-    if (field === 'lake') return nzSetDraftField(game, idx, 'lake', d.lake + step);
-    if (field === 'nertzLeft') return nzSetDraftField(game, idx, 'nertzLeft', d.nertzLeft + step);
-    if (field === 'direct') return nzSetDraftField(game, idx, 'direct', d.direct + step);
-    return null;
+    return nzSetDraftDelta(game, idx, d.delta + (Number(step) || 0));
   }
 
   function nzClearDraft(game) {
     if (!game) return;
     game.nertzDraft = {};
+    game.nertzDraftCallerIdx = null;
     ensureDraft(game);
   }
 
   function nzGetDraftSummary(game) {
-    if (!game || !Array.isArray(game.players)) return { rows: [], hasAnyInput: false };
+    if (!game || !Array.isArray(game.players)) {
+      return { rows: [], hasAnyInput: false, callerIdx: null };
+    }
     ensureDraft(game);
-    const isDirect = game.nertzEntryMode === 'direct';
-    let hasAnyInput = false;
+    const callerIdx = game.nertzDraftCallerIdx;
+    let hasAnyInput = callerIdx !== null;
 
     const rows = game.players.map((p, idx) => {
       const d = game.nertzDraft[idx] || emptyDraftEntry();
       if (d.touched) hasAnyInput = true;
-      const net = isDirect ? d.direct : (d.touched ? nzCalcCardNet(d.lake, d.nertzLeft) : 0);
-      const calledNertz = !isDirect && nzIsNertzCall(d);
+      const delta = d.delta;
+      const calledNertz = callerIdx === idx;
       return {
         idx,
         name: p.name,
-        lake: d.lake,
-        nertzLeft: d.nertzLeft,
-        direct: d.direct,
+        delta,
+        net: delta,
         touched: d.touched,
-        net,
         calledNertz,
-        projectedTotal: (Number(p.score) || 0) + net
+        projectedTotal: (Number(p.score) || 0) + delta
       };
     });
 
-    return { rows, hasAnyInput };
+    return { rows, hasAnyInput, callerIdx };
   }
 
   function nzApplyRound(game) {
@@ -5340,29 +5323,31 @@ window.SocialUI = (function () {
 
     const prev = game.players.map((p) => Number(p.score) || 0);
     const prevNertzCalls = game.players.map((p) => Number(p.nertzCalls) || 0);
-    const deltas = summary.rows.map((r) => r.net);
+    const deltas = summary.rows.map((r) => r.delta);
+    const callerIdx = summary.callerIdx;
 
     game.players.forEach((p, idx) => {
       p.score = prev[idx] + deltas[idx]; // Running totals CAN be negative!
-      if (summary.rows[idx].calledNertz) {
+      if (idx === callerIdx) {
         p.nertzCalls = prevNertzCalls[idx] + 1;
       }
     });
 
     const round = {
       ts: new Date().toISOString(),
-      mode: game.nertzEntryMode,
       prev,
       deltas,
       prevNertzCalls,
+      callerIdx,
       detail: {
         nertzMode: game.nertzMode,
+        callerIdx,
         entries: summary.rows.map((r) => ({
           idx: r.idx,
           name: r.name,
-          ...(game.nertzEntryMode === 'direct'
-            ? { direct: r.direct, net: r.net, calledNertz: false }
-            : { lake: r.lake, nertzLeft: r.nertzLeft, net: r.net, calledNertz: r.calledNertz })
+          delta: r.delta,
+          net: r.delta,
+          calledNertz: r.calledNertz
         }))
       }
     };
@@ -5391,6 +5376,14 @@ window.SocialUI = (function () {
         p.nertzCalls = Math.max(0, Number(last.prevNertzCalls[idx]) || 0);
       }
     });
+
+    // Restore the undone round's Nertz caller highlight cleanly
+    const restoredCaller = last.callerIdx !== undefined
+      ? last.callerIdx
+      : (last.detail && last.detail.callerIdx !== undefined ? last.detail.callerIdx : null);
+    game.nertzDraftCallerIdx = Number.isInteger(restoredCaller) && game.players[restoredCaller]
+      ? restoredCaller
+      : null;
 
     const lead = nzLeaders(game);
     game.winner = lead.reachedTarget ? lead.winners.map((w) => w.name).join(', ') : null;
@@ -5444,6 +5437,7 @@ window.SocialUI = (function () {
     if (!game) return null;
     const finished = JSON.parse(JSON.stringify(game));
     delete finished.nertzDraft;
+    delete finished.nertzDraftCallerIdx;
     finished.endTime = new Date().toISOString();
 
     const scores = (finished.players || []).map((p) => Number(p.score) || 0);
@@ -5461,7 +5455,11 @@ window.SocialUI = (function () {
       p.isWinner = (Number(p.score) || 0) === best;
       if (finished.nertzMode === 'teams') {
         p.userId = null;
-        p.members = (Array.isArray(p.partners) ? p.partners : []).map((m) => ({ name: m.name, userId: m.userId || null, isSelf: !!m.isSelf }));
+        p.members = (Array.isArray(p.partners) ? p.partners : []).map((m) => ({
+          name: m.name,
+          userId: m.userId || null,
+          isSelf: !!m.isSelf
+        }));
       }
     });
 
@@ -5482,11 +5480,6 @@ window.SocialUI = (function () {
   /**
    * Expands a finished Nertz game into `game_participants` compatible rows for
    * `SocialAPI.saveSharedGame` & `SocialScoring.computeGroupLeaderboard`.
-   *
-   * - In `solo` mode: 1 participant per player.
-   * - In `teams` mode: 1 participant per partner so EVERY linked partner gets
-   *   Personal History and Group Leaderboard credit with their team's score & win!
-   *   (Falls back to 1 row for the team name if a team has 0 named partners.)
    */
   function nzBuildSharedParticipants(finishedGame) {
     if (!finishedGame || !Array.isArray(finishedGame.players)) return [];
@@ -5563,8 +5556,6 @@ window.SocialUI = (function () {
     NZ_COLORS,
     nzColor,
     nzFreeColor,
-    nzCalcCardNet,
-    nzIsNertzCall,
     nzNormalize,
     nzSetMode,
     nzAddSoloPlayer,
@@ -5579,9 +5570,9 @@ window.SocialUI = (function () {
     nzCycleColor,
     nzPickColor,
     nzSetTarget,
-    nzSetEntryMode,
-    nzSetDraftField,
-    nzStepDraftField,
+    nzToggleNertzCaller,
+    nzSetDraftDelta,
+    nzStepDraftDelta,
     nzClearDraft,
     nzGetDraftSummary,
     nzApplyRound,
@@ -5614,7 +5605,7 @@ window.SocialUI = (function () {
 
   // ---------------- Games ----------------
   const GAMES = [
-    { id: 'flip7', name: 'Flip 7', img: 'flip7.jpg', fit: 'contain', icon: '🃏',
+    { id: 'flip7', name: 'Flip 7', img: 'assets/games/flip7.svg', icon: '🃏',
       versions: ['Standard (to 200)', 'With a Vengeance', 'Thematic / Promo'],
       target: () => 200, detailedLabel: 'Card Pad' },
     { id: '7wonders', name: '7 Wonders', img: '7wonders.jpg', icon: '🏛️',
@@ -6700,10 +6691,10 @@ window.SocialUI = (function () {
             const cur = p.color === k.key;
             return `<button type="button" class="nz-swatch${cur ? ' active' : ''}" role="menuitemradio" aria-checked="${cur}" data-deck="${k.key}" aria-label="${esc(k.label)}" onclick="nzUiPickDeck(${i}, '${k.key}', event)">${nzDeckSvg}${cur ? '<span class="nz-swatch-check" aria-hidden="true">✓</span>' : ''}</button>`;
           }).join('')}</div></div>` : '';
-      const tags = `${pending ? `<span class="nz-round-tag${r.net < 0 ? ' neg' : ''}">${signed(r.net || 0)}</span>` : ''}${r.calledNertz ? '<span class="nz-called-badge">Nertz!</span>' : ''}`;
+      const tags = `${pending ? `<span class="nz-round-tag${r.net < 0 ? ' neg' : ''}">${signed(r.net || 0)}</span>` : ''}${r.calledNertz ? '<span class="nz-nertz-badge" aria-label="Got Nertz this round">♠ NERTZ</span>' : ''}`;
       const partnerTxt = teams ? `<span class="nz-partners">${(p.partners || []).length ? esc(p.partners.map((pt) => pt.name).join(' & ')) : 'No partners yet — tap + Manage Teams'}</span>` : '';
       const partners = tags || partnerTxt ? `<div class="nz-sub-line">${tags}${partnerTxt}</div>` : '';
-      return `<div class="nz-row${sel ? ' selected' : ''}${isLead ? ' leader' : ''}${g.nzDone.includes(i) ? ' done' : ''}${nzPopIdx === i ? ' picker-open' : ''}" data-idx="${i}" data-name="${esc(p.name)}" role="option" aria-selected="${sel}" tabindex="0"
+      return `<div class="nz-row${sel ? ' selected' : ''}${isLead ? ' leader' : ''}${r.calledNertz ? ' is-nertz-caller' : ''}${g.nzDone.includes(i) ? ' done' : ''}${nzPopIdx === i ? ' picker-open' : ''}" data-idx="${i}" data-name="${esc(p.name)}" role="option" aria-selected="${sel}" tabindex="0"
           onclick="nzUiSelect(${i})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();nzUiSelect(${i})}">
         <button type="button" class="nz-deck-btn" data-deck="${c.key}" aria-haspopup="menu" aria-expanded="${nzPopIdx === i}" aria-label="${esc(p.name)} deck back: ${esc(c.label)}. Tap to pick" onclick="nzUiToggleDeckPop(${i}, event)">${nzDeckSvg}<span class="nz-deck-caret" aria-hidden="true">▾</span></button>
         ${pop}
@@ -6718,15 +6709,21 @@ window.SocialUI = (function () {
     const progress = g.players.length > 1 ? `<div class="nz-progress" id="nz-progress">${done ? `${done} of ${g.players.length} entered this round` : 'Tap a ' + (teams ? 'team' : 'player') + ' card, enter their round, then Confirm'}</div>` : '';
     byId('nz-roster').innerHTML = banner + rows + progress;
   }
+  // Signed round entry: the input text is authoritative ("-12" / "14" / "-" while typing); the −/+ toggle mirrors it.
+  const nzDeltaText = (v) => (v ? String(v) : '');
+  function nzSignOf(text, delta) { return /^\s*-/.test(String(text || '')) || delta < 0 ? -1 : 1; }
   function nzRenderScorer(keepInputs) {
-    const g = currentGame, direct = g.nertzEntryMode === 'direct';
-    const p = g.players[g.nzSel], d = (g.nertzDraft || {})[g.nzSel] || { lake: 0, nertzLeft: 0, direct: 0 };
+    const g = currentGame, N = NZL();
+    const p = g.players[g.nzSel], d = (g.nertzDraft || {})[g.nzSel] || { delta: 0 };
     byId('nz-scorer-who').textContent = 'ROUND SCORING • ' + (p ? p.name.toUpperCase() : '—');
-    [['split', !direct], ['net', direct]].forEach(([k, on]) => { const b = byId('nz-entry-' + k); b.classList.toggle('active', on); b.setAttribute('aria-selected', String(on)); });
-    setHidden(byId('nz-split-wrap'), direct); setHidden(byId('nz-net-wrap'), !direct);
-    if (!keepInputs) { byId('nz-lake-val').value = d.lake; byId('nz-nertz-val').value = d.nertzLeft; byId('nz-net-input').value = d.direct; }
-    const net = direct ? d.direct : NZL().nzCalcCardNet(d.lake, d.nertzLeft);
-    const pv = byId('nz-preview'); pv.textContent = signed(net); pv.classList.toggle('is-neg', net < 0);
+    const input = byId('nz-net-input');
+    if (!keepInputs) input.value = nzDeltaText(d.delta);
+    const sign = nzSignOf(input.value, d.delta);
+    [['minus', sign < 0], ['plus', sign > 0]].forEach(([k, on]) => { const b = byId('nz-sign-' + k); b.classList.toggle('active', on); b.setAttribute('aria-pressed', String(on)); });
+    input.classList.toggle('is-neg', sign < 0);
+    const caller = g.nertzDraftCallerIdx === g.nzSel;
+    const gb = byId('nz-got-nertz-btn'); gb.classList.toggle('is-active', caller); gb.setAttribute('aria-pressed', String(caller));
+    const pv = byId('nz-preview'); pv.textContent = signed(d.delta || 0); pv.classList.toggle('is-neg', d.delta < 0);
     const remaining = g.players.filter((_, i) => i !== g.nzSel && !g.nzDone.includes(i)).length;
     const lbl = byId('nz-confirm').querySelector('span:nth-child(2)');
     if (lbl) lbl.textContent = remaining ? 'CONFIRM · NEXT' : 'CONFIRM ROUND';
@@ -6737,8 +6734,8 @@ window.SocialUI = (function () {
     if (!g.nertzLogOpen) return;
     el.innerHTML = g.rounds.length ? g.rounds.map((r, k) => ({ r, k })).reverse().map(({ r, k }) => {
       const entries = (r.detail && r.detail.entries) || g.players.map((p, i) => ({ name: p.name, net: (r.deltas || [])[i] || 0 }));
-      return `<div class="nz-hist-round">Round ${k + 1} · ${r.mode === 'direct' ? 'Quick Net' : r.mode === 'cards' ? 'Lake &amp; Nertz' : 'Score'}</div>` + entries.map((e) =>
-        `<div class="nz-hist-row"><span>${esc(e.name)}${e.calledNertz ? ' ★ Nertz!' : ''}${e.lake !== undefined ? ` <small>(${e.lake} lake · ${e.nertzLeft} left)</small>` : ''}</span><span class="${e.net < 0 ? 'neg' : ''}">${signed(Number(e.net) || 0)}</span></div>`).join('');
+      return `<div class="nz-hist-round">Round ${k + 1}</div>` + entries.map((e) =>
+        `<div class="nz-hist-row${e.calledNertz ? ' is-nertz-caller' : ''}"><span>${esc(e.name)}${e.calledNertz ? ' <span class="nz-nertz-badge">♠ NERTZ</span>' : ''}</span><span class="${e.net < 0 ? 'neg' : ''}">${signed(Number(e.net ?? e.delta) || 0)}</span></div>`).join('');
     }).join('') : '<div class="nz-hist-empty">No rounds yet.</div>';
   }
 
@@ -6758,26 +6755,36 @@ window.SocialUI = (function () {
     }
     nzPopIdx = -1; nzResetProgress(); nzCommit(true); return !!r.ok;
   }
-  function nzUiSetEntryMode(m) {
-    if (!isNertz()) return false;
-    NZL().nzSetEntryMode(currentGame, m === 'net' || m === 'direct' ? 'direct' : 'cards');
-    nzCommit(true); return currentGame.nertzEntryMode;
-  }
-  function nzStep(field, delta) {
+  function nzStepNet(step) {
     if (!isNertz()) return null;
-    const r = NZL().nzStepDraftField(currentGame, currentGame.nzSel, field, delta);
+    const r = NZL().nzStepDraftDelta(currentGame, currentGame.nzSel, step);
     nzCommit(false); nzRenderScorer(false); return r;
   }
-  const nzStepLake = (d) => nzStep('lake', d), nzStepNertz = (d) => nzStep('nertzLeft', d), nzStepNet = (d) => nzStep('direct', d);
+  function nzSetSign(sign) {
+    if (!isNertz()) return null;
+    const g = currentGame, i = g.nzSel, d = g.nertzDraft[i] || { delta: 0 }, input = byId('nz-net-input');
+    const mag = Math.abs(Number(d.delta) || 0), want = sign < 0 ? -1 : 1;
+    const r = NZL().nzSetDraftDelta(g, i, want * mag);
+    nzCommit(false);
+    input.value = mag ? String(want * mag) : (want < 0 ? '-' : '');   // "-" arms negative entry for the next digit
+    nzRenderScorer(true);
+    return r;
+  }
   function nzSyncPreview() {
     if (!isNertz()) return null;
-    const g = currentGame, N = NZL(), i = g.nzSel;
-    let r;
-    if (g.nertzEntryMode === 'direct') r = N.nzSetDraftField(g, i, 'direct', byId('nz-net-input').value);
-    else { N.nzSetDraftField(g, i, 'lake', byId('nz-lake-val').value); r = N.nzSetDraftField(g, i, 'nertzLeft', byId('nz-nertz-val').value); }
+    const g = currentGame, input = byId('nz-net-input');
+    const raw = String(input.value || '').replace(/[^0-9+-]/g, '');
+    const neg = /^-/.test(raw), digits = raw.replace(/[^0-9]/g, '').slice(0, 4);
+    const clean = (neg ? '-' : '') + digits;
+    if (clean !== input.value) input.value = clean;
+    const r = NZL().nzSetDraftDelta(g, g.nzSel, (neg ? -1 : 1) * (Number(digits) || 0));
     nzCommit(false); return r;
   }
-  function nzToggleBonus() { return false; }
+  function nzToggleGotNertz() {
+    if (!isNertz()) return null;
+    const c = NZL().nzToggleNertzCaller(currentGame, currentGame.nzSel);
+    nzCommit(false); return c;
+  }
   function nzConfirmRound() {
     if (!isNertz()) return null;
     const g = currentGame, N = NZL(), n = g.players.length, sel = g.nzSel;
@@ -6785,10 +6792,7 @@ window.SocialUI = (function () {
     let next = -1;
     for (let s = 1; s <= n; s++) { const k = (sel + s) % n; if (!g.nzDone.includes(k)) { next = k; break; } }
     if (next >= 0) { g.nzSel = next; nzCommit(true); return { next }; }
-    if (!N.nzGetDraftSummary(g).hasAnyInput) {
-      const d = g.nertzDraft[sel];
-      N.nzSetDraftField(g, sel, g.nertzEntryMode === 'direct' ? 'direct' : 'lake', g.nertzEntryMode === 'direct' ? d.direct : d.lake);
-    }
+    if (!N.nzGetDraftSummary(g).hasAnyInput) N.nzSetDraftDelta(g, sel, (g.nertzDraft[sel] || {}).delta || 0);
     const round = N.nzApplyRound(g);
     nzResetProgress(); nzCommit(true);
     return round;
@@ -6796,7 +6800,8 @@ window.SocialUI = (function () {
   function nzUndo() {
     if (!isNertz()) return null;
     const r = NZL().nzUndoLastRound(currentGame);
-    NZL().nzClearDraft(currentGame); nzResetProgress(); nzCommit(true); return r;
+    const caller = currentGame.nertzDraftCallerIdx; // undo restores the undone round's Nertz caller highlight
+    NZL().nzClearDraft(currentGame); currentGame.nertzDraftCallerIdx = caller; nzResetProgress(); nzCommit(true); return r;
   }
   function nzToggleHistory() { if (!isNertz()) return false; NZL().nzToggleLog(currentGame); nzCommit(true); return currentGame.nertzLogOpen; }
   function nzUiToggleDeckPop(idx, e) {
@@ -7303,7 +7308,7 @@ window.SocialUI = (function () {
     selectCatanPlayer, catanStep, catanAction, resetCatanScores,
     f7Select, f7Toggle, f7SetMode, f7Num, f7Close, f7Confirm, f7Undo, f7ToggleSort, f7OpenSheet, f7CloseSheet, f7SetTarget, f7AddPlayer, f7ResetScores,
     ccInput, ccKey, ccCycleColor, ccToggleColorPicker, ccPickColor, ccCloseColorPicker, ccShowAdd, ccHideAdd, ccAddPlayer, ccReset,
-    nzSetMode: nzUiSetMode, nzSetEntryMode: nzUiSetEntryMode, nzStepLake, nzStepNertz, nzStepNet, nzSyncPreview, nzToggleBonus, nzConfirmRound, nzUndo,
+    nzSetMode: nzUiSetMode, nzStepNet, nzSetSign, nzSyncPreview, nzToggleGotNertz, nzConfirmRound, nzUndo,
     nzToggleHistory, nzOpenSheet, nzCloseSheet, nzUiSelect, nzUiToggleDeckPop, nzUiPickDeck, nzUiSaveTarget, nzUiAddPlayer, nzUiRemovePlayer, nzUiAddTeam,
     nzUiRemoveTeam, nzUiRenameTeam, nzUiAddPartner, nzUiRemovePartner, nzUiMovePartner,
     undoLastRound, undoLastAction: undoLastRound, endGame, deleteGame,
