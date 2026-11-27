@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0c0d10">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="score-tracker-build" content="v19-tallyit-domain-2026-11-27">
+<meta name="score-tracker-build" content="v20-features-2026-11-27">
 <meta name="apple-mobile-web-app-title" content="TallyIt">
 <title>TallyIt — Score Tracker</title>
 <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png">
@@ -5662,9 +5662,1135 @@ body.theme-seven-wonders .bottom-nav #nav-social {
 }
 
 </style>
+<!-- v20: Request a Game, Variations & Popularity, Private Admin Stats, Full Screen (neutral obsidian + warm brass) -->
+<style id="v20-features">
+
+
+:root {
+  --v20-bg: #0c0d10;
+  --v20-surface: #14161b;
+  --v20-surface-2: #1c1f26;
+  --v20-surface-3: #232730;
+  --v20-border: rgba(255, 255, 255, 0.09);
+  --v20-border-hi: rgba(255, 255, 255, 0.16);
+  --v20-text: #f4f1ea;
+  --v20-muted: #989fa9;
+  --v20-brass: #d4a853;
+  --v20-brass-soft: rgba(212, 168, 83, 0.14);
+  --v20-brass-border: rgba(212, 168, 83, 0.36);
+  --v20-success: #4ade80;
+  --v20-success-soft: rgba(74, 222, 128, 0.13);
+  --v20-danger: #f87171;
+  --v20-danger-soft: rgba(248, 113, 113, 0.13);
+}
+
+
+.v20-req-slot {
+  margin: 12px 0 14px;
+}
+
+.v20-req-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  padding: 11px 14px;
+  border-radius: 12px;
+  border: 1px dashed var(--v20-border-hi);
+  background: rgba(28, 31, 38, 0.55);
+  color: var(--v20-text);
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  box-sizing: border-box;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.v20-req-trigger:active,
+.v20-req-trigger:hover {
+  background: var(--v20-surface-2);
+  border-color: var(--v20-brass-border);
+}
+
+.v20-req-trigger-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.v20-req-ico {
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  background: var(--v20-brass-soft);
+  border: 1px solid var(--v20-brass-border);
+  color: var(--v20-brass);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.v20-req-ico svg,
+.v20-req-chev {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.v20-req-chev {
+  color: var(--v20-muted);
+}
+
+.v20-req-copy {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.v20-req-title {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--v20-text);
+  line-height: 1.2;
+}
+
+.v20-req-sub {
+  font-size: 11.5px;
+  font-weight: 400;
+  color: var(--v20-muted);
+  margin-top: 2px;
+}
+
+
+.v20-var-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: var(--v20-surface-2);
+  border: 1px solid var(--v20-border);
+  box-sizing: border-box;
+}
+
+.v20-var-bar[hidden],
+.v20-var-bar.hidden {
+  display: none;
+}
+
+.v20-var-pop-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--v20-text);
+}
+
+.v20-var-pop-pill svg {
+  width: 14px;
+  height: 14px;
+  color: var(--v20-brass);
+  flex-shrink: 0;
+}
+
+.v20-var-pop-pill.is-top {
+  color: var(--v20-brass);
+}
+
+.v20-compare-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--v20-brass-border);
+  background: var(--v20-brass-soft);
+  color: var(--v20-brass);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  transition: background 0.14s ease;
+}
+
+.v20-compare-btn:active {
+  background: rgba(212, 168, 83, 0.24);
+}
+
+.v20-compare-btn svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+
+.v20-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  background: rgba(6, 7, 10, 0.78);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 12px;
+  box-sizing: border-box;
+}
+
+.v20-modal-backdrop[hidden],
+.v20-modal-backdrop.hidden {
+  display: none !important;
+}
+
+.v20-modal-sheet {
+  width: 100%;
+  max-width: 440px;
+  max-height: 86vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--v20-surface);
+  border: 1px solid var(--v20-border-hi);
+  border-radius: 18px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
+  color: var(--v20-text);
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.v20-modal-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 16px 16px 12px;
+  border-bottom: 1px solid var(--v20-border);
+}
+
+.v20-modal-title {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--v20-text);
+  line-height: 1.2;
+}
+
+.v20-modal-sub {
+  margin: 3px 0 0;
+  font-size: 12.5px;
+  color: var(--v20-muted);
+  line-height: 1.35;
+}
+
+.v20-modal-close {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  border: 1px solid var(--v20-border);
+  background: var(--v20-surface-2);
+  color: var(--v20-muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+.v20-modal-close svg {
+  width: 16px;
+  height: 16px;
+}
+
+.v20-modal-body {
+  padding: 14px 16px 18px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+
+.v20-field {
+  margin-bottom: 13px;
+}
+
+.v20-label {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--v20-text);
+}
+
+.v20-label-opt {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--v20-muted);
+}
+
+.v20-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 11px 12px;
+  border-radius: 11px;
+  border: 1px solid var(--v20-border-hi);
+  background: var(--v20-bg);
+  color: var(--v20-text);
+  font-family: inherit;
+  font-size: 16px;
+  line-height: 1.3;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.v20-input:focus {
+  border-color: var(--v20-brass);
+  box-shadow: 0 0 0 3px rgba(212, 168, 83, 0.16);
+}
+
+.v20-help {
+  margin: 5px 0 0;
+  font-size: 11.5px;
+  color: var(--v20-muted);
+}
+
+.v20-error {
+  margin: 0 0 10px;
+  padding: 8px 10px;
+  border-radius: 9px;
+  background: var(--v20-danger-soft);
+  border: 1px solid rgba(248, 113, 113, 0.32);
+  color: var(--v20-danger);
+  font-size: 12.5px;
+}
+
+.v20-error:empty,
+.v20-error[hidden] {
+  display: none;
+}
+
+.v20-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 16px;
+  border-radius: 12px;
+  border: none;
+  background: var(--v20-text);
+  color: var(--v20-bg);
+  font-family: inherit;
+  font-size: 14.5px;
+  font-weight: 700;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+.v20-btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.v20-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 42px;
+  padding: 9px 14px;
+  border-radius: 11px;
+  border: 1px solid var(--v20-border-hi);
+  background: var(--v20-surface-2);
+  color: var(--v20-text);
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+
+.v20-confirm-box {
+  text-align: center;
+  padding: 12px 6px 4px;
+}
+
+.v20-confirm-box[hidden] {
+  display: none;
+}
+
+.v20-confirm-ico {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 10px;
+  border-radius: 14px;
+  background: var(--v20-brass-soft);
+  border: 1px solid var(--v20-brass-border);
+  color: var(--v20-brass);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.v20-confirm-ico svg {
+  width: 24px;
+  height: 24px;
+}
+
+.v20-confirm-title {
+  margin: 0 0 4px;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--v20-text);
+}
+
+.v20-confirm-desc {
+  margin: 0 0 16px;
+  font-size: 13px;
+  color: var(--v20-muted);
+  line-height: 1.45;
+}
+
+.v20-confirm-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+
+.v20-var-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.v20-var-card {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 13px 14px;
+  border-radius: 14px;
+  border: 1.5px solid var(--v20-border);
+  background: var(--v20-surface-2);
+  color: var(--v20-text);
+  font-family: inherit;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.v20-var-card.is-selected {
+  border-color: var(--v20-brass);
+  background: linear-gradient(180deg, rgba(212, 168, 83, 0.11) 0%, rgba(28, 31, 38, 0.96) 100%);
+  box-shadow: 0 0 0 1px rgba(212, 168, 83, 0.25);
+}
+
+.v20-var-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.v20-var-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--v20-text);
+  line-height: 1.25;
+}
+
+.v20-var-badges {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  flex-shrink: 0;
+}
+
+.v20-pop-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--v20-brass-soft);
+  border: 1px solid var(--v20-brass-border);
+  color: var(--v20-brass);
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.v20-pop-badge svg {
+  width: 11px;
+  height: 11px;
+}
+
+.v20-selected-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: var(--v20-text);
+  color: var(--v20-bg);
+  font-size: 10.5px;
+  font-weight: 700;
+}
+
+.v20-var-tagline {
+  margin: 4px 0 9px;
+  font-size: 12.5px;
+  color: var(--v20-muted);
+  line-height: 1.35;
+}
+
+
+.v20-share-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 11.5px;
+  color: var(--v20-muted);
+  margin-bottom: 5px;
+  font-variant-numeric: tabular-nums;
+}
+
+.v20-share-track {
+  width: 100%;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.v20-share-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #b58d3d 0%, var(--v20-brass) 100%);
+  transition: width 0.25s ease;
+}
+
+.v20-diff-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--v20-muted);
+  margin: 0 0 5px;
+}
+
+.v20-diff-list {
+  margin: 0;
+  padding-left: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 12.5px;
+  color: var(--v20-text);
+  line-height: 1.35;
+}
+
+
+.v20-admin-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 11px;
+  border-radius: 10px;
+  border: 1px solid var(--v20-brass-border);
+  background: var(--v20-brass-soft);
+  color: var(--v20-brass);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+.v20-admin-trigger[hidden],
+.v20-admin-trigger.hidden {
+  display: none !important;
+}
+
+.v20-admin-trigger svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+#admin-screen {
+  max-width: 100%;
+  overflow-x: hidden;
+  padding-bottom: 84px;
+  box-sizing: border-box;
+}
+
+#admin-screen[hidden],
+#admin-screen.hidden {
+  display: none !important;
+}
+
+.v20-admin-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.v20-admin-head-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.v20-admin-icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 1px solid var(--v20-border-hi);
+  background: var(--v20-surface);
+  color: var(--v20-text);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+.v20-admin-icon-btn svg {
+  width: 17px;
+  height: 17px;
+}
+
+.v20-admin-title {
+  margin: 0;
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--v20-text);
+  line-height: 1.15;
+}
+
+.v20-admin-sub {
+  margin: 2px 0 0;
+  font-size: 11.5px;
+  color: var(--v20-muted);
+}
+
+.v20-admin-banner {
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  border-radius: 11px;
+  border: 1px solid var(--v20-border-hi);
+  background: var(--v20-surface-2);
+  color: var(--v20-muted);
+  font-size: 12.5px;
+}
+
+.v20-admin-banner[hidden],
+.v20-admin-banner:empty {
+  display: none;
+}
+
+.v20-admin-banner.is-error {
+  border-color: rgba(248, 113, 113, 0.35);
+  background: var(--v20-danger-soft);
+  color: var(--v20-danger);
+}
+
+
+.v20-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.v20-kpi-card {
+  padding: 12px;
+  border-radius: 13px;
+  border: 1px solid var(--v20-border);
+  background: var(--v20-surface);
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.v20-kpi-card.is-accent {
+  border-color: var(--v20-brass-border);
+  background: linear-gradient(180deg, rgba(212, 168, 83, 0.09) 0%, var(--v20-surface) 100%);
+}
+
+.v20-kpi-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--v20-muted);
+  margin-bottom: 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.v20-kpi-val {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.05;
+  color: var(--v20-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.v20-kpi-card.is-accent .v20-kpi-val {
+  color: var(--v20-brass);
+}
+
+.v20-kpi-foot {
+  margin-top: 4px;
+  font-size: 11px;
+  color: var(--v20-muted);
+}
+
+
+.v20-admin-card {
+  padding: 14px;
+  border-radius: 14px;
+  border: 1px solid var(--v20-border);
+  background: var(--v20-surface);
+  margin-bottom: 12px;
+  box-sizing: border-box;
+}
+
+.v20-admin-card-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.v20-admin-card-title {
+  margin: 0;
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--v20-text);
+}
+
+.v20-admin-card-meta {
+  font-size: 11.5px;
+  color: var(--v20-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+
+.v20-chart-wrap {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.v20-chart-bars {
+  display: grid;
+  grid-template-columns: repeat(30, minmax(0, 1fr));
+  align-items: end;
+  gap: 2px;
+  height: 112px;
+  padding: 8px 2px 2px;
+  border-bottom: 1px solid var(--v20-border-hi);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px) 0 0 / 100% 34px;
+}
+
+.v20-chart-col {
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  min-width: 0;
+}
+
+.v20-chart-bar {
+  width: 100%;
+  min-height: 2px;
+  border-radius: 3px 3px 0 0;
+  background: linear-gradient(180deg, var(--v20-brass) 0%, #9b7631 100%);
+  transition: height 0.25s ease;
+}
+
+.v20-chart-bar.is-zero {
+  background: rgba(255, 255, 255, 0.09);
+}
+
+.v20-chart-axis {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+  font-size: 10.5px;
+  color: var(--v20-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+
+.v20-breakdown-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.v20-bk-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.v20-bk-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.v20-bk-name {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--v20-text);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.v20-bk-sub {
+  font-size: 11.5px;
+  color: var(--v20-muted);
+  margin-left: 5px;
+  font-weight: 400;
+}
+
+.v20-bk-stat {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--v20-brass);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.v20-bk-track {
+  width: 100%;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.07);
+  overflow: hidden;
+}
+
+.v20-bk-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #b58d3d 0%, var(--v20-brass) 100%);
+}
+
+
+.v20-req-filters {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  margin-bottom: 8px;
+  scrollbar-width: none;
+}
+
+.v20-req-filters::-webkit-scrollbar {
+  display: none;
+}
+
+.v20-filter-pill {
+  flex: 0 0 auto;
+  padding: 5px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--v20-border-hi);
+  background: var(--v20-surface-2);
+  color: var(--v20-muted);
+  font-family: inherit;
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+.v20-filter-pill.is-active {
+  background: var(--v20-brass-soft);
+  border-color: var(--v20-brass-border);
+  color: var(--v20-brass);
+}
+
+.v20-inbox-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.v20-req-item {
+  padding: 11px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--v20-border);
+  background: var(--v20-surface-2);
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  box-sizing: border-box;
+}
+
+.v20-req-item-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.v20-req-item-info {
+  min-width: 0;
+  flex: 1;
+}
+
+.v20-req-item-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--v20-text);
+  word-break: break-word;
+}
+
+.v20-req-item-meta {
+  font-size: 11.5px;
+  color: var(--v20-muted);
+  margin-top: 2px;
+}
+
+.v20-req-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  max-width: 100%;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--v20-brass);
+  text-decoration: none;
+  word-break: break-all;
+}
+
+.v20-req-link svg {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+}
+
+.v20-status-select {
+  width: auto;
+  min-width: 104px;
+  max-width: 126px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1px solid var(--v20-border-hi);
+  background: var(--v20-bg);
+  color: var(--v20-text);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  flex-shrink: 0;
+  outline: none;
+}
+
+.v20-status-select[data-status="new"]       { border-color: var(--v20-brass-border); color: var(--v20-brass); }
+.v20-status-select[data-status="planned"]   { border-color: rgba(147, 197, 253, 0.4); color: #93c5fd; }
+.v20-status-select[data-status="added"]     { border-color: rgba(74, 222, 128, 0.4); color: var(--v20-success); }
+.v20-status-select[data-status="dismissed"] { border-color: var(--v20-border); color: var(--v20-muted); }
+
+.v20-empty-note {
+  padding: 14px 8px;
+  text-align: center;
+  font-size: 12.5px;
+  color: var(--v20-muted);
+}
+
+
+.v20-fs-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.v20-fs-btn {
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border-radius: 10px;
+  border: 1px solid var(--v20-border-hi);
+  background: rgba(20, 22, 27, 0.85);
+  color: var(--v20-muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+}
+
+.v20-fs-btn:hover,
+.v20-fs-btn:active {
+  color: var(--v20-text);
+  border-color: var(--v20-brass-border);
+  background: var(--v20-surface-2);
+}
+
+.v20-fs-btn.is-fullscreen {
+  color: var(--v20-brass);
+  border-color: var(--v20-brass-border);
+  background: var(--v20-brass-soft);
+}
+
+.v20-fs-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.v20-fs-btn .v20-fs-ico-compress {
+  display: none;
+}
+
+.v20-fs-btn.is-fullscreen .v20-fs-ico-expand {
+  display: none;
+}
+
+.v20-fs-btn.is-fullscreen .v20-fs-ico-compress {
+  display: block;
+}
+
+.v20-ios-popover {
+  position: fixed;
+  top: 58px;
+  right: 12px;
+  z-index: 130;
+  width: min(310px, calc(100vw - 24px));
+  padding: 12px 13px;
+  border-radius: 14px;
+  border: 1px solid var(--v20-brass-border);
+  background: var(--v20-surface);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.55);
+  color: var(--v20-text);
+  box-sizing: border-box;
+}
+
+.v20-ios-popover[hidden],
+.v20-ios-popover.hidden {
+  display: none !important;
+}
+
+.v20-ios-popover-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.v20-ios-popover-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--v20-brass);
+}
+
+.v20-ios-popover-title svg {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
+
+.v20-ios-popover-close {
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  border: 1px solid var(--v20-border);
+  background: var(--v20-surface-2);
+  color: var(--v20-muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+.v20-ios-popover-close svg {
+  width: 13px;
+  height: 13px;
+}
+
+.v20-ios-popover-body {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--v20-muted);
+}
+
+.v20-ios-popover-body strong {
+  color: var(--v20-text);
+  font-weight: 600;
+}
+
+.v20-status-select[data-status="reviewing"] { border-color: rgba(147, 197, 253, 0.4); color: #93c5fd; }
+.v20-status-select[data-status="planned"]   { border-color: rgba(196, 181, 253, 0.42); color: #c4b5fd; }
+.v20-status-select[data-status="built"]     { border-color: rgba(74, 222, 128, 0.4); color: var(--v20-success); }
+.v20-status-select[data-status="declined"]  { border-color: var(--v20-border); color: var(--v20-muted); }
+.v20-req-filters { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+.v20-req-filters::-webkit-scrollbar { display: none; }
+.v20-filter-pill { flex: 0 0 auto; }
+.app-header-actions { min-width: 0; }
+.app-header-actions .v20-admin-trigger, .app-header-actions .v20-fs-wrap { flex: 0 0 auto; }
+body.v20-modal-open { overflow: hidden; }
+.v20-share-count, .v20-share-pct { white-space: nowrap; }
+.app-header-actions .v20-admin-trigger { width: 36px; height: 36px; padding: 0; justify-content: center; gap: 0; border-radius: 10px; }
+.app-header-actions .v20-admin-trigger span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.app-header-actions .v20-admin-trigger svg { width: 17px; height: 17px; }
+
+</style>
 </head>
 <body>
-<!-- Build: v19-tallyit-domain-2026-11-27 -->
+<!-- Build: v20-features-2026-11-27 -->
 
 <!-- Login: starts hidden until getSession() resolves -->
 <section id="login-view" class="auth-hidden" hidden aria-label="Sign in to Score Tracker">
@@ -5708,6 +6834,30 @@ body.theme-seven-wonders .bottom-nav #nav-social {
     </div>
     <div class="app-header-actions">
       <span id="sync-status" role="status" aria-live="polite"></span>
+<button type="button" id="btn-open-admin" aria-label="Admin Stats" title="Admin Stats" class="v20-admin-trigger hidden" hidden onclick="window.openAdminScreen && openAdminScreen()">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <line x1="18" y1="20" x2="18" y2="10"/>
+    <line x1="12" y1="20" x2="12" y2="4"/>
+    <line x1="6" y1="20" x2="6" y2="14"/>
+  </svg>
+  <span>Admin Stats</span>
+</button>
+<span class="v20-fs-wrap">
+  <button type="button" id="btn-fullscreen-toggle" class="v20-fs-btn" aria-label="Toggle full screen" aria-pressed="false" title="Full Screen" onclick="window.toggleFullscreen && toggleFullscreen()">
+    <svg class="v20-fs-ico-expand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <polyline points="15 3 21 3 21 9"/>
+      <polyline points="9 21 3 21 3 15"/>
+      <line x1="21" y1="3" x2="14" y2="10"/>
+      <line x1="3" y1="21" x2="10" y2="14"/>
+    </svg>
+    <svg class="v20-fs-ico-compress" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <polyline points="4 14 10 14 10 20"/>
+      <polyline points="20 10 14 10 14 4"/>
+      <line x1="14" y1="10" x2="21" y2="3"/>
+      <line x1="3" y1="21" x2="10" y2="14"/>
+    </svg>
+  </button>
+</span>
       <button class="app-signout-btn" type="button" onclick="signOut()">Sign out</button>
     </div>
   </header>
@@ -5782,8 +6932,43 @@ body.theme-seven-wonders .bottom-nav #nav-social {
     <div class="card">
       <h2>Choose Game</h2>
       <div class="game-grid" id="game-grid"></div>
+<div id="v20-request-game-slot" class="v20-req-slot">
+  <button type="button" id="btn-open-request-game" class="v20-req-trigger" onclick="window.openRequestGameModal && openRequestGameModal()">
+    <span class="v20-req-trigger-left">
+      <span class="v20-req-ico" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="9"/>
+          <line x1="12" y1="8" x2="12" y2="16"/>
+          <line x1="8" y1="12" x2="16" y2="12"/>
+        </svg>
+      </span>
+      <span class="v20-req-copy">
+        <span class="v20-req-title">Request a Game</span>
+        <span class="v20-req-sub">Don't see your tabletop favorite? Suggest it in seconds</span>
+      </span>
+    </span>
+    <svg class="v20-req-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <polyline points="9 18 15 12 9 6"/>
+    </svg>
+  </button>
+</div>
       <label class="small" for="version-select">Version / Scoring rules</label>
       <select id="version-select"></select>
+<div id="v20-variation-bar" class="v20-var-bar" hidden>
+  <span id="var-pop-pill" class="v20-var-pop-pill">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <polygon points="12 2.5 15 8.8 21.8 9.6 16.8 14.3 18.1 21 12 17.7 5.9 21 7.2 14.3 2.2 9.6 9 8.8 12 2.5"/>
+    </svg>
+    <span id="var-pop-text">Standard rules</span>
+  </span>
+  <button type="button" id="btn-compare-variations" class="v20-compare-btn" onclick="window.openVariationsModal && openVariationsModal()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <rect x="3" y="4" width="7" height="16" rx="1.5"/>
+      <rect x="14" y="4" width="7" height="16" rx="1.5"/>
+    </svg>
+    <span>Compare Variations</span>
+  </button>
+</div>
       <div id="setup-players-section">
         <h3 style="margin-top:1.1rem">Players</h3>
 
@@ -6495,6 +7680,120 @@ body.theme-seven-wonders .bottom-nav #nav-social {
     </div>
   </section>
 
+  <!-- v20 PRIVATE ADMIN STATS (randw50@gmail.com only) -->
+<section id="admin-screen" class="view v20-admin-view hidden" hidden aria-label="Admin Stats">
+  <header class="v20-admin-head">
+    <div class="v20-admin-head-left">
+      <button type="button" id="btn-admin-back" class="v20-admin-icon-btn" aria-label="Back" onclick="window.closeAdminScreen ? closeAdminScreen() : (window.showView && showView('home'))">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <div>
+        <h2 class="v20-admin-title">Admin Stats</h2>
+        <p id="admin-last-updated" class="v20-admin-sub">Private TallyIt telemetry</p>
+      </div>
+    </div>
+    <button type="button" id="btn-admin-refresh" class="v20-admin-icon-btn" aria-label="Refresh stats" onclick="window.loadAdminStats && loadAdminStats(true)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="23 4 23 10 17 10"/>
+        <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+      </svg>
+    </button>
+  </header>
+
+  <div id="admin-status-banner" class="v20-admin-banner" hidden role="status"></div>
+
+  <!-- KPI Summary Grid -->
+  <div id="admin-kpi-grid" class="v20-kpi-grid">
+    <div class="v20-kpi-card is-accent">
+      <div class="v20-kpi-label">All-Time Games</div>
+      <div id="kpi-games-total" class="v20-kpi-val">—</div>
+      <div class="v20-kpi-foot">Games started</div>
+    </div>
+    <div class="v20-kpi-card">
+      <div class="v20-kpi-label">Last 7 Days</div>
+      <div id="kpi-games-7d" class="v20-kpi-val">—</div>
+      <div class="v20-kpi-foot">Weekly velocity</div>
+    </div>
+    <div class="v20-kpi-card">
+      <div class="v20-kpi-label">Last 30 Days</div>
+      <div id="kpi-games-30d" class="v20-kpi-val">—</div>
+      <div class="v20-kpi-foot">Monthly plays</div>
+    </div>
+    <div class="v20-kpi-card">
+      <div class="v20-kpi-label">Registered Users</div>
+      <div id="kpi-users-total" class="v20-kpi-val">—</div>
+      <div class="v20-kpi-foot">Active accounts</div>
+    </div>
+    <div class="v20-kpi-card">
+      <div class="v20-kpi-label">Game Requests</div>
+      <div id="kpi-requests-total" class="v20-kpi-val">—</div>
+      <div id="kpi-requests-new" class="v20-kpi-foot">0 new</div>
+    </div>
+    <div class="v20-kpi-card">
+      <div class="v20-kpi-label">Friends &amp; Groups</div>
+      <div id="kpi-social-total" class="v20-kpi-val">—</div>
+      <div id="kpi-social-sub" class="v20-kpi-foot">0 friends · 0 groups</div>
+    </div>
+  </div>
+
+  <!-- 30-Day Daily Plays Bar Chart -->
+  <article class="v20-admin-card" id="admin-daily-chart-card">
+    <div class="v20-admin-card-head">
+      <h3 class="v20-admin-card-title">Daily Plays (30d)</h3>
+      <span id="admin-chart-peak" class="v20-admin-card-meta">Peak: 0/day</span>
+    </div>
+    <div class="v20-chart-wrap">
+      <div id="admin-daily-chart" class="v20-chart-bars" role="img" aria-label="30-day daily plays bar chart"></div>
+      <div class="v20-chart-axis">
+        <span id="admin-chart-start">30d ago</span>
+        <span>15d ago</span>
+        <span>Today</span>
+      </div>
+    </div>
+  </article>
+
+  <!-- Most Played Games Breakdown -->
+  <article class="v20-admin-card">
+    <div class="v20-admin-card-head">
+      <h3 class="v20-admin-card-title">Most Played Games</h3>
+      <span id="admin-top-games-meta" class="v20-admin-card-meta">Share of plays</span>
+    </div>
+    <div id="admin-top-games" class="v20-breakdown-list">
+      <div class="v20-empty-note">Loading game breakdown...</div>
+    </div>
+  </article>
+
+  <!-- Most Popular Variations Breakdown -->
+  <article class="v20-admin-card">
+    <div class="v20-admin-card-head">
+      <h3 class="v20-admin-card-title">Most Popular Variations</h3>
+      <span id="admin-top-vars-meta" class="v20-admin-card-meta">By rule set</span>
+    </div>
+    <div id="admin-top-variations" class="v20-breakdown-list">
+      <div class="v20-empty-note">Loading variations breakdown...</div>
+    </div>
+  </article>
+
+  <!-- Game Requests Inbox -->
+  <article class="v20-admin-card">
+    <div class="v20-admin-card-head">
+      <h3 class="v20-admin-card-title">Game Requests Inbox</h3>
+      <span id="admin-inbox-count" class="v20-admin-card-meta">0 items</span>
+    </div>
+    <div id="admin-req-filters" class="v20-req-filters" role="tablist" aria-label="Filter game requests">
+      <button type="button" class="v20-filter-pill is-active" data-filter="all" role="tab" aria-selected="true" onclick="window.setAdminRequestFilter && setAdminRequestFilter('all')">All</button>
+      <button type="button" class="v20-filter-pill" data-filter="new" role="tab" aria-selected="false" onclick="window.setAdminRequestFilter && setAdminRequestFilter('new')">New</button>
+      <button type="button" class="v20-filter-pill" data-filter="reviewing" role="tab" aria-selected="false" onclick="window.setAdminRequestFilter && setAdminRequestFilter('reviewing')">Reviewing</button>
+      <button type="button" class="v20-filter-pill" data-filter="planned" role="tab" aria-selected="false" onclick="window.setAdminRequestFilter && setAdminRequestFilter('planned')">Planned</button>
+      <button type="button" class="v20-filter-pill" data-filter="built" role="tab" aria-selected="false" onclick="window.setAdminRequestFilter && setAdminRequestFilter('built')">Built</button>
+      <button type="button" class="v20-filter-pill" data-filter="declined" role="tab" aria-selected="false" onclick="window.setAdminRequestFilter && setAdminRequestFilter('declined')">Declined</button>
+    </div>
+    <div id="admin-requests-list" class="v20-inbox-list">
+      <div class="v20-empty-note">No game requests yet.</div>
+    </div>
+  </article>
+</section>
+
   <!-- FRIENDS & GROUPS (v17: clarity states + Friend QR) -->
 <section id="view-social" class="view" aria-label="Friends and Groups">
   <div class="soc-top-bar">
@@ -6753,6 +8052,96 @@ body.theme-seven-wonders .bottom-nav #nav-social {
 
     <p id="soc-scan-msg" class="soc-qr-msg" role="status" aria-live="polite"></p>
   </div>
+</div>
+
+  <!-- v20 modals: Request a Game, Compare Variations, iOS full-screen tip -->
+<div id="req-game-modal" class="v20-modal-backdrop hidden" hidden role="dialog" aria-modal="true" aria-labelledby="req-game-modal-title" onclick="if(event.target===this && window.closeRequestGameModal) closeRequestGameModal()">
+  <div class="v20-modal-sheet">
+    <header class="v20-modal-head">
+      <div>
+        <h3 id="req-game-modal-title" class="v20-modal-title">Request a Game</h3>
+        <p class="v20-modal-sub">Tell us what your table plays next.</p>
+      </div>
+      <button type="button" class="v20-modal-close" aria-label="Close" onclick="window.closeRequestGameModal && closeRequestGameModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </header>
+
+    <div class="v20-modal-body">
+      <form id="req-game-form" onsubmit="event.preventDefault(); window.submitGameRequest && submitGameRequest();">
+        <div class="v20-field">
+          <label class="v20-label" for="req-game-name">
+            <span>Name of Game</span>
+            <span class="v20-label-opt">Required</span>
+          </label>
+          <input type="text" id="req-game-name" class="v20-input" placeholder="e.g. Azul, Wingspan, Splendor" maxlength="100" required autocomplete="off">
+        </div>
+
+        <div class="v20-field">
+          <label class="v20-label" for="req-game-url">
+            <span>Website link</span>
+            <span class="v20-label-opt">Optional</span>
+          </label>
+          <input type="url" id="req-game-url" class="v20-input" placeholder="https://boardgamegeek.com/..." maxlength="300" autocomplete="off">
+          <p class="v20-help">Add a BoardGameGeek or publisher link so we build the exact edition.</p>
+        </div>
+
+        <p id="req-game-error" class="v20-error" role="alert" hidden></p>
+
+        <button type="submit" id="btn-submit-game-request" class="v20-btn-primary">Submit Request</button>
+      </form>
+
+      <div id="req-game-success" class="v20-confirm-box" hidden>
+        <div class="v20-confirm-ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+        </div>
+        <h4 class="v20-confirm-title">Request Received</h4>
+        <p class="v20-confirm-desc">
+          We added <strong id="req-game-success-name">your game</strong> to the TallyIt build queue.
+        </p>
+        <div class="v20-confirm-actions">
+          <button type="button" class="v20-btn-secondary" onclick="window.resetRequestGameForm && resetRequestGameForm()">Request Another</button>
+          <button type="button" class="v20-btn-primary" onclick="window.closeRequestGameModal && closeRequestGameModal()">Done</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="var-compare-modal" class="v20-modal-backdrop hidden" hidden role="dialog" aria-modal="true" aria-labelledby="var-compare-title" onclick="if(event.target===this && window.closeVariationsModal) closeVariationsModal()">
+  <div class="v20-modal-sheet">
+    <header class="v20-modal-head">
+      <div>
+        <h3 id="var-compare-title" class="v20-modal-title">Compare Variations</h3>
+        <p id="var-compare-sub" class="v20-modal-sub">Tap any variation to select it for this game.</p>
+      </div>
+      <button type="button" class="v20-modal-close" aria-label="Close" onclick="window.closeVariationsModal && closeVariationsModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </header>
+    <div class="v20-modal-body">
+      <div id="var-compare-list" class="v20-var-list" role="radiogroup" aria-label="Game variations"></div>
+    </div>
+  </div>
+</div>
+<div id="v20-ios-fs-popover" class="v20-ios-popover hidden" hidden role="dialog" aria-label="Full screen on iOS">
+  <div class="v20-ios-popover-head">
+    <span class="v20-ios-popover-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+        <polyline points="16 6 12 2 8 6"/>
+        <line x1="12" y1="2" x2="12" y2="15"/>
+      </svg>
+      <span>Add to Home Screen for Full Screen</span>
+    </span>
+    <button type="button" id="btn-close-ios-fs-popover" class="v20-ios-popover-close" aria-label="Close" onclick="window.closeIosFullscreenHint ? closeIosFullscreenHint() : document.getElementById('v20-ios-fs-popover').setAttribute('hidden','')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <p class="v20-ios-popover-body">
+    In Safari, tap <strong>Share</strong> and choose <strong>Add to Home Screen</strong> to launch TallyIt in full screen without browser bars.
+  </p>
 </div>
 
   <nav class="bottom-nav" aria-label="Main navigation">
@@ -12422,6 +13811,7 @@ window.SocialUI = (function () {
     { id: 'other', name: 'Custom', img: 'assets/games/custom.svg', icon: '✏️',
       versions: ['Custom rules'], target: () => null, detailedLabel: null }
   ];
+  const V20 = () => global.TallyItV20 || null;
   const gameById = (id) => GAMES.find((g) => g.id === id) || GAMES[GAMES.length - 1];
 
   const FLIP7_COLORS = {
@@ -12570,6 +13960,7 @@ window.SocialUI = (function () {
     const socialReady = socialInit(user);
     await loadData();
     if (initializedUserId === user.id) showView(currentView);
+    if (V20() && V20().onAuthChange) { try { V20().onAuthChange(user); } catch (_) {} }
     await socialReady;
   }
   function onAuthSignedOut() {
@@ -12578,6 +13969,7 @@ window.SocialUI = (function () {
     document.body.classList.remove('theme-catan', 'theme-flip7', 'theme-carcassonne', 'theme-nertz', 'theme-rummikub', 'theme-seven-wonders'); f7 = null; swExpOpen = false; rkCalcOpen = false; rkCalcExpr = ''; nzSheetKind = null; nzPopIdx = -1;
     if (typeof unsubFriendships === 'function') { unsubFriendships(); unsubFriendships = null; }
     lastFriendsError = null;
+    if (V20() && V20().onAuthChange) { try { V20().onAuthChange(null); } catch (_) {} }
     resetSocialState();
     document.querySelectorAll('#app-shell .view').forEach((el) => el.classList.remove('active'));
     ['gen-leaderboard', 'gen-pad', 'leaderboard', 'score-form', 'history-list', 'recent-list', 'player-chips', 'f7-board', 'f7-drawer', 'cc-list',
@@ -12654,8 +14046,9 @@ window.SocialUI = (function () {
     if (!selectedVersion || !g.versions.includes(selectedVersion)) selectedVersion = g.versions[0];
     const sel = byId('version-select');
     sel.innerHTML = g.versions.map((v) => `<option ${v === selectedVersion ? 'selected' : ''}>${esc(v)}</option>`).join('');
-    sel.onchange = () => { selectedVersion = sel.value; };
+    sel.onchange = () => { selectedVersion = sel.value; if (V20() && V20().onSetupRendered) V20().onSetupRendered(selectedGame, selectedVersion); };
     renderSetupPlayers();
+    if (V20() && V20().onSetupRendered) { try { V20().onSetupRendered(selectedGame, selectedVersion); } catch (_) {} }
   }
   function selectGame(id) { selectedGame = id; selectedVersion = null; renderNew(); }
   function quickStart(id) {
@@ -12708,7 +14101,9 @@ window.SocialUI = (function () {
     if (g.id === 'rummikub') rkStartGame();
     if (g.id === '7wonders' && SWL()) swStartGame();
     scoringPlayer = null; padMode = 'simple'; f7 = null;
+    currentGame.v20Recorded = true;
     persistActive();
+    if (V20() && V20().onGameStarted) { try { V20().onGameStarted(currentGame); } catch (_) {} }
     showView('active');
     return currentGame;
   }
@@ -12788,6 +14183,7 @@ window.SocialUI = (function () {
     const DL = global.DiceLogic, diceStats = DL ? DL.buildDiceSummary(currentGame, { gamesCatalog: GAMES }) : null;
     if (diceStats) finished.meta = { ...(finished.meta || {}), diceStats };
     delete finished.diceRolls;
+    if (currentGame.v20Recorded) finished.v20Recorded = true;
     closeDiceModal();
     history.unshift(finished);
     currentGame = null; scoringPlayer = null; f7 = null;
@@ -15029,9 +16425,1976 @@ window.SocialUI = (function () {
     addGroupModalGuest, removeGroupModalGuest, createGroupFromModal, deleteGroup, setHistoryFilter, setGroupLbFilter, refreshSocial,
     getMyFriendShareUrl, handleScannedFriendQr, consumePendingFriendInvite,
     openMyQrModal, closeMyQrModal, copyFriendInviteLink, shareFriendInviteLink, openScanQrModal, closeScanQrModal, handleScanQrFile, submitScannedFriend,
-    ScoreTracker: { GAMES, getState: () => ({ players: [...players], history: [...history], currentGame, currentView, scoringPlayer, padMode, pendingSync,
+    ScoreTracker: { GAMES, getSetup: () => ({ game: selectedGame, version: selectedVersion }), getState: () => ({ players: [...players], history: [...history], currentGame, currentView, scoringPlayer, padMode, pendingSync,
       selfPlayer, selfIncluded, setupFriends: [...setupFriends], setupGroup, historyFilter, social }) }
   });
+})(window);
+
+</script>
+
+<!-- v20: backend client (window.TallyItBackend), variations catalog (window.TallyItVariations), controller (window.TallyItV20) -->
+<script id="v20-backend">
+/**
+ * TallyIt — v20 Features Backend Client Layer (window.TallyItBackend)
+ * Drop-in module for game_tracker.html. Uses window.sb (Supabase v2 client).
+ *
+ * Exposes window.TallyItBackend:
+ *   - ADMIN_EMAIL
+ *   - REQUEST_STATUSES
+ *   - submitGameRequest(gameName, websiteUrl?)
+ *   - recordGamePlay(gameKey, variationKey?, playerCount?)
+ *   - getVariationPopularity(gameKey?, options?)
+ *   - isAdmin(options?)
+ *   - isLikelyAdminSync()
+ *   - getAdminStats()
+ *   - updateGameRequestStatus(id, status)
+ *   - clearCache()
+ *   - isMigrationReady()
+ *
+ * Gracefully falls back to localStorage whenever the v20 SQL migration has not
+ * been applied yet or the client is offline, so the UI never breaks.
+ */
+(function (global) {
+  'use strict';
+
+  const ADMIN_EMAIL = 'randw50@gmail.com';
+  const REQUEST_STATUSES = ['new', 'reviewing', 'planned', 'built', 'declined'];
+  const LS_REQUESTS = 'gst_v20_game_requests';
+  const LS_PLAYS = 'gst_v20_play_events';
+  const POPULARITY_TTL_MS = 60 * 1000;
+  const MIGRATION_RETRY_MS = 30 * 1000;
+
+  let migrationReady = null; // null = unknown, true = ready, false = not migrated yet
+  let migrationCheckedAt = 0;
+  let adminCache = { userId: null, value: false, checkedAt: 0 };
+  const popularityCache = new Map(); // key ('__all__' or game_key) -> { rows, byGame, fetchedAt }
+
+  function getClient() {
+    return global.sb || null;
+  }
+
+  async function getAuthUser() {
+    if (global.ScoreAuth && typeof global.ScoreAuth.getUser === 'function') {
+      try {
+        const u = await global.ScoreAuth.getUser();
+        if (u && u.id) return u;
+      } catch (_) {}
+    }
+    const client = getClient();
+    if (!client || !client.auth || typeof client.auth.getSession !== 'function') return null;
+    try {
+      const { data: { session } } = await client.auth.getSession();
+      return session && session.user ? session.user : null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function isMissingMigrationError(err) {
+    if (!err) return false;
+    const code = String(err.code || '').toUpperCase();
+    const msg = String(err.message || err.details || err.hint || '').toLowerCase();
+    if (code === '42P01' || code === '42883' || code === '42703' || code === 'PGRST202' || code === 'PGRST205') return true;
+    return (
+      msg.includes('does not exist') ||
+      msg.includes('could not find the table') ||
+      msg.includes('could not find the function')
+    );
+  }
+
+  function isForbiddenError(err) {
+    if (!err) return false;
+    const code = String(err.code || '').toUpperCase();
+    const msg = String(err.message || '').toLowerCase();
+    return code === '42501' || msg.includes('forbidden');
+  }
+
+  function markMigrationMissing() {
+    migrationReady = false;
+    migrationCheckedAt = Date.now();
+  }
+
+  function shouldSkipSupabase(client) {
+    if (!client) return true;
+    if (migrationReady !== false) return false;
+    if (Date.now() - migrationCheckedAt > MIGRATION_RETRY_MS) {
+      migrationReady = null;
+      return false;
+    }
+    return true;
+  }
+
+  function readLocal(key, fallback) {
+    try {
+      const raw = global.localStorage && global.localStorage.getItem(key);
+      return raw ? JSON.parse(raw) : fallback;
+    } catch (_) {
+      return fallback;
+    }
+  }
+
+  function writeLocal(key, value) {
+    try {
+      if (global.localStorage) global.localStorage.setItem(key, JSON.stringify(value));
+    } catch (_) {}
+  }
+
+  function normalizeWebsiteUrl(rawUrl) {
+    const trimmed = String(rawUrl || '').trim();
+    if (!trimmed) return { ok: true, url: null };
+    if (trimmed.length > 500) {
+      return { ok: false, url: null, error: 'Website link is too long (max 500 characters).' };
+    }
+    if (/^https?:\/\//i.test(trimmed)) {
+      return { ok: true, url: trimmed };
+    }
+    if (/^[a-z0-9.-]+\.[a-z]{2,}(\/.*)?$/i.test(trimmed)) {
+      return { ok: true, url: 'https://' + trimmed };
+    }
+    return { ok: false, url: null, error: 'Website link must start with http:// or https://.' };
+  }
+
+  function groupPopularityRows(rows) {
+    const byGame = {};
+    (rows || []).forEach((r) => {
+      const gk = String(r.game_key || '').toLowerCase();
+      if (!gk) return;
+      if (!byGame[gk]) byGame[gk] = [];
+      byGame[gk].push({
+        game_key: gk,
+        variation_key: String(r.variation_key || 'standard'),
+        play_count: Number(r.play_count || 0)
+      });
+    });
+    return byGame;
+  }
+
+  function localPopularity(gameKey) {
+    const filterKey = gameKey ? String(gameKey).trim().toLowerCase() : null;
+    const events = readLocal(LS_PLAYS, []);
+    const counts = new Map();
+    events.forEach((ev) => {
+      const gk = String(ev.game_key || '').toLowerCase();
+      const vk = String(ev.variation_key || 'standard');
+      if (!gk || (filterKey && gk !== filterKey)) return;
+      const k = gk + '||' + vk;
+      counts.set(k, (counts.get(k) || 0) + 1);
+    });
+    const rows = [...counts.entries()]
+      .map(([k, count]) => {
+        const [game_key, variation_key] = k.split('||');
+        return { game_key, variation_key, play_count: count };
+      })
+      .sort((a, b) => (b.play_count - a.play_count) || a.game_key.localeCompare(b.game_key) || a.variation_key.localeCompare(b.variation_key));
+    return { ok: true, rows, byGame: groupPopularityRows(rows), isFallback: true };
+  }
+
+  function buildLocalAdminStats() {
+    const events = readLocal(LS_PLAYS, []);
+    const requests = readLocal(LS_REQUESTS, []);
+    const now = Date.now();
+    const d7 = now - 7 * 86400000;
+    const d30 = now - 30 * 86400000;
+
+    let plays7d = 0;
+    let plays30d = 0;
+    const gameMap = new Map();
+    const varMap = new Map();
+    const dayCounts = new Map();
+
+    events.forEach((ev) => {
+      const ts = Date.parse(ev.created_at || '') || now;
+      const in7 = ts >= d7;
+      const in30 = ts >= d30;
+      if (in7) plays7d++;
+      if (in30) plays30d++;
+
+      const gk = String(ev.game_key || 'other').toLowerCase();
+      const vk = String(ev.variation_key || 'standard');
+      const pc = Number(ev.player_count || 2);
+
+      const gm = gameMap.get(gk) || { game_key: gk, play_count: 0, plays_7d: 0, plays_30d: 0, _players: 0 };
+      gm.play_count++;
+      if (in7) gm.plays_7d++;
+      if (in30) gm.plays_30d++;
+      gm._players += pc;
+      gameMap.set(gk, gm);
+
+      const vKey = gk + '||' + vk;
+      const vm = varMap.get(vKey) || { game_key: gk, variation_key: vk, play_count: 0, plays_7d: 0, plays_30d: 0 };
+      vm.play_count++;
+      if (in7) vm.plays_7d++;
+      if (in30) vm.plays_30d++;
+      varMap.set(vKey, vm);
+
+      const dayStr = new Date(ts).toISOString().slice(0, 10);
+      dayCounts.set(dayStr, (dayCounts.get(dayStr) || 0) + 1);
+    });
+
+    const daily_plays_30d = [];
+    for (let i = 29; i >= 0; i--) {
+      const dayStr = new Date(now - i * 86400000).toISOString().slice(0, 10);
+      daily_plays_30d.push({ date: dayStr, play_count: dayCounts.get(dayStr) || 0 });
+    }
+
+    const by_game = [...gameMap.values()]
+      .map((g) => ({
+        game_key: g.game_key,
+        play_count: g.play_count,
+        plays_7d: g.plays_7d,
+        plays_30d: g.plays_30d,
+        avg_players: g.play_count ? Math.round((g._players / g.play_count) * 10) / 10 : 0
+      }))
+      .sort((a, b) => b.play_count - a.play_count);
+
+    const by_variation = [...varMap.values()].sort((a, b) => b.play_count - a.play_count);
+
+    return {
+      generated_at: new Date().toISOString(),
+      totals: {
+        total_plays: events.length,
+        plays_7d: plays7d,
+        plays_30d: plays30d,
+        shared_games_total: 0,
+        shared_games_7d: 0,
+        shared_games_30d: 0,
+        users_total: 1,
+        users_7d: 0,
+        users_30d: 0,
+        friendships_accepted: 0,
+        friendships_pending: 0,
+        groups_total: 0,
+        game_requests_total: requests.length,
+        game_requests_new: requests.filter((r) => r.status === 'new').length
+      },
+      by_game,
+      by_variation,
+      daily_plays_30d,
+      recent_game_requests: requests.slice(0, 50)
+    };
+  }
+
+  // ---------------------------------------------------------------------------
+  // 1. Request a Game (auth + anon guests)
+  // ---------------------------------------------------------------------------
+  async function submitGameRequest(gameName, websiteUrl) {
+    const name = String(gameName || '').trim();
+    if (name.length < 2) {
+      return { ok: false, error: 'Please enter a game name (at least 2 characters).' };
+    }
+    const clippedName = name.slice(0, 120);
+    const urlCheck = normalizeWebsiteUrl(websiteUrl);
+    if (!urlCheck.ok) {
+      return { ok: false, error: urlCheck.error };
+    }
+
+    const saveLocalFallback = async (reason) => {
+      const user = await getAuthUser();
+      const req = {
+        id: 'local-req-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+        game_name: clippedName,
+        website_url: urlCheck.url,
+        requester_id: user ? user.id : null,
+        requester_email: user && user.email ? String(user.email).toLowerCase() : null,
+        status: 'new',
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
+      const list = readLocal(LS_REQUESTS, []);
+      list.unshift(req);
+      writeLocal(LS_REQUESTS, list.slice(0, 100));
+      return { ok: true, request: req, isFallback: true, warning: reason || null };
+    };
+
+    const client = getClient();
+    if (shouldSkipSupabase(client)) {
+      return saveLocalFallback('offline_or_unmigrated');
+    }
+
+    try {
+      const { data, error } = await client.rpc('submit_game_request', {
+        p_game_name: clippedName,
+        p_website_url: urlCheck.url
+      });
+      if (error) {
+        if (isMissingMigrationError(error)) {
+          markMigrationMissing();
+          return saveLocalFallback(error.message);
+        }
+        return { ok: false, error: error.message || 'Could not submit game request.' };
+      }
+      migrationReady = true;
+      if (data && data.ok === false) {
+        return { ok: false, error: data.error || 'Could not submit game request.' };
+      }
+      return {
+        ok: true,
+        request: (data && data.request) || data || null,
+        isFallback: false
+      };
+    } catch (err) {
+      return saveLocalFallback(err && err.message);
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // 2. Game Variation Popularity (auth + anon guests)
+  // ---------------------------------------------------------------------------
+  async function recordGamePlay(gameKey, variationKey, playerCount) {
+    const gk = String(gameKey || '').trim().toLowerCase().slice(0, 80);
+    if (!gk) return { ok: false, error: 'Missing game_key.' };
+    const vk = String(variationKey || 'standard').trim().slice(0, 120) || 'standard';
+    const pc = Math.max(1, Math.min(50, Number.isFinite(Number(playerCount)) ? Math.round(Number(playerCount)) : 2));
+
+    // Always append to local cache so local fallback / immediate tally stays warm
+    const localEv = {
+      id: 'local-play-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+      game_key: gk,
+      variation_key: vk,
+      player_count: pc,
+      created_at: new Date().toISOString()
+    };
+    const localList = readLocal(LS_PLAYS, []);
+    localList.unshift(localEv);
+    writeLocal(LS_PLAYS, localList.slice(0, 500));
+
+    // Invalidate cached popularity for this game + all
+    popularityCache.delete('__all__');
+    popularityCache.delete(gk);
+
+    const client = getClient();
+    if (shouldSkipSupabase(client)) {
+      return { ok: true, event: localEv, isFallback: true };
+    }
+
+    try {
+      const { data, error } = await client.rpc('record_game_play', {
+        p_game_key: gk,
+        p_variation_key: vk,
+        p_player_count: pc
+      });
+      if (error) {
+        if (isMissingMigrationError(error)) markMigrationMissing();
+        return { ok: true, event: localEv, isFallback: true, warning: error.message };
+      }
+      migrationReady = true;
+      if (data && data.ok === false) {
+        return { ok: false, error: data.error || 'Could not record play.' };
+      }
+      return {
+        ok: true,
+        event: (data && data.event) || localEv,
+        isFallback: false
+      };
+    } catch (err) {
+      return { ok: true, event: localEv, isFallback: true, warning: err && err.message };
+    }
+  }
+
+  async function getVariationPopularity(gameKey, options) {
+    const opts = options || {};
+    const gk = gameKey ? String(gameKey).trim().toLowerCase() : null;
+    const cacheKey = gk || '__all__';
+
+    if (!opts.force) {
+      const cached = popularityCache.get(cacheKey);
+      if (cached && Date.now() - cached.fetchedAt < POPULARITY_TTL_MS) {
+        return { ok: true, rows: cached.rows, byGame: cached.byGame, isFallback: cached.isFallback, fromCache: true };
+      }
+    }
+
+    const client = getClient();
+    if (shouldSkipSupabase(client)) {
+      return localPopularity(gk);
+    }
+
+    try {
+      const { data, error } = await client.rpc('get_variation_popularity', {
+        p_game_key: gk
+      });
+      if (error) {
+        if (isMissingMigrationError(error)) markMigrationMissing();
+        return { ...localPopularity(gk), warning: error.message };
+      }
+      migrationReady = true;
+      const rows = (Array.isArray(data) ? data : []).map((r) => ({
+        game_key: String(r.game_key || '').toLowerCase(),
+        variation_key: String(r.variation_key || 'standard'),
+        play_count: Number(r.play_count || 0)
+      }));
+      const byGame = groupPopularityRows(rows);
+      popularityCache.set(cacheKey, { rows, byGame, isFallback: false, fetchedAt: Date.now() });
+      return { ok: true, rows, byGame, isFallback: false };
+    } catch (err) {
+      return { ...localPopularity(gk), warning: err && err.message };
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // 3. Private Admin Stats & Request Triage (randw50@gmail.com only)
+  // ---------------------------------------------------------------------------
+  function isLikelyAdminSync() {
+    try {
+      const prof = global.SocialAPI && typeof global.SocialAPI.getCachedProfile === 'function'
+        ? global.SocialAPI.getCachedProfile()
+        : null;
+      if (prof && prof.email && String(prof.email).toLowerCase() === ADMIN_EMAIL) return true;
+      if (adminCache.value && Date.now() - adminCache.checkedAt < 5 * 60 * 1000) return true;
+    } catch (_) {}
+    return false;
+  }
+
+  async function isAdmin(options) {
+    const opts = options || {};
+    const user = await getAuthUser();
+    if (!user || !user.id) {
+      adminCache = { userId: null, value: false, checkedAt: Date.now() };
+      return false;
+    }
+
+    const emailMatches = String(user.email || '').trim().toLowerCase() === ADMIN_EMAIL;
+    if (!emailMatches) {
+      adminCache = { userId: user.id, value: false, checkedAt: Date.now() };
+      return false;
+    }
+
+    if (!opts.force && adminCache.userId === user.id && Date.now() - adminCache.checkedAt < 60 * 1000) {
+      return adminCache.value;
+    }
+
+    const client = getClient();
+    if (shouldSkipSupabase(client)) {
+      adminCache = { userId: user.id, value: emailMatches, checkedAt: Date.now() };
+      return emailMatches;
+    }
+
+    try {
+      const { data, error } = await client.rpc('is_admin');
+      if (error) {
+        if (isMissingMigrationError(error)) markMigrationMissing();
+        adminCache = { userId: user.id, value: emailMatches, checkedAt: Date.now() };
+        return emailMatches;
+      }
+      migrationReady = true;
+      const val = Boolean(data);
+      adminCache = { userId: user.id, value: val, checkedAt: Date.now() };
+      return val;
+    } catch (_) {
+      adminCache = { userId: user.id, value: emailMatches, checkedAt: Date.now() };
+      return emailMatches;
+    }
+  }
+
+  async function getAdminStats() {
+    const user = await getAuthUser();
+    if (!user || String(user.email || '').trim().toLowerCase() !== ADMIN_EMAIL) {
+      return { ok: false, forbidden: true, error: 'forbidden', stats: null };
+    }
+
+    const client = getClient();
+    if (shouldSkipSupabase(client)) {
+      return { ok: true, stats: buildLocalAdminStats(), isFallback: true };
+    }
+
+    try {
+      const { data, error } = await client.rpc('get_admin_stats');
+      if (error) {
+        if (isForbiddenError(error)) {
+          return { ok: false, forbidden: true, error: 'forbidden', stats: null };
+        }
+        if (isMissingMigrationError(error)) {
+          markMigrationMissing();
+          return { ok: true, stats: buildLocalAdminStats(), isFallback: true, warning: error.message };
+        }
+        return { ok: false, error: error.message || 'Could not load admin stats.', stats: null };
+      }
+      migrationReady = true;
+      return { ok: true, stats: data || buildLocalAdminStats(), isFallback: false };
+    } catch (err) {
+      return { ok: true, stats: buildLocalAdminStats(), isFallback: true, warning: err && err.message };
+    }
+  }
+
+  async function updateGameRequestStatus(id, status) {
+    const reqId = String(id || '').trim();
+    const nextStatus = String(status || '').trim().toLowerCase();
+    if (!reqId) return { ok: false, error: 'Missing request id.' };
+    if (!REQUEST_STATUSES.includes(nextStatus)) {
+      return { ok: false, error: 'Invalid status. Use: ' + REQUEST_STATUSES.join(', ') + '.' };
+    }
+
+    const user = await getAuthUser();
+    if (!user || String(user.email || '').trim().toLowerCase() !== ADMIN_EMAIL) {
+      return { ok: false, forbidden: true, error: 'forbidden' };
+    }
+
+    const updateLocalReq = () => {
+      const list = readLocal(LS_REQUESTS, []);
+      let updated = null;
+      const next = list.map((r) => {
+        if (r.id === reqId) {
+          updated = { ...r, status: nextStatus, updated_at: new Date().toISOString() };
+          return updated;
+        }
+        return r;
+      });
+      if (!updated) return { ok: false, isFallback: true, error: 'Game request not found.' };
+      writeLocal(LS_REQUESTS, next);
+      return { ok: true, request: updated, isFallback: true };
+    };
+
+    const client = getClient();
+    if (shouldSkipSupabase(client) || reqId.startsWith('local-req-')) {
+      return updateLocalReq();
+    }
+
+    try {
+      const { data, error } = await client.rpc('update_game_request_status', {
+        p_id: reqId,
+        p_status: nextStatus
+      });
+      if (error) {
+        if (isForbiddenError(error)) return { ok: false, forbidden: true, error: 'forbidden' };
+        if (isMissingMigrationError(error)) {
+          markMigrationMissing();
+          return updateLocalReq();
+        }
+        return { ok: false, error: error.message || 'Could not update request status.' };
+      }
+      migrationReady = true;
+      if (data && data.ok === false) {
+        return { ok: false, error: data.error || 'Could not update request status.' };
+      }
+      return { ok: true, request: (data && data.request) || data || null, isFallback: false };
+    } catch (err) {
+      return { ok: false, error: (err && err.message) || 'Could not update request status.' };
+    }
+  }
+
+  function clearCache() {
+    popularityCache.clear();
+    adminCache = { userId: null, value: false, checkedAt: 0 };
+    migrationReady = null;
+    migrationCheckedAt = 0;
+  }
+
+  global.TallyItBackend = {
+    ADMIN_EMAIL,
+    REQUEST_STATUSES,
+    submitGameRequest,
+    recordGamePlay,
+    getVariationPopularity,
+    isAdmin,
+    isLikelyAdminSync,
+    getAdminStats,
+    updateGameRequestStatus,
+    clearCache,
+    isMigrationReady: () => migrationReady
+  };
+})(window);
+
+</script>
+<script id="v20-variations">
+/* ==========================================================================
+   TallyIt — Game Variations Catalog & Popularity Helpers (v20)
+   ==========================================================================
+   Zero-dependency UMD module for v3/engine.js & v3/shell.html.
+   Exposes `window.TallyItVariations` in browsers and `module.exports` in Node.
+
+   Provides:
+   - Complete real-world variations catalog for every game in TallyIt
+     (Catan, Flip 7, 7 Wonders, Carcassonne, Oh Hell, Hearts, Nertz,
+     Rummikub, Custom) plus classic tabletop games (Mexican Train, Euchre,
+     Uno, Yahtzee, Phase 10, Scrabble).
+   - 100% compatibility with existing `engine.js` version strings via
+     `versionLabel` + `aliases` so legacy History / Supabase `variant` rows
+     resolve cleanly to canonical variation keys.
+   - Pure helpers:
+       * getVariationsForGame(gameKey)
+       * getVariation(gameKey, variationKey)
+       * getDefaultVariation(gameKey)
+       * mergePopularity(gameKey, serverRows, localCounts)
+   ========================================================================== */
+
+(function (global) {
+  'use strict';
+
+  const GAME_KEY_ALIASES = {
+    '7wonders': '7wonders',
+    'seven_wonders': '7wonders',
+    'seven-wonders': '7wonders',
+    '7_wonders': '7wonders',
+    'flip7': 'flip7',
+    'flip_7': 'flip7',
+    'flip-7': 'flip7',
+    'carcassonne': 'carcassonne',
+    'catan': 'catan',
+    'settlers': 'catan',
+    'ohhell': 'ohhell',
+    'oh_hell': 'ohhell',
+    'oh-hell': 'ohhell',
+    'hearts': 'hearts',
+    'nertz': 'nertz',
+    'rummikub': 'rummikub',
+    'other': 'other',
+    'custom': 'other',
+    'mexican_train': 'mexican_train',
+    'mexican-train': 'mexican_train',
+    'mexicantrain': 'mexican_train',
+    'euchre': 'euchre',
+    'uno': 'uno',
+    'yahtzee': 'yahtzee',
+    'phase10': 'phase10',
+    'phase_10': 'phase10',
+    'phase-10': 'phase10',
+    'scrabble': 'scrabble'
+  };
+
+  const CATALOG = {
+    // -----------------------------------------------------------------------
+    // 1. CATAN
+    // -----------------------------------------------------------------------
+    catan: [
+      {
+        key: 'base',
+        versionLabel: 'Base (to 10 VP)',
+        name: 'Base Game',
+        tagline: 'Classic Catan island — first player to 10 Victory Points wins.',
+        isDefault: true,
+        aliases: ['Base', 'Base (to 10 VP)', 'Standard', '10 VP'],
+        differences: [
+          'First to 10 VP wins on your own turn.',
+          'Score via Settlements (+1), Cities (+2), Longest Road (+2), Largest Army (+2), and VP Dev Cards (+1).',
+          'Standard 3–4 player board with 19 terrain hexes.'
+        ],
+        scoringOverrides: {
+          targetScore: 10,
+          playersMin: 3,
+          playersMax: 4,
+          notes: 'Standard 10 VP target.'
+        }
+      },
+      {
+        key: 'cities_knights',
+        versionLabel: 'Cities & Knights (to 13 VP)',
+        name: 'Cities & Knights',
+        tagline: 'Deeper strategy with barbarians, knights, and metropolises — play to 13 VP.',
+        isDefault: false,
+        aliases: ['Cities & Knights', 'Cities & Knights (to 13 VP)', 'C&K'],
+        differences: [
+          'Winning target increases from 10 VP to 13 VP.',
+          'Metropolises (+2 VP each) and Defender of Catan (+1 VP) replace Largest Army.',
+          'Commodity upgrades & Progress Cards replace standard Development Cards.'
+        ],
+        scoringOverrides: {
+          targetScore: 13,
+          playersMin: 3,
+          playersMax: 4,
+          notes: '13 VP target; track Metropolises & Defender points in VP Cards / Simple mode.'
+        }
+      },
+      {
+        key: 'seafarers',
+        versionLabel: 'Seafarers (to 12 VP)',
+        name: 'Seafarers',
+        tagline: 'Explore islands by ship — most scenarios play to 12–14 VP.',
+        isDefault: false,
+        aliases: ['Seafarers', 'Seafarers (to 12 VP)'],
+        differences: [
+          'Default winning target rises from 10 VP to 12 VP (varies by scenario).',
+          'Ships extend trade routes and count toward Longest Road (+2 VP).',
+          'Bonus VPs awarded for settling new islands or discovering gold hexes.'
+        ],
+        scoringOverrides: {
+          targetScore: 12,
+          playersMin: 3,
+          playersMax: 4,
+          notes: '12 VP default target; adjustable in setup.'
+        }
+      },
+      {
+        key: 'five_six_player',
+        versionLabel: '5-6 Player (to 10 VP)',
+        name: '5–6 Player Extension',
+        tagline: 'Larger island for 5–6 players with Special Building Phase — still to 10 VP.',
+        isDefault: false,
+        aliases: ['5-6 Player', '5-6 Player (to 10 VP)', '5-6 Players'],
+        differences: [
+          'Supports 5–6 players on an expanded 30-hex board.',
+          'Adds a Special Building Phase (or Paired Player turn) between regular turns.',
+          'Same 10 VP winning target as the Base Game.'
+        ],
+        scoringOverrides: {
+          targetScore: 10,
+          playersMin: 5,
+          playersMax: 6,
+          notes: 'Supports up to 6 players; 10 VP target.'
+        }
+      }
+    ],
+
+    // -----------------------------------------------------------------------
+    // 2. 7 WONDERS
+    // -----------------------------------------------------------------------
+    '7wonders': [
+      {
+        key: 'base',
+        versionLabel: 'Base Game',
+        name: 'Base Game',
+        tagline: 'Classic 7-category drafting — Military, Treasury, Wonder, Blue, Yellow, Guilds & Science.',
+        isDefault: true,
+        aliases: ['Base', 'Base Game', 'Standard', '7 Wonders'],
+        differences: [
+          'Score all 7 core categories: Military, Treasury (3 coins = 1 VP), Wonder, Civilian, Commercial, Guilds, and Science.',
+          'Raw Treasury coins break Victory Point ties.',
+          '3–7 players across three Ages with no expansion boards.'
+        ],
+        scoringOverrides: {
+          targetScore: null,
+          playersMin: 3,
+          playersMax: 7,
+          expansions: { leaders: false, cities: false, armada: false },
+          notes: '7 base categories; raw coins break VP ties.'
+        }
+      },
+      {
+        key: 'leaders',
+        versionLabel: 'With Leaders',
+        name: 'With Leaders',
+        tagline: 'Draft iconic historical Leaders before Age I for asymmetric powers and bonus VP.',
+        isDefault: false,
+        aliases: ['Leaders', 'With Leaders'],
+        differences: [
+          'Adds a Leaders (White) scoring category to the ledger.',
+          'Players draft 4 Leaders at setup and recruit one before each Age.',
+          'All 7 base categories and coin tiebreaker remain unchanged.'
+        ],
+        scoringOverrides: {
+          targetScore: null,
+          playersMin: 3,
+          playersMax: 7,
+          expansions: { leaders: true, cities: false, armada: false },
+          notes: 'Enables the Leaders (White) category.'
+        }
+      },
+      {
+        key: 'cities',
+        versionLabel: 'With Cities',
+        name: 'With Cities',
+        tagline: 'Adds Black cards, Diplomacy, Debt tokens, and optional 8-player team play.',
+        isDefault: false,
+        aliases: ['Cities', 'With Cities'],
+        differences: [
+          'Adds a signed Cities (Black) scoring category (Debt tokens can subtract VP).',
+          'Each Age has 1 extra card per player for espionage, diplomacy, and loss-of-coins effects.',
+          'All 7 base categories and coin tiebreaker still apply.'
+        ],
+        scoringOverrides: {
+          targetScore: null,
+          playersMin: 3,
+          playersMax: 7,
+          expansions: { leaders: false, cities: true, armada: false },
+          notes: 'Enables the signed Cities (Black) category.'
+        }
+      },
+      {
+        key: 'armada',
+        versionLabel: 'With Armada',
+        name: 'With Armada',
+        tagline: 'Adds naval shipyards, fleets, island exploration, and table-wide naval conflicts.',
+        isDefault: false,
+        aliases: ['Armada', 'With Armada'],
+        differences: [
+          'Adds a signed Armada (Navy) category covering naval conflict tokens, fleets, and islands.',
+          'Naval conflicts pit all players against each other at the end of every Age.',
+          'All 7 base categories and coin tiebreaker remain unchanged.'
+        ],
+        scoringOverrides: {
+          targetScore: null,
+          playersMin: 3,
+          playersMax: 7,
+          expansions: { leaders: false, cities: false, armada: true },
+          notes: 'Enables the signed Armada (Navy) category.'
+        }
+      }
+    ],
+
+    // -----------------------------------------------------------------------
+    // 3. FLIP 7
+    // -----------------------------------------------------------------------
+    flip7: [
+      {
+        key: 'standard',
+        versionLabel: 'Standard (to 200)',
+        name: 'Standard',
+        tagline: 'Push-your-luck card drafting — first player to 200 points wins.',
+        isDefault: true,
+        aliases: ['Standard', 'Standard (to 200)', 'Base'],
+        differences: [
+          'Play rounds until at least one player reaches 200+ points; highest score wins.',
+          'Flipping 7 unique number cards scores a +15 Flip 7 bonus and ends the round.',
+          'Busting on a duplicate number scores 0 for the round unless protected by Second Chance.'
+        ],
+        scoringOverrides: {
+          targetScore: 200,
+          playersMin: 2,
+          playersMax: 18,
+          notes: '200-point target with +15 Flip 7 bonus.'
+        }
+      },
+      {
+        key: 'vengeance',
+        versionLabel: 'With a Vengeance',
+        name: 'With a Vengeance',
+        tagline: 'Meaner action cards and take-that twists — same 200-point race.',
+        isDefault: false,
+        aliases: ['With a Vengeance', 'Vengeance'],
+        differences: [
+          'Adds aggressive action cards that force rivals to draw or drop cards.',
+          'Higher bust risk makes banking points early more valuable.',
+          'Same 200-point target and +15 Flip 7 bonus.'
+        ],
+        scoringOverrides: {
+          targetScore: 200,
+          playersMin: 2,
+          playersMax: 18,
+          notes: '200-point target.'
+        }
+      },
+      {
+        key: 'thematic_promo',
+        versionLabel: 'Thematic / Promo',
+        name: 'Thematic / Promo',
+        tagline: 'Promo or seasonal deck variants with custom modifier cards.',
+        isDefault: false,
+        aliases: ['Thematic / Promo', 'Promo', 'Thematic'],
+        differences: [
+          'Includes promo modifier or special action cards not in the core deck.',
+          'Use custom delta adjustments on the Card Pad for unique promo effects.',
+          'Standard 200-point target.'
+        ],
+        scoringOverrides: {
+          targetScore: 200,
+          playersMin: 2,
+          playersMax: 18,
+          notes: '200-point target.'
+        }
+      }
+    ],
+
+    // -----------------------------------------------------------------------
+    // 4. CARCASSONNE
+    // -----------------------------------------------------------------------
+    carcassonne: [
+      {
+        key: 'classic',
+        versionLabel: 'Classic (current scoring)',
+        name: 'Classic (Current Edition)',
+        tagline: 'Modern 3rd-edition scoring — 2-tile cities score 4 pts, farms score 3 pts per city.',
+        isDefault: true,
+        aliases: ['Classic', 'Classic (current scoring)', 'Standard', 'Current Edition'],
+        differences: [
+          'Completed 2-tile cities score 4 points (2 per tile + 2 per pennant).',
+          'Farms score 3 points per completed city touching that field at game end.',
+          'Includes the River & Abbot mini-expansions in modern box printings.'
+        ],
+        scoringOverrides: {
+          targetScore: null,
+          playersMin: 2,
+          playersMax: 5,
+          notes: 'Current official scoring rules.'
+        }
+      },
+      {
+        key: 'older_edition',
+        versionLabel: 'Older edition (small cities)',
+        name: '1st Edition (Small Cities)',
+        tagline: 'Original 2000 rules where 2-tile cities score 2 points instead of 4.',
+        isDefault: false,
+        aliases: ['Older edition (small cities)', '1st Edition', 'Small Cities'],
+        differences: [
+          'Completed 2-tile cities without a pennant score 2 points instead of 4.',
+          'Farms score 3 points per city (or 4 per city in the earliest 2000 printing).',
+          'Rewards building larger multi-tile cities rather than quick 2-tile caps.'
+        ],
+        scoringOverrides: {
+          targetScore: null,
+          playersMin: 2,
+          playersMax: 5,
+          notes: '2-tile cities score 2 pts.'
+        }
+      },
+      {
+        key: 'inns_cathedrals',
+        versionLabel: 'With Inns & Cathedrals',
+        name: 'Inns & Cathedrals',
+        tagline: 'Higher stakes on roads and cities, Big Meeple, and support for a 6th player.',
+        isDefault: false,
+        aliases: ['With Inns & Cathedrals', 'Inns & Cathedrals'],
+        differences: [
+          'Completed roads with an Inn score 2 pts/tile (0 if unfinished at game end).',
+          'Completed cities with a Cathedral score 3 pts/tile & pennant (0 if unfinished).',
+          'Adds the Big Meeple (worth 2 meeples for majority) and supports up to 6 players.'
+        ],
+        scoringOverrides: {
+          targetScore: null,
+          playersMin: 2,
+          playersMax: 6,
+          notes: 'Supports up to 6 players; Inns & Cathedrals multipliers.'
+        }
+      },
+      {
+        key: 'other_expansions',
+        versionLabel: 'With other expansions',
+        name: 'Multi-Expansion',
+        tagline: 'Traders & Builders, Princess & Dragon, or custom expansion mixes.',
+        isDefault: false,
+        aliases: ['With other expansions', 'Other Expansions'],
+        differences: [
+          'Adds trade goods bonuses (10 pts per majority in Wine, Grain, Cloth).',
+          'Supports extra features like Builders, Pigs (+1 per city on farms), or Towers.',
+          'Track bonus points cleanly in the Feature pad.'
+        ],
+        scoringOverrides: {
+          targetScore: null,
+          playersMin: 2,
+          playersMax: 6,
+          notes: 'Flexible feature scoring for expansion mixes.'
+        }
+      }
+    ],
+
+    // -----------------------------------------------------------------------
+    // 5. OH HELL
+    // -----------------------------------------------------------------------
+    ohhell: [
+      {
+        key: 'exact_10_plus_bid',
+        versionLabel: 'Exact: 10+bid (miss=0)',
+        name: 'Exact 10 + Bid',
+        tagline: 'Hit your exact bid for 10 + tricks won; miss by any amount and score 0.',
+        isDefault: true,
+        aliases: ['Exact: 10+bid (miss=0)', '10+bid', 'Standard'],
+        differences: [
+          'Exact bid scores 10 + number of tricks bid (e.g., bid 3 & take 3 = 13 pts).',
+          'Missing your bid (over or under) scores 0 points for the hand.',
+          'Dealer is usually barred from making total bids equal cards dealt ("Hook" rule).'
+        ],
+        scoringOverrides: {
+          targetScore: null,
+          playersMin: 3,
+          playersMax: 7,
+          notes: 'Exact = 10 + bid; miss = 0.'
+        }
+      },
+      {
+        key: 'one_per_trick_plus_10',
+        versionLabel: '1 per trick +10 if exact',
+        name: '1/Trick + 10 Bonus',
+        tagline: 'Always earn 1 point per trick taken, plus a +10 bonus for hitting your bid.',
+        isDefault: false,
+        aliases: ['1 per trick +10 if exact', '1 per trick'],
+        differences: [
+          'Every trick taken earns 1 point even if you miss your bid.',
+          'Hitting your exact bid awards an additional +10 bonus.',
+          'Softer punishment for missing by a single trick than pure 10+bid.'
+        ],
+        scoringOverrides: {
+          targetScore: null,
+          playersMin: 3,
+          playersMax: 7,
+          notes: '1 pt per trick won + 10 bonus if exact.'
+        }
+      },
+      {
+        key: 'other_variant',
+        versionLabel: 'Other variant',
+        name: 'House / Penalty Variant',
+        tagline: 'Custom table scoring such as 10 + bid², negative misses, or 5 + bid.',
+        isDefault: false,
+        aliases: ['Other variant', 'House Rules', 'Penalty'],
+        differences: [
+          'Supports house rules like −10 per trick off bid or 10 + (2 × bid).',
+          'Use manual score entry when your table plays custom multipliers.',
+          'Highest total after the final hand wins.'
+        ],
+        scoringOverrides: {
+          targetScore: null,
+          playersMin: 3,
+          playersMax: 7,
+          notes: 'Custom round scoring.'
+        }
+      }
+    ],
+
+    // -----------------------------------------------------------------------
+    // 6. HEARTS
+    // -----------------------------------------------------------------------
+    hearts: [
+      {
+        key: 'standard_100',
+        versionLabel: 'Standard (to 100)',
+        name: 'Standard (to 100)',
+        tagline: 'Classic 4-player Hearts — game ends at 100 points, lowest score wins.',
+        isDefault: true,
+        aliases: ['Standard', 'Standard (to 100)', 'Classic'],
+        differences: [
+          'Each Heart = +1 pt, Queen of Spades = +13 pts (26 pts per hand).',
+          'Shooting the Moon gives every opponent +26 pts (or −26 to the shooter).',
+          'Game ends when any player reaches 100+ points; lowest score wins.'
+        ],
+        scoringOverrides: {
+          targetScore: 100,
+          playersMin: 3,
+          playersMax: 6,
+          lowWins: true,
+          notes: 'Ends at 100; lowest score wins.'
+        }
+      },
+      {
+        key: 'short_50',
+        versionLabel: 'Short (to 50)',
+        name: 'Short Game (to 50)',
+        tagline: 'Faster match ending at 50 points — great for quick sessions.',
+        isDefault: false,
+        aliases: ['Short', 'Short (to 50)', '50'],
+        differences: [
+          'Target threshold drops from 100 points to 50 points.',
+          'A single Queen of Spades (+13) or Shoot the Moon (+26) swings the game fast.',
+          'Lowest score when someone hits 50+ wins.'
+        ],
+        scoringOverrides: {
+          targetScore: 50,
+          playersMin: 3,
+          playersMax: 6,
+          lowWins: true,
+          notes: 'Ends at 50; lowest score wins.'
+        }
+      },
+      {
+        key: 'jack_of_diamonds',
+        versionLabel: 'With Jack of Diamonds',
+        name: 'Omnibus (Jack of Diamonds)',
+        tagline: 'Taking the Jack of Diamonds subtracts 10 points from your hand score.',
+        isDefault: false,
+        aliases: ['With Jack of Diamonds', 'Jack of Diamonds', 'Omnibus'],
+        differences: [
+          'Capturing the Jack of Diamonds awards −10 points (can make a hand negative).',
+          'Creates a thrilling race to win the J♦ without taking Hearts or Q♠.',
+          'Game still ends at 100 points; lowest score wins.'
+        ],
+        scoringOverrides: {
+          targetScore: 100,
+          playersMin: 3,
+          playersMax: 6,
+          lowWins: true,
+          notes: 'J♦ = −10 pts; ends at 100.'
+        }
+      }
+    ],
+
+    // -----------------------------------------------------------------------
+    // 7. NERTZ
+    // -----------------------------------------------------------------------
+    nertz: [
+      {
+        key: 'standard_100',
+        versionLabel: 'Standard (to 100)',
+        name: 'Standard (to 100)',
+        tagline: 'Classic frantic solitaire race — +1 per center card, −2 per Nertz left, first to 100.',
+        isDefault: true,
+        aliases: ['Standard', 'Standard (to 100)'],
+        differences: [
+          'Score +1 for each card played to the center lake and −2 for each card left in your Nertz pile.',
+          'Scores can go negative; play until a player or team hits 100+ points.',
+          'Supports Solo play or unlimited Teams/Partners.'
+        ],
+        scoringOverrides: {
+          targetScore: 100,
+          playersMin: 2,
+          playersMax: 8,
+          notes: 'First to 100 points wins.'
+        }
+      },
+      {
+        key: 'long_150',
+        versionLabel: 'Long game (to 150)',
+        name: 'Long Game (to 150)',
+        tagline: 'Extended match to 150 points for bigger comeback arcs.',
+        isDefault: false,
+        aliases: ['Long game (to 150)', 'Long', '150'],
+        differences: [
+          'Winning target increases from 100 points to 150 points.',
+          'Gives players more rounds to recover from an early negative hand.',
+          'Same +1 center / −2 Nertz pile scoring.'
+        ],
+        scoringOverrides: {
+          targetScore: 150,
+          playersMin: 2,
+          playersMax: 8,
+          notes: 'First to 150 points wins.'
+        }
+      },
+      {
+        key: 'short_50',
+        versionLabel: 'Short game (to 50)',
+        name: 'Short Game (to 50)',
+        tagline: 'Quick 3–5 round sprint to 50 points.',
+        isDefault: false,
+        aliases: ['Short game (to 50)', 'Short', '50'],
+        differences: [
+          'Winning target drops from 100 points to 50 points.',
+          'Ideal for warm-up games or larger 6+ player tables.',
+          'Same +1 center / −2 Nertz pile scoring.'
+        ],
+        scoringOverrides: {
+          targetScore: 50,
+          playersMin: 2,
+          playersMax: 8,
+          notes: 'First to 50 points wins.'
+        }
+      }
+    ],
+
+    // -----------------------------------------------------------------------
+    // 8. RUMMIKUB
+    // -----------------------------------------------------------------------
+    rummikub: [
+      {
+        key: 'points_up',
+        versionLabel: 'Points Up (Lowest Wins)',
+        name: 'Points Up (Lowest Wins)',
+        tagline: 'Leftover tiles add positive penalty points to your rack — lowest total wins.',
+        isDefault: true,
+        aliases: ['Points Up (Lowest Wins)', 'Points Up', 'Lowest Wins'],
+        differences: [
+          'Round winner gets 0; everyone else adds the sum of tiles left on their rack.',
+          'Unused Joker on your rack adds a +30 penalty.',
+          'Lowest cumulative score at the end of the session wins.'
+        ],
+        scoringOverrides: {
+          targetScore: null,
+          playersMin: 2,
+          playersMax: 6,
+          lowWins: true,
+          scoringMode: 'points_up',
+          notes: 'Non-negative round deltas, Joker +30, lowest score wins.'
+        }
+      },
+      {
+        key: 'classic',
+        versionLabel: 'Classic (+/−)',
+        name: 'Classic (+/− Official)',
+        tagline: 'Official zero-sum scoring — losers subtract leftover tiles and winner gains the sum.',
+        isDefault: false,
+        aliases: ['Classic (+/−)', 'Classic (+/-)', 'Classic', 'Official'],
+        differences: [
+          'Losers subtract their remaining tile values (unused Joker = −30).',
+          'The player who goes out gains the positive total of all opponents’ leftover tiles.',
+          'Highest cumulative score at the end of the session wins.'
+        ],
+        scoringOverrides: {
+          targetScore: null,
+          playersMin: 2,
+          playersMax: 6,
+          lowWins: false,
+          scoringMode: 'classic',
+          notes: 'Signed round deltas, Joker −30, highest score wins.'
+        }
+      }
+    ],
+
+    // -----------------------------------------------------------------------
+    // 9. CUSTOM / OTHER
+    // -----------------------------------------------------------------------
+    other: [
+      {
+        key: 'custom',
+        versionLabel: 'Custom rules',
+        name: 'Custom Rules',
+        tagline: 'Freeform scorepad for any tabletop, card, or yard game.',
+        isDefault: true,
+        aliases: ['Custom rules', 'Custom', 'Other'],
+        differences: [
+          'Enter any positive or negative score per round.',
+          'Works with 2–12 players with no fixed target score.',
+          'Highest total wins by default.'
+        ],
+        scoringOverrides: {
+          targetScore: null,
+          playersMin: 1,
+          playersMax: 12,
+          notes: 'Open-ended custom scorepad.'
+        }
+      }
+    ],
+
+    // -----------------------------------------------------------------------
+    // BONUS CLASSIC CATALOG (ready when these games join TallyIt)
+    // -----------------------------------------------------------------------
+    mexican_train: [
+      {
+        key: 'double_12',
+        versionLabel: 'Double-12 (13 Rounds)',
+        name: 'Double-12 Standard',
+        tagline: 'Classic 13-round game counting down from 12-12 to 0-0 — lowest pip total wins.',
+        isDefault: true,
+        aliases: ['Double-12', 'Standard', '13 Rounds'],
+        differences: [
+          '13 rounds starting with the double-12 engine down to double-blank.',
+          'Add leftover pips in your hand each round; double-blank counts as 50 (or 0 in some tables).',
+          'Lowest cumulative score after the 0-0 round wins.'
+        ],
+        scoringOverrides: { targetScore: null, playersMin: 2, playersMax: 8, lowWins: true, notes: '13 rounds; lowest pip score wins.' }
+      },
+      {
+        key: 'double_9',
+        versionLabel: 'Double-9 (10 Rounds)',
+        name: 'Double-9 Quick',
+        tagline: 'Shorter 10-round set starting from 9-9 — faster rounds for 2–4 players.',
+        isDefault: false,
+        aliases: ['Double-9', 'Quick', '10 Rounds'],
+        differences: [
+          '10 rounds starting at double-9 instead of double-12.',
+          'Smaller domino set keeps rounds brisk (30–45 minutes total).',
+          'Same lowest-score-wins pip tally.'
+        ],
+        scoringOverrides: { targetScore: null, playersMin: 2, playersMax: 6, lowWins: true, notes: '10 rounds; lowest pip score wins.' }
+      },
+      {
+        key: 'double_15',
+        versionLabel: 'Double-15 (16 Rounds)',
+        name: 'Double-15 Marathon',
+        tagline: 'Big 136-tile set for large 6–12 player tables across 16 rounds.',
+        isDefault: false,
+        aliases: ['Double-15', 'Marathon', '16 Rounds'],
+        differences: [
+          '16 rounds starting from the double-15 engine.',
+          'Supports larger groups up to 12 players without running short on tiles.',
+          'Higher pip totals per round; lowest cumulative score wins.'
+        ],
+        scoringOverrides: { targetScore: null, playersMin: 4, playersMax: 12, lowWins: true, notes: '16 rounds; supports large tables.' }
+      }
+    ],
+
+    euchre: [
+      {
+        key: 'standard_10',
+        versionLabel: 'Standard (to 10)',
+        name: 'Standard Partnership (to 10)',
+        tagline: 'Classic 4-player partnership Euchre — first team to 10 points wins.',
+        isDefault: true,
+        aliases: ['Standard', 'Standard (to 10)', 'Classic'],
+        differences: [
+          'Makers score +1 (3–4 tricks), +2 (all 5 tricks / march), or +4 (going alone & taking all 5).',
+          'Euchring the makers awards +2 points to the defenders.',
+          'First team to 10 points wins.'
+        ],
+        scoringOverrides: { targetScore: 10, playersMin: 4, playersMax: 4, notes: '2v2 partnership to 10 pts.' }
+      },
+      {
+        key: 'stick_the_dealer',
+        versionLabel: 'Stick the Dealer (to 10)',
+        name: 'Stick the Dealer',
+        tagline: 'If everyone passes twice, the dealer MUST call trump — zero dead hands.',
+        isDefault: false,
+        aliases: ['Stick the Dealer', 'Screw the Dealer'],
+        differences: [
+          'Dealer cannot pass in the second round of bidding and must name a trump suit.',
+          'Eliminates redeals and creates more high-tension euchres (+2 for defenders).',
+          'Same 10-point target and loner (+4) scoring.'
+        ],
+        scoringOverrides: { targetScore: 10, playersMin: 4, playersMax: 4, notes: 'Forced dealer call; play to 10.' }
+      },
+      {
+        key: 'cutthroat_3p',
+        versionLabel: 'Cutthroat (3 Players)',
+        name: 'Cutthroat (3-Player)',
+        tagline: 'Every player for themselves — maker plays 1 vs 2 each hand.',
+        isDefault: false,
+        aliases: ['Cutthroat', '3 Players', '3-Player'],
+        differences: [
+          'Solo maker faces the other two players temporarily allied as defenders.',
+          'Maker scores +1 (3–4 tricks) or +3 (all 5 tricks); each defender gets +2 on a euchre.',
+          'First individual player to 10 (or 15) points wins.'
+        ],
+        scoringOverrides: { targetScore: 10, playersMin: 3, playersMax: 3, notes: '3-player solo Euchre.' }
+      }
+    ],
+
+    uno: [
+      {
+        key: 'classic_500',
+        versionLabel: 'Classic (to 500)',
+        name: 'Classic (to 500)',
+        tagline: 'Round winner scores the points left in all opponents’ hands — first to 500 wins.',
+        isDefault: true,
+        aliases: ['Classic', 'Classic (to 500)', 'Standard'],
+        differences: [
+          'Number cards = face value, Action cards = 20 pts, Wild / Wild Draw 4 = 50 pts.',
+          'Only the player who empties their hand scores each round.',
+          'First player to reach 500 points wins the match.'
+        ],
+        scoringOverrides: { targetScore: 500, playersMin: 2, playersMax: 10, notes: 'First to 500 pts wins.' }
+      },
+      {
+        key: 'low_score_200',
+        versionLabel: 'Lowest Score (to 200)',
+        name: 'Lowest Score Wins',
+        tagline: 'Everyone keeps their own leftover card points — game ends at 200, lowest wins.',
+        isDefault: false,
+        aliases: ['Lowest Score', 'Lowest Score (to 200)', 'Points Up'],
+        differences: [
+          'Round winner scores 0; every other player adds the point value of cards left in their hand.',
+          'Match ends when any player hits 200+ points; lowest total wins.',
+          'Popular house variant that punishes holding Wilds (+50) late.'
+        ],
+        scoringOverrides: { targetScore: 200, playersMin: 2, playersMax: 10, lowWins: true, notes: 'Ends at 200; lowest wins.' }
+      },
+      {
+        key: 'no_mercy',
+        versionLabel: 'UNO Show ’em No Mercy',
+        name: 'Show ’em No Mercy',
+        tagline: 'Stackable +4/+6/+10 penalties and Mercy Rule elimination at 25+ cards.',
+        isDefault: false,
+        aliases: ['No Mercy', 'UNO No Mercy'],
+        differences: [
+          'Draw cards stack and include brutal +6 and +10 Wild penalties.',
+          'Mercy Rule knocks out any player holding 25 or more cards.',
+          'Last player standing or first to empty hand wins the round (play to 1,000 or match wins).'
+        ],
+        scoringOverrides: { targetScore: 1000, playersMin: 2, playersMax: 6, notes: 'High-scoring No Mercy edition.' }
+      }
+    ],
+
+    yahtzee: [
+      {
+        key: 'classic',
+        versionLabel: 'Classic Yahtzee',
+        name: 'Classic Yahtzee',
+        tagline: '13-round dice classic with +35 Upper Bonus and +100 Yahtzee bonuses.',
+        isDefault: true,
+        aliases: ['Classic', 'Classic Yahtzee', 'Standard'],
+        differences: [
+          'Upper section total of 63+ awards a +35 bonus.',
+          'First Yahtzee scores 50; each additional Yahtzee earns a +100 bonus (when 50 box is filled).',
+          'Highest total after all 13 categories wins.'
+        ],
+        scoringOverrides: { targetScore: null, playersMin: 1, playersMax: 8, notes: '13 categories; +35 upper bonus.' }
+      },
+      {
+        key: 'triple_yahtzee',
+        versionLabel: 'Triple Yahtzee',
+        name: 'Triple Yahtzee',
+        tagline: 'Three columns per player (1×, 2×, 3× multipliers) across 39 rolls.',
+        isDefault: false,
+        aliases: ['Triple Yahtzee', 'Triple'],
+        differences: [
+          'Each player fills 3 full columns: Column 1 (1×), Column 2 (2×), and Column 3 (3×).',
+          'Upper +35 bonus applies independently to each column before multiplying.',
+          'Rewards saving big rolls for the 3× column.'
+        ],
+        scoringOverrides: { targetScore: null, playersMin: 1, playersMax: 6, notes: '3 columns with 1×/2×/3× multipliers.' }
+      },
+      {
+        key: 'yatzy_scandinavian',
+        versionLabel: 'Yatzy (Scandinavian)',
+        name: 'Yatzy (Scandinavian)',
+        tagline: '15 categories with One Pair, Two Pairs, and +50 Upper Bonus — no Yahtzee joker.',
+        isDefault: false,
+        aliases: ['Yatzy', 'Scandinavian Yatzy'],
+        differences: [
+          '15 rounds adding One Pair and Two Pairs; Small Straight is 1–5 (15 pts) and Large Straight is 2–6 (20 pts).',
+          'Upper bonus is +50 (still at 63+ upper points) instead of +35.',
+          'Full House scores the actual sum of all 5 dice rather than a flat 25.'
+        ],
+        scoringOverrides: { targetScore: null, playersMin: 1, playersMax: 8, notes: '15 categories; +50 upper bonus.' }
+      }
+    ],
+
+    phase10: [
+      {
+        key: 'classic',
+        versionLabel: 'Classic (10 Phases)',
+        name: 'Classic Phase 10',
+        tagline: 'Complete Phases 1–10 in order; lowest penalty score wins ties.',
+        isDefault: true,
+        aliases: ['Classic', 'Standard', 'Classic (10 Phases)'],
+        differences: [
+          'Phases must be completed strictly in order from Phase 1 to Phase 10.',
+          'Leftover cards score 5 pts (1–9), 10 pts (10–12), 15 pts (Skip), 25 pts (Wild).',
+          'First to finish Phase 10 wins (lowest total points breaks same-round ties).'
+        ],
+        scoringOverrides: { targetScore: null, playersMin: 2, playersMax: 6, lowWins: true, notes: 'Lowest points breaks Phase 10 ties.' }
+      },
+      {
+        key: 'floating_choice',
+        versionLabel: 'Choice / Floating Phases',
+        name: 'Choice (Any Order)',
+        tagline: 'Complete the 10 Phases in any order you choose — faster, less getting stuck.',
+        isDefault: false,
+        aliases: ['Choice', 'Floating', 'Any Order'],
+        differences: [
+          'Players may complete any remaining Phase each round instead of going 1→10 strictly.',
+          'Dramatically reduces getting stuck on Phase 8 (7 of one color).',
+          'Same card penalty values and tiebreaker.'
+        ],
+        scoringOverrides: { targetScore: null, playersMin: 2, playersMax: 6, lowWins: true, notes: 'Complete phases in any order.' }
+      },
+      {
+        key: 'masters_edition',
+        versionLabel: 'Phase 10 Masters',
+        name: 'Masters Edition',
+        tagline: 'Harder Phase cards plus a Save Card slot for deeper hand planning.',
+        isDefault: false,
+        aliases: ['Masters', 'Phase 10 Masters'],
+        differences: [
+          'Includes trickier Master Phases (e.g., 4 of one color + run of 4).',
+          'Each player may set aside 1 card per round to carry into the next turn.',
+          'Same lowest-score tiebreaker when finishing Phase 10.'
+        ],
+        scoringOverrides: { targetScore: null, playersMin: 2, playersMax: 6, lowWins: true, notes: 'Master phase deck with Save Card.' }
+      }
+    ],
+
+    scrabble: [
+      {
+        key: 'standard',
+        versionLabel: 'Standard (TWL / CSW)',
+        name: 'Standard Scrabble',
+        tagline: 'Classic 15×15 board with +50 Bingo bonus for playing all 7 tiles.',
+        isDefault: true,
+        aliases: ['Standard', 'Classic', 'TWL', 'CSW'],
+        differences: [
+          'Using all 7 rack tiles in one play awards a +50 Bingo bonus.',
+          'At game end, players subtract unplayed rack tiles; the player who went out gains opponents’ remaining tile values.',
+          'Highest final score wins.'
+        ],
+        scoringOverrides: { targetScore: null, playersMin: 2, playersMax: 4, notes: 'Classic 2–4 player Scrabble.' }
+      },
+      {
+        key: 'super_scrabble',
+        versionLabel: 'Super Scrabble',
+        name: 'Super Scrabble',
+        tagline: 'Expanded 21×21 board with 200 tiles plus Quadruple Letter & Word squares.',
+        isDefault: false,
+        aliases: ['Super Scrabble', 'Super'],
+        differences: [
+          '21×21 board with 200 tiles (double the standard tile bag).',
+          'Adds Quadruple Letter (4L) and Quadruple Word (4W) premium squares.',
+          'Same +50 Bingo bonus and end-game rack scoring.'
+        ],
+        scoringOverrides: { targetScore: null, playersMin: 2, playersMax: 4, notes: '200 tiles; 4L and 4W squares.' }
+      },
+      {
+        key: 'duplicate',
+        versionLabel: 'Duplicate / Tournament',
+        name: 'Duplicate Scrabble',
+        tagline: 'Everyone plays from the exact same 7-tile rack each turn — pure skill, zero luck.',
+        isDefault: false,
+        aliases: ['Duplicate', 'Tournament'],
+        differences: [
+          'All players independently find the best play from the same shared 7-tile rack.',
+          'Everyone scores their own word, while the highest-scoring word is placed on the master board.',
+          'Eliminates tile-draw luck and scales cleanly to any number of players.'
+        ],
+        scoringOverrides: { targetScore: null, playersMin: 2, playersMax: 12, notes: 'Shared rack each turn.' }
+      }
+    ]
+  };
+
+  // ---------------- Pure Helpers ----------------
+  function normalizeGameKey(gameKey) {
+    const raw = String(gameKey || '').trim().toLowerCase();
+    if (!raw) return '';
+    return GAME_KEY_ALIASES[raw] || raw;
+  }
+
+  function normToken(v) {
+    return String(v || '').trim().toLowerCase().replace(/\s+/g, ' ');
+  }
+
+  function cloneVariation(v) {
+    return {
+      key: v.key,
+      versionLabel: v.versionLabel || v.name,
+      name: v.name,
+      tagline: v.tagline,
+      isDefault: Boolean(v.isDefault),
+      aliases: Array.isArray(v.aliases) ? v.aliases.slice() : [],
+      differences: Array.isArray(v.differences) ? v.differences.slice() : [],
+      scoringOverrides: v.scoringOverrides
+        ? {
+            ...v.scoringOverrides,
+            ...(v.scoringOverrides.expansions ? { expansions: { ...v.scoringOverrides.expansions } } : {})
+          }
+        : {}
+    };
+  }
+
+  /**
+   * Returns a cloned array of all variations for a gameKey.
+   */
+  function getVariationsForGame(gameKey) {
+    const gk = normalizeGameKey(gameKey);
+    const list = CATALOG[gk];
+    return Array.isArray(list) ? list.map(cloneVariation) : [];
+  }
+
+  /**
+   * Returns the default variation for a gameKey (or null if unknown game).
+   */
+  function getDefaultVariation(gameKey) {
+    const list = getVariationsForGame(gameKey);
+    if (!list.length) return null;
+    return list.find((v) => v.isDefault) || list[0];
+  }
+
+  /**
+   * Looks up a single variation by canonical `key`, `versionLabel`, `name`, or `aliases`.
+   */
+  function getVariation(gameKey, variationKey) {
+    const list = getVariationsForGame(gameKey);
+    if (!list.length) return null;
+    const target = normToken(variationKey);
+    if (!target) return null;
+
+    // 1. Exact key match
+    let hit = list.find((v) => normToken(v.key) === target);
+    if (hit) return hit;
+
+    // 2. Exact versionLabel or name match
+    hit = list.find((v) => normToken(v.versionLabel) === target || normToken(v.name) === target);
+    if (hit) return hit;
+
+    // 3. Alias match
+    hit = list.find((v) => v.aliases.some((a) => normToken(a) === target));
+    if (hit) return hit;
+
+    return null;
+  }
+
+  /**
+   * Normalizes server popularity rows or local counts into a map of
+   * { [canonicalVariationKey]: count }.
+   */
+  function accumulateCounts(gameKey, source, countsMap, defaultKey) {
+    if (!source) return;
+    const add = (rawKey, rawCount) => {
+      const n = Math.max(0, Math.trunc(Number(rawCount) || 0));
+      if (n <= 0) return;
+      const resolved = getVariation(gameKey, rawKey);
+      const targetKey = resolved ? resolved.key : (!normToken(rawKey) ? defaultKey : null);
+      if (!targetKey) return;
+      countsMap.set(targetKey, (countsMap.get(targetKey) || 0) + n);
+    };
+
+    if (Array.isArray(source)) {
+      for (const row of source) {
+        if (!row || typeof row !== 'object') continue;
+        // Support server aggregate rows: { variant, play_count } / { variation_key, count } / { key, plays }
+        const hasCountField =
+          row.play_count !== undefined ||
+          row.playCount !== undefined ||
+          row.count !== undefined ||
+          row.plays !== undefined;
+        const rawKey = row.variation_key ?? row.variationKey ?? row.variant ?? row.version ?? row.key ?? '';
+        if (hasCountField) {
+          const cnt = row.play_count ?? row.playCount ?? row.count ?? row.plays ?? 0;
+          add(rawKey, cnt);
+        } else {
+          // Also supports passing raw local history game objects: [{ type, version, variant }]
+          const rowGame = row.type || row.game_type;
+          if (rowGame && normalizeGameKey(rowGame) !== normalizeGameKey(gameKey)) continue;
+          add(rawKey, 1);
+        }
+      }
+    } else if (typeof source === 'object') {
+      for (const [k, v] of Object.entries(source)) {
+        add(k, v);
+      }
+    }
+  }
+
+  /**
+   * Merges Supabase popularity rows (`serverRows`) and optional local counts
+   * (`localCounts`) onto the game's variation catalog.
+   *
+   * Returns a sorted array of variations annotated with:
+   *   - `playCount` (integer >= 0)
+   *   - `sharePct` (integer 0–100; 0 when totalPlays === 0)
+   *   - `isMostPopular` (boolean; true on the #1 variation when totalPlays > 0)
+   */
+  function mergePopularity(gameKey, serverRows, localCounts) {
+    const variations = getVariationsForGame(gameKey);
+    if (!variations.length) return [];
+
+    const defVar = variations.find((v) => v.isDefault) || variations[0];
+    const counts = new Map(variations.map((v) => [v.key, 0]));
+
+    accumulateCounts(gameKey, serverRows, counts, defVar.key);
+    accumulateCounts(gameKey, localCounts, counts, defVar.key);
+
+    let totalPlays = 0;
+    for (const c of counts.values()) totalPlays += c;
+
+    const annotated = variations.map((v, catalogIdx) => {
+      const playCount = counts.get(v.key) || 0;
+      const sharePct = totalPlays > 0 ? Math.round((playCount / totalPlays) * 100) : 0;
+      return {
+        ...v,
+        playCount,
+        sharePct,
+        isMostPopular: false,
+        _catalogIdx: catalogIdx
+      };
+    });
+
+    if (totalPlays > 0) {
+      annotated.sort((a, b) => {
+        if (b.playCount !== a.playCount) return b.playCount - a.playCount;
+        if (a.isDefault !== b.isDefault) return a.isDefault ? -1 : 1;
+        return a._catalogIdx - b._catalogIdx;
+      });
+      if (annotated[0].playCount > 0) {
+        annotated[0].isMostPopular = true;
+      }
+    }
+
+    return annotated.map(({ _catalogIdx, ...rest }) => rest);
+  }
+
+  // ---------------- Exports ----------------
+  const api = {
+    CATALOG,
+    GAME_KEY_ALIASES,
+    normalizeGameKey,
+    getVariationsForGame,
+    getDefaultVariation,
+    getVariation,
+    mergePopularity
+  };
+
+  global.TallyItVariations = api;
+  if (typeof module !== 'undefined' && module.exports) {
+    module.exports = api;
+  }
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+<script id="v20-controller">
+/* TallyIt v20 controller (window.TallyItV20): Request a Game, Variations & Popularity, Private Admin Stats, Full Screen.
+   Depends on window.TallyItBackend (v20_backend.js) + window.TallyItVariations (variations_catalog.js). Zero emojis. */
+(function (global) {
+  'use strict';
+  const doc = global.document;
+  const $ = (id) => doc.getElementById(id);
+  const BE = () => global.TallyItBackend || null;
+  const VC = () => global.TallyItVariations || null;
+  const ST = () => global.ScoreTracker || null;
+  const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const fmt = (n) => (Number(n) || 0).toLocaleString('en-US');
+  const show = (el, on) => { if (!el) return; el.hidden = !on; el.classList.toggle('hidden', !on); };
+  const STATUS_LABELS = { new: 'New', reviewing: 'Reviewing', planned: 'Planned', built: 'Built', declined: 'Declined' };
+  const statuses = () => (BE() && BE().REQUEST_STATUSES) || ['new', 'reviewing', 'planned', 'built', 'declined'];
+  const gameName = (key) => {
+    const st = ST(), g = st && st.GAMES ? st.GAMES.find((x) => x.id === key) : null;
+    if (g) return g.name;
+    return String(key || 'Game').replace(/[_-]+/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+  };
+  const variationFor = (gameKey, label) => { const vc = VC(); return vc ? (vc.getVariation(gameKey, label) || null) : null; };
+  const variationKeyFor = (gameKey, label) => { const v = variationFor(gameKey, label); return v ? v.key : (String(label || '').trim() || 'standard'); };
+  const variationName = (gameKey, key) => { const v = variationFor(gameKey, key); return v ? v.name : String(key || 'Standard'); };
+
+  // ---------------------------------------------------------------- Request a Game
+  function setReqError(msg) { const e = $('req-game-error'); if (!e) return; e.textContent = msg || ''; e.hidden = !msg; }
+  function resetRequestGameForm() {
+    const f = $('req-game-form'); if (f) { f.reset(); f.hidden = false; }
+    show($('req-game-success'), false); setReqError('');
+    const b = $('btn-submit-game-request'); if (b) { b.disabled = false; b.textContent = 'Submit Request'; }
+    const n = $('req-game-name'); if (n && doc.activeElement && $('req-game-modal') && !$('req-game-modal').hidden) { try { n.focus({ preventScroll: true }); } catch (_) {} }
+  }
+  function openRequestGameModal() {
+    show($('req-game-modal'), true); doc.body.classList.add('v20-modal-open');
+    resetRequestGameForm();
+  }
+  function closeRequestGameModal() { show($('req-game-modal'), false); syncBodyLock(); }
+  let reqBusy = false;
+  async function submitGameRequest() {
+    if (reqBusy) return;
+    const name = (($('req-game-name') || {}).value || '').trim();
+    const url = (($('req-game-url') || {}).value || '').trim();
+    if (name.length < 2) { setReqError('Please enter the name of the game (at least 2 characters).'); return; }
+    if (url && !/^(https?:\/\/)?[^\s/$.?#][^\s]*\.[^\s]+$/i.test(url)) { setReqError('That link does not look right. Try something like https://boardgamegeek.com/...'); return; }
+    setReqError('');
+    const b = $('btn-submit-game-request'); if (b) { b.disabled = true; b.textContent = 'Sending...'; }
+    reqBusy = true;
+    let res;
+    try { res = BE() ? await BE().submitGameRequest(name, url || null) : { ok: false, error: 'Requests are unavailable right now.' }; }
+    catch (err) { res = { ok: false, error: (err && err.message) || 'Could not send your request.' }; }
+    reqBusy = false;
+    if (b) { b.disabled = false; b.textContent = 'Submit Request'; }
+    if (!res || !res.ok) { setReqError((res && res.error) || 'Could not send your request. Please try again.'); return; }
+    const sn = $('req-game-success-name'); if (sn) sn.textContent = name;
+    const f = $('req-game-form'); if (f) f.hidden = true;
+    show($('req-game-success'), true);
+  }
+
+  // ---------------------------------------------------------------- Variations & Popularity
+  let setupGame = null, setupVersion = null, lastMerged = [], popSeq = 0;
+  function localHistoryCounts(gameKey) {
+    const st = ST(); if (!st || !st.getState) return [];
+    // Only legacy games (finished before v20 tracking) count locally, so plays recorded server-side are never double counted.
+    return (st.getState().history || []).filter((g) => g && g.type === gameKey && !g.v20Recorded).map((g) => ({ type: g.type, version: g.version }));
+  }
+  async function loadPopularity(gameKey, force) {
+    const vc = VC(); if (!vc) return [];
+    let rows = [];
+    try { const r = BE() ? await BE().getVariationPopularity(gameKey, { force: !!force }) : null; rows = (r && r.byGame && r.byGame[gameKey]) || (r && r.rows) || []; } catch (_) { rows = []; }
+    rows = rows.filter((x) => !x.game_key || vc.normalizeGameKey(x.game_key) === vc.normalizeGameKey(gameKey));
+    return vc.mergePopularity(gameKey, rows, localHistoryCounts(gameKey));
+  }
+  function currentVariationKey() { return setupGame ? variationKeyFor(setupGame, setupVersion) : null; }
+  function renderVariationBar(merged) {
+    const bar = $('v20-variation-bar'), pill = $('var-pop-pill'), txt = $('var-pop-text');
+    if (!bar) return;
+    const list = merged || [];
+    show(bar, list.length > 0);
+    if (!list.length || !txt) return;
+    const top = list[0], total = list.reduce((a, v) => a + v.playCount, 0), curKey = currentVariationKey();
+    const isTop = total > 0 && top.isMostPopular && top.key === curKey;
+    if (pill) pill.classList.toggle('is-top', isTop);
+    if (!total) txt.textContent = list.length > 1 ? list.length + ' variations' : 'Standard rules';
+    else if (isTop) txt.textContent = '#1 Most Popular · ' + top.sharePct + '%';
+    else txt.textContent = 'Most popular: ' + top.name + ' · ' + top.sharePct + '%';
+    const cmp = $('btn-compare-variations'); if (cmp) cmp.hidden = false;
+  }
+  function onSetupRendered(gameKey, version) {
+    setupGame = gameKey; setupVersion = version;
+    const vc = VC();
+    const base = vc ? vc.mergePopularity(gameKey, [], localHistoryCounts(gameKey)) : [];
+    if (!lastMerged.length || lastMerged.gameKey !== gameKey) { lastMerged = base; lastMerged.gameKey = gameKey; }
+    renderVariationBar(lastMerged);
+    const seq = ++popSeq;
+    loadPopularity(gameKey).then((m) => { if (seq !== popSeq) return; lastMerged = m; lastMerged.gameKey = gameKey; renderVariationBar(m); if (!$('var-compare-modal').hidden) renderVariationCards(m); }).catch(() => {});
+  }
+  function renderVariationCards(merged) {
+    const list = $('var-compare-list'); if (!list) return;
+    const curKey = currentVariationKey(), total = merged.reduce((a, v) => a + v.playCount, 0);
+    const title = $('var-compare-title'); if (title) title.textContent = gameName(setupGame) + ' Variations';
+    const sub = $('var-compare-sub'); if (sub) sub.textContent = total ? fmt(total) + ' tracked ' + (total === 1 ? 'play' : 'plays') + ' · tap a variation to select it' : 'No plays tracked yet · tap a variation to select it';
+    list.innerHTML = merged.map((v) => {
+      const sel = v.key === curKey;
+      return `<button type="button" class="v20-var-card${sel ? ' is-selected' : ''}${v.isMostPopular ? ' is-top' : ''}" role="radio" aria-checked="${sel}" data-key="${esc(v.key)}" data-label="${esc(v.versionLabel)}">
+        <div class="v20-var-card-head">
+          <span class="v20-var-name">${esc(v.name)}</span>
+          ${v.isMostPopular && v.playCount > 0 ? '<span class="v20-pop-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2.5 15 8.8 21.8 9.6 16.8 14.3 18.1 21 12 17.7 5.9 21 7.2 14.3 2.2 9.6 9 8.8 12 2.5"/></svg>#1 Most Popular</span>' : ''}
+          ${sel ? '<span class="v20-selected-badge">Selected</span>' : ''}
+        </div>
+        ${v.tagline ? `<p class="v20-var-tagline">${esc(v.tagline)}</p>` : ''}
+        <div class="v20-share-row"><span class="v20-share-count">${fmt(v.playCount)} ${v.playCount === 1 ? 'play' : 'plays'}</span><span class="v20-share-pct">${total ? v.sharePct : 0}% of plays</span></div><div class="v20-share-track"><div class="v20-share-fill" style="width:${total ? v.sharePct : 0}%"></div></div>
+        ${v.differences && v.differences.length ? `<div class="v20-diff-title">What's different</div><ul class="v20-diff-list">${v.differences.map((d) => `<li>${esc(d)}</li>`).join('')}</ul>` : ''}
+      </button>`;
+    }).join('') || '<div class="v20-empty-note">No variations listed for this game yet.</div>';
+    list.querySelectorAll('.v20-var-card').forEach((b) => b.addEventListener('click', () => selectVariation(b.dataset.label, b.dataset.key)));
+  }
+  async function openVariationsModal() {
+    if (!setupGame) { const st = ST(); const s = st && st.getSetup ? st.getSetup() : null; if (s) { setupGame = s.game; setupVersion = s.version; } }
+    if (!setupGame) return;
+    renderVariationCards(lastMerged.gameKey === setupGame ? lastMerged : (VC() ? VC().mergePopularity(setupGame, [], localHistoryCounts(setupGame)) : []));
+    show($('var-compare-modal'), true); doc.body.classList.add('v20-modal-open');
+    const m = await loadPopularity(setupGame);
+    lastMerged = m; lastMerged.gameKey = setupGame;
+    if (!$('var-compare-modal').hidden) renderVariationCards(m);
+    renderVariationBar(m);
+  }
+  function closeVariationsModal() { show($('var-compare-modal'), false); syncBodyLock(); }
+  function selectVariation(label, key) {
+    const sel = $('version-select'); if (!sel) return;
+    const opt = [...sel.options].find((o) => o.value === label || o.textContent === label);
+    const v = variationFor(setupGame, key || label);
+    if (opt) {
+      sel.value = opt.value;
+      sel.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+    global.__v20ScoringOverrides = v ? { gameKey: setupGame, variationKey: v.key, ...v.scoringOverrides } : null;
+    closeVariationsModal();
+  }
+  function onGameStarted(game) {
+    if (!game || !BE()) return;
+    const vk = variationKeyFor(game.type, game.version);
+    const n = (game.players || []).length || 1;
+    Promise.resolve().then(() => BE().recordGamePlay(game.type, vk, n)).then(() => { if (setupGame === game.type) lastMerged = []; }).catch(() => {});
+  }
+
+  // ---------------------------------------------------------------- Admin Stats
+  let adminOk = false, adminStats = null, adminFilter = 'all', adminSeq = 0;
+  async function onAuthChange(user) {
+    const trig = $('btn-open-admin');
+    adminOk = false; show(trig, false);
+    if (!user) { if (BE()) BE().clearCache(); closeAdminScreen(true); return; }
+    const seq = ++adminSeq;
+    let ok = false;
+    try { ok = BE() ? await BE().isAdmin({ force: true }) : false; } catch (_) { ok = false; }
+    if (seq !== adminSeq) return;
+    adminOk = ok === true;
+    show(trig, adminOk);
+  }
+  function openAdminScreen() {
+    if (!adminOk) return;
+    const scr = $('admin-screen'); if (!scr) return;
+    doc.querySelectorAll('#app-shell .view').forEach((el) => el.classList.toggle('active', el === scr));
+    doc.querySelectorAll('.bottom-nav button').forEach((b) => b.classList.remove('active'));
+    show(scr, true);
+    global.scrollTo(0, 0);
+    loadAdminStats(false);
+  }
+  function closeAdminScreen(silent) {
+    const scr = $('admin-screen'); if (!scr) return;
+    const wasOpen = !scr.hidden;
+    show(scr, false); scr.classList.remove('active');
+    if (wasOpen && !silent && typeof global.showView === 'function') global.showView('home');
+  }
+  function banner(msg, tone) { const b = $('admin-status-banner'); if (!b) return; b.textContent = msg || ''; b.hidden = !msg; if (tone) b.dataset.tone = tone; else delete b.dataset.tone; }
+  async function loadAdminStats() {
+    if (!adminOk || !BE()) return;
+    const upd = $('admin-last-updated'); if (upd) upd.textContent = 'Loading...';
+    let res;
+    try { res = await BE().getAdminStats(); } catch (err) { res = { ok: false, error: (err && err.message) || 'Could not load stats' }; }
+    if (!res || !res.ok || !res.stats) {
+      if (res && res.forbidden) { adminOk = false; show($('btn-open-admin'), false); closeAdminScreen(); return; }
+      banner((res && res.error) || 'Could not load admin stats.', 'error'); if (upd) upd.textContent = 'Private TallyIt telemetry'; return;
+    }
+    adminStats = res.stats;
+    banner(res.isFallback ? 'Showing this device\'s local data. Run supabase_v20_features_migration.sql in Supabase to see all-time stats for every player.' : '', res.isFallback ? 'info' : null);
+    renderAdminStats(adminStats);
+    if (upd) upd.textContent = 'Updated ' + new Date(adminStats.generated_at || Date.now()).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+  }
+  function setText(id, v) { const el = $(id); if (el) el.textContent = v; }
+  function bkRow(name, sub, stat, pct) {
+    return `<div class="v20-bk-row"><div class="v20-bk-top"><div><div class="v20-bk-name">${esc(name)}</div>${sub ? `<div class="v20-bk-sub">${esc(sub)}</div>` : ''}</div><div class="v20-bk-stat">${esc(stat)}</div></div><div class="v20-bk-track"><div class="v20-bk-fill" style="width:${Math.max(0, Math.min(100, pct))}%"></div></div></div>`;
+  }
+  function renderAdminStats(s) {
+    const t = s.totals || {};
+    setText('kpi-games-total', fmt(t.total_plays));
+    setText('kpi-games-7d', fmt(t.plays_7d));
+    setText('kpi-games-30d', fmt(t.plays_30d));
+    setText('kpi-users-total', fmt(t.users_total));
+    setText('kpi-requests-total', fmt(t.game_requests_total));
+    setText('kpi-requests-new', fmt(t.game_requests_new) + ' new');
+    const fr = Number(t.friendships_accepted) || 0, gr = Number(t.groups_total) || 0;
+    setText('kpi-social-total', fmt(fr + gr));
+    setText('kpi-social-sub', fmt(fr) + (fr === 1 ? ' friendship' : ' friends') + ' · ' + fmt(gr) + (gr === 1 ? ' group' : ' groups'));
+    // 30-day chart
+    const days = (s.daily_plays_30d || []).slice(-30);
+    while (days.length < 30) days.unshift({ date: '', play_count: 0 });
+    const peak = Math.max(0, ...days.map((d) => Number(d.play_count) || 0));
+    const chart = $('admin-daily-chart');
+    if (chart) chart.innerHTML = days.map((d) => { const c = Number(d.play_count) || 0, h = peak ? Math.max(4, Math.round((c / peak) * 100)) : 0;
+      return `<div class="v20-chart-col" title="${esc(d.date)}: ${c}"><div class="v20-chart-bar${c ? '' : ' is-zero'}" style="height:${c ? h : 4}%"></div></div>`; }).join('');
+    setText('admin-chart-peak', 'Peak: ' + fmt(peak) + '/day');
+    const first = days.find((d) => d.date);
+    if (first && first.date) { const dt = new Date(first.date + 'T12:00:00'); if (!isNaN(dt)) setText('admin-chart-start', dt.toLocaleDateString([], { month: 'short', day: 'numeric' })); }
+    // Top games
+    const games = (s.by_game || []).slice().sort((a, b) => (b.play_count || 0) - (a.play_count || 0));
+    const gTotal = games.reduce((a, g) => a + (Number(g.play_count) || 0), 0);
+    const tg = $('admin-top-games');
+    if (tg) tg.innerHTML = games.length ? games.slice(0, 10).map((g) => { const pct = gTotal ? Math.round((g.play_count / gTotal) * 100) : 0;
+      return bkRow(gameName(g.game_key), (g.avg_players ? 'Avg ' + g.avg_players + ' players · ' : '') + fmt(g.plays_30d || 0) + ' in 30d', fmt(g.play_count) + ' · ' + pct + '%', pct); }).join('')
+      : '<div class="v20-empty-note">No games played yet.</div>';
+    // Top variations
+    const vars = (s.by_variation || []).slice().sort((a, b) => (b.play_count || 0) - (a.play_count || 0));
+    const vTotal = vars.reduce((a, v) => a + (Number(v.play_count) || 0), 0);
+    const tv = $('admin-top-variations');
+    if (tv) tv.innerHTML = vars.length ? vars.slice(0, 12).map((v) => { const pct = vTotal ? Math.round((v.play_count / vTotal) * 100) : 0;
+      return bkRow(variationName(v.game_key, v.variation_key), gameName(v.game_key), fmt(v.play_count) + ' · ' + pct + '%', pct); }).join('')
+      : '<div class="v20-empty-note">No variation plays tracked yet.</div>';
+    renderRequests();
+  }
+  function setAdminRequestFilter(f) {
+    adminFilter = f || 'all';
+    doc.querySelectorAll('#admin-req-filters .v20-filter-pill').forEach((p) => { const on = p.dataset.filter === adminFilter; p.classList.toggle('is-active', on); p.setAttribute('aria-selected', on ? 'true' : 'false'); });
+    renderRequests();
+  }
+  function renderRequests() {
+    const listEl = $('admin-requests-list'); if (!listEl) return;
+    const all = (adminStats && adminStats.recent_game_requests) || [];
+    const list = adminFilter === 'all' ? all : all.filter((r) => (r.status || 'new') === adminFilter);
+    setText('admin-inbox-count', list.length + (list.length === 1 ? ' item' : ' items'));
+    listEl.innerHTML = list.length ? list.map((r) => {
+      const st = statuses().includes(r.status) ? r.status : 'new';
+      const when = r.created_at ? new Date(r.created_at).toLocaleDateString([], { month: 'short', day: 'numeric' }) : '';
+      const who = r.requester_email || (r.requester_id ? 'Signed-in player' : 'Guest');
+      let host = '';
+      if (r.website_url) { try { host = new URL(r.website_url).hostname.replace(/^www\./, ''); } catch (_) { host = r.website_url; } }
+      return `<div class="v20-req-item" data-id="${esc(r.id)}"><div class="v20-req-item-top"><div class="v20-req-item-info"><div class="v20-req-item-name">${esc(r.game_name)}</div><div class="v20-req-item-meta">${esc(who)}${when ? ' · ' + esc(when) : ''}</div>
+        ${r.website_url && /^https?:\/\//i.test(r.website_url) ? `<a class="v20-req-link" href="${esc(r.website_url)}" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg><span>${esc(host)}</span></a>` : ''}</div>
+        <select class="v20-status-select" data-status="${st}" data-id="${esc(r.id)}" aria-label="Status for ${esc(r.game_name)}">${statuses().map((s) => `<option value="${s}"${s === st ? ' selected' : ''}>${STATUS_LABELS[s] || s}</option>`).join('')}</select></div></div>`;
+    }).join('') : `<div class="v20-empty-note">${adminFilter === 'all' ? 'No game requests yet.' : 'No ' + esc((STATUS_LABELS[adminFilter] || adminFilter).toLowerCase()) + ' requests.'}</div>`;
+    listEl.querySelectorAll('.v20-status-select').forEach((sel) => sel.addEventListener('change', () => changeRequestStatus(sel)));
+  }
+  async function changeRequestStatus(sel) {
+    const id = sel.dataset.id, next = sel.value, prev = sel.dataset.status;
+    sel.disabled = true;
+    let res;
+    try { res = await BE().updateGameRequestStatus(id, next); } catch (err) { res = { ok: false, error: err && err.message }; }
+    sel.disabled = false;
+    if (!res || !res.ok) { sel.value = prev; banner((res && res.error) || 'Could not update status.', 'error'); return; }
+    sel.dataset.status = next;
+    const all = (adminStats && adminStats.recent_game_requests) || [];
+    const r = all.find((x) => String(x.id) === String(id)); if (r) r.status = next;
+    if (adminStats && adminStats.totals) adminStats.totals.game_requests_new = all.filter((x) => x.status === 'new').length;
+    setText('kpi-requests-new', fmt(adminStats.totals.game_requests_new) + ' new');
+    if (adminFilter !== 'all') renderRequests();
+  }
+
+  // ---------------------------------------------------------------- Full Screen
+  const fsEl = () => doc.fullscreenElement || doc.webkitFullscreenElement || null;
+  const fsSupported = () => { const el = doc.documentElement; return !!(el.requestFullscreen || el.webkitRequestFullscreen) && doc.fullscreenEnabled !== false; };
+  const isIOS = () => /iPad|iPhone|iPod/.test(navigator.userAgent || '') || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const isStandalone = () => (global.matchMedia && global.matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
+  function syncFullscreenUI() {
+    const on = !!fsEl() || isStandalone();
+    const b = $('btn-fullscreen-toggle'); if (!b) return;
+    b.classList.toggle('is-fullscreen', on);
+    b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    b.title = on ? 'Exit Full Screen' : 'Full Screen';
+    doc.documentElement.classList.toggle('v20-is-fullscreen', on);
+  }
+  function showIosFullscreenHint() { show($('v20-ios-fs-popover'), true); }
+  function closeIosFullscreenHint() { show($('v20-ios-fs-popover'), false); }
+  async function toggleFullscreen() {
+    if (isStandalone() && !fsEl()) { syncFullscreenUI(); return; }
+    if (!fsSupported() || (isIOS() && !doc.documentElement.requestFullscreen)) {
+      const pop = $('v20-ios-fs-popover'); if (pop && !pop.hidden) closeIosFullscreenHint(); else showIosFullscreenHint();
+      return;
+    }
+    try {
+      if (fsEl()) { if (doc.exitFullscreen) await doc.exitFullscreen(); else if (doc.webkitExitFullscreen) doc.webkitExitFullscreen(); }
+      else { const el = doc.documentElement; if (el.requestFullscreen) await el.requestFullscreen({ navigationUI: 'hide' }); else el.webkitRequestFullscreen(); }
+    } catch (_) {
+      if (isIOS()) showIosFullscreenHint();
+    }
+    syncFullscreenUI();
+  }
+
+  // ---------------------------------------------------------------- Shared
+  function syncBodyLock() { const anyOpen = ['req-game-modal', 'var-compare-modal'].some((id) => $(id) && !$(id).hidden); doc.body.classList.toggle('v20-modal-open', anyOpen); }
+  function init() {
+    doc.addEventListener('fullscreenchange', syncFullscreenUI);
+    doc.addEventListener('webkitfullscreenchange', syncFullscreenUI);
+    doc.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closeRequestGameModal(); closeVariationsModal(); closeIosFullscreenHint(); } });
+    syncFullscreenUI();
+    setAdminRequestFilter('all');
+  }
+  if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', init, { once: true }); else init();
+
+  const api = { openRequestGameModal, closeRequestGameModal, submitGameRequest, resetRequestGameForm, openVariationsModal, closeVariationsModal, selectVariation,
+    onSetupRendered, onGameStarted, onAuthChange, openAdminScreen, closeAdminScreen, loadAdminStats, setAdminRequestFilter, renderAdminStats,
+    toggleFullscreen, closeIosFullscreenHint, showIosFullscreenHint, isAdminVisible: () => adminOk, _state: () => ({ setupGame, setupVersion, lastMerged, adminFilter, adminStats }) };
+  global.TallyItV20 = api;
+  Object.assign(global, { openRequestGameModal, closeRequestGameModal, submitGameRequest, resetRequestGameForm, openVariationsModal, closeVariationsModal,
+    openAdminScreen, closeAdminScreen, loadAdminStats, setAdminRequestFilter, toggleFullscreen, closeIosFullscreenHint });
 })(window);
 
 </script>
