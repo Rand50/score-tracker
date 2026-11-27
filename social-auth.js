@@ -1227,6 +1227,72 @@
     }
   }
 
+
+  async function deleteSharedGame(sharedId, options) {
+    const user = await getAuthUser();
+    if (!user) return { ok: false, error: 'Not signed in.' };
+
+    const opts = options || {};
+    const idStr = sharedId ? String(sharedId).trim() : '';
+    const clientGameId = opts.clientGameId ? String(opts.clientGameId).trim() : '';
+    if (!idStr && !clientGameId) {
+      return { ok: false, error: 'Missing game id.' };
+    }
+
+    const removeLocal = () => {
+      const existing = readLocal(user.id, 'games', []);
+      const next = existing.filter((g) => {
+        if (!g) return false;
+        if (idStr && String(g.id || '') === idStr) return false;
+        if (clientGameId && String(g.client_game_id || '') === clientGameId) return false;
+        if (idStr && String(g.client_game_id || '') === idStr) return false;
+        return true;
+      });
+      writeLocal(user.id, 'games', next);
+      return existing.length - next.length;
+    };
+
+    const localRemoved = removeLocal();
+    const isUuid = (v) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(v || ''));
+    const client = getClient();
+
+    if (!client || migrationReady === false || (idStr && isLocalId(idStr) && !clientGameId)) {
+      return { ok: true, deletedId: idStr || clientGameId, localRemoved, isFallback: true };
+    }
+
+    try {
+      let query = client.from('games').delete().eq('created_by', user.id);
+      if (idStr && isUuid(idStr)) {
+        query = query.eq('id', idStr);
+      } else if (clientGameId) {
+        query = query.eq('client_game_id', clientGameId);
+      } else {
+        query = query.eq('client_game_id', idStr);
+      }
+
+      const { data, error } = await query.select('id');
+      if (error) {
+        if (isMissingMigrationError(error)) {
+          migrationReady = false;
+          return { ok: true, deletedId: idStr || clientGameId, localRemoved, isFallback: true };
+        }
+        return { ok: false, error: error.message || 'Could not delete shared game.' };
+      }
+
+      migrationReady = true;
+      const deletedRows = Array.isArray(data) ? data : [];
+      return {
+        ok: true,
+        deletedId: (deletedRows[0] && deletedRows[0].id) || idStr || clientGameId,
+        deletedCount: deletedRows.length,
+        localRemoved,
+        isFallback: false
+      };
+    } catch (err) {
+      return { ok: false, error: (err && err.message) || 'Could not delete shared game.' };
+    }
+  }
+
   function reset() {
     cachedProfile = null;
     migrationReady = null;
@@ -1247,6 +1313,7 @@
     createGroup,
     deleteGroup,
     saveSharedGame,
+    deleteSharedGame,
     loadMyGames,
     loadGroupGames,
     normalizeFriendIdentifier,

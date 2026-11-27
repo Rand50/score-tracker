@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0c0d10">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="score-tracker-build" content="v22-search-houserules-2026-11-27">
+<meta name="score-tracker-build" content="v23-hearts-ohhell-2026-11-27">
 <meta name="apple-mobile-web-app-title" content="TallyIt">
 <title>TallyIt — Score Tracker</title>
 <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png">
@@ -162,6 +162,8 @@ body.theme-catan .app-header { display: none; }
 #rk-shell { display: none; }
 /* 7 Wonders papyrus ledger is only shown when theme-seven-wonders is on */
 #sw-shell { display: none; }
+/* v23 Hearts Ivory & Crimson Ledger / Oh Hell Ivory & Emerald Ledger: only shown with body.theme-hearts / body.theme-ohhell */
+#ht-shell, #oh-shell { display: none; }
 /* Friends tab lives only in the neutral nav: themed game navs stay clean 4-tab bars */
 body.theme-catan .bottom-nav #nav-social, body.theme-flip7 .bottom-nav #nav-social, body.theme-carcassonne .bottom-nav #nav-social { display: none !important; }
 #soc-create-group-modal { z-index: 80; }
@@ -190,7 +192,7 @@ body.theme-catan .bottom-nav #nav-social, body.theme-flip7 .bottom-nav #nav-soci
   --shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 8px 24px rgba(0, 0, 0, 0.28);
   --font: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', 'Segoe UI', Roboto, system-ui, sans-serif;
 }
-body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders) {
+body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders):not(.theme-hearts):not(.theme-ohhell) {
   background: var(--bg);
   color: var(--text);
   font-family: var(--font);
@@ -294,11 +296,11 @@ body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nert
 #sync-status[data-state="error"]::before {
   background: var(--accent-brass);
 }
-:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders)) .view {
+:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders):not(.theme-hearts):not(.theme-ohhell)) .view {
   max-width: 760px;
   padding: 1rem 1.15rem 1.25rem;
 }
-:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders)) .card {
+:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders):not(.theme-hearts):not(.theme-ohhell)) .card {
   background: var(--surface);
   border-radius: var(--radius);
   padding: 1.15rem;
@@ -306,7 +308,7 @@ body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nert
   border: 1px solid var(--border);
   box-shadow: none;
 }
-:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders)) .btn {
+:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders):not(.theme-hearts):not(.theme-ohhell)) .btn {
   background: var(--surface2);
   color: var(--text);
   border: 1px solid var(--border);
@@ -317,13 +319,13 @@ body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nert
   cursor: pointer;
   transition: transform .08s ease, background .15s ease, border-color .15s ease, opacity .15s ease;
 }
-:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders)) .btn:active:not(:disabled) { transform: scale(0.985); }
-:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders)) .btn.primary {
+:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders):not(.theme-hearts):not(.theme-ohhell)) .btn:active:not(:disabled) { transform: scale(0.985); }
+:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders):not(.theme-hearts):not(.theme-ohhell)) .btn.primary {
   background: var(--accent);
   color: var(--accent-ink);
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
-:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders)) .btn.primary:hover:not(:disabled) {
+:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders):not(.theme-hearts):not(.theme-ohhell)) .btn.primary:hover:not(:disabled) {
   background: #ffffff;
 }
 #view-home {
@@ -556,7 +558,7 @@ body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nert
   color: var(--muted);
   line-height: 1.45;
 }
-:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders)) .bottom-nav {
+:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders):not(.theme-hearts):not(.theme-ohhell)) .bottom-nav {
   position: fixed;
   bottom: 0;
   left: 0;
@@ -572,7 +574,7 @@ body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nert
   padding: 0.42rem 0.25rem calc(0.45rem + env(safe-area-inset-bottom, 0px));
   font-family: var(--font);
 }
-:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders)) .bottom-nav button {
+:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders):not(.theme-hearts):not(.theme-ohhell)) .bottom-nav button {
   position: relative;
   background: none;
   border: none;
@@ -589,7 +591,7 @@ body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nert
   padding: 0.24rem 0.35rem;
   transition: color .15s ease;
 }
-:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders)) .bottom-nav button .icon {
+:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders):not(.theme-hearts):not(.theme-ohhell)) .bottom-nav button .icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -597,16 +599,16 @@ body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nert
   height: 22px;
   line-height: 1;
 }
-:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders)) .bottom-nav button .icon svg {
+:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders):not(.theme-hearts):not(.theme-ohhell)) .bottom-nav button .icon svg {
   width: 20px;
   height: 20px;
   display: block;
 }
-:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders)) .bottom-nav button.active {
+:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders):not(.theme-hearts):not(.theme-ohhell)) .bottom-nav button.active {
   color: var(--text);
   font-weight: 600;
 }
-:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders)) .bottom-nav button.active::before {
+:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders):not(.theme-hearts):not(.theme-ohhell)) .bottom-nav button.active::before {
   content: "";
   position: absolute;
   top: -0.42rem;
@@ -5661,6 +5663,1832 @@ body.theme-seven-wonders .bottom-nav #nav-social {
 }
 
 </style>
+
+<!-- ===================== v23 HEARTS (Ivory & Crimson Ledger; strictly scoped to body.theme-hearts) ===================== -->
+<style id="hearts-theme">
+
+
+body.theme-hearts {
+  --ht-bg: #F5F0E6;
+  --ht-paper: #FAF7F0;
+  --ht-card: #FCF9F3;
+  --ht-ink: #1F1C18;
+  --ht-muted: #5C554C;
+  --ht-line: #4F4A44;
+  --ht-line-soft: rgba(79, 74, 68, 0.34);
+  --ht-crimson: #9A1B22;
+  --ht-crimson-deep: #7B1118;
+  --ht-crimson-soft: rgba(154, 27, 34, 0.10);
+  --ht-crimson-border: rgba(154, 27, 34, 0.45);
+  --ht-serif: Georgia, "Times New Roman", "Palatino Linotype", serif;
+  --ht-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  background-color: var(--ht-bg);
+  background-image:
+    radial-gradient(rgba(120, 102, 78, 0.06) 1px, transparent 0),
+    linear-gradient(180deg, #F8F4EC 0%, #EFE9DC 100%);
+  background-size: 14px 14px, 100% 100%;
+  color: var(--ht-ink);
+  font-family: var(--ht-sans);
+  overflow-x: hidden;
+}
+
+
+body.theme-hearts .app-header,
+body.theme-hearts #generic-board,
+body.theme-hearts #catan-board,
+body.theme-hearts #flip7-board,
+body.theme-hearts #carc-board,
+body.theme-hearts #nz-shell,
+body.theme-hearts #rk-shell,
+body.theme-hearts #sw-shell,
+body.theme-hearts #oh-shell {
+  display: none !important;
+}
+
+body.theme-hearts #ht-shell {
+  display: block;
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto;
+  padding: 10px 10px calc(86px + env(safe-area-inset-bottom, 0px));
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+body.theme-hearts #ht-shell *,
+body.theme-hearts #ht-shell *::before,
+body.theme-hearts #ht-shell *::after {
+  box-sizing: border-box;
+}
+
+
+body.theme-hearts .ht-ledger-frame {
+  position: relative;
+  background: var(--ht-paper);
+  border: 1.5px solid var(--ht-crimson);
+  border-radius: 14px;
+  padding: 12px 12px 14px;
+  box-shadow:
+    inset 0 0 0 3px var(--ht-paper),
+    inset 0 0 0 4px rgba(79, 74, 68, 0.35),
+    0 8px 24px rgba(48, 34, 24, 0.08);
+  overflow: hidden;
+}
+
+
+body.theme-hearts .ht-corner-pips {
+  position: absolute;
+  top: 42px;
+  width: 32px;
+  height: 38px;
+  pointer-events: none;
+  opacity: 0.92;
+}
+
+body.theme-hearts .ht-corner-tl {
+  left: 10px;
+}
+
+body.theme-hearts .ht-corner-tr {
+  right: 10px;
+}
+
+body.theme-hearts .ht-corner-pips svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+
+body.theme-hearts .ht-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 4px;
+  position: relative;
+  z-index: 2;
+}
+
+body.theme-hearts .ht-top-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+body.theme-hearts .ht-top-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 34px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--ht-line-soft);
+  background: var(--ht-card);
+  color: var(--ht-ink);
+  font-family: var(--ht-sans);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body.theme-hearts .ht-top-btn svg {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
+
+body.theme-hearts .ht-top-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+body.theme-hearts .ht-top-btn-end {
+  border-color: var(--ht-crimson-border);
+  color: var(--ht-crimson);
+  background: var(--ht-crimson-soft);
+}
+
+
+body.theme-hearts .ht-header {
+  text-align: center;
+  padding: 2px 36px 10px;
+  position: relative;
+  z-index: 1;
+}
+
+body.theme-hearts .ht-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+body.theme-hearts .ht-title {
+  margin: 0;
+  font-family: var(--ht-serif);
+  font-size: clamp(2rem, 8.5vw, 2.55rem);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  line-height: 1.08;
+  color: var(--ht-ink);
+}
+
+body.theme-hearts .ht-title-pip {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+body.theme-hearts .ht-ornament-rule {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 6px auto 7px;
+  max-width: 210px;
+}
+
+body.theme-hearts .ht-rule-line {
+  flex: 1;
+  height: 1px;
+  background: var(--ht-line);
+  opacity: 0.65;
+}
+
+body.theme-hearts .ht-rule-diamond {
+  width: 7px;
+  height: 7px;
+  background: var(--ht-crimson);
+  transform: rotate(45deg);
+  flex-shrink: 0;
+}
+
+body.theme-hearts .ht-hand-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+body.theme-hearts .ht-rule-line-sm {
+  flex: 1;
+  max-width: 72px;
+  height: 1px;
+  background: var(--ht-line);
+  opacity: 0.45;
+}
+
+body.theme-hearts .ht-rule-diamond-sm {
+  width: 5px;
+  height: 5px;
+  background: var(--ht-crimson);
+  transform: rotate(45deg);
+  flex-shrink: 0;
+}
+
+body.theme-hearts .ht-hand-label {
+  font-family: var(--ht-serif);
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: var(--ht-ink);
+  letter-spacing: 0.02em;
+}
+
+
+body.theme-hearts .ht-meta-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+body.theme-hearts .ht-meta-box {
+  background: var(--ht-card);
+  border: 1px solid var(--ht-line);
+  border-radius: 10px;
+  padding: 8px 10px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  min-width: 0;
+}
+
+body.theme-hearts .ht-meta-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--ht-serif);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--ht-crimson);
+  white-space: nowrap;
+}
+
+body.theme-hearts .ht-meta-svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+body.theme-hearts .ht-meta-val {
+  font-family: var(--ht-serif);
+  font-size: 1.32rem;
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--ht-ink);
+}
+
+body.theme-hearts .ht-pass-val {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+body.theme-hearts .ht-pass-pip {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+}
+
+
+body.theme-hearts .ht-status-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  margin-bottom: 9px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  background: rgba(154, 27, 34, 0.06);
+  border: 1px solid rgba(154, 27, 34, 0.22);
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--ht-muted);
+}
+
+body.theme-hearts .ht-status-chip {
+  white-space: nowrap;
+}
+
+body.theme-hearts .ht-status-total {
+  color: var(--ht-crimson);
+  font-weight: 700;
+}
+
+body.theme-hearts .ht-status-bar.is-ready {
+  background: rgba(25, 118, 72, 0.09);
+  border-color: rgba(25, 118, 72, 0.32);
+  color: #165B3A;
+}
+
+body.theme-hearts .ht-status-bar.is-ready .ht-status-total {
+  color: #165B3A;
+}
+
+body.theme-hearts .ht-status-bar.is-error {
+  background: rgba(154, 27, 34, 0.14);
+  border-color: var(--ht-crimson);
+  color: var(--ht-crimson-deep);
+}
+
+
+body.theme-hearts .ht-player-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+body.theme-hearts .ht-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: stretch;
+  gap: 8px;
+  background: var(--ht-card);
+  border: 1.25px solid var(--ht-line);
+  border-radius: 10px;
+  padding: 9px 10px;
+  box-shadow: inset 0 0 0 2px var(--ht-card), inset 0 0 0 3px rgba(79, 74, 68, 0.14);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+body.theme-hearts .ht-row.is-selected {
+  border-color: var(--ht-crimson);
+  box-shadow: 0 0 0 2px rgba(154, 27, 34, 0.16);
+}
+
+body.theme-hearts .ht-row.is-moon {
+  border-color: var(--ht-crimson);
+  background: #FFF7F5;
+}
+
+body.theme-hearts .ht-row-left {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+}
+
+body.theme-hearts .ht-row-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+body.theme-hearts .ht-suit-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  flex-shrink: 0;
+  gap: 2px;
+}
+
+body.theme-hearts .ht-suit-badge svg {
+  width: 15px;
+  height: 15px;
+  display: block;
+}
+
+body.theme-hearts .ht-suit-lines {
+  width: 14px;
+  height: 4px;
+  border-top: 1.2px solid var(--ht-line);
+  border-bottom: 1px solid var(--ht-line);
+  opacity: 0.7;
+}
+
+body.theme-hearts .ht-name-wrap {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  min-width: 0;
+  flex: 1;
+}
+
+body.theme-hearts .ht-player-name {
+  font-family: var(--ht-serif);
+  font-size: clamp(1.12rem, 4.4vw, 1.32rem);
+  font-weight: 500;
+  color: var(--ht-ink);
+  border-bottom: 1.5px solid var(--ht-crimson);
+  padding-bottom: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+body.theme-hearts .ht-leader-tag {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: rgba(25, 118, 72, 0.12);
+  color: #165B3A;
+  border: 1px solid rgba(25, 118, 72, 0.32);
+  flex-shrink: 0;
+}
+
+body.theme-hearts .ht-delta-tag {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--ht-crimson);
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+
+body.theme-hearts .ht-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+body.theme-hearts .ht-stepper {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--ht-line-soft);
+  border-radius: 8px;
+  background: var(--ht-paper);
+  overflow: hidden;
+}
+
+body.theme-hearts .ht-step-btn {
+  width: 30px;
+  height: 30px;
+  border: 0;
+  background: transparent;
+  color: var(--ht-ink);
+  font-size: 1rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body.theme-hearts .ht-step-btn:active {
+  background: var(--ht-crimson-soft);
+}
+
+body.theme-hearts .ht-step-val {
+  min-width: 32px;
+  padding: 0 3px;
+  text-align: center;
+  font-family: var(--ht-serif);
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--ht-crimson);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+body.theme-hearts .ht-step-val svg {
+  width: 10px;
+  height: 10px;
+}
+
+body.theme-hearts .ht-chip-btn {
+  min-height: 30px;
+  padding: 0 8px;
+  border-radius: 8px;
+  border: 1px solid var(--ht-line-soft);
+  background: var(--ht-paper);
+  color: var(--ht-ink);
+  font-family: var(--ht-sans);
+  font-size: 0.74rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  white-space: nowrap;
+}
+
+body.theme-hearts .ht-chip-btn.active {
+  background: var(--ht-crimson);
+  border-color: var(--ht-crimson-deep);
+  color: #FFFFFF;
+}
+
+body.theme-hearts .ht-chip-btn.ht-chip-jd.active {
+  background: #1B6B46;
+  border-color: #114D31;
+  color: #FFFFFF;
+}
+
+body.theme-hearts .ht-chip-btn.ht-chip-moon.active {
+  background: #23201D;
+  border-color: #23201D;
+  color: #F8E6C2;
+}
+
+
+body.theme-hearts .ht-row-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-left: 8px;
+  border-left: 1px solid var(--ht-line-soft);
+}
+
+body.theme-hearts .ht-pts-box {
+  min-width: 68px;
+  padding: 6px 8px;
+  border-radius: 7px;
+  border: 1px solid var(--ht-line);
+  background: var(--ht-paper);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+body.theme-hearts .ht-pts-num {
+  font-family: var(--ht-serif);
+  font-size: 1.55rem;
+  font-weight: 600;
+  line-height: 1.05;
+  color: var(--ht-crimson);
+}
+
+body.theme-hearts .ht-pts-lbl {
+  font-family: var(--ht-sans);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ht-crimson-deep);
+  margin-top: 2px;
+}
+
+
+body.theme-hearts .ht-specials {
+  display: grid;
+  grid-template-columns: 70px 1fr;
+  gap: 10px;
+  align-items: stretch;
+  margin-bottom: 12px;
+}
+
+body.theme-hearts .ht-card-emblem {
+  width: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+body.theme-hearts .ht-card-emblem svg {
+  width: 70px;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 2px 5px rgba(31, 28, 24, 0.12));
+}
+
+body.theme-hearts .ht-special-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+body.theme-hearts .ht-special-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+body.theme-hearts .ht-special-card {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 9px;
+  border: 1px solid var(--ht-line);
+  background: var(--ht-card);
+  text-align: left;
+  color: var(--ht-ink);
+}
+
+body.theme-hearts .ht-moon-card {
+  width: 100%;
+  border-color: var(--ht-crimson-border);
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body.theme-hearts .ht-moon-card[aria-pressed="true"] {
+  background: var(--ht-crimson-soft);
+  border-color: var(--ht-crimson);
+}
+
+body.theme-hearts .ht-sp-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+body.theme-hearts .ht-sp-text {
+  min-width: 0;
+  flex: 1;
+}
+
+body.theme-hearts .ht-sp-title {
+  font-family: var(--ht-serif);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--ht-ink);
+  line-height: 1.2;
+}
+
+body.theme-hearts .ht-sp-sub {
+  font-family: var(--ht-serif);
+  font-size: 0.78rem;
+  color: var(--ht-crimson);
+  line-height: 1.2;
+  margin-top: 1px;
+}
+
+body.theme-hearts .ht-moon-heart {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+body.theme-hearts .ht-moon-card[aria-pressed="true"] .ht-moon-heart {
+  fill: var(--ht-crimson);
+  stroke: var(--ht-crimson);
+}
+
+
+body.theme-hearts .ht-switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+body.theme-hearts .ht-switch input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+body.theme-hearts .ht-switch-track {
+  width: 46px;
+  height: 28px;
+  border-radius: 999px;
+  background: #DCD6CA;
+  border: 1px solid rgba(79, 74, 68, 0.35);
+  position: relative;
+  transition: background-color 0.18s ease, border-color 0.18s ease;
+}
+
+body.theme-hearts .ht-switch-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  transition: transform 0.18s ease;
+}
+
+body.theme-hearts .ht-switch input:checked + .ht-switch-track {
+  background: var(--ht-crimson);
+  border-color: var(--ht-crimson-deep);
+}
+
+body.theme-hearts .ht-switch input:checked + .ht-switch-track .ht-switch-thumb {
+  transform: translateX(18px);
+}
+
+body.theme-hearts .ht-jd-banner {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 9px;
+  border-radius: 8px;
+  background: rgba(27, 107, 70, 0.08);
+  border: 1px solid rgba(27, 107, 70, 0.3);
+  color: #165B3A;
+  font-size: 0.74rem;
+  font-weight: 600;
+}
+
+body.theme-hearts .ht-jd-banner[hidden] {
+  display: none;
+}
+
+
+body.theme-hearts .ht-error-msg {
+  margin-bottom: 10px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: rgba(154, 27, 34, 0.12);
+  border: 1px solid var(--ht-crimson);
+  color: var(--ht-crimson-deep);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+body.theme-hearts .ht-error-msg[hidden] {
+  display: none;
+}
+
+
+body.theme-hearts .ht-cta-wrap {
+  position: sticky;
+  bottom: calc(68px + env(safe-area-inset-bottom, 0px));
+  z-index: 6;
+  padding: 4px 0 6px;
+  background: linear-gradient(180deg, rgba(250, 247, 240, 0) 0%, var(--ht-paper) 28%);
+}
+
+body.theme-hearts .ht-cta-btn {
+  width: 100%;
+  min-height: 50px;
+  border: 1px solid #630C12;
+  border-radius: 10px;
+  background: linear-gradient(180deg, #A31B24 0%, #7C1118 100%);
+  color: #FCF7EE;
+  font-family: var(--ht-serif);
+  font-size: 1.24rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(124, 17, 24, 0.28);
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body.theme-hearts .ht-cta-btn:active {
+  transform: translateY(1px);
+  filter: brightness(0.95);
+}
+
+body.theme-hearts .ht-cta-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+body.theme-hearts .ht-sparkle {
+  width: 13px;
+  height: 13px;
+  opacity: 0.9;
+}
+
+
+body.theme-hearts .ht-history-drawer {
+  margin-top: 8px;
+  border: 1px solid var(--ht-line-soft);
+  border-radius: 9px;
+  background: var(--ht-card);
+  overflow: hidden;
+}
+
+body.theme-hearts .ht-history-summary {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 12px;
+  font-family: var(--ht-serif);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--ht-ink);
+  cursor: pointer;
+  user-select: none;
+}
+
+body.theme-hearts .ht-history-summary::-webkit-details-marker {
+  display: none;
+}
+
+body.theme-hearts .ht-history-count {
+  font-family: var(--ht-sans);
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--ht-crimson);
+}
+
+body.theme-hearts .ht-history-list {
+  border-top: 1px solid var(--ht-line-soft);
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+body.theme-hearts .ht-history-empty {
+  font-size: 0.8rem;
+  color: var(--ht-muted);
+  text-align: center;
+  padding: 6px 0;
+}
+
+body.theme-hearts .ht-history-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 0.78rem;
+  padding: 5px 7px;
+  border-radius: 6px;
+  background: var(--ht-paper);
+  border: 1px solid rgba(79, 74, 68, 0.16);
+}
+
+
+body.theme-hearts .ht-bottom-ornament {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 10px;
+  padding: 4px 2px 0;
+}
+
+body.theme-hearts .ht-foot-line {
+  flex: 1;
+  height: 1px;
+  background: var(--ht-line-soft);
+}
+
+body.theme-hearts .ht-foot-pip {
+  width: 15px;
+  height: 15px;
+}
+
+body.theme-hearts .ht-foot-pip-center {
+  width: 17px;
+  height: 17px;
+}
+
+
+body.theme-hearts .bottom-nav {
+  background: rgba(250, 247, 240, 0.96);
+  border-top: 1.5px solid var(--ht-crimson-border);
+  box-shadow: 0 -4px 16px rgba(48, 34, 24, 0.08);
+}
+
+body.theme-hearts .bottom-nav button {
+  color: var(--ht-muted);
+  font-family: var(--ht-serif);
+}
+
+body.theme-hearts .bottom-nav button.active {
+  color: var(--ht-crimson);
+}
+
+body.theme-hearts .bottom-nav #nav-new {
+  display: none;
+}
+
+body.theme-hearts .bottom-nav #nav-active {
+  display: flex;
+}
+
+body.theme-hearts .bottom-nav #nav-social {
+  display: none !important;
+}
+
+</style>
+
+<!-- ===================== v23 OH HELL (Ivory & Emerald Ledger; strictly scoped to body.theme-ohhell) ===================== -->
+<style id="ohhell-theme">
+
+
+body.theme-ohhell {
+  --oh-bg: #F5F0E6;
+  --oh-paper: #FAF7F0;
+  --oh-card: #FCF9F3;
+  --oh-ink: #1F1C18;
+  --oh-muted: #555A53;
+  --oh-line: #3E4D44;
+  --oh-line-soft: rgba(62, 77, 68, 0.34);
+  --oh-emerald: #115539;
+  --oh-emerald-deep: #0B3E29;
+  --oh-emerald-soft: rgba(17, 85, 57, 0.10);
+  --oh-emerald-border: rgba(17, 85, 57, 0.44);
+  --oh-warn: #9A1B22;
+  --oh-warn-soft: rgba(154, 27, 34, 0.10);
+  --oh-serif: Georgia, "Times New Roman", "Palatino Linotype", serif;
+  --oh-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  background-color: var(--oh-bg);
+  background-image:
+    radial-gradient(rgba(82, 108, 92, 0.06) 1px, transparent 0),
+    linear-gradient(180deg, #F8F4EC 0%, #EFE9DC 100%);
+  background-size: 14px 14px, 100% 100%;
+  color: var(--oh-ink);
+  font-family: var(--oh-sans);
+  overflow-x: hidden;
+}
+
+
+body.theme-ohhell .app-header,
+body.theme-ohhell #generic-board,
+body.theme-ohhell #catan-board,
+body.theme-ohhell #flip7-board,
+body.theme-ohhell #carc-board,
+body.theme-ohhell #nz-shell,
+body.theme-ohhell #rk-shell,
+body.theme-ohhell #sw-shell,
+body.theme-ohhell #ht-shell {
+  display: none !important;
+}
+
+body.theme-ohhell #oh-shell {
+  display: block;
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto;
+  padding: 10px 10px calc(86px + env(safe-area-inset-bottom, 0px));
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+body.theme-ohhell #oh-shell *,
+body.theme-ohhell #oh-shell *::before,
+body.theme-ohhell #oh-shell *::after {
+  box-sizing: border-box;
+}
+
+
+body.theme-ohhell .oh-ledger-frame {
+  position: relative;
+  background: var(--oh-paper);
+  border: 1.5px solid var(--oh-emerald);
+  border-radius: 14px;
+  padding: 12px 12px 14px;
+  box-shadow:
+    inset 0 0 0 3px var(--oh-paper),
+    inset 0 0 0 4px rgba(62, 77, 68, 0.35),
+    0 8px 24px rgba(24, 42, 32, 0.08);
+  overflow: hidden;
+}
+
+
+body.theme-ohhell .oh-corner-pips {
+  position: absolute;
+  top: 42px;
+  width: 32px;
+  height: 38px;
+  pointer-events: none;
+  opacity: 0.92;
+}
+
+body.theme-ohhell .oh-corner-tl {
+  left: 10px;
+}
+
+body.theme-ohhell .oh-corner-tr {
+  right: 10px;
+}
+
+body.theme-ohhell .oh-corner-pips svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+
+body.theme-ohhell .oh-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 4px;
+  position: relative;
+  z-index: 2;
+}
+
+body.theme-ohhell .oh-top-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+body.theme-ohhell .oh-top-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 34px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--oh-line-soft);
+  background: var(--oh-card);
+  color: var(--oh-ink);
+  font-family: var(--oh-sans);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body.theme-ohhell .oh-top-btn svg {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
+
+body.theme-ohhell .oh-top-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+body.theme-ohhell .oh-top-btn-end {
+  border-color: var(--oh-emerald-border);
+  color: var(--oh-emerald);
+  background: var(--oh-emerald-soft);
+}
+
+
+body.theme-ohhell .oh-header {
+  text-align: center;
+  padding: 2px 36px 10px;
+  position: relative;
+  z-index: 1;
+}
+
+body.theme-ohhell .oh-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+body.theme-ohhell .oh-title {
+  margin: 0;
+  font-family: var(--oh-serif);
+  font-size: clamp(2rem, 8.5vw, 2.55rem);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  line-height: 1.08;
+  color: var(--oh-ink);
+}
+
+body.theme-ohhell .oh-title-pip {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+body.theme-ohhell .oh-ornament-rule {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 6px auto 7px;
+  max-width: 210px;
+}
+
+body.theme-ohhell .oh-rule-line {
+  flex: 1;
+  height: 1px;
+  background: var(--oh-line);
+  opacity: 0.65;
+}
+
+body.theme-ohhell .oh-rule-diamond {
+  width: 7px;
+  height: 7px;
+  background: var(--oh-emerald);
+  transform: rotate(45deg);
+  flex-shrink: 0;
+}
+
+body.theme-ohhell .oh-round-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+body.theme-ohhell .oh-rule-line-sm {
+  flex: 1;
+  max-width: 72px;
+  height: 1px;
+  background: var(--oh-line);
+  opacity: 0.45;
+}
+
+body.theme-ohhell .oh-rule-diamond-sm {
+  width: 5px;
+  height: 5px;
+  background: var(--oh-emerald);
+  transform: rotate(45deg);
+  flex-shrink: 0;
+}
+
+body.theme-ohhell .oh-round-label {
+  font-family: var(--oh-serif);
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: var(--oh-ink);
+  letter-spacing: 0.02em;
+}
+
+
+body.theme-ohhell .oh-meta-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+body.theme-ohhell .oh-meta-box {
+  background: var(--oh-card);
+  border: 1px solid var(--oh-line);
+  border-radius: 10px;
+  padding: 10px 8px;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-width: 0;
+  color: var(--oh-ink);
+}
+
+body.theme-ohhell .oh-meta-btn {
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body.theme-ohhell .oh-meta-btn:active {
+  background: var(--oh-emerald-soft);
+}
+
+body.theme-ohhell .oh-trump-icon {
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+body.theme-ohhell .oh-trump-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+body.theme-ohhell .oh-meta-label {
+  font-family: var(--oh-serif);
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: var(--oh-emerald-deep);
+  white-space: nowrap;
+}
+
+body.theme-ohhell .oh-meta-val {
+  font-family: var(--oh-serif);
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: var(--oh-ink);
+  white-space: nowrap;
+}
+
+
+body.theme-ohhell .oh-status-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 9px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: rgba(17, 85, 57, 0.06);
+  border: 1px solid rgba(17, 85, 57, 0.24);
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--oh-muted);
+}
+
+body.theme-ohhell .oh-status-chip {
+  white-space: nowrap;
+}
+
+body.theme-ohhell .oh-status-total {
+  color: var(--oh-emerald);
+  font-weight: 700;
+}
+
+body.theme-ohhell .oh-status-bar.is-ready {
+  background: rgba(17, 85, 57, 0.12);
+  border-color: var(--oh-emerald);
+  color: var(--oh-emerald-deep);
+}
+
+body.theme-ohhell .oh-status-bar.is-error {
+  background: var(--oh-warn-soft);
+  border-color: var(--oh-warn);
+  color: var(--oh-warn);
+}
+
+body.theme-ohhell .oh-status-bar.is-error .oh-status-total {
+  color: var(--oh-warn);
+}
+
+
+body.theme-ohhell .oh-player-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+body.theme-ohhell .oh-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: stretch;
+  gap: 8px;
+  background: var(--oh-card);
+  border: 1.25px solid var(--oh-line);
+  border-radius: 10px;
+  padding: 9px 10px;
+  box-shadow: inset 0 0 0 2px var(--oh-card), inset 0 0 0 3px rgba(62, 77, 68, 0.14);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+body.theme-ohhell .oh-row.is-exact {
+  border-color: var(--oh-emerald);
+  background: #F4FAF6;
+}
+
+body.theme-ohhell .oh-row.is-screw-violation {
+  border-color: var(--oh-warn);
+  box-shadow: 0 0 0 2px rgba(154, 27, 34, 0.16);
+}
+
+body.theme-ohhell .oh-row-left {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+}
+
+body.theme-ohhell .oh-row-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+body.theme-ohhell .oh-suit-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  flex-shrink: 0;
+  gap: 2px;
+}
+
+body.theme-ohhell .oh-suit-badge svg {
+  width: 15px;
+  height: 15px;
+  display: block;
+}
+
+body.theme-ohhell .oh-suit-lines {
+  width: 14px;
+  height: 4px;
+  border-top: 1.2px solid var(--oh-line);
+  border-bottom: 1px solid var(--oh-line);
+  opacity: 0.7;
+}
+
+body.theme-ohhell .oh-name-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  flex: 1;
+}
+
+body.theme-ohhell .oh-player-name {
+  font-family: var(--oh-serif);
+  font-size: clamp(1.12rem, 4.4vw, 1.32rem);
+  font-weight: 500;
+  color: var(--oh-ink);
+  border-bottom: 1.5px solid var(--oh-emerald);
+  padding-bottom: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+body.theme-ohhell .oh-dealer-pill {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: var(--oh-emerald);
+  color: #FAF7F0;
+  flex-shrink: 0;
+}
+
+body.theme-ohhell .oh-exact-pill {
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: rgba(17, 85, 57, 0.14);
+  color: var(--oh-emerald-deep);
+  border: 1px solid var(--oh-emerald-border);
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+body.theme-ohhell .oh-miss-pill {
+  font-size: 0.64rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: rgba(154, 27, 34, 0.10);
+  color: var(--oh-warn);
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+
+body.theme-ohhell .oh-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+body.theme-ohhell .oh-stepper-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 4px;
+  border-radius: 8px;
+  border: 1px solid var(--oh-line-soft);
+  background: var(--oh-paper);
+}
+
+body.theme-ohhell .oh-stepper-lbl {
+  font-family: var(--oh-serif);
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--oh-muted);
+  padding: 0 3px;
+  user-select: none;
+}
+
+body.theme-ohhell .oh-step-btn {
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--oh-ink);
+  font-size: 0.98rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body.theme-ohhell .oh-step-btn:active {
+  background: var(--oh-emerald-soft);
+}
+
+body.theme-ohhell .oh-step-val {
+  min-width: 18px;
+  text-align: center;
+  font-family: var(--oh-serif);
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--oh-emerald-deep);
+}
+
+
+body.theme-ohhell .oh-row-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-left: 8px;
+  border-left: 1px solid var(--oh-line-soft);
+}
+
+body.theme-ohhell .oh-pts-box {
+  min-width: 68px;
+  padding: 6px 8px;
+  border-radius: 7px;
+  border: 1px solid var(--oh-line);
+  background: var(--oh-paper);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+body.theme-ohhell .oh-pts-num {
+  font-family: var(--oh-serif);
+  font-size: 1.55rem;
+  font-weight: 600;
+  line-height: 1.05;
+  color: var(--oh-emerald);
+}
+
+body.theme-ohhell .oh-pts-lbl {
+  font-family: var(--oh-sans);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--oh-emerald-deep);
+  margin-top: 2px;
+}
+
+
+body.theme-ohhell .oh-specials {
+  display: grid;
+  grid-template-columns: 70px 1fr;
+  gap: 10px;
+  align-items: stretch;
+  margin-bottom: 12px;
+}
+
+body.theme-ohhell .oh-card-emblem {
+  width: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+body.theme-ohhell .oh-card-emblem svg {
+  width: 70px;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 2px 5px rgba(24, 42, 32, 0.12));
+}
+
+body.theme-ohhell .oh-special-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+body.theme-ohhell .oh-special-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+body.theme-ohhell .oh-special-card {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 9px;
+  border: 1px solid var(--oh-line);
+  background: var(--oh-card);
+  text-align: left;
+  color: var(--oh-ink);
+}
+
+body.theme-ohhell .oh-special-card.is-warning {
+  border-color: var(--oh-warn);
+  background: var(--oh-warn-soft);
+}
+
+body.theme-ohhell .oh-bonus-card {
+  border-color: var(--oh-emerald-border);
+}
+
+body.theme-ohhell .oh-sp-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+body.theme-ohhell .oh-sp-text {
+  min-width: 0;
+  flex: 1;
+}
+
+body.theme-ohhell .oh-sp-title {
+  font-family: var(--oh-serif);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--oh-ink);
+  line-height: 1.2;
+}
+
+body.theme-ohhell .oh-sp-sub {
+  font-family: var(--oh-serif);
+  font-size: 0.78rem;
+  color: var(--oh-emerald);
+  line-height: 1.2;
+  margin-top: 1px;
+}
+
+body.theme-ohhell .oh-special-card.is-warning .oh-sp-sub {
+  color: var(--oh-warn);
+  font-weight: 700;
+}
+
+body.theme-ohhell .oh-bonus-heart {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+
+body.theme-ohhell .oh-switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+body.theme-ohhell .oh-switch input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+body.theme-ohhell .oh-switch-track {
+  width: 46px;
+  height: 28px;
+  border-radius: 999px;
+  background: #DCD6CA;
+  border: 1px solid rgba(62, 77, 68, 0.35);
+  position: relative;
+  transition: background-color 0.18s ease, border-color 0.18s ease;
+}
+
+body.theme-ohhell .oh-switch-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  transition: transform 0.18s ease;
+}
+
+body.theme-ohhell .oh-switch input:checked + .oh-switch-track {
+  background: var(--oh-emerald);
+  border-color: var(--oh-emerald-deep);
+}
+
+body.theme-ohhell .oh-switch input:checked + .oh-switch-track .oh-switch-thumb {
+  transform: translateX(18px);
+}
+
+
+body.theme-ohhell .oh-error-msg {
+  margin-bottom: 10px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: var(--oh-warn-soft);
+  border: 1px solid var(--oh-warn);
+  color: var(--oh-warn);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+body.theme-ohhell .oh-error-msg[hidden] {
+  display: none;
+}
+
+
+body.theme-ohhell .oh-cta-wrap {
+  position: sticky;
+  bottom: calc(68px + env(safe-area-inset-bottom, 0px));
+  z-index: 6;
+  padding: 4px 0 6px;
+  background: linear-gradient(180deg, rgba(250, 247, 240, 0) 0%, var(--oh-paper) 28%);
+}
+
+body.theme-ohhell .oh-cta-btn {
+  width: 100%;
+  min-height: 50px;
+  border: 1px solid #08301F;
+  border-radius: 10px;
+  background: linear-gradient(180deg, #156242 0%, #0C432C 100%);
+  color: #FCF7EE;
+  font-family: var(--oh-serif);
+  font-size: 1.24rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(12, 67, 44, 0.28);
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body.theme-ohhell .oh-cta-btn:active {
+  transform: translateY(1px);
+  filter: brightness(0.95);
+}
+
+body.theme-ohhell .oh-cta-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+body.theme-ohhell .oh-sparkle {
+  width: 13px;
+  height: 13px;
+  opacity: 0.9;
+}
+
+
+body.theme-ohhell .oh-history-drawer {
+  margin-top: 8px;
+  border: 1px solid var(--oh-line-soft);
+  border-radius: 9px;
+  background: var(--oh-card);
+  overflow: hidden;
+}
+
+body.theme-ohhell .oh-history-summary {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 12px;
+  font-family: var(--oh-serif);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--oh-ink);
+  cursor: pointer;
+  user-select: none;
+}
+
+body.theme-ohhell .oh-history-summary::-webkit-details-marker {
+  display: none;
+}
+
+body.theme-ohhell .oh-history-count {
+  font-family: var(--oh-sans);
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--oh-emerald);
+}
+
+body.theme-ohhell .oh-history-list {
+  border-top: 1px solid var(--oh-line-soft);
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+body.theme-ohhell .oh-history-empty {
+  font-size: 0.8rem;
+  color: var(--oh-muted);
+  text-align: center;
+  padding: 6px 0;
+}
+
+body.theme-ohhell .oh-history-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 0.78rem;
+  padding: 5px 7px;
+  border-radius: 6px;
+  background: var(--oh-paper);
+  border: 1px solid rgba(62, 77, 68, 0.16);
+}
+
+
+body.theme-ohhell .oh-bottom-ornament {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 10px;
+  padding: 4px 2px 0;
+}
+
+body.theme-ohhell .oh-foot-line {
+  flex: 1;
+  height: 1px;
+  background: var(--oh-line-soft);
+}
+
+body.theme-ohhell .oh-foot-pip {
+  width: 15px;
+  height: 15px;
+}
+
+body.theme-ohhell .oh-foot-pip-center {
+  width: 17px;
+  height: 17px;
+}
+
+
+body.theme-ohhell .bottom-nav {
+  background: rgba(250, 247, 240, 0.96);
+  border-top: 1.5px solid var(--oh-emerald-border);
+  box-shadow: 0 -4px 16px rgba(24, 42, 32, 0.08);
+}
+
+body.theme-ohhell .bottom-nav button {
+  color: var(--oh-muted);
+  font-family: var(--oh-serif);
+}
+
+body.theme-ohhell .bottom-nav button.active {
+  color: var(--oh-emerald);
+}
+
+body.theme-ohhell .bottom-nav #nav-new {
+  display: none;
+}
+
+body.theme-ohhell .bottom-nav #nav-active {
+  display: flex;
+}
+
+body.theme-ohhell .bottom-nav #nav-social {
+  display: none !important;
+}
+
+</style>
 <!-- v20: Request a Game, Variations & Popularity, Private Admin Stats, Full Screen (neutral obsidian + warm brass) -->
 <style id="v20-features">
 
@@ -8850,57 +10678,57 @@ html.v21-sheet-open, html.v21-sheet-open body { overscroll-behavior: contain; }
 
 
 #setup-screen.setup-theme-hearts {
-  --st-bg: #18080d;
+  --st-bg: #f5f0e6;
   --st-bg-image:
-    radial-gradient(ellipse at 50% 0%, rgba(158, 31, 56, 0.38) 0%, transparent 56%),
-    linear-gradient(180deg, #240b12 0%, #14060a 100%);
-  --st-card: #1f0c12;
-  --st-card-border: rgba(232, 93, 117, 0.32);
-  --st-surface: #2c121a;
-  --st-surface-border: rgba(232, 93, 117, 0.22);
-  --st-text: #faf3e6;
-  --st-muted: #c9a7b0;
-  --st-accent: #f06278;
-  --st-accent-soft: rgba(240, 98, 120, 0.16);
-  --st-accent-border: rgba(240, 98, 120, 0.44);
-  --st-cta-bg: linear-gradient(180deg, #e84861 0%, #bf263f 100%);
-  --st-cta-text: #ffffff;
-  --st-cta-shadow: 0 4px 16px rgba(191, 38, 63, 0.36);
-  --st-sticky-bg: rgba(20, 6, 10, 0.96);
-  --st-input-bg: #14060a;
-  --st-input-text: #faf3e6;
-  --st-input-placeholder: #9c7983;
-  --st-chip-bg: #2c121a;
-  --st-chip-text: #faf3e6;
+    radial-gradient(rgba(120, 102, 78, 0.06) 1px, transparent 0),
+    linear-gradient(180deg, #f8f4ec 0%, #efe9dc 100%);
+  --st-card: #faf7f0;
+  --st-card-border: rgba(154, 27, 34, 0.36);
+  --st-surface: #fcf9f3;
+  --st-surface-border: rgba(79, 74, 68, 0.34);
+  --st-text: #1f1c18;
+  --st-muted: #5c554c;
+  --st-accent: #9a1b22;
+  --st-accent-soft: rgba(154, 27, 34, 0.10);
+  --st-accent-border: rgba(154, 27, 34, 0.45);
+  --st-cta-bg: linear-gradient(180deg, #a31b24 0%, #7c1118 100%);
+  --st-cta-text: #fcf7ee;
+  --st-cta-shadow: 0 4px 16px rgba(124, 17, 24, 0.28);
+  --st-sticky-bg: rgba(245, 240, 230, 0.96);
+  --st-input-bg: #ffffff;
+  --st-input-text: #1f1c18;
+  --st-input-placeholder: #7a7166;
+  --st-chip-bg: #f2ece0;
+  --st-chip-text: #1f1c18;
   --st-font-display: Georgia, "Times New Roman", serif;
   --st-font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 
 #setup-screen.setup-theme-ohhell {
-  --st-bg: #0c0e1f;
+  --st-bg: #f5f0e6;
   --st-bg-image:
-    radial-gradient(ellipse at 50% 0%, rgba(79, 70, 178, 0.32) 0%, transparent 56%),
-    linear-gradient(180deg, #131630 0%, #090a18 100%);
-  --st-card: #141730;
-  --st-card-border: rgba(232, 168, 56, 0.32);
-  --st-surface: #1d2142;
-  --st-surface-border: rgba(255, 255, 255, 0.14);
-  --st-text: #f3f1eb;
-  --st-muted: #a6adc8;
-  --st-accent: #e8a838;
-  --st-accent-soft: rgba(232, 168, 56, 0.15);
-  --st-accent-border: rgba(232, 168, 56, 0.44);
-  --st-cta-bg: linear-gradient(180deg, #f2bc54 0%, #d69422 100%);
-  --st-cta-text: #0c0e1f;
-  --st-cta-shadow: 0 4px 16px rgba(214, 148, 34, 0.32);
-  --st-sticky-bg: rgba(9, 10, 24, 0.96);
-  --st-input-bg: #0a0c1b;
-  --st-input-text: #f3f1eb;
-  --st-input-placeholder: #7e86a6;
-  --st-chip-bg: #1d2142;
-  --st-chip-text: #f3f1eb;
-  --st-font-display: Georgia, "Palatino Linotype", serif;
+    radial-gradient(rgba(82, 108, 92, 0.06) 1px, transparent 0),
+    linear-gradient(180deg, #f8f4ec 0%, #efe9dc 100%);
+  --st-card: #faf7f0;
+  --st-card-border: rgba(17, 85, 57, 0.36);
+  --st-surface: #fcf9f3;
+  --st-surface-border: rgba(62, 77, 68, 0.34);
+  --st-text: #1f1c18;
+  --st-muted: #555a53;
+  --st-accent: #115539;
+  --st-accent-soft: rgba(17, 85, 57, 0.10);
+  --st-accent-border: rgba(17, 85, 57, 0.44);
+  --st-cta-bg: linear-gradient(180deg, #156242 0%, #0c432c 100%);
+  --st-cta-text: #fcf7ee;
+  --st-cta-shadow: 0 4px 16px rgba(12, 67, 44, 0.28);
+  --st-sticky-bg: rgba(245, 240, 230, 0.96);
+  --st-input-bg: #ffffff;
+  --st-input-text: #1f1c18;
+  --st-input-placeholder: #6e756c;
+  --st-chip-bg: #edf1ec;
+  --st-chip-text: #1f1c18;
+  --st-font-display: Georgia, "Times New Roman", serif;
   --st-font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
@@ -8933,7 +10761,7 @@ html.v21-sheet-open, html.v21-sheet-open body { overscroll-behavior: contain; }
 </style>
 </head>
 <body>
-<!-- Build: v22-search-houserules-2026-11-27 -->
+<!-- Build: v23-hearts-ohhell-2026-11-27 -->
 
 <!-- Login: starts hidden until getSession() resolves -->
 <section id="login-view" class="auth-hidden" hidden aria-label="Sign in to Score Tracker">
@@ -9956,6 +11784,401 @@ html.v21-sheet-open, html.v21-sheet-open body { overscroll-behavior: contain; }
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M8 20c4.5-2.5 7-6.8 6.5-12.5-.2-1.8-.8-3.4-1.8-4.5M14.5 14l-3.5-.8M14.5 10.2l-3.4.3M13.5 6.8l-2.8 1.2"/></svg>
       </button>
     </footer>
+  </div>
+</div>
+
+    <!-- v23 Hearts Ivory & Crimson Ledger: only visible with body.theme-hearts (pass cycle, Q of Spades +13, Shoot the Moon, optional J of Diamonds) -->
+<div id="ht-shell" class="ht-shell" aria-label="Hearts Score Ledger">
+  <div class="ht-ledger-frame">
+    <div class="ht-corner-pips ht-corner-tl" aria-hidden="true">
+      <svg viewBox="0 0 36 42" fill="none">
+        <path d="M9 12.2C9 12.2 3.5 8.5 3.5 5.2A3 3 0 0 1 9 3.6a3 3 0 0 1 5.5 1.6c0 3.3-5.5 7-5.5 7Z" fill="#9A1B22"/>
+        <path d="M25 12.2C25 12.2 19.5 8.5 19.5 5.2A3 3 0 0 1 25 3.6a3 3 0 0 1 5.5 1.6c0 3.3-5.5 7-5.5 7Z" fill="#9A1B22"/>
+        <path d="M9 26.2C9 26.2 3.5 22.5 3.5 19.2A3 3 0 0 1 9 17.6a3 3 0 0 1 5.5 1.6c0 3.3-5.5 7-5.5 7Z" fill="#9A1B22"/>
+        <path d="M25 26.2C25 26.2 19.5 22.5 19.5 19.2A3 3 0 0 1 25 17.6a3 3 0 0 1 5.5 1.6c0 3.3-5.5 7-5.5 7Z" fill="#9A1B22"/>
+        <line x1="3" y1="31.5" x2="18" y2="31.5" stroke="#4F4A44" stroke-width="1.2"/>
+        <line x1="3" y1="35" x2="14" y2="35" stroke="#4F4A44" stroke-width="1"/>
+      </svg>
+    </div>
+    <div class="ht-corner-pips ht-corner-tr" aria-hidden="true">
+      <svg viewBox="0 0 36 42" fill="none">
+        <path d="M9 2.5C9 2.5 3.5 6.8 3.5 9.6A2.8 2.8 0 0 0 8.2 11.4L7.2 13.5h3.6l-1-2.1A2.8 2.8 0 0 0 14.5 9.6C14.5 6.8 9 2.5 9 2.5Z" fill="#23201D"/>
+        <path d="M25 2.5C25 2.5 19.5 6.8 19.5 9.6A2.8 2.8 0 0 0 24.2 11.4l-1 2.1h3.6l-1-2.1A2.8 2.8 0 0 0 30.5 9.6C30.5 6.8 25 2.5 25 2.5Z" fill="#23201D"/>
+        <path d="M9 16.5C9 16.5 3.5 20.8 3.5 23.6A2.8 2.8 0 0 0 8.2 25.4L7.2 27.5h3.6l-1-2.1A2.8 2.8 0 0 0 14.5 23.6C14.5 20.8 9 16.5 9 16.5Z" fill="#23201D"/>
+        <path d="M25 16.5C25 16.5 19.5 20.8 19.5 23.6A2.8 2.8 0 0 0 24.2 25.4l-1 2.1h3.6l-1-2.1A2.8 2.8 0 0 0 30.5 23.6C30.5 20.8 25 16.5 25 16.5Z" fill="#23201D"/>
+        <line x1="18" y1="31.5" x2="33" y2="31.5" stroke="#4F4A44" stroke-width="1.2"/>
+        <line x1="22" y1="35" x2="33" y2="35" stroke="#4F4A44" stroke-width="1"/>
+      </svg>
+    </div>
+
+    <div class="ht-topbar">
+      <button type="button" id="ht-btn-home" class="ht-top-btn" onclick="showView('home')" aria-label="Back to Home">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+        <span>Home</span>
+      </button>
+      <div class="ht-top-actions">
+        <button type="button" id="ht-btn-undo" class="ht-top-btn" onclick="window.HeartsUI && window.HeartsUI.undoHand()" aria-label="Undo last hand" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M9 14 4 9l5-5"/>
+            <path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/>
+          </svg>
+          <span>Undo</span>
+        </button>
+        <button type="button" id="ht-btn-end" class="ht-top-btn ht-top-btn-end" onclick="window.openEndGameModal && openEndGameModal()" aria-label="End or pause game">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/>
+            <line x1="4" y1="22" x2="4" y2="15"/>
+          </svg>
+          <span>End</span>
+        </button>
+      </div>
+    </div>
+
+    <header class="ht-header">
+      <div class="ht-title-row">
+        <svg class="ht-title-pip" viewBox="0 0 16 16" aria-hidden="true">
+          <path d="M8 14S2 9.8 2 5.6A3.4 3.4 0 0 1 8 3.5a3.4 3.4 0 0 1 6 2.1C14 9.8 8 14 8 14Z" fill="#9A1B22"/>
+        </svg>
+        <h1 class="ht-title">Hearts</h1>
+        <svg class="ht-title-pip" viewBox="0 0 16 16" aria-hidden="true">
+          <path d="M8 14S2 9.8 2 5.6A3.4 3.4 0 0 1 8 3.5a3.4 3.4 0 0 1 6 2.1C14 9.8 8 14 8 14Z" fill="#9A1B22"/>
+        </svg>
+      </div>
+      <div class="ht-ornament-rule" aria-hidden="true">
+        <span class="ht-rule-line"></span>
+        <span class="ht-rule-diamond"></span>
+        <span class="ht-rule-line"></span>
+      </div>
+      <div class="ht-hand-row">
+        <span class="ht-rule-diamond-sm" aria-hidden="true"></span>
+        <span class="ht-rule-line-sm" aria-hidden="true"></span>
+        <span id="ht-hand-label" class="ht-hand-label">Hand 1</span>
+        <span class="ht-rule-line-sm" aria-hidden="true"></span>
+        <span class="ht-rule-diamond-sm" aria-hidden="true"></span>
+      </div>
+    </header>
+
+    <section class="ht-meta-grid" aria-label="Hand information">
+      <div class="ht-meta-box">
+        <div class="ht-meta-kicker">
+          <svg class="ht-meta-svg" viewBox="0 0 16 16" aria-hidden="true">
+            <path d="M8 14S2 9.8 2 5.6A3.4 3.4 0 0 1 8 3.5a3.4 3.4 0 0 1 6 2.1C14 9.8 8 14 8 14Z" fill="#9A1B22"/>
+          </svg>
+          <span>Target Score</span>
+        </div>
+        <div id="ht-target-score" class="ht-meta-val">100</div>
+      </div>
+
+      <div class="ht-meta-box">
+        <div class="ht-meta-kicker">
+          <svg class="ht-meta-svg" viewBox="0 0 24 24" fill="none" stroke="#9A1B22" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="7"/>
+            <line x1="12" y1="2" x2="12" y2="6"/>
+            <line x1="12" y1="18" x2="12" y2="22"/>
+            <line x1="2" y1="12" x2="6" y2="12"/>
+            <line x1="18" y1="12" x2="22" y2="12"/>
+            <circle cx="12" cy="12" r="2" fill="#9A1B22"/>
+          </svg>
+          <span>Pass Direction</span>
+        </div>
+        <div class="ht-meta-val ht-pass-val">
+          <svg class="ht-pass-pip" viewBox="0 0 16 16" aria-hidden="true">
+            <path d="M8 14S2 9.8 2 5.6A3.4 3.4 0 0 1 8 3.5a3.4 3.4 0 0 1 6 2.1C14 9.8 8 14 8 14Z" fill="#23201D"/>
+          </svg>
+          <span id="ht-pass-dir">Left</span>
+        </div>
+      </div>
+    </section>
+
+    <div id="ht-hand-status" class="ht-status-bar" role="status" aria-live="polite">
+      <span id="ht-hearts-tally" class="ht-status-chip">Hearts: 0 / 13</span>
+      <span id="ht-qs-status" class="ht-status-chip">Q&#x2660;: Unassigned</span>
+      <span id="ht-points-tally" class="ht-status-chip ht-status-total">Hand: 0 / 26</span>
+    </div>
+
+    <section id="ht-player-rows" class="ht-player-rows" aria-label="Player scores and current hand entry"></section>
+
+    <section class="ht-specials" aria-label="Special scoring controls">
+      <div class="ht-card-emblem" aria-hidden="true">
+        <svg viewBox="0 0 74 108" fill="none">
+          <rect x="1.5" y="1.5" width="71" height="105" rx="6" fill="#FCF9F2" stroke="#5E5850" stroke-width="1.3"/>
+          <rect x="6" y="6" width="62" height="96" rx="3.5" fill="none" stroke="#CBBFA8" stroke-width="0.9"/>
+          <text x="10" y="19" fill="#1F1C18" font-family="Georgia,serif" font-size="13" font-weight="700">Q</text>
+          <path d="M14.5 22.5C14.5 22.5 10.5 26 10.5 28.1a2.1 2.1 0 0 0 3.5 1.4l-.6 1.5h2.2l-.6-1.5a2.1 2.1 0 0 0 3.5-1.4c0-2.1-4-5.6-4-5.6Z" fill="#1F1C18"/>
+          <path d="M23 41l4-8 5 5 5-7 5 7 5-5 4 8H23Z" fill="#C99A3E" stroke="#5A3E12" stroke-width="1"/>
+          <rect x="23" y="42" width="28" height="3.2" rx="1" fill="#8C161E"/>
+          <path d="M37 48.5C37 48.5 25 57.5 25 64.2a6.2 6.2 0 0 0 10.4 4.3L33.8 74h6.4l-1.6-5.5A6.2 6.2 0 0 0 49 64.2c0-6.7-12-15.7-12-15.7Z" fill="#1F1C18"/>
+          <path d="M37 54.5c0 0-5.2 4.3-5.2 7.5a2.7 2.7 0 0 0 5.2 1.1 2.7 2.7 0 0 0 5.2-1.1c0-3.2-5.2-7.5-5.2-7.5Z" fill="#8C161E"/>
+          <g transform="rotate(180 37 54)">
+            <text x="10" y="19" fill="#1F1C18" font-family="Georgia,serif" font-size="13" font-weight="700">Q</text>
+            <path d="M14.5 22.5C14.5 22.5 10.5 26 10.5 28.1a2.1 2.1 0 0 0 3.5 1.4l-.6 1.5h2.2l-.6-1.5a2.1 2.1 0 0 0 3.5-1.4c0-2.1-4-5.6-4-5.6Z" fill="#1F1C18"/>
+          </g>
+        </svg>
+      </div>
+
+      <div class="ht-special-stack">
+        <div class="ht-special-row">
+          <div class="ht-special-card">
+            <svg class="ht-sp-icon" viewBox="0 0 16 16" aria-hidden="true">
+              <path d="M8 1.5C8 1.5 2.5 6.1 2.5 9.4A3.1 3.1 0 0 0 7.1 11.8L6.1 14.5h3.8l-1-2.7a3.1 3.1 0 0 0 4.6-2.4C13.5 6.1 8 1.5 8 1.5Z" fill="#1F1C18"/>
+            </svg>
+            <div class="ht-sp-text">
+              <div class="ht-sp-title">Queen of Spades</div>
+              <div id="ht-qs-holder" class="ht-sp-sub">(+13) Tap Q&#x2660; on a player row</div>
+            </div>
+          </div>
+          <label class="ht-switch" aria-label="Toggle Queen of Spades for selected player">
+            <input type="checkbox" id="ht-qs-toggle" onchange="window.HeartsUI && window.HeartsUI.toggleQueenForSelected(this.checked)">
+            <span class="ht-switch-track"><span class="ht-switch-thumb"></span></span>
+          </label>
+        </div>
+
+        <button type="button" id="ht-moon-btn" class="ht-special-card ht-moon-card" onclick="window.HeartsUI && window.HeartsUI.toggleShootMoon()" aria-pressed="false">
+          <svg class="ht-sp-icon" viewBox="0 0 24 24" fill="none" stroke="#9A1B22" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="7"/>
+            <line x1="12" y1="2" x2="12" y2="6"/>
+            <line x1="12" y1="18" x2="12" y2="22"/>
+            <line x1="2" y1="12" x2="6" y2="12"/>
+            <line x1="18" y1="12" x2="22" y2="12"/>
+            <circle cx="12" cy="12" r="2" fill="#9A1B22"/>
+          </svg>
+          <div class="ht-sp-text">
+            <div class="ht-sp-title">Shoot the Moon</div>
+            <div id="ht-moon-sub" class="ht-sp-sub">(+26 to all others)</div>
+          </div>
+          <svg class="ht-moon-heart" viewBox="0 0 24 24" fill="none" stroke="#5A3A3A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 20.5S4 15.2 4 9.6A4.6 4.6 0 0 1 12 6.8a4.6 4.6 0 0 1 8 2.8c0 5.6-8 10.9-8 10.9Z"/>
+          </svg>
+        </button>
+
+        <div id="ht-jd-banner" class="ht-jd-banner" hidden>
+          <svg class="ht-sp-icon" viewBox="0 0 16 16" aria-hidden="true">
+            <path d="M8 1.5 13.5 8 8 14.5 2.5 8 8 1.5Z" fill="#9A1B22"/>
+          </svg>
+          <span id="ht-jd-status">Jack of Diamonds (&minus;10) active &mdash; tap J&#x2666; on a player row</span>
+        </div>
+      </div>
+    </section>
+
+    <div id="ht-error-msg" class="ht-error-msg" role="alert" hidden></div>
+
+    <div class="ht-cta-wrap">
+      <button type="button" id="ht-btn-record" class="ht-cta-btn" onclick="window.HeartsUI && window.HeartsUI.recordHand()">
+        <svg class="ht-sparkle" viewBox="0 0 16 16" aria-hidden="true">
+          <path d="M8 1 9.8 6.2 15 8 9.8 9.8 8 15 6.2 9.8 1 8 6.2 6.2 8 1Z" fill="currentColor"/>
+        </svg>
+        <span>Record Hand</span>
+        <svg class="ht-sparkle" viewBox="0 0 16 16" aria-hidden="true">
+          <path d="M8 1 9.8 6.2 15 8 9.8 9.8 8 15 6.2 9.8 1 8 6.2 6.2 8 1Z" fill="currentColor"/>
+        </svg>
+      </button>
+    </div>
+
+    <details id="ht-history-drawer" class="ht-history-drawer">
+      <summary class="ht-history-summary">
+        <span>Hand History</span>
+        <span id="ht-history-count" class="ht-history-count">0 hands</span>
+      </summary>
+      <div id="ht-history-list" class="ht-history-list">
+        <div class="ht-history-empty">No hands recorded yet.</div>
+      </div>
+    </details>
+
+    <div class="ht-bottom-ornament" aria-hidden="true">
+      <svg class="ht-foot-pip" viewBox="0 0 16 16"><path d="M8 14S2 9.8 2 5.6A3.4 3.4 0 0 1 8 3.5a3.4 3.4 0 0 1 6 2.1C14 9.8 8 14 8 14Z" fill="#9A1B22"/></svg>
+      <span class="ht-foot-line"></span>
+      <svg class="ht-foot-pip-center" viewBox="0 0 16 16"><path d="M8 14S2 9.8 2 5.6A3.4 3.4 0 0 1 8 3.5a3.4 3.4 0 0 1 6 2.1C14 9.8 8 14 8 14Z" fill="#9A1B22"/></svg>
+      <span class="ht-foot-line"></span>
+      <svg class="ht-foot-pip" viewBox="0 0 16 16"><path d="M8 1.5C8 1.5 2.5 6.1 2.5 9.4A3.1 3.1 0 0 0 7.1 11.8L6.1 14.5h3.8l-1-2.7a3.1 3.1 0 0 0 4.6-2.4C13.5 6.1 8 1.5 8 1.5Z" fill="#23201D"/></svg>
+    </div>
+  </div>
+</div>
+
+    <!-- v23 Oh Hell Ivory & Emerald Ledger: only visible with body.theme-ohhell (bid/tricks, trump, Screw the Dealer, exact bonus) -->
+<div id="oh-shell" class="oh-shell" aria-label="Oh Hell Score Ledger">
+  <div class="oh-ledger-frame">
+    <div class="oh-corner-pips oh-corner-tl" aria-hidden="true">
+      <svg viewBox="0 0 36 42" fill="none">
+        <path d="M9 2.5C9 2.5 3.5 6.8 3.5 9.6A2.8 2.8 0 0 0 8.2 11.4L7.2 13.5h3.6l-1-2.1A2.8 2.8 0 0 0 14.5 9.6C14.5 6.8 9 2.5 9 2.5Z" fill="#115539"/>
+        <path d="M25 2.5C25 2.5 19.5 6.8 19.5 9.6A2.8 2.8 0 0 0 24.2 11.4l-1 2.1h3.6l-1-2.1A2.8 2.8 0 0 0 30.5 9.6C30.5 6.8 25 2.5 25 2.5Z" fill="#115539"/>
+        <path d="M9 16.5C9 16.5 3.5 20.8 3.5 23.6A2.8 2.8 0 0 0 8.2 25.4L7.2 27.5h3.6l-1-2.1A2.8 2.8 0 0 0 14.5 23.6C14.5 20.8 9 16.5 9 16.5Z" fill="#115539"/>
+        <path d="M25 16.5C25 16.5 19.5 20.8 19.5 23.6A2.8 2.8 0 0 0 24.2 25.4l-1 2.1h3.6l-1-2.1A2.8 2.8 0 0 0 30.5 23.6C30.5 20.8 25 16.5 25 16.5Z" fill="#115539"/>
+        <line x1="3" y1="31.5" x2="18" y2="31.5" stroke="#4F4A44" stroke-width="1.2"/>
+        <line x1="3" y1="35" x2="14" y2="35" stroke="#4F4A44" stroke-width="1"/>
+      </svg>
+    </div>
+    <div class="oh-corner-pips oh-corner-tr" aria-hidden="true">
+      <svg viewBox="0 0 36 42" fill="none">
+        <path d="M9 2.5C9 2.5 3.5 6.8 3.5 9.6A2.8 2.8 0 0 0 8.2 11.4L7.2 13.5h3.6l-1-2.1A2.8 2.8 0 0 0 14.5 9.6C14.5 6.8 9 2.5 9 2.5Z" fill="#23201D"/>
+        <path d="M25 2.5C25 2.5 19.5 6.8 19.5 9.6A2.8 2.8 0 0 0 24.2 11.4l-1 2.1h3.6l-1-2.1A2.8 2.8 0 0 0 30.5 9.6C30.5 6.8 25 2.5 25 2.5Z" fill="#23201D"/>
+        <path d="M9 16.5C9 16.5 3.5 20.8 3.5 23.6A2.8 2.8 0 0 0 8.2 25.4L7.2 27.5h3.6l-1-2.1A2.8 2.8 0 0 0 14.5 23.6C14.5 20.8 9 16.5 9 16.5Z" fill="#23201D"/>
+        <circle cx="25" cy="19.5" r="2.7" fill="#115539"/>
+        <circle cx="22.1" cy="23.2" r="2.6" fill="#115539"/>
+        <circle cx="27.9" cy="23.2" r="2.6" fill="#115539"/>
+        <path d="M24 23.8l-1 3.7h4l-1-3.7h-2Z" fill="#115539"/>
+        <line x1="18" y1="31.5" x2="33" y2="31.5" stroke="#4F4A44" stroke-width="1.2"/>
+        <line x1="22" y1="35" x2="33" y2="35" stroke="#4F4A44" stroke-width="1"/>
+      </svg>
+    </div>
+
+    <div class="oh-topbar">
+      <button type="button" id="oh-btn-home" class="oh-top-btn" onclick="showView('home')" aria-label="Back to Home">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+        <span>Home</span>
+      </button>
+      <div class="oh-top-actions">
+        <button type="button" id="oh-btn-undo" class="oh-top-btn" onclick="window.OhHellUI && window.OhHellUI.undoRound()" aria-label="Undo last round" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M9 14 4 9l5-5"/>
+            <path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/>
+          </svg>
+          <span>Undo</span>
+        </button>
+        <button type="button" id="oh-btn-end" class="oh-top-btn oh-top-btn-end" onclick="window.openEndGameModal && openEndGameModal()" aria-label="End or pause game">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/>
+            <line x1="4" y1="22" x2="4" y2="15"/>
+          </svg>
+          <span>End</span>
+        </button>
+      </div>
+    </div>
+
+    <header class="oh-header">
+      <div class="oh-title-row">
+        <svg class="oh-title-pip" viewBox="0 0 16 16" aria-hidden="true">
+          <path d="M8 14S2 9.8 2 5.6A3.4 3.4 0 0 1 8 3.5a3.4 3.4 0 0 1 6 2.1C14 9.8 8 14 8 14Z" fill="#115539"/>
+        </svg>
+        <h1 class="oh-title">Oh Hell</h1>
+        <svg class="oh-title-pip" viewBox="0 0 16 16" aria-hidden="true">
+          <path d="M8 14S2 9.8 2 5.6A3.4 3.4 0 0 1 8 3.5a3.4 3.4 0 0 1 6 2.1C14 9.8 8 14 8 14Z" fill="#115539"/>
+        </svg>
+      </div>
+      <div class="oh-ornament-rule" aria-hidden="true">
+        <span class="oh-rule-line"></span>
+        <span class="oh-rule-diamond"></span>
+        <span class="oh-rule-line"></span>
+      </div>
+      <div class="oh-round-row">
+        <span class="oh-rule-diamond-sm" aria-hidden="true"></span>
+        <span class="oh-rule-line-sm" aria-hidden="true"></span>
+        <span id="oh-round-label" class="oh-round-label">Round 1</span>
+        <span class="oh-rule-line-sm" aria-hidden="true"></span>
+        <span class="oh-rule-diamond-sm" aria-hidden="true"></span>
+      </div>
+    </header>
+
+    <section class="oh-meta-grid" aria-label="Round information">
+      <div class="oh-meta-box">
+        <span class="oh-meta-label">Cards Dealt:</span>
+        <span id="oh-cards-dealt" class="oh-meta-val">1</span>
+      </div>
+
+      <button type="button" id="oh-trump-btn" class="oh-meta-box oh-meta-btn" onclick="window.OhHellUI && window.OhHellUI.cycleTrump()" aria-label="Change trump suit">
+        <span id="oh-trump-icon" class="oh-trump-icon" aria-hidden="true">
+          <svg viewBox="0 0 16 16"><path d="M8 1.5C8 1.5 2.5 6.1 2.5 9.4A3.1 3.1 0 0 0 7.1 11.8L6.1 14.5h3.8l-1-2.7a3.1 3.1 0 0 0 4.6-2.4C13.5 6.1 8 1.5 8 1.5Z" fill="#115539"/></svg>
+        </span>
+        <span class="oh-meta-label">Trump:</span>
+        <span id="oh-trump-name" class="oh-meta-val">Spades</span>
+      </button>
+    </section>
+
+    <div id="oh-round-status" class="oh-status-bar" role="status" aria-live="polite">
+      <span id="oh-bids-tally" class="oh-status-chip">Total Bids: 0 / 1</span>
+      <span id="oh-tricks-tally" class="oh-status-chip oh-status-total">Tricks Won: 0 / 1</span>
+    </div>
+
+    <section id="oh-player-rows" class="oh-player-rows" aria-label="Player scores, bids, and tricks won"></section>
+
+    <section class="oh-specials" aria-label="Oh Hell rules and bonuses">
+      <div class="oh-card-emblem" aria-hidden="true">
+        <svg viewBox="0 0 74 108" fill="none">
+          <rect x="1.5" y="1.5" width="71" height="105" rx="6" fill="#FCF9F2" stroke="#5E5850" stroke-width="1.3"/>
+          <rect x="6" y="6" width="62" height="96" rx="3.5" fill="none" stroke="#C4CDBF" stroke-width="0.9"/>
+          <text x="10" y="19" fill="#1F1C18" font-family="Georgia,serif" font-size="13" font-weight="700">A</text>
+          <path d="M14.5 22.5C14.5 22.5 10.5 26 10.5 28.1a2.1 2.1 0 0 0 3.5 1.4l-.6 1.5h2.2l-.6-1.5a2.1 2.1 0 0 0 3.5-1.4c0-2.1-4-5.6-4-5.6Z" fill="#1F1C18"/>
+          <path d="M37 32C37 32 19 46.5 19 57.5a9.8 9.8 0 0 0 15.8 7.5L32 76h10l-2.8-11A9.8 9.8 0 0 0 55 57.5C55 46.5 37 32 37 32Z" fill="#1F1C18"/>
+          <path d="M37 39.5c0 0-9.2 8.2-9.2 14.6a4.8 4.8 0 0 0 9.2 2 4.8 4.8 0 0 0 9.2-2c0-6.4-9.2-14.6-9.2-14.6Z" fill="none" stroke="#FCF9F2" stroke-width="1.2"/>
+          <circle cx="37" cy="53" r="3" fill="#115539"/>
+          <g transform="rotate(180 37 54)">
+            <text x="10" y="19" fill="#1F1C18" font-family="Georgia,serif" font-size="13" font-weight="700">A</text>
+            <path d="M14.5 22.5C14.5 22.5 10.5 26 10.5 28.1a2.1 2.1 0 0 0 3.5 1.4l-.6 1.5h2.2l-.6-1.5a2.1 2.1 0 0 0 3.5-1.4c0-2.1-4-5.6-4-5.6Z" fill="#1F1C18"/>
+          </g>
+        </svg>
+      </div>
+
+      <div class="oh-special-stack">
+        <div class="oh-special-row">
+          <div id="oh-screw-card" class="oh-special-card">
+            <svg class="oh-sp-icon" viewBox="0 0 16 16" aria-hidden="true">
+              <path d="M8 1.5C8 1.5 2.5 6.1 2.5 9.4A3.1 3.1 0 0 0 7.1 11.8L6.1 14.5h3.8l-1-2.7a3.1 3.1 0 0 0 4.6-2.4C13.5 6.1 8 1.5 8 1.5Z" fill="#1F1C18"/>
+            </svg>
+            <div class="oh-sp-text">
+              <div class="oh-sp-title">Screw the Dealer</div>
+              <div id="oh-screw-sub" class="oh-sp-sub">(Dealer cannot bid 1)</div>
+            </div>
+          </div>
+          <label class="oh-switch" aria-label="Toggle Screw the Dealer rule">
+            <input type="checkbox" id="oh-screw-toggle" checked onchange="window.OhHellUI && window.OhHellUI.toggleScrewDealer(this.checked)">
+            <span class="oh-switch-track"><span class="oh-switch-thumb"></span></span>
+          </label>
+        </div>
+
+        <div id="oh-bonus-card" class="oh-special-card oh-bonus-card">
+          <svg class="oh-sp-icon" viewBox="0 0 24 24" fill="none" stroke="#115539" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="7"/>
+            <line x1="12" y1="2" x2="12" y2="6"/>
+            <line x1="12" y1="18" x2="12" y2="22"/>
+            <line x1="2" y1="12" x2="6" y2="12"/>
+            <line x1="18" y1="12" x2="22" y2="12"/>
+            <circle cx="12" cy="12" r="2" fill="#115539"/>
+          </svg>
+          <div class="oh-sp-text">
+            <div class="oh-sp-title">Exact Bid Bonus</div>
+            <div id="oh-bonus-sub" class="oh-sp-sub">(+10 + tricks won)</div>
+          </div>
+          <svg class="oh-bonus-heart" viewBox="0 0 24 24" fill="none" stroke="#2D4A3B" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 20.5S4 15.2 4 9.6A4.6 4.6 0 0 1 12 6.8a4.6 4.6 0 0 1 8 2.8c0 5.6-8 10.9-8 10.9Z"/>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <div id="oh-error-msg" class="oh-error-msg" role="alert" hidden></div>
+
+    <div class="oh-cta-wrap">
+      <button type="button" id="oh-btn-score" class="oh-cta-btn" onclick="window.OhHellUI && window.OhHellUI.scoreRound()">
+        <svg class="oh-sparkle" viewBox="0 0 16 16" aria-hidden="true">
+          <path d="M8 1 9.8 6.2 15 8 9.8 9.8 8 15 6.2 9.8 1 8 6.2 6.2 8 1Z" fill="currentColor"/>
+        </svg>
+        <span>Score Round</span>
+        <svg class="oh-sparkle" viewBox="0 0 16 16" aria-hidden="true">
+          <path d="M8 1 9.8 6.2 15 8 9.8 9.8 8 15 6.2 9.8 1 8 6.2 6.2 8 1Z" fill="currentColor"/>
+        </svg>
+      </button>
+    </div>
+
+    <details id="oh-history-drawer" class="oh-history-drawer">
+      <summary class="oh-history-summary">
+        <span>Round History</span>
+        <span id="oh-history-count" class="oh-history-count">0 rounds</span>
+      </summary>
+      <div id="oh-history-list" class="oh-history-list">
+        <div class="oh-history-empty">No rounds recorded yet.</div>
+      </div>
+    </details>
+
+    <div class="oh-bottom-ornament" aria-hidden="true">
+      <svg class="oh-foot-pip" viewBox="0 0 16 16"><path d="M8 14S2 9.8 2 5.6A3.4 3.4 0 0 1 8 3.5a3.4 3.4 0 0 1 6 2.1C14 9.8 8 14 8 14Z" fill="#115539"/></svg>
+      <span class="oh-foot-line"></span>
+      <svg class="oh-foot-pip-center" viewBox="0 0 16 16"><path d="M8 14S2 9.8 2 5.6A3.4 3.4 0 0 1 8 3.5a3.4 3.4 0 0 1 6 2.1C14 9.8 8 14 8 14Z" fill="#115539"/></svg>
+      <span class="oh-foot-line"></span>
+      <svg class="oh-foot-pip" viewBox="0 0 16 16"><path d="M8 1.5C8 1.5 2.5 6.1 2.5 9.4A3.1 3.1 0 0 0 7.1 11.8L6.1 14.5h3.8l-1-2.7a3.1 3.1 0 0 0 4.6-2.4C13.5 6.1 8 1.5 8 1.5Z" fill="#23201D"/></svg>
+    </div>
   </div>
 </div>
 
@@ -12960,6 +15183,72 @@ html.v21-sheet-open, html.v21-sheet-open body { overscroll-behavior: contain; }
     }
   }
 
+
+  async function deleteSharedGame(sharedId, options) {
+    const user = await getAuthUser();
+    if (!user) return { ok: false, error: 'Not signed in.' };
+
+    const opts = options || {};
+    const idStr = sharedId ? String(sharedId).trim() : '';
+    const clientGameId = opts.clientGameId ? String(opts.clientGameId).trim() : '';
+    if (!idStr && !clientGameId) {
+      return { ok: false, error: 'Missing game id.' };
+    }
+
+    const removeLocal = () => {
+      const existing = readLocal(user.id, 'games', []);
+      const next = existing.filter((g) => {
+        if (!g) return false;
+        if (idStr && String(g.id || '') === idStr) return false;
+        if (clientGameId && String(g.client_game_id || '') === clientGameId) return false;
+        if (idStr && String(g.client_game_id || '') === idStr) return false;
+        return true;
+      });
+      writeLocal(user.id, 'games', next);
+      return existing.length - next.length;
+    };
+
+    const localRemoved = removeLocal();
+    const isUuid = (v) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(v || ''));
+    const client = getClient();
+
+    if (!client || migrationReady === false || (idStr && isLocalId(idStr) && !clientGameId)) {
+      return { ok: true, deletedId: idStr || clientGameId, localRemoved, isFallback: true };
+    }
+
+    try {
+      let query = client.from('games').delete().eq('created_by', user.id);
+      if (idStr && isUuid(idStr)) {
+        query = query.eq('id', idStr);
+      } else if (clientGameId) {
+        query = query.eq('client_game_id', clientGameId);
+      } else {
+        query = query.eq('client_game_id', idStr);
+      }
+
+      const { data, error } = await query.select('id');
+      if (error) {
+        if (isMissingMigrationError(error)) {
+          migrationReady = false;
+          return { ok: true, deletedId: idStr || clientGameId, localRemoved, isFallback: true };
+        }
+        return { ok: false, error: error.message || 'Could not delete shared game.' };
+      }
+
+      migrationReady = true;
+      const deletedRows = Array.isArray(data) ? data : [];
+      return {
+        ok: true,
+        deletedId: (deletedRows[0] && deletedRows[0].id) || idStr || clientGameId,
+        deletedCount: deletedRows.length,
+        localRemoved,
+        isFallback: false
+      };
+    } catch (err) {
+      return { ok: false, error: (err && err.message) || 'Could not delete shared game.' };
+    }
+  }
+
   function reset() {
     cachedProfile = null;
     migrationReady = null;
@@ -12980,6 +15269,7 @@ html.v21-sheet-open, html.v21-sheet-open body { overscroll-behavior: contain; }
     createGroup,
     deleteGroup,
     saveSharedGame,
+    deleteSharedGame,
     loadMyGames,
     loadGroupGames,
     normalizeFriendIdentifier,
@@ -15426,6 +17716,854 @@ window.SocialUI = (function () {
 
 </script>
 
+<!-- v23 Hearts scoring (window.TallyItHearts): pass cycle, 26-pt validation, Q of Spades, Shoot the Moon, J of Diamonds, undo -->
+<script id="hearts-scoring">
+/* ==========================================================================
+   TallyIt — Hearts Scoring Module (v23)
+   ==========================================================================
+   Zero-dependency UMD module for v3/engine.js & v3/shell.html.
+   Exposes `window.TallyItHearts` in browsers and `module.exports` in Node.
+
+   Features:
+   - State initialization & normalization (`initState(game)`) honoring
+     `TallyItHouseRules` overrides (`targetScore`, `jackOfDiamonds`,
+     `moonSubtract` / `shootMoonSubtract`, `lowWins`) and legacy version labels.
+   - Pass direction cycle (`getPassDirection(handIndex, playerCount)`):
+       * 4p / even: Pass Left -> Pass Right -> Pass Across -> Hold
+       * 3p:        Pass Left -> Pass Right -> Hold
+       * 5p+:       Pass Left -> Pass Right -> Pass 2 Left -> Pass 2 Right -> Hold
+   - Hand validation & scoring (`validateHand`, `scoreHand`):
+       * Hearts (0–13), Queen of Spades (+13), optional Jack of Diamonds (-10),
+         Shoot the Moon (+26 to all others, or -26 to shooter if `moonSubtract`).
+       * Standard 26-point hand sum validation with clear warning + intentional
+         override support (`allowNon26: true` or `overridePoints`).
+   - Full hand history, `undoLastHand(state)`, `getStandings(state)`, and
+     game-over detection when any player reaches `targetScore` (lowest wins).
+   ========================================================================== */
+
+(function (global) {
+  'use strict';
+
+  const DEFAULT_TARGET = 100;
+  const STANDARD_HAND_SUM = 26;
+
+  function cleanStr(v) {
+    return String(v ?? '').trim();
+  }
+
+  function clampInt(v, min, max) {
+    const n = typeof v === 'number' ? Math.trunc(v) : parseInt(String(v ?? '').trim(), 10);
+    if (!Number.isFinite(n)) return 0;
+    return Math.max(min, Math.min(max, n));
+  }
+
+  function resolveRules(game) {
+    const g = (game && typeof game === 'object') ? game : {};
+    const hr =
+      (g.heartsRules && typeof g.heartsRules === 'object' ? g.heartsRules : null) ||
+      (g.houseRules && typeof g.houseRules === 'object' ? g.houseRules : null) ||
+      (g.scoringOverrides && g.scoringOverrides.houseRules && typeof g.scoringOverrides.houseRules === 'object' ? g.scoringOverrides.houseRules : null) ||
+      (g.meta && g.meta.houseRules && typeof g.meta.houseRules === 'object' ? g.meta.houseRules : null) ||
+      {};
+    const ov = (g.scoringOverrides && typeof g.scoringOverrides === 'object') ? g.scoringOverrides : {};
+    const version = cleanStr(g.version || g.versionLabel || g.variant);
+
+    let targetScore = DEFAULT_TARGET;
+    if (hr.targetScore !== undefined && Number(hr.targetScore) > 0) {
+      targetScore = clampInt(hr.targetScore, 10, 1000);
+    } else if (ov.targetScore !== undefined && Number(ov.targetScore) > 0) {
+      targetScore = clampInt(ov.targetScore, 10, 1000);
+    } else if (g.target !== undefined && g.target !== null && Number(g.target) > 0) {
+      targetScore = clampInt(g.target, 10, 1000);
+    } else if (/\b50\b/.test(version)) {
+      targetScore = 50;
+    }
+
+    const jackOfDiamonds =
+      hr.jackOfDiamonds !== undefined
+        ? Boolean(hr.jackOfDiamonds)
+        : /jack of diamonds|omnibus/i.test(version);
+
+    const moonSubtract = Boolean(
+      hr.moonSubtract !== undefined ? hr.moonSubtract : hr.shootMoonSubtract
+    );
+
+    const lowWins =
+      hr.lowWins !== undefined
+        ? Boolean(hr.lowWins)
+        : (ov.lowWins !== undefined ? Boolean(ov.lowWins) : (typeof g.low === 'boolean' ? g.low : true));
+
+    return {
+      targetScore,
+      jackOfDiamonds,
+      moonSubtract,
+      lowWins
+    };
+  }
+
+  /**
+   * Returns the pass direction descriptor for 0-based `handIndex` and `playerCount`.
+   */
+  function getPassDirection(handIndex, playerCount) {
+    const idx = Math.max(0, Math.trunc(Number(handIndex) || 0));
+    const n = Math.max(2, Math.trunc(Number(playerCount) || 4));
+
+    let cycle;
+    if (n === 3) {
+      cycle = [
+        { key: 'left',  label: 'Pass Left',  arrow: '←' },
+        { key: 'right', label: 'Pass Right', arrow: '→' },
+        { key: 'hold',  label: 'Hold',       arrow: '✋' }
+      ];
+    } else if (n === 5) {
+      cycle = [
+        { key: 'left',   label: 'Pass Left',    arrow: '←' },
+        { key: 'right',  label: 'Pass Right',   arrow: '→' },
+        { key: 'left2',  label: 'Pass 2 Left',  arrow: '↞' },
+        { key: 'right2', label: 'Pass 2 Right', arrow: '↠' },
+        { key: 'hold',   label: 'Hold',         arrow: '✋' }
+      ];
+    } else {
+      // Standard 4-player (and 6p) cycle
+      cycle = [
+        { key: 'left',   label: 'Pass Left',   arrow: '←' },
+        { key: 'right',  label: 'Pass Right',  arrow: '→' },
+        { key: 'across', label: 'Pass Across', arrow: '↔' },
+        { key: 'hold',   label: 'Hold',        arrow: '✋' }
+      ];
+    }
+
+    const item = cycle[idx % cycle.length];
+    return {
+      ...item,
+      handNumber: idx + 1,
+      cycleLength: cycle.length
+    };
+  }
+
+  function getStandings(state) {
+    const players = Array.isArray(state && state.players) ? state.players : [];
+    const rules = resolveRules(state);
+    const list = players.map((p, idx) => ({
+      playerIdx: idx,
+      name: cleanStr(p && p.name) || `Player ${idx + 1}`,
+      userId: (p && (p.userId || p.user_id)) || null,
+      score: Number(p && p.score) || 0,
+      moonShots: Number(p && p.moonShots) || 0,
+      queenHits: Number(p && p.queenHits) || 0,
+      toTarget: Math.max(0, rules.targetScore - (Number(p && p.score) || 0))
+    }));
+
+    list.sort((a, b) => {
+      const cmp = rules.lowWins ? (a.score - b.score) : (b.score - a.score);
+      return cmp !== 0 ? cmp : (a.playerIdx - b.playerIdx);
+    });
+
+    let rank = 1;
+    list.forEach((entry, i) => {
+      if (i > 0 && entry.score !== list[i - 1].score) {
+        rank = i + 1;
+      }
+      entry.rank = rank;
+      entry.isWinner = rank === 1;
+    });
+
+    return list;
+  }
+
+  function recomputeCompletion(state) {
+    const rules = resolveRules(state);
+    state.heartsRules = rules;
+    state.target = rules.targetScore;
+    state.low = rules.lowWins;
+
+    const players = Array.isArray(state.players) ? state.players : [];
+    const reached = players.some((p) => (Number(p.score) || 0) >= rules.targetScore);
+    const standings = getStandings(state);
+    const winners = standings.filter((s) => s.isWinner);
+
+    state.isGameOver = reached;
+    state.winnerNames = reached ? winners.map((w) => w.name) : [];
+    state.winner = state.winnerNames.join(', ');
+    state.nextPass = getPassDirection((state.hands || []).length, players.length);
+    return { isGameOver: reached, standings, winnerNames: state.winnerNames };
+  }
+
+  /**
+   * Initializes or normalizes a Hearts game state object.
+   * Accepts either an existing `engine.js` game object or a plain players array.
+   */
+  function initState(gameOrPlayers, opts) {
+    const isArray = Array.isArray(gameOrPlayers);
+    const state = isArray
+      ? {
+          id: (opts && opts.id) || ('ht_' + Date.now().toString(36)),
+          type: 'hearts',
+          gameName: 'Hearts',
+          players: gameOrPlayers.map((p, i) =>
+            typeof p === 'string'
+              ? { name: cleanStr(p) || `Player ${i + 1}`, score: 0 }
+              : { ...p, name: cleanStr(p && p.name) || `Player ${i + 1}`, score: Number(p && p.score) || 0 }
+          ),
+          ...(opts || {})
+        }
+      : (gameOrPlayers && typeof gameOrPlayers === 'object' ? gameOrPlayers : { players: [] });
+
+    state.type = 'hearts';
+    state.gameName = state.gameName || 'Hearts';
+    if (!Array.isArray(state.players)) state.players = [];
+    state.players.forEach((p, i) => {
+      p.name = cleanStr(p.name) || `Player ${i + 1}`;
+      p.score = Number(p.score) || 0;
+      p.moonShots = Math.max(0, Math.trunc(Number(p.moonShots) || 0));
+      p.queenHits = Math.max(0, Math.trunc(Number(p.queenHits) || 0));
+    });
+
+    if (!Array.isArray(state.hands)) {
+      state.hands = Array.isArray(state.rounds) ? state.rounds.slice() : [];
+    }
+    if (!Array.isArray(state.rounds)) {
+      state.rounds = state.hands.slice();
+    }
+
+    recomputeCompletion(state);
+    return state;
+  }
+
+  /**
+   * Validates a hand entry array before scoring.
+   * Each entry: `{ hearts: 0..13, queenOfSpades: bool, jackOfDiamonds?: bool, shotMoon?: bool, overridePoints?: number }`
+   */
+  function validateHand(state, entries, opts) {
+    const options = opts || {};
+    const rules = resolveRules(state);
+    const players = Array.isArray(state && state.players) ? state.players : [];
+    const list = Array.isArray(entries) ? entries : [];
+
+    if (!players.length) {
+      return { ok: false, error: 'No players in game.', canOverride: false };
+    }
+    if (list.length !== players.length) {
+      return { ok: false, error: `Expected ${players.length} hand entries, got ${list.length}.`, canOverride: false };
+    }
+
+    let heartsSum = 0;
+    let queenCount = 0;
+    let jackCount = 0;
+    let explicitMoonIndices = [];
+    let autoMoonIdx = -1;
+    let hasOverride = false;
+
+    const normalized = list.map((raw, idx) => {
+      const e = (raw && typeof raw === 'object') ? raw : {};
+      const hearts = clampInt(e.hearts, 0, 13);
+      const queenOfSpades = Boolean(e.queenOfSpades);
+      const jackOfDiamonds = Boolean(rules.jackOfDiamonds && e.jackOfDiamonds);
+      const shotMoon = Boolean(e.shotMoon);
+      const overrideVal =
+        e.overridePoints !== undefined && e.overridePoints !== null && e.overridePoints !== '' && Number.isFinite(Number(e.overridePoints))
+          ? Math.trunc(Number(e.overridePoints))
+          : null;
+
+      if (overrideVal !== null) hasOverride = true;
+      heartsSum += hearts;
+      if (queenOfSpades) queenCount += 1;
+      if (jackOfDiamonds) jackCount += 1;
+      if (shotMoon) explicitMoonIndices.push(idx);
+      if (hearts === 13 && queenOfSpades) autoMoonIdx = idx;
+
+      return { hearts, queenOfSpades, jackOfDiamonds, shotMoon, overridePoints: overrideVal };
+    });
+
+    if (explicitMoonIndices.length > 1) {
+      return { ok: false, error: 'Only one player can Shoot the Moon in a hand.', canOverride: false };
+    }
+    if (queenCount > 1) {
+      return { ok: false, error: 'Only one player can take the Queen of Spades.', canOverride: false };
+    }
+    if (jackCount > 1) {
+      return { ok: false, error: 'Only one player can take the Jack of Diamonds.', canOverride: false };
+    }
+
+    const shooterIdx = explicitMoonIndices.length === 1 ? explicitMoonIndices[0] : autoMoonIdx;
+    const rawBaseSum = heartsSum + queenCount * 13;
+
+    let warning = null;
+    if (shooterIdx < 0 && !hasOverride && rawBaseSum !== STANDARD_HAND_SUM) {
+      const diff = rawBaseSum - STANDARD_HAND_SUM;
+      warning = diff < 0
+        ? `Hand points sum to ${rawBaseSum} instead of 26 (${Math.abs(diff)} pts missing).`
+        : `Hand points sum to ${rawBaseSum} instead of 26 (${diff} extra pts).`;
+
+      if (!options.allowNon26 && !options.force) {
+        return {
+          ok: false,
+          error: warning,
+          warning,
+          canOverride: true,
+          rawBaseSum,
+          shooterIdx: -1,
+          normalized
+        };
+      }
+    }
+
+    return {
+      ok: true,
+      warning,
+      canOverride: false,
+      rawBaseSum,
+      shooterIdx,
+      normalized
+    };
+  }
+
+  /**
+   * Scores one Hearts hand, updates running totals & history, and checks game end.
+   */
+  function scoreHand(state, entries, opts) {
+    initState(state);
+    const rules = resolveRules(state);
+    const check = validateHand(state, entries, opts);
+    if (!check.ok) return check;
+
+    const prevScores = state.players.map((p) => Number(p.score) || 0);
+    const prevMoonShots = state.players.map((p) => Number(p.moonShots) || 0);
+    const prevQueenHits = state.players.map((p) => Number(p.queenHits) || 0);
+
+    const shooterIdx = check.shooterIdx;
+    const deltas = check.normalized.map((e, idx) => {
+      if (e.overridePoints !== null) return e.overridePoints;
+
+      let pts = 0;
+      if (shooterIdx >= 0) {
+        if (rules.moonSubtract) {
+          pts = idx === shooterIdx ? -STANDARD_HAND_SUM : 0;
+        } else {
+          pts = idx === shooterIdx ? 0 : STANDARD_HAND_SUM;
+        }
+        if (rules.jackOfDiamonds && e.jackOfDiamonds) pts -= 10;
+      } else {
+        pts = e.hearts + (e.queenOfSpades ? 13 : 0) + (rules.jackOfDiamonds && e.jackOfDiamonds ? -10 : 0);
+      }
+      return pts;
+    });
+
+    state.players.forEach((p, idx) => {
+      p.score = prevScores[idx] + deltas[idx];
+      if (shooterIdx === idx) p.moonShots = prevMoonShots[idx] + 1;
+      if (check.normalized[idx].queenOfSpades) p.queenHits = prevQueenHits[idx] + 1;
+    });
+
+    const handIndex = state.hands.length;
+    const passDir = getPassDirection(handIndex, state.players.length);
+    const record = {
+      handNumber: handIndex + 1,
+      ts: new Date().toISOString(),
+      passDirection: passDir.key,
+      passLabel: passDir.label,
+      prev: prevScores,
+      prevMoonShots,
+      prevQueenHits,
+      deltas,
+      shooterIdx,
+      moonMode: shooterIdx >= 0 ? (rules.moonSubtract ? 'subtract' : 'add_others') : null,
+      entries: check.normalized,
+      warning: check.warning || null
+    };
+
+    state.hands.push(record);
+    state.rounds.push(record);
+
+    const status = recomputeCompletion(state);
+    return {
+      ok: true,
+      hand: record,
+      deltas,
+      warning: check.warning || null,
+      ...status
+    };
+  }
+
+  /**
+   * Undoes the most recent Hearts hand and restores exact previous totals.
+   */
+  function undoLastHand(state) {
+    initState(state);
+    if (!state.hands.length) {
+      return { ok: false, error: 'No hands to undo.' };
+    }
+    const last = state.hands.pop();
+    if (state.rounds.length) state.rounds.pop();
+
+    state.players.forEach((p, idx) => {
+      if (Array.isArray(last.prev) && last.prev[idx] !== undefined) {
+        p.score = Number(last.prev[idx]) || 0;
+      } else if (Array.isArray(last.deltas) && last.deltas[idx] !== undefined) {
+        p.score = (Number(p.score) || 0) - (Number(last.deltas[idx]) || 0);
+      }
+      if (Array.isArray(last.prevMoonShots) && last.prevMoonShots[idx] !== undefined) {
+        p.moonShots = last.prevMoonShots[idx];
+      }
+      if (Array.isArray(last.prevQueenHits) && last.prevQueenHits[idx] !== undefined) {
+        p.queenHits = last.prevQueenHits[idx];
+      }
+    });
+
+    const status = recomputeCompletion(state);
+    return { ok: true, undone: last, ...status };
+  }
+
+  const api = {
+    DEFAULT_TARGET,
+    STANDARD_HAND_SUM,
+    resolveRules,
+    initState,
+    getPassDirection,
+    validateHand,
+    scoreHand,
+    undoLastHand,
+    getStandings
+  };
+
+  global.TallyItHearts = api;
+  if (typeof module !== 'undefined' && module.exports) {
+    module.exports = api;
+  }
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+
+<!-- v23 Oh Hell scoring (window.TallyItOhHell): round schedule, rotating dealer, trump, Screw the Dealer, exact bonus, undo -->
+<script id="ohhell-scoring">
+/* ==========================================================================
+   TallyIt — Oh Hell Scoring Module (v23)
+   ==========================================================================
+   Zero-dependency UMD module for v3/engine.js & v3/shell.html.
+   Exposes `window.TallyItOhHell` in browsers and `module.exports` in Node.
+
+   Features:
+   - State initialization & normalization (`initState(game)`) honoring
+     `TallyItHouseRules` overrides (`exactBonus`, `missPointsPerTrick` /
+     `pointsOnMiss`, `screwTheDealer`, `scheduleMode`, `lowWins`) and legacy
+     version strings.
+   - Round schedule generator (`buildRoundSchedule(playerCount, mode)`):
+       * max = Math.min(10, Math.floor(51 / playerCount))
+       * 'down_up' (default): max..1..max
+       * 'up_down':           1..max..1
+       * 'down_only' / 'up_only'
+   - Rotating dealer index (`getDealerIndex(roundIndex, playerCount, startIdx)`)
+     and trump suit cycle (`getTrumpSuit(roundIndex)`).
+   - Live Screw the Dealer calculation (`getForbiddenDealerBid(cardsDealt,
+     bids, dealerIndex, screwTheDealerEnabled)`).
+   - Round validation (`sum(tricksWon) === cardsDealt` + Screw the Dealer check),
+     scoring (`scoreRound`), `undoLastRound`, `getStandings`, and completion
+     detection after the final scheduled round.
+   ========================================================================== */
+
+(function (global) {
+  'use strict';
+
+  const DEFAULT_EXACT_BONUS = 10;
+  const TRUMP_SUITS = [
+    { key: 'spades',   label: 'Spades',   symbol: '♠', color: '#111827' },
+    { key: 'hearts',   label: 'Hearts',   symbol: '♥', color: '#dc2626' },
+    { key: 'clubs',    label: 'Clubs',    symbol: '♣', color: '#111827' },
+    { key: 'diamonds', label: 'Diamonds', symbol: '♦', color: '#dc2626' },
+    { key: 'notrump',  label: 'No Trump', symbol: 'NT', color: '#475569' }
+  ];
+
+  function cleanStr(v) {
+    return String(v ?? '').trim();
+  }
+
+  function clampInt(v, min, max) {
+    const n = typeof v === 'number' ? Math.trunc(v) : parseInt(String(v ?? '').trim(), 10);
+    if (!Number.isFinite(n)) return 0;
+    return Math.max(min, Math.min(max, n));
+  }
+
+  function resolveRules(game) {
+    const g = (game && typeof game === 'object') ? game : {};
+    const hr =
+      (g.ohHellRules && typeof g.ohHellRules === 'object' ? g.ohHellRules : null) ||
+      (g.houseRules && typeof g.houseRules === 'object' ? g.houseRules : null) ||
+      (g.scoringOverrides && g.scoringOverrides.houseRules && typeof g.scoringOverrides.houseRules === 'object' ? g.scoringOverrides.houseRules : null) ||
+      (g.meta && g.meta.houseRules && typeof g.meta.houseRules === 'object' ? g.meta.houseRules : null) ||
+      {};
+    const ov = (g.scoringOverrides && typeof g.scoringOverrides === 'object') ? g.scoringOverrides : {};
+    const version = cleanStr(g.version || g.versionLabel || g.variant);
+
+    const exactBonus = hr.exactBonus !== undefined
+      ? clampInt(hr.exactBonus, 0, 100)
+      : DEFAULT_EXACT_BONUS;
+
+    let missPointsPerTrick = 0;
+    if (hr.missPointsPerTrick !== undefined) {
+      missPointsPerTrick = clampInt(hr.missPointsPerTrick, 0, 10);
+    } else if (hr.pointsOnMiss !== undefined) {
+      missPointsPerTrick = hr.pointsOnMiss ? 1 : 0;
+    } else if (/1 per trick/i.test(version)) {
+      missPointsPerTrick = 1;
+    }
+
+    const screwTheDealer = hr.screwTheDealer !== undefined ? Boolean(hr.screwTheDealer) : true;
+    const scheduleMode = cleanStr(hr.scheduleMode || g.scheduleMode || 'down_up').toLowerCase();
+    const lowWins =
+      hr.lowWins !== undefined
+        ? Boolean(hr.lowWins)
+        : (ov.lowWins !== undefined ? Boolean(ov.lowWins) : (typeof g.low === 'boolean' ? g.low : false));
+
+    return {
+      exactBonus,
+      missPointsPerTrick,
+      screwTheDealer,
+      scheduleMode,
+      lowWins
+    };
+  }
+
+  /**
+   * Generates the cards-per-round schedule for `playerCount`.
+   * max = Math.min(10, Math.floor(51 / playerCount)) (keeps 1 card for trump).
+   * Modes: 'down_up' (max..1..max, default), 'up_down' (1..max..1),
+   *        'down_only' (max..1), 'up_only' (1..max).
+   */
+  function buildRoundSchedule(playerCount, mode) {
+    const n = Math.max(2, Math.trunc(Number(playerCount) || 4));
+    const max = Math.max(1, Math.min(10, Math.floor(51 / n)));
+    const m = cleanStr(mode || 'down_up').toLowerCase();
+
+    const up = [];
+    for (let i = 1; i <= max; i++) up.push(i);
+    const down = up.slice().reverse();
+
+    if (m === 'up_down') {
+      return up.concat(down.slice(1));
+    }
+    if (m === 'up_only') {
+      return up;
+    }
+    if (m === 'down_only') {
+      return down;
+    }
+    // Default 'down_up': max..1..max
+    return down.concat(up.slice(1));
+  }
+
+  /**
+   * Returns rotating dealer index for 0-based `roundIndex`.
+   */
+  function getDealerIndex(roundIndex, playerCount, initialDealer) {
+    const n = Math.max(1, Math.trunc(Number(playerCount) || 4));
+    const start = Math.max(0, Math.trunc(Number(initialDealer) || 0));
+    const r = Math.max(0, Math.trunc(Number(roundIndex) || 0));
+    return (start + r) % n;
+  }
+
+  /**
+   * Returns suggested trump suit descriptor for 0-based `roundIndex`.
+   */
+  function getTrumpSuit(roundIndex) {
+    const r = Math.max(0, Math.trunc(Number(roundIndex) || 0));
+    return { ...TRUMP_SUITS[r % TRUMP_SUITS.length] };
+  }
+
+  /**
+   * Live Screw the Dealer calculation.
+   * Returns the exact integer bid the dealer is forbidden from making,
+   * or `null` if Screw the Dealer is disabled, non-dealer bids are incomplete,
+   * or the remaining difference is outside `0..cardsDealt`.
+   */
+  function getForbiddenDealerBid(cardsDealt, bids, dealerIndex, screwTheDealerEnabled) {
+    if (!screwTheDealerEnabled) return null;
+    const cards = Math.max(0, Math.trunc(Number(cardsDealt) || 0));
+    const list = Array.isArray(bids) ? bids : [];
+    if (!list.length || dealerIndex < 0 || dealerIndex >= list.length) return null;
+
+    let otherSum = 0;
+    for (let i = 0; i < list.length; i++) {
+      if (i === dealerIndex) continue;
+      const raw = list[i];
+      if (raw === null || raw === undefined || raw === '' || !Number.isFinite(Number(raw))) {
+        return null; // Wait until every non-dealer has entered a bid
+      }
+      otherSum += Math.trunc(Number(raw));
+    }
+
+    const forbidden = cards - otherSum;
+    if (forbidden < 0 || forbidden > cards) return null;
+    return forbidden;
+  }
+
+  function getStandings(state) {
+    const players = Array.isArray(state && state.players) ? state.players : [];
+    const rules = resolveRules(state);
+    const list = players.map((p, idx) => ({
+      playerIdx: idx,
+      name: cleanStr(p && p.name) || `Player ${idx + 1}`,
+      userId: (p && (p.userId || p.user_id)) || null,
+      score: Number(p && p.score) || 0,
+      exactHits: Number(p && p.exactHits) || 0
+    }));
+
+    list.sort((a, b) => {
+      const cmp = rules.lowWins ? (a.score - b.score) : (b.score - a.score);
+      return cmp !== 0 ? cmp : (a.playerIdx - b.playerIdx);
+    });
+
+    let rank = 1;
+    list.forEach((entry, i) => {
+      if (i > 0 && entry.score !== list[i - 1].score) {
+        rank = i + 1;
+      }
+      entry.rank = rank;
+      entry.isWinner = rank === 1;
+    });
+
+    return list;
+  }
+
+  function recomputeCompletion(state) {
+    const rules = resolveRules(state);
+    state.ohHellRules = rules;
+    state.low = rules.lowWins;
+
+    const totalRounds = Array.isArray(state.schedule) ? state.schedule.length : 0;
+    const completed = (state.rounds || []).length;
+    state.currentRoundIndex = completed;
+    const isGameOver = totalRounds > 0 && completed >= totalRounds;
+    const standings = getStandings(state);
+    const winners = standings.filter((s) => s.isWinner);
+
+    state.isGameOver = isGameOver;
+    state.winnerNames = isGameOver ? winners.map((w) => w.name) : [];
+    state.winner = state.winnerNames.join(', ');
+    state.currentCards = !isGameOver && totalRounds > 0 ? state.schedule[completed] : null;
+    state.currentDealerIndex = state.players.length
+      ? getDealerIndex(completed, state.players.length, state.initialDealer || 0)
+      : 0;
+    state.currentTrump = getTrumpSuit(completed);
+
+    return {
+      isGameOver,
+      standings,
+      winnerNames: state.winnerNames,
+      currentRoundIndex: completed,
+      totalRounds,
+      currentCards: state.currentCards,
+      currentDealerIndex: state.currentDealerIndex,
+      currentTrump: state.currentTrump
+    };
+  }
+
+  /**
+   * Initializes or normalizes an Oh Hell game state object.
+   */
+  function initState(gameOrPlayers, opts) {
+    const isArray = Array.isArray(gameOrPlayers);
+    const state = isArray
+      ? {
+          id: (opts && opts.id) || ('oh_' + Date.now().toString(36)),
+          type: 'ohhell',
+          gameName: 'Oh Hell',
+          players: gameOrPlayers.map((p, i) =>
+            typeof p === 'string'
+              ? { name: cleanStr(p) || `Player ${i + 1}`, score: 0 }
+              : { ...p, name: cleanStr(p && p.name) || `Player ${i + 1}`, score: Number(p && p.score) || 0 }
+          ),
+          ...(opts || {})
+        }
+      : (gameOrPlayers && typeof gameOrPlayers === 'object' ? gameOrPlayers : { players: [] });
+
+    state.type = 'ohhell';
+    state.gameName = state.gameName || 'Oh Hell';
+    if (!Array.isArray(state.players)) state.players = [];
+    state.players.forEach((p, i) => {
+      p.name = cleanStr(p.name) || `Player ${i + 1}`;
+      p.score = Number(p.score) || 0;
+      p.exactHits = Math.max(0, Math.trunc(Number(p.exactHits) || 0));
+    });
+
+    const rules = resolveRules(state);
+    state.ohHellRules = rules;
+    if (!Array.isArray(state.schedule) || !state.schedule.length) {
+      state.schedule = buildRoundSchedule(state.players.length || 4, rules.scheduleMode);
+    }
+    if (!Array.isArray(state.rounds)) state.rounds = [];
+    if (typeof state.initialDealer !== 'number') state.initialDealer = 0;
+
+    recomputeCompletion(state);
+    return state;
+  }
+
+  /**
+   * Validates and scores one Oh Hell round.
+   * Each entry: `{ bid: number, tricksWon: number }` (or `{ bid, tricks }`).
+   */
+  function scoreRound(state, entries, opts) {
+    initState(state);
+    const options = opts || {};
+    const rules = resolveRules(state);
+    const players = state.players;
+    const list = Array.isArray(entries) ? entries : [];
+
+    if (!players.length) {
+      return { ok: false, error: 'No players in game.' };
+    }
+    if (list.length !== players.length) {
+      return { ok: false, error: `Expected ${players.length} round entries, got ${list.length}.` };
+    }
+
+    const roundIndex = state.rounds.length;
+    const cardsDealt =
+      options.cardsDealt !== undefined && Number(options.cardsDealt) > 0
+        ? Math.trunc(Number(options.cardsDealt))
+        : (state.schedule[roundIndex] || 1);
+    const dealerIndex =
+      options.dealerIndex !== undefined
+        ? clampInt(options.dealerIndex, 0, players.length - 1)
+        : getDealerIndex(roundIndex, players.length, state.initialDealer || 0);
+
+    const normalized = [];
+    let tricksSum = 0;
+    const bids = [];
+
+    for (let i = 0; i < list.length; i++) {
+      const raw = (list[i] && typeof list[i] === 'object') ? list[i] : {};
+      const bidRaw = raw.bid;
+      const tricksRaw = raw.tricksWon !== undefined ? raw.tricksWon : raw.tricks;
+
+      if (bidRaw === null || bidRaw === undefined || bidRaw === '' || !Number.isFinite(Number(bidRaw))) {
+        return { ok: false, error: `Missing bid for ${players[i].name}.` };
+      }
+      if (tricksRaw === null || tricksRaw === undefined || tricksRaw === '' || !Number.isFinite(Number(tricksRaw))) {
+        return { ok: false, error: `Missing tricks won for ${players[i].name}.` };
+      }
+
+      const bid = Math.trunc(Number(bidRaw));
+      const tricksWon = Math.trunc(Number(tricksRaw));
+
+      if (bid < 0 || bid > cardsDealt) {
+        return { ok: false, error: `${players[i].name}'s bid (${bid}) must be between 0 and ${cardsDealt}.` };
+      }
+      if (tricksWon < 0 || tricksWon > cardsDealt) {
+        return { ok: false, error: `${players[i].name}'s tricks (${tricksWon}) must be between 0 and ${cardsDealt}.` };
+      }
+
+      bids.push(bid);
+      tricksSum += tricksWon;
+      normalized.push({ bid, tricksWon });
+    }
+
+    if (tricksSum !== cardsDealt) {
+      return {
+        ok: false,
+        error: `Total tricks won (${tricksSum}) must equal cards dealt (${cardsDealt}).`
+      };
+    }
+
+    if (rules.screwTheDealer && options.enforceScrewTheDealer !== false) {
+      const forbidden = getForbiddenDealerBid(cardsDealt, bids, dealerIndex, true);
+      if (forbidden !== null && bids[dealerIndex] === forbidden) {
+        return {
+          ok: false,
+          error: `Screw the Dealer: total bids cannot equal ${cardsDealt} (${players[dealerIndex].name} cannot bid ${forbidden}).`,
+          forbiddenBid: forbidden
+        };
+      }
+    }
+
+    const prevScores = players.map((p) => Number(p.score) || 0);
+    const prevExactHits = players.map((p) => Number(p.exactHits) || 0);
+
+    const deltas = normalized.map((e) => {
+      const hit = e.tricksWon === e.bid;
+      if (hit) return rules.exactBonus + e.tricksWon;
+      return rules.missPointsPerTrick > 0 ? e.tricksWon * rules.missPointsPerTrick : 0;
+    });
+
+    players.forEach((p, idx) => {
+      p.score = prevScores[idx] + deltas[idx];
+      if (normalized[idx].tricksWon === normalized[idx].bid) {
+        p.exactHits = prevExactHits[idx] + 1;
+      }
+    });
+
+    const trump = options.trump || getTrumpSuit(roundIndex).key;
+    const record = {
+      roundNumber: roundIndex + 1,
+      ts: new Date().toISOString(),
+      cardsDealt,
+      dealerIndex,
+      dealerName: players[dealerIndex].name,
+      trump,
+      prev: prevScores,
+      prevExactHits,
+      deltas,
+      entries: normalized.map((e, i) => ({
+        ...e,
+        exact: e.tricksWon === e.bid,
+        points: deltas[i]
+      }))
+    };
+
+    state.rounds.push(record);
+    const status = recomputeCompletion(state);
+    return {
+      ok: true,
+      round: record,
+      deltas,
+      ...status
+    };
+  }
+
+  /**
+   * Undoes the most recent Oh Hell round and restores exact previous totals.
+   */
+  function undoLastRound(state) {
+    initState(state);
+    if (!state.rounds.length) {
+      return { ok: false, error: 'No rounds to undo.' };
+    }
+    const last = state.rounds.pop();
+    state.players.forEach((p, idx) => {
+      if (Array.isArray(last.prev) && last.prev[idx] !== undefined) {
+        p.score = Number(last.prev[idx]) || 0;
+      } else if (Array.isArray(last.deltas) && last.deltas[idx] !== undefined) {
+        p.score = (Number(p.score) || 0) - (Number(last.deltas[idx]) || 0);
+      }
+      if (Array.isArray(last.prevExactHits) && last.prevExactHits[idx] !== undefined) {
+        p.exactHits = last.prevExactHits[idx];
+      }
+    });
+
+    const status = recomputeCompletion(state);
+    return { ok: true, undone: last, ...status };
+  }
+
+  const api = {
+    DEFAULT_EXACT_BONUS,
+    TRUMP_SUITS,
+    resolveRules,
+    buildRoundSchedule,
+    getDealerIndex,
+    getTrumpSuit,
+    getForbiddenDealerBid,
+    initState,
+    scoreRound,
+    undoLastRound,
+    getStandings
+  };
+
+  global.TallyItOhHell = api;
+  if (typeof module !== 'undefined' && module.exports) {
+    module.exports = api;
+  }
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+
 <!-- Reusable dice roller + roll tracker logic (window.DiceLogic) -->
 <script id="dice-logic">
 /* ==========================================================================
@@ -17128,6 +20266,12 @@ window.SocialUI = (function () {
   let players = [], history = [], pendingSync = false, syncInFlight = false;
   let currentGame = null, currentView = 'home';
   let selectedGame = 'flip7', selectedVersion = null;
+  // v23 Hearts / Oh Hell ledgers
+  const HTL = () => global.TallyItHearts || null;
+  const OHL = () => global.TallyItOhHell || null;
+  const isHt = () => !!(currentGame && currentGame.type === 'hearts' && HTL());
+  const isOh = () => !!(currentGame && currentGame.type === 'ohhell' && OHL());
+  let htSel = -1, htForceArmed = false, ohForceMsg = '';
   const deselected = new Set();
   let scoringPlayer = null, padMode = 'simple';
   let flip = null;
@@ -17182,6 +20326,8 @@ window.SocialUI = (function () {
       if (g.type === 'carcassonne') ccNormalize(g);
       if (g.type === 'rummikub' && global.RummikubLogic) global.RummikubLogic.rkNormalize(g);
       if (g.type === '7wonders' && global.SevenWondersLogic) { global.SevenWondersLogic.ensureSevenWondersState(g); if (!Array.isArray(g.swDone)) g.swDone = []; }
+      if (g.type === 'hearts' && global.TallyItHearts) global.TallyItHearts.initState(g);
+      if (g.type === 'ohhell' && global.TallyItOhHell) global.TallyItOhHell.initState(g);
       if (g.type === 'catan' && !g.targetVp) g.targetVp = gameById('catan').target(g.version);
       return g;
     } catch (_) { return null; }
@@ -17279,7 +20425,7 @@ window.SocialUI = (function () {
   function onAuthSignedOut() {
     currentUser = null; initializedUserId = null; players = []; history = []; currentGame = null; pendingSync = false;
     scoringPlayer = null; currentView = 'home'; closeDiceModal();
-    document.body.classList.remove('theme-catan', 'theme-flip7', 'theme-carcassonne', 'theme-nertz', 'theme-rummikub', 'theme-seven-wonders'); f7 = null; swExpOpen = false; rkCalcOpen = false; rkCalcExpr = ''; nzSheetKind = null; nzPopIdx = -1;
+    document.body.classList.remove('theme-catan', 'theme-flip7', 'theme-carcassonne', 'theme-nertz', 'theme-rummikub', 'theme-seven-wonders', 'theme-hearts', 'theme-ohhell'); f7 = null; swExpOpen = false; rkCalcOpen = false; rkCalcExpr = ''; nzSheetKind = null; nzPopIdx = -1;
     if (typeof unsubFriendships === 'function') { unsubFriendships(); unsubFriendships = null; }
     lastFriendsError = null;
     if (V20() && V20().onAuthChange) { try { V20().onAuthChange(null); } catch (_) {} }
@@ -17303,6 +20449,12 @@ window.SocialUI = (function () {
     document.body.classList.toggle('theme-rummikub', rkon);
     const swon = currentView === 'active' && isSw();
     document.body.classList.toggle('theme-seven-wonders', swon);
+    const hton = currentView === 'active' && isHt();
+    document.body.classList.toggle('theme-hearts', hton);
+    const ohon = currentView === 'active' && isOh();
+    document.body.classList.toggle('theme-ohhell', ohon);
+    if (!hton) { htSel = -1; htForceArmed = false; }
+    if (!ohon) ohForceMsg = '';
     if (!swon) swExpOpen = false;
     if (!rkon) rkCalcOpen = false;
     if (!nzon && (nzSheetKind || nzPopIdx >= 0)) { nzCloseSheet(); nzPopIdx = -1; }
@@ -17310,7 +20462,7 @@ window.SocialUI = (function () {
     if (!f7on) { const s = byId('f7-sheet'); if (s && !s.hidden) { setHidden(s, true); s.innerHTML = ''; } }
     syncDiceTrigger();
     const meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.setAttribute('content', on ? '#180f08' : f7on ? '#4bbdb8' : ccon ? '#6fa6d8' : nzon ? '#071222' : rkon ? '#0b2f69' : swon ? '#eadbc0' : '#0c0d10');
+    if (meta) meta.setAttribute('content', on ? '#180f08' : f7on ? '#4bbdb8' : ccon ? '#6fa6d8' : nzon ? '#071222' : rkon ? '#0b2f69' : swon ? '#eadbc0' : (hton || ohon) ? '#f5f0e6' : '#0c0d10');
   }
   function showView(v) {
     if (!byId('view-' + v)) v = 'home';
@@ -17526,6 +20678,8 @@ window.SocialUI = (function () {
     if (g.id === 'nertz') nzStartGame(chosen);
     if (g.id === 'rummikub') rkStartGame();
     if (g.id === '7wonders' && SWL()) swStartGame();
+    if (g.id === 'hearts' && HTL()) htStartGame();
+    if (g.id === 'ohhell' && OHL()) ohStartGame();
     if (v22o && g.id === 'rummikub' && v22o.scoringMode && RKL()) { currentGame.rkScoringMode = v22o.scoringMode === 'classic' ? 'classic' : 'points_up'; RKL().rkNormalize(currentGame); }
     scoringPlayer = null; padMode = 'simple'; f7 = null;
     currentGame.v20Recorded = true;
@@ -17555,6 +20709,7 @@ window.SocialUI = (function () {
   function v21ResetTransient() {
     scoringPlayer = null; f7 = null; flip = null; padMode = 'simple';
     swExpOpen = false; swEditKey = null; rkCalcOpen = false; rkCalcExpr = ''; nzSheetKind = null; nzPopIdx = -1;
+    htSel = -1; htForceArmed = false; ohForceMsg = '';
   }
   // v21: park the focused game in In Progress (saved, focus cleared) without navigating
   function v21ParkCurrent() {
@@ -17620,6 +20775,8 @@ window.SocialUI = (function () {
     if (isNertz()) return nzUndo();
     if (isRk()) return rkUndo();
     if (isSw()) return swUndoAction();
+    if (isHt()) return HeartsUI.undoHand();
+    if (isOh()) return OhHellUI.undoRound();
     if (!currentGame || !currentGame.rounds.length) return null;
     const r = currentGame.rounds.pop();
     currentGame.players.forEach((p, i) => { p.score = Array.isArray(r.prev) && r.prev[i] !== undefined ? r.prev[i] : p.score - ((r.deltas || [])[i] || 0); });
@@ -17668,6 +20825,7 @@ window.SocialUI = (function () {
     } else {
       finished = { ...currentGame, endTime: new Date().toISOString() };
       finished.winner = computeWinner(finished);
+      if (finished.type === 'hearts' || finished.type === 'ohhell') ['htDraft', 'htMoon', 'ohDraft', 'ohDraftRound', 'ohTrump', 'currentCards', 'currentDealerIndex', 'currentTrump', 'currentRoundIndex'].forEach((k) => delete finished[k]);
     }
     const DL = global.DiceLogic, diceStats = DL ? DL.buildDiceSummary(currentGame, { gamesCatalog: GAMES }) : null;
     if (diceStats) finished.meta = { ...(finished.meta || {}), diceStats };
@@ -17697,7 +20855,7 @@ window.SocialUI = (function () {
       setHidden(byId('gen-pad'), true); setHidden(byId('gen-undo'), true);
       return;
     }
-    if (isCatan()) renderCatan(); else if (isFlip7()) renderFlip7(); else if (isCarc()) renderCarc(); else if (isNertz()) renderNertz(); else if (isRk()) renderRummikub(); else if (isSw()) renderSevenWonders(); else renderGeneric();
+    if (isCatan()) renderCatan(); else if (isFlip7()) renderFlip7(); else if (isCarc()) renderCarc(); else if (isNertz()) renderNertz(); else if (isRk()) renderRummikub(); else if (isSw()) renderSevenWonders(); else if (isHt()) renderHearts(); else if (isOh()) renderOhHell(); else renderGeneric();
   }
 
   // ----- Generic (neutral) games -----
@@ -17722,6 +20880,8 @@ window.SocialUI = (function () {
     if (isNertz()) { nzUiSelect(idx); return; }
     if (isRk()) { rkSelect(idx); return; }
     if (isSw()) return;
+    if (isHt()) { HeartsUI.selectPlayer(idx); return; }
+    if (isOh()) return;
     scoringPlayer = idx;
     if (isCatan()) { selectCatanPlayer(idx); return; }
     if (isFlip7()) { f7Select(idx); return; }
@@ -19241,6 +22401,268 @@ window.SocialUI = (function () {
     return `<div class="small history-dice" data-dice-rolls="${st.totalRolls}" style="margin-top:.2rem;opacity:.72">${st.totalRolls} ${st.totalRolls === 1 ? 'roll' : 'rolls'}${top ? ` · Most rolled: ${esc(top)}` : ''}</div>`;
   }
 
+  // ---------------- v23 Hearts: Ivory & Crimson Ledger (window.HeartsUI backed by window.TallyItHearts) ----------------
+  const V23_SVG = {
+    heart: (c) => `<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 14S2 9.8 2 5.6A3.4 3.4 0 0 1 8 3.5a3.4 3.4 0 0 1 6 2.1C14 9.8 8 14 8 14Z" fill="${c}"/></svg>`,
+    spade: (c) => `<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5C8 1.5 2.5 6.1 2.5 9.4A3.1 3.1 0 0 0 7.1 11.8L6.1 14.5h3.8l-1-2.7a3.1 3.1 0 0 0 4.6-2.4C13.5 6.1 8 1.5 8 1.5Z" fill="${c}"/></svg>`,
+    diamond: (c) => `<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5 13.5 8 8 14.5 2.5 8Z" fill="${c}"/></svg>`,
+    club: (c) => `<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="4.6" r="2.9" fill="${c}"/><circle cx="4.5" cy="9" r="2.9" fill="${c}"/><circle cx="11.5" cy="9" r="2.9" fill="${c}"/><path d="M7.2 9h1.6l1 5.5H6.2Z" fill="${c}"/></svg>`,
+    moon: (c) => `<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10.8 2.2a6 6 0 1 0 3 9.9A5 5 0 0 1 10.8 2.2Z" fill="${c}"/></svg>`,
+    nt: (c) => `<svg viewBox="0 0 16 16" aria-hidden="true"><text x="8" y="11.5" text-anchor="middle" font-family="Georgia,serif" font-size="9" font-weight="700" fill="${c}">NT</text></svg>`
+  };
+  const HT_CRIMSON = '#9A1B22', HT_INK = '#23201D', OH_EMERALD = '#115539';
+  function htDraftFresh() { return currentGame.players.map(() => ({ hearts: 0, queenOfSpades: false, jackOfDiamonds: false })); }
+  function htEnsure() {
+    const L = HTL(); if (!L || !currentGame) return null;
+    L.initState(currentGame);
+    if (!Array.isArray(currentGame.htDraft) || currentGame.htDraft.length !== currentGame.players.length) currentGame.htDraft = htDraftFresh();
+    if (typeof currentGame.htMoon !== 'number' || currentGame.htMoon >= currentGame.players.length) currentGame.htMoon = -1;
+    if (htSel >= currentGame.players.length) htSel = -1;
+    return L.resolveRules(currentGame);
+  }
+  function htStartGame() { currentGame.htDraft = null; currentGame.htMoon = -1; htSel = -1; htForceArmed = false; htEnsure(); }
+  function htDraftPoints(rules) {
+    const d = currentGame.htDraft, moon = currentGame.htMoon;
+    return d.map((e, i) => {
+      let pts;
+      if (moon >= 0) pts = rules.moonSubtract ? (i === moon ? -26 : 0) : (i === moon ? 0 : 26);
+      else pts = (e.hearts || 0) + (e.queenOfSpades ? 13 : 0);
+      if (rules.jackOfDiamonds && e.jackOfDiamonds) pts -= 10;
+      return pts;
+    });
+  }
+  function htMsg(text) { const m = byId('ht-error-msg'); if (!m) return; m.textContent = text || ''; m.hidden = !text; }
+  function renderHearts() {
+    const rules = htEnsure(); if (!rules) return;
+    const g = currentGame, L = HTL(), n = g.players.length, hands = g.hands || [];
+    const set = (id, t) => { const el = byId(id); if (el) el.textContent = t; };
+    const pass = L.getPassDirection(hands.length, n);
+    set('ht-hand-label', 'Hand ' + (hands.length + 1));
+    set('ht-target-score', String(rules.targetScore));
+    set('ht-pass-dir', pass.label);
+    const d = g.htDraft, moon = g.htMoon;
+    const heartsSum = d.reduce((s, e) => s + (e.hearts || 0), 0);
+    const qIdx = d.findIndex((e) => e.queenOfSpades), jIdx = d.findIndex((e) => e.jackOfDiamonds);
+    const handPts = heartsSum + (qIdx >= 0 ? 13 : 0);
+    set('ht-hearts-tally', `Hearts: ${heartsSum} / 13`);
+    const qs = byId('ht-qs-status'); if (qs) qs.innerHTML = `Q${V23_SVG.spade(HT_INK).replace('<svg ', '<svg style="width:10px;height:10px;vertical-align:-1px" ')}: ${esc(qIdx >= 0 ? g.players[qIdx].name : 'Unassigned')}`;
+    set('ht-points-tally', moon >= 0 ? `Moon: ${g.players[moon].name}` : `Hand: ${handPts} / 26`);
+    const sb = byId('ht-hand-status');
+    if (sb) { sb.classList.toggle('is-ready', moon >= 0 || handPts === 26); sb.classList.toggle('is-error', moon < 0 && (handPts > 26 || heartsSum > 13)); }
+    const proj = htDraftPoints(rules);
+    const scores = g.players.map((p) => Number(p.score) || 0);
+    const best = hands.length ? (rules.lowWins ? Math.min(...scores) : Math.max(...scores)) : null;
+    const step = (i, dir, lbl) => `<button type="button" class="ht-step-btn" aria-label="${lbl}" onclick="event.stopPropagation();HeartsUI.stepHearts(${i},${dir})">${dir < 0 ? '&minus;' : '+'}</button>`;
+    const rows = byId('ht-player-rows');
+    if (rows) rows.innerHTML = g.players.map((p, i) => {
+      const e = d[i], sel = i === htSel, isMoon = moon === i;
+      const delta = proj[i];
+      return `<div class="ht-row${sel ? ' is-selected' : ''}${isMoon ? ' is-moon' : ''}" data-player-idx="${i}" onclick="HeartsUI.selectPlayer(${i})" role="button" aria-pressed="${sel}">
+        <div class="ht-row-left">
+          <div class="ht-row-head"><span class="ht-suit-badge">${V23_SVG.heart(i % 2 ? HT_INK : HT_CRIMSON)}<span class="ht-suit-lines"></span></span>
+            <span class="ht-name-wrap"><span class="ht-player-name">${esc(p.name)}</span>${best !== null && scores[i] === best ? '<span class="ht-leader-tag">Leader</span>' : ''}</span>
+            ${delta ? `<span class="ht-delta-tag">${signed(delta)}</span>` : ''}</div>
+          <div class="ht-controls">
+            <div class="ht-stepper">${step(i, -1, 'Fewer hearts for ' + esc(p.name))}<span class="ht-step-val" data-hearts="${e.hearts}">${V23_SVG.heart(HT_CRIMSON)}${e.hearts}</span>${step(i, 1, 'More hearts for ' + esc(p.name))}</div>
+            <button type="button" class="ht-chip-btn ht-chip-qs${e.queenOfSpades ? ' active' : ''}" aria-pressed="${!!e.queenOfSpades}" onclick="event.stopPropagation();HeartsUI.toggleQueen(${i})">Q${V23_SVG.spade(e.queenOfSpades ? '#FFFFFF' : HT_INK).replace('<svg ', '<svg style="width:10px;height:10px" ')} +13</button>
+            ${rules.jackOfDiamonds ? `<button type="button" class="ht-chip-btn ht-chip-jd${e.jackOfDiamonds ? ' active' : ''}" aria-pressed="${!!e.jackOfDiamonds}" onclick="event.stopPropagation();HeartsUI.toggleJack(${i})">J${V23_SVG.diamond(e.jackOfDiamonds ? '#FFFFFF' : HT_CRIMSON).replace('<svg ', '<svg style="width:10px;height:10px" ')} &minus;10</button>` : ''}
+            <button type="button" class="ht-chip-btn ht-chip-moon${isMoon ? ' active' : ''}" aria-pressed="${isMoon}" aria-label="Shoot the Moon for ${esc(p.name)}" onclick="event.stopPropagation();HeartsUI.setMoon(${i})">${V23_SVG.moon(isMoon ? '#F8E6C2' : HT_INK).replace('<svg ', '<svg style="width:11px;height:11px" ')}</button>
+          </div>
+        </div>
+        <div class="ht-row-right"><div class="ht-pts-box"><span class="ht-pts-num">${scores[i]}</span><span class="ht-pts-lbl">Points</span></div></div>
+      </div>`;
+    }).join('');
+    const selP = htSel >= 0 ? g.players[htSel] : null;
+    const qt = byId('ht-qs-toggle'); if (qt) { qt.checked = !!(htSel >= 0 && d[htSel].queenOfSpades); qt.disabled = htSel < 0; }
+    set('ht-qs-holder', qIdx >= 0 ? `(+13) Taken by ${g.players[qIdx].name}` : selP ? `(+13) Toggle for ${selP.name}` : '(+13) Tap Q on a player row');
+    const mb = byId('ht-moon-btn'); if (mb) mb.setAttribute('aria-pressed', String(moon >= 0));
+    set('ht-moon-sub', moon >= 0 ? `${g.players[moon].name} shot the moon (${rules.moonSubtract ? '\u221226 to shooter' : '+26 to all others'})` : (rules.moonSubtract ? '(\u221226 to the shooter)' : '(+26 to all others)'));
+    const jb = byId('ht-jd-banner'); if (jb) jb.hidden = !rules.jackOfDiamonds;
+    set('ht-jd-status', jIdx >= 0 ? `Jack of Diamonds (\u221210) taken by ${g.players[jIdx].name}` : 'Jack of Diamonds (\u221210) active \u2014 tap J on a player row');
+    const ub = byId('ht-btn-undo'); if (ub) ub.disabled = !hands.length;
+    const rb = byId('ht-btn-record'); if (rb) rb.disabled = !!g.isGameOver;
+    set('ht-history-count', hands.length + (hands.length === 1 ? ' hand' : ' hands'));
+    const hl = byId('ht-history-list');
+    if (hl) hl.innerHTML = hands.length ? hands.slice().reverse().map((h) => `<div class="ht-history-item" data-hand="${h.handNumber}"><span style="flex:0 0 auto;font-weight:700">Hand ${h.handNumber} &middot; ${esc(h.passLabel || '')}${h.shooterIdx >= 0 ? ' &middot; Moon' : ''}</span>
+        <span style="min-width:0;text-align:right;overflow-wrap:anywhere">${g.players.map((p, i) => esc(p.name) + ' ' + signed((h.deltas || [])[i] || 0)).join(', ')}</span></div>`).join('')
+      : '<div class="ht-history-empty">No hands recorded yet.</div>';
+    if (!htForceArmed) htMsg('');
+  }
+  function htCommit() { htForceArmed = false; persistActive(); renderHearts(); }
+  const HeartsUI = {
+    render: () => { if (isHt()) renderHearts(); },
+    selectPlayer(i) { if (!isHt() || !currentGame.players[i]) return; htSel = htSel === i ? -1 : i; renderHearts(); },
+    stepHearts(i, dir) {
+      if (!isHt() || !currentGame.players[i]) return; htEnsure();
+      const e = currentGame.htDraft[i]; e.hearts = Math.max(0, Math.min(13, (e.hearts || 0) + (dir < 0 ? -1 : 1)));
+      htSel = i; htCommit();
+    },
+    toggleQueen(i) {
+      if (!isHt() || !currentGame.players[i]) return; htEnsure();
+      const on = !currentGame.htDraft[i].queenOfSpades;
+      currentGame.htDraft.forEach((e, k) => { e.queenOfSpades = on && k === i; });
+      htSel = i; htCommit();
+    },
+    toggleQueenForSelected(checked) {
+      if (!isHt()) return; htEnsure();
+      if (htSel < 0) { renderHearts(); htMsg('Tap a player row first, then toggle the Queen of Spades.'); return; }
+      currentGame.htDraft.forEach((e, k) => { e.queenOfSpades = !!checked && k === htSel; });
+      htCommit();
+    },
+    toggleJack(i) {
+      if (!isHt() || !currentGame.players[i]) return; const rules = htEnsure(); if (!rules.jackOfDiamonds) return;
+      const on = !currentGame.htDraft[i].jackOfDiamonds;
+      currentGame.htDraft.forEach((e, k) => { e.jackOfDiamonds = on && k === i; });
+      htSel = i; htCommit();
+    },
+    setMoon(i) { if (!isHt() || !currentGame.players[i]) return; htEnsure(); currentGame.htMoon = currentGame.htMoon === i ? -1 : i; htSel = i; htCommit(); },
+    toggleShootMoon() {
+      if (!isHt()) return; htEnsure();
+      if (currentGame.htMoon >= 0) { currentGame.htMoon = -1; htCommit(); return; }
+      if (htSel < 0) { renderHearts(); htMsg('Tap the player who shot the moon first.'); return; }
+      currentGame.htMoon = htSel; htCommit();
+    },
+    recordHand() {
+      if (!isHt()) return null; htEnsure();
+      const L = HTL(), g = currentGame;
+      const entries = g.htDraft.map((e, i) => ({ ...e, shotMoon: g.htMoon === i }));
+      const res = L.scoreHand(g, entries, htForceArmed ? { allowNon26: true } : {});
+      if (!res.ok) {
+        if (res.canOverride) { htForceArmed = true; renderHearts(); htMsg(res.error + ' Tap Record Hand again to record it anyway.'); }
+        else { htForceArmed = false; renderHearts(); htMsg(res.error || 'Could not record that hand.'); }
+        return res;
+      }
+      g.htDraft = htDraftFresh(); g.htMoon = -1; htSel = -1; htForceArmed = false;
+      persistActive(); renderHearts();
+      if (res.isGameOver && typeof global.openEndGameModal === 'function') global.openEndGameModal();
+      return res;
+    },
+    undoHand() {
+      if (!isHt()) return null; htEnsure();
+      const res = HTL().undoLastHand(currentGame);
+      if (res.ok) { currentGame.htDraft = htDraftFresh(); currentGame.htMoon = -1; htSel = -1; }
+      htCommit(); return res;
+    }
+  };
+
+  // ---------------- v23 Oh Hell: Ivory & Emerald Ledger (window.OhHellUI backed by window.TallyItOhHell) ----------------
+  function ohEnsure() {
+    const L = OHL(); if (!L || !currentGame) return null;
+    L.initState(currentGame);
+    const n = currentGame.players.length;
+    if (!Array.isArray(currentGame.ohDraft) || currentGame.ohDraft.length !== n) currentGame.ohDraft = currentGame.players.map(() => ({ bid: 0, tricksWon: 0 }));
+    if (currentGame.ohDraftRound !== currentGame.rounds.length) { currentGame.ohDraft = currentGame.players.map(() => ({ bid: 0, tricksWon: 0 })); currentGame.ohDraftRound = currentGame.rounds.length; currentGame.ohTrump = null; }
+    return L.resolveRules(currentGame);
+  }
+  function ohStartGame() { currentGame.ohDraft = null; currentGame.ohDraftRound = 0; currentGame.ohTrump = null; ohForceMsg = ''; ohEnsure(); }
+  function ohTrumpNow() {
+    const L = OHL(), key = currentGame.ohTrump;
+    const t = key ? L.TRUMP_SUITS.find((s) => s.key === key) : null;
+    return t || L.getTrumpSuit(currentGame.rounds.length);
+  }
+  function ohSuitSvg(key) {
+    const red = '#9A1B22';
+    return key === 'hearts' ? V23_SVG.heart(red) : key === 'diamonds' ? V23_SVG.diamond(red) : key === 'clubs' ? V23_SVG.club(OH_EMERALD) : key === 'notrump' ? V23_SVG.nt('#475569') : V23_SVG.spade(OH_EMERALD);
+  }
+  function ohMsg(text) { const m = byId('oh-error-msg'); if (!m) return; m.textContent = text || ''; m.hidden = !text; }
+  function ohLive() {
+    const L = OHL(), rules = ohEnsure(), g = currentGame;
+    const cards = g.currentCards || (g.schedule || [])[g.rounds.length] || 0;
+    const dealer = g.currentDealerIndex || 0;
+    const bids = g.ohDraft.map((e) => e.bid), tricks = g.ohDraft.map((e) => e.tricksWon);
+    const forbidden = L.getForbiddenDealerBid(cards, bids, dealer, rules.screwTheDealer);
+    return { rules, cards, dealer, bids, tricks, forbidden, bidSum: bids.reduce((a, b) => a + b, 0), trickSum: tricks.reduce((a, b) => a + b, 0), violation: forbidden !== null && bids[dealer] === forbidden };
+  }
+  function renderOhHell() {
+    if (!ohEnsure()) return;
+    const g = currentGame, n = g.players.length, total = (g.schedule || []).length;
+    const lv = ohLive(), { rules, cards, dealer } = lv;
+    const set = (id, t) => { const el = byId(id); if (el) el.textContent = t; };
+    const over = !!g.isGameOver;
+    set('oh-round-label', over ? `Game Complete \u00b7 ${total} rounds` : `Round ${g.rounds.length + 1} of ${total}`);
+    set('oh-cards-dealt', over ? '\u2014' : String(cards));
+    const tr = ohTrumpNow();
+    set('oh-trump-name', tr.label);
+    const ti = byId('oh-trump-icon'); if (ti) ti.innerHTML = ohSuitSvg(tr.key);
+    const tb = byId('oh-trump-btn'); if (tb) tb.dataset.trump = tr.key;
+    set('oh-bids-tally', `Total Bids: ${lv.bidSum} / ${cards}`);
+    set('oh-tricks-tally', `Tricks Won: ${lv.trickSum} / ${cards}`);
+    const sb = byId('oh-round-status');
+    if (sb) { sb.classList.toggle('is-ready', !over && lv.trickSum === cards && !lv.violation); sb.classList.toggle('is-error', !over && (lv.trickSum > cards || lv.violation)); }
+    const complete = lv.trickSum === cards;
+    const scores = g.players.map((p) => Number(p.score) || 0);
+    const best = g.rounds.length ? (rules.lowWins ? Math.min(...scores) : Math.max(...scores)) : null;
+    const step = (i, k, dir, lbl) => `<button type="button" class="oh-step-btn" aria-label="${lbl}" onclick="OhHellUI.step(${i},'${k}',${dir})"${over ? ' disabled' : ''}>${dir < 0 ? '&minus;' : '+'}</button>`;
+    const rows = byId('oh-player-rows');
+    if (rows) rows.innerHTML = g.players.map((p, i) => {
+      const e = g.ohDraft[i], exact = complete && e.tricksWon === e.bid, isDealer = i === dealer && !over;
+      const viol = isDealer && lv.violation;
+      const pts = exact ? rules.exactBonus + e.tricksWon : rules.missPointsPerTrick * e.tricksWon;
+      return `<div class="oh-row${exact ? ' is-exact' : ''}${viol ? ' is-screw-violation' : ''}" data-player-idx="${i}">
+        <div class="oh-row-left">
+          <div class="oh-row-head"><span class="oh-suit-badge">${i % 2 ? V23_SVG.spade(HT_INK) : V23_SVG.spade(OH_EMERALD)}<span class="oh-suit-lines"></span></span>
+            <span class="oh-name-wrap"><span class="oh-player-name">${esc(p.name)}</span>${isDealer ? '<span class="oh-dealer-pill">Dealer</span>' : ''}</span>
+            ${over || !complete ? (best !== null && scores[i] === best && over ? '<span class="oh-exact-pill">Winner</span>' : '') : exact ? `<span class="oh-exact-pill">Exact +${pts}</span>` : `<span class="oh-miss-pill">Miss${pts ? ' +' + pts : ''}</span>`}</div>
+          <div class="oh-controls">
+            <div class="oh-stepper-group" data-kind="bid"><span class="oh-stepper-lbl">Bid</span>${step(i, 'bid', -1, 'Lower bid for ' + esc(p.name))}<span class="oh-step-val">${e.bid}</span>${step(i, 'bid', 1, 'Raise bid for ' + esc(p.name))}</div>
+            <div class="oh-stepper-group" data-kind="tricks"><span class="oh-stepper-lbl">Won</span>${step(i, 'tricksWon', -1, 'Fewer tricks for ' + esc(p.name))}<span class="oh-step-val">${e.tricksWon}</span>${step(i, 'tricksWon', 1, 'More tricks for ' + esc(p.name))}</div>
+          </div>
+        </div>
+        <div class="oh-row-right"><div class="oh-pts-box"><span class="oh-pts-num">${scores[i]}</span><span class="oh-pts-lbl">Points</span></div></div>
+      </div>`;
+    }).join('');
+    const sc = byId('oh-screw-card'); if (sc) sc.classList.toggle('is-warning', !over && lv.violation);
+    const dn = g.players[dealer] ? g.players[dealer].name : 'Dealer';
+    set('oh-screw-sub', !rules.screwTheDealer ? '(Off \u2014 dealer may bid freely)' : over ? '(Dealer cannot even the bids)' : lv.forbidden === null ? `(${dn} cannot make bids total ${cards})` : lv.violation ? `${dn} cannot bid ${lv.forbidden} \u2014 change the dealer's bid` : `(${dn} cannot bid ${lv.forbidden})`);
+    const st = byId('oh-screw-toggle'); if (st) st.checked = !!rules.screwTheDealer;
+    set('oh-bonus-sub', `(+${rules.exactBonus} + tricks won${rules.missPointsPerTrick ? ` \u00b7 miss ${rules.missPointsPerTrick}/trick` : ''})`);
+    const ub = byId('oh-btn-undo'); if (ub) ub.disabled = !g.rounds.length;
+    const btn = byId('oh-btn-score'); if (btn) btn.disabled = over;
+    set('oh-history-count', g.rounds.length + (g.rounds.length === 1 ? ' round' : ' rounds'));
+    const hl = byId('oh-history-list');
+    if (hl) hl.innerHTML = g.rounds.length ? g.rounds.slice().reverse().map((r) => `<div class="oh-history-item" data-round="${r.roundNumber}"><span style="flex:0 0 auto;font-weight:700">R${r.roundNumber} &middot; ${r.cardsDealt} card${r.cardsDealt === 1 ? '' : 's'}</span>
+        <span style="min-width:0;text-align:right;overflow-wrap:anywhere">${g.players.map((p, i) => { const e = (r.entries || [])[i] || {}; return esc(p.name) + ' ' + (e.bid ?? '-') + '/' + (e.tricksWon ?? '-') + ' ' + signed((r.deltas || [])[i] || 0); }).join(', ')}</span></div>`).join('')
+      : '<div class="oh-history-empty">No rounds recorded yet.</div>';
+    ohMsg(ohForceMsg);
+  }
+  function ohCommit() { ohForceMsg = ''; persistActive(); renderOhHell(); }
+  const OhHellUI = {
+    render: () => { if (isOh()) renderOhHell(); },
+    step(i, key, dir) {
+      if (!isOh() || !currentGame.players[i] || currentGame.isGameOver) return; ohEnsure();
+      const cards = currentGame.currentCards || 1, e = currentGame.ohDraft[i], k = key === 'bid' ? 'bid' : 'tricksWon';
+      e[k] = Math.max(0, Math.min(cards, (Number(e[k]) || 0) + (dir < 0 ? -1 : 1)));
+      ohCommit();
+    },
+    cycleTrump() {
+      if (!isOh() || currentGame.isGameOver) return null; ohEnsure();
+      const S = OHL().TRUMP_SUITS, cur = ohTrumpNow();
+      const idx = S.findIndex((s) => s.key === cur.key);
+      currentGame.ohTrump = S[(idx + 1) % S.length].key;
+      ohCommit(); return currentGame.ohTrump;
+    },
+    toggleScrewDealer(checked) {
+      if (!isOh()) return; const rules = ohEnsure();
+      currentGame.ohHellRules = { ...rules, screwTheDealer: !!checked };
+      currentGame.houseRules = { ...(currentGame.houseRules || {}), screwTheDealer: !!checked };
+      ohCommit();
+    },
+    scoreRound() {
+      if (!isOh() || currentGame.isGameOver) return null; ohEnsure();
+      const g = currentGame, tr = ohTrumpNow();
+      const res = OHL().scoreRound(g, g.ohDraft.map((e) => ({ bid: e.bid, tricksWon: e.tricksWon })), { trump: tr.key });
+      if (!res.ok) { ohForceMsg = res.error || 'Could not score that round.'; renderOhHell(); return res; }
+      ohForceMsg = ''; ohEnsure(); persistActive(); renderOhHell();
+      if (res.isGameOver && typeof global.openEndGameModal === 'function') global.openEndGameModal();
+      return res;
+    },
+    undoRound() {
+      if (!isOh()) return null; ohEnsure();
+      const res = OHL().undoLastRound(currentGame);
+      ohEnsure(); ohCommit(); return res;
+    }
+  };
+
   function renderHistory() {
     const el = byId('history-list');
     renderHistoryFilter();
@@ -19248,24 +22670,59 @@ window.SocialUI = (function () {
     if (!entries.length) { el.innerHTML = `<p class="small">${historyFilter === 'all' ? 'Nothing here yet.' : 'No games for this group yet.'}</p>`; return; }
     const ui = SUI(), uid = currentUser ? currentUser.id : null;
     el.innerHTML = entries.map((g) => {
-      const i = history.findIndex((h) => h && h.id && h.id === g.id);
+      const i = history.findIndex((h) => h && h.id && String(h.id) === String(g.id));
+      const sharedId = g.sharedGameId || (g.source === 'shared' ? g.id : '');
+      const isOwner = !!(uid && g.createdBy && String(g.createdBy) === String(uid));
+      const canDelete = i >= 0 || isOwner;
       const sharedBy = g.createdBy && uid && String(g.createdBy) !== String(uid) ? (g.sharedByName || 'a friend') : '';
       const badges = ui ? ui.renderHistoryBadges({ groupName: g.groupName, sharedByName: sharedBy }) : '';
       return `
-      <div class="history-item" data-game-id="${esc(g.id)}"${g.groupId ? ` data-group-id="${esc(g.groupId)}"` : ''}>
+      <div class="history-item" data-game-id="${esc(g.id)}"${sharedId ? ` data-shared-id="${esc(sharedId)}"` : ''}${g.groupId ? ` data-group-id="${esc(g.groupId)}"` : ''}>
         <div class="flex space-between" style="flex-wrap:nowrap">
           <div><strong>${esc(gameLabel(g))}</strong>${g.version ? ` <span class="small">· ${esc(g.version)}</span>` : ''}
             <div class="small">${esc(new Date(g.endTime || g.startTime || Date.now()).toLocaleDateString())}</div></div>
-          ${i >= 0 ? `<button class="btn danger sm" type="button" aria-label="Delete game" onclick="deleteGame(${i})">×</button>` : ''}
+          ${canDelete ? `<button class="btn danger sm" type="button" aria-label="Delete game" onclick="deleteHistoryEntry('${esc(g.id || '')}','${esc(sharedId || '')}')">×</button>` : ''}
         </div>${badges}
         <div style="margin-top:.3rem">${[...(g.players || [])].sort((a, b) => ((typeof g.low === 'boolean' ? g.low : g.meta && typeof g.meta.low === 'boolean' ? g.meta.low : gameById(g.type).low) ? a.score - b.score : b.score - a.score)).map((p) => `${esc(p.name)}${Array.isArray(p.members) && p.members.length ? ` <span class="small">(${esc(p.members.map((m) => m.name).join(' & '))})</span>` : ''}: <strong>${p.score}</strong>`).join(' · ')}</div>
         <div class="winner">Winner: ${esc(g.winner || '—')}</div>${diceHistoryLine(g)}
       </div>`;
     }).join('');
   }
+  // v23: delete any game you own from History — local entries AND cloud-synced public.games rows (never resurrects on reload)
+  async function deleteHistoryEntry(gameId, sharedId) {
+    const gid = String(gameId || '').trim();
+    const sid = String(sharedId || '').trim();
+    const localIdx = gid ? history.findIndex((h) => h && String(h.id || '') === gid) : -1;
+    const sharedRow = (social.shared || []).find((s) => s && ((sid && String(s.id) === sid) || (gid && (String(s.id) === gid || String(s.client_game_id || '') === gid))));
+    const uid = currentUser ? String(currentUser.id) : null;
+    const ownsShared = !!(sharedRow && uid && String(sharedRow.created_by || '') === uid);
+    const resolvedSharedId = sid || (sharedRow ? String(sharedRow.id) : '');
+    if (localIdx < 0 && !ownsShared && !resolvedSharedId) return false;
+    if (!confirm('Delete this game from history?')) return false;
+    if (localIdx >= 0) history.splice(localIdx, 1);
+    const matchesEntry = (s) => s && (
+      (resolvedSharedId && String(s.id) === resolvedSharedId) ||
+      (gid && (String(s.id) === gid || String(s.client_game_id || '') === gid))
+    );
+    if (Array.isArray(social.shared)) social.shared = social.shared.filter((s) => !matchesEntry(s));
+    if (social.groupShared && typeof social.groupShared === 'object') {
+      Object.keys(social.groupShared).forEach((k) => { if (Array.isArray(social.groupShared[k])) social.groupShared[k] = social.groupShared[k].filter((s) => !matchesEntry(s)); });
+    }
+    renderHistory();
+    saveData();
+    const api = SAPI();
+    if (api && typeof api.deleteSharedGame === 'function' && uid && (ownsShared || resolvedSharedId || gid)) {
+      try {
+        const r = await api.deleteSharedGame(resolvedSharedId || null, { clientGameId: gid || null });
+        if (r && !r.ok) console.warn('[social] deleteSharedGame failed:', r.error);
+      } catch (e) { console.warn('[social] deleteSharedGame error:', e); }
+    }
+    return true;
+  }
   function deleteGame(i) {
-    if (!history[i] || !confirm('Delete this game from history?')) return;
-    history.splice(i, 1); renderHistory(); saveData();
+    const h = history[i];
+    if (!h) return false;
+    return deleteHistoryEntry(h.id || '', '');
   }
 
   // ---------------- Social layer: you + friends + groups ----------------
@@ -19914,7 +23371,7 @@ window.SocialUI = (function () {
     rkSelect, rkSetMode, rkSetSign, rkOnDeltaInput, rkStep, rkApplyJoker, rkConfirmRound, rkUndo, rkToggleHistory, rkAddPlayer, rkCycleColor, rkFinishGame,
     rkToggleCalc, rkCalcKey, rkCalcApply,
     swSelectCategory, swStepCategory, swStep, swSetVal, swSci, swSciOverride, swBeginEdit, swToggleExpansionsDrawer, swToggleExpansion, swUndo: swUndoAction, swFinishGame, renderSevenWonders,
-    undoLastRound, undoLastAction: undoLastRound, endGame, deleteGame,
+    undoLastRound, undoLastAction: undoLastRound, endGame, deleteGame, deleteHistoryEntry, HeartsUI, OhHellUI, renderHearts, renderOhHell,
     openDiceModal, closeDiceModal, rollVirtualDice, logPhysicalRoll, undoDiceRoll, resetDiceRolls, renderDiceUI,
     onAuthSignedIn: onAuthReady, removeSelf, addSelf, removeSetupFriend, toggleSetupFriend, includeFriendInNextGame, applyGroupPreset, clearSetupGroup,
     startGameWithGroup, saveDisplayName, sendFriendRequest, respondFriendRequest, removeFriend, openCreateGroup, toggleGroupModalFriend,
@@ -24141,7 +27598,7 @@ window.SocialUI = (function () {
   }
 
   function showSignedOutUI() {
-    document.body.classList.remove('theme-catan', 'theme-flip7', 'theme-carcassonne', 'theme-nertz', 'theme-rummikub', 'theme-seven-wonders');
+    document.body.classList.remove('theme-catan', 'theme-flip7', 'theme-carcassonne', 'theme-nertz', 'theme-rummikub', 'theme-seven-wonders', 'theme-hearts', 'theme-ohhell');
     const { loginView, appShell } = getEls();
     if (appShell) {
       appShell.hidden = true;
