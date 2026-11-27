@@ -6,7 +6,7 @@
 <title>Score Tracker</title>
 <style>
 :root { --bg:#0b1220; --surface:#151c2c; --surface2:#1e293b; --text:#f1f5f9; --muted:#94a3b8; --accent:#22d3ee; --accent-dim:#0891b2; --border:rgba(255,255,255,0.08); }
-body { margin:0; font-family:system-ui,sans-serif; background:var(--bg); color:var(--text); padding-bottom:80px; transition:background .3s; }
+body { margin:0; font-family:system-ui,sans-serif; background:var(--bg); color:var(--text); padding-bottom:80px; }
 .view { padding:0 1rem; max-width:900px; margin:0 auto; }
 .hidden { display:none !important; }
 .card { background:var(--surface); border-radius:16px; padding:1.25rem; margin-bottom:1rem; border:1px solid var(--border); }
@@ -23,13 +23,12 @@ input, select { background:#0b1220; border:1px solid var(--border); color:var(--
 .bottom-nav button.active { color:var(--accent); }
 .small { color:var(--muted); font-size:.85rem; }
 .flex { display:flex; gap:.5rem; align-items:center; flex-wrap:wrap; }
-.key { border-radius:10px; padding:0.85rem 0.3rem; text-align:center; font-weight:700; font-size:1.15rem; cursor:pointer; border:1px solid #334155; }
-.key.active { outline:3px solid var(--accent); }
-.player-row { background:var(--surface2); border-radius:14px; padding:0.9rem 1.1rem; margin:0.45rem 0; display:flex; justify-content:space-between; align-items:center; cursor:pointer; }
+.player-row { background:var(--surface2); border-radius:14px; padding:0.9rem 1.1rem; margin:0.45rem 0; display:flex; justify-content:space-between; align-items:center; }
 .rank { width:28px; font-weight:700; color:var(--muted); }
-.theme-header { text-align:center; padding:1rem 0; font-size:1.4rem; font-weight:700; }
-.cat-row { display:flex; justify-content:space-between; align-items:center; padding:.5rem 0; border-bottom:1px solid var(--border); }
-.cat-icon { width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-weight:700; color:white; margin-right:.6rem; }
+.res-btn { padding:.6rem .8rem; border-radius:10px; border:none; font-weight:600; color:white; cursor:pointer; }
+.mode-toggle { display:flex; gap:.5rem; margin:.6rem 0; }
+.mode-toggle button { flex:1; }
+.mode-toggle button.active { background:var(--accent); color:#0b1220; }
 </style>
 </head>
 <body>
@@ -73,7 +72,7 @@ input, select { background:#0b1220; border:1px solid var(--border); color:var(--
   </div>
   <div id="view-active" class="view hidden">
     <div class="card" id="active-card">
-      <div class="theme-header" id="theme-header"></div>
+      <h2 id="active-title" style="margin-top:0"></h2>
       <div id="leaderboard"></div>
       <div id="pad" class="hidden"></div>
       <div class="flex" style="margin-top:1rem">
@@ -96,50 +95,35 @@ const SUPABASE_ANON_KEY = 'sb_publishable_HEGO45Fw5dl1s8sAbFnSkg_VzWU_guj';
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const REDIRECT = 'https://rand50.github.io/score-tracker/game_tracker.html';
 
-const CARD_COLORS = {
-  0:'#1a1a1a',1:'#4a90d9',2:'#f4d03f',3:'#e74c3c',4:'#27ae60',
-  5:'#2ecc71',6:'#8e44ad',7:'#e67e22',8:'#16a085',9:'#d35400',
-  10:'#c0392b',11:'#2c3e50',12:'#7f8c8d'
-};
-
-const THEMES = {
-  flip7: { bg:'#0b1220', accent:'#22d3ee', surface:'#151c2c', icon:'🃏' },
-  '7wonders': { bg:'#0a1a1a', accent:'#d4a017', surface:'#1a2a2a', icon:'🏛️' },
-  carcassonne: { bg:'#1a1f14', accent:'#7cb342', surface:'#2a3320', icon:'🏰' },
-  catan: { bg:'#1a120b', accent:'#e67e22', surface:'#2a1f14', icon:'🏝️' },
-  ohhell: { bg:'#0d1a0d', accent:'#4caf50', surface:'#1a2a1a', icon:'🃏' },
-  hearts: { bg:'#1a0d0d', accent:'#e74c3c', surface:'#2a1515', icon:'❤️' },
-  nertz: { bg:'#1a140d', accent:'#f4d03f', surface:'#2a2214', icon:'🂡' },
-  other: { bg:'#0b1220', accent:'#22d3ee', surface:'#151c2c', icon:'🎲' }
-};
-
 let players = [];
 let history = [];
 let currentGame = null;
-let selectedGame = 'flip7';
+let selectedGame = 'catan';
 let scoringPlayer = null;
+let catanMode = 'simple';
 
 const games = [
   { id:'flip7', name:'Flip 7', img:'flip7.jpg', versions:['Standard (to 200)'], theme:'flip7' },
   { id:'7wonders', name:'7 Wonders', img:'7wonders.jpg', versions:['Base'], theme:'7wonders' },
   { id:'carcassonne', name:'Carcassonne', img:'', versions:['Classic'], theme:'carcassonne' },
-  { id:'catan', name:'Catan', img:'', versions:['Base (to 10)'], theme:'catan' },
+  { id:'catan', name:'Catan', img:'', versions:['Base (to 10)','Cities & Knights'], theme:'catan' },
   { id:'ohhell', name:'Oh Hell', img:'ohhell.jpg', versions:['Exact = 10+bid'], theme:'ohhell' },
   { id:'hearts', name:'Hearts', img:'', versions:['Standard'], theme:'hearts' },
   { id:'nertz', name:'Nertz', img:'nertz.png', versions:['Standard'], theme:'nertz' },
   { id:'other', name:'Custom', img:'', versions:['Custom'], theme:'other' }
 ];
 
-function applyTheme(themeKey) {
-  const t = THEMES[themeKey] || THEMES.other;
-  document.documentElement.style.setProperty('--bg', t.bg);
-  document.documentElement.style.setProperty('--accent', t.accent);
-  document.documentElement.style.setProperty('--surface', t.surface);
-  document.body.style.background = t.bg;
-  const header = document.getElementById('theme-header');
-  if (header && currentGame) {
-    const g = games.find(x=>x.id===currentGame.type);
-    header.textContent = t.icon + ' ' + (g?.name || '');
+function applyTheme(theme) {
+  if (theme === 'catan') {
+    document.documentElement.style.setProperty('--bg', '#1a120b');
+    document.documentElement.style.setProperty('--accent', '#e67e22');
+    document.documentElement.style.setProperty('--surface', '#2a1f14');
+    document.body.style.background = '#1a120b';
+  } else {
+    document.documentElement.style.setProperty('--bg', '#0b1220');
+    document.documentElement.style.setProperty('--accent', '#22d3ee');
+    document.documentElement.style.setProperty('--surface', '#151c2c');
+    document.body.style.background = '#0b1220';
   }
 }
 
@@ -193,8 +177,7 @@ function showView(v) {
   if (v==='new') { applyTheme('other'); renderNew(); }
   if (v==='history') { applyTheme('other'); renderHistory(); }
   if (v==='active' && currentGame) {
-    const g = games.find(x=>x.id===currentGame.type);
-    applyTheme(g?.theme || 'other');
+    applyTheme(currentGame.type === 'catan' ? 'catan' : 'other');
     renderLeaderboard();
   }
 }
@@ -222,6 +205,8 @@ function startGame(){
 }
 
 function renderLeaderboard(){
+  const g = games.find(x=>x.id===currentGame.type);
+  document.getElementById('active-title').textContent = g.name;
   const sorted = [...currentGame.players].map((p,i)=>({...p,idx:i})).sort((a,b)=>b.score-a.score);
   document.getElementById('leaderboard').innerHTML = sorted.map((p, rank) => `
     <div class="player-row" onclick="openPad(${p.idx})">
@@ -234,78 +219,63 @@ function renderLeaderboard(){
 
 function openPad(idx){
   scoringPlayer = idx;
-  const g = games.find(x=>x.id===currentGame.type);
   document.getElementById('pad').classList.remove('hidden');
-  document.getElementById('pad').innerHTML = `
-    <div class="small" style="margin:.6rem 0">${g.name} · ${currentGame.players[idx].name}</div>
-    <div class="flex" style="margin-bottom:.6rem">
-      <button class="btn" onclick="setMode('simple')">Simple Points</button>
-      <button class="btn" onclick="setMode('detailed')">Detailed</button>
-    </div>
-    <div id="score-form"></div>
-  `;
-  setMode('simple');
-}
-
-function setMode(mode){
-  const g = games.find(x=>x.id===currentGame.type);
-  const form = document.getElementById('score-form');
-  if (mode === 'simple') {
-    form.innerHTML = `
-      <input type="number" id="simple-pts" value="0" placeholder="Points / VP">
-      <div class="flex" style="margin-top:.6rem">
-        <button class="btn primary" onclick="commitSimple()">Add</button>
-        <button class="btn" onclick="renderLeaderboard()">Cancel</button>
-      </div>
-    `;
+  if (currentGame.type === 'catan') {
+    openCatanPad();
   } else {
-    if (g.theme === '7wonders') form.innerHTML = `
-      <div class="cat-row"><div class="flex"><div class="cat-icon" style="background:#c0392b">⚔️</div>Military</div><input type="number" id="w-mil" value="0" style="width:70px"></div>
-      <div class="cat-row"><div class="flex"><div class="cat-icon" style="background:#27ae60">🔬</div>Science</div><input type="number" id="w-sci" value="0" style="width:70px"></div>
-      <div class="cat-row"><div class="flex"><div class="cat-icon" style="background:#2980b9">🏛️</div>Civilian</div><input type="number" id="w-civ" value="0" style="width:70px"></div>
-      <div class="cat-row"><div class="flex"><div class="cat-icon" style="background:#8e44ad">✨</div>Wonder</div><input type="number" id="w-won" value="0" style="width:70px"></div>
-      <div class="cat-row"><div class="flex"><div class="cat-icon" style="background:#d4a017">💰</div>Coins</div><input type="number" id="w-coin" value="0" style="width:70px"></div>
-      <button class="btn primary" style="margin-top:.6rem" onclick="commit7Wonders()">Add</button>
+    document.getElementById('pad').innerHTML = `
+      <input type="number" id="simple-pts" value="0" placeholder="Points">
+      <button class="btn primary" style="margin-top:.6rem" onclick="commitSimple()">Add</button>
     `;
-    else if (g.theme === 'catan') form.innerHTML = `
-      <div class="cat-row"><div class="flex"><div class="cat-icon" style="background:#8B4513">🏠</div>Settlements</div><input type="number" id="c-set" value="0" style="width:70px"></div>
-      <div class="cat-row"><div class="flex"><div class="cat-icon" style="background:#A0522D">🏙️</div>Cities</div><input type="number" id="c-cit" value="0" style="width:70px"></div>
-      <div class="cat-row"><div class="flex"><div class="cat-icon" style="background:#2ecc71">🛣️</div>Longest Road</div><input type="number" id="c-lr" value="0" style="width:70px"></div>
-      <div class="cat-row"><div class="flex"><div class="cat-icon" style="background:#e74c3c">⚔️</div>Largest Army</div><input type="number" id="c-la" value="0" style="width:70px"></div>
-      <div class="cat-row"><div class="flex"><div class="cat-icon" style="background:#f39c12">📜</div>Dev cards</div><input type="number" id="c-dev" value="0" style="width:70px"></div>
-      <button class="btn primary" style="margin-top:.6rem" onclick="commitCatan()">Add VP</button>
-    `;
-    else if (g.theme === 'carcassonne') form.innerHTML = `
-      <div class="cat-row"><div class="flex"><div class="cat-icon" style="background:#7f8c8d">🏰</div>Cities</div><input type="number" id="ca-cit" value="0" style="width:70px"></div>
-      <div class="cat-row"><div class="flex"><div class="cat-icon" style="background:#95a5a6">🛤️</div>Roads</div><input type="number" id="ca-road" value="0" style="width:70px"></div>
-      <div class="cat-row"><div class="flex"><div class="cat-icon" style="background:#34495e">⛪</div>Monasteries</div><input type="number" id="ca-mon" value="0" style="width:70px"></div>
-      <div class="cat-row"><div class="flex"><div class="cat-icon" style="background:#27ae60">🌾</div>Fields</div><input type="number" id="ca-field" value="0" style="width:70px"></div>
-      <button class="btn primary" style="margin-top:.6rem" onclick="commitCarcassonne()">Add</button>
-    `;
-    else form.innerHTML = `<input type="number" id="simple-pts" value="0"><button class="btn primary" onclick="commitSimple()">Add</button>`;
   }
 }
 
-function commitSimple(){
-  currentGame.players[scoringPlayer].score += +document.getElementById('simple-pts').value || 0;
+function openCatanPad(){
+  document.getElementById('pad').innerHTML = `
+    <div class="mode-toggle">
+      <button class="btn ${catanMode==='simple'?'active':''}" onclick="setCatanMode('simple')">Simple VPs</button>
+      <button class="btn ${catanMode==='detailed'?'active':''}" onclick="setCatanMode('detailed')">Detailed</button>
+    </div>
+    <div id="catan-form"></div>
+  `;
+  setCatanMode(catanMode);
+}
+
+function setCatanMode(mode){
+  catanMode = mode;
+  const form = document.getElementById('catan-form');
+  if (mode === 'simple') {
+    form.innerHTML = `
+      <div class="small" style="margin:.4rem 0">Enter VPs for ${currentGame.players[scoringPlayer].name}</div>
+      <input type="number" id="catan-simple" value="0" placeholder="Victory Points">
+      <button class="btn primary" style="margin-top:.6rem" onclick="commitCatanSimple()">Add</button>
+    `;
+  } else {
+    form.innerHTML = `
+      <div class="small" style="margin:.4rem 0">Detailed for ${currentGame.players[scoringPlayer].name}</div>
+      <div class="flex" style="margin:.3rem 0"><span style="width:110px">Settlements</span><input type="number" id="c-set" value="0" style="width:70px"></div>
+      <div class="flex" style="margin:.3rem 0"><span style="width:110px">Cities</span><input type="number" id="c-cit" value="0" style="width:70px"></div>
+      <div class="flex" style="margin:.3rem 0"><span style="width:110px">Longest Road</span><input type="number" id="c-lr" value="0" style="width:70px"></div>
+      <div class="flex" style="margin:.3rem 0"><span style="width:110px">Largest Army</span><input type="number" id="c-la" value="0" style="width:70px"></div>
+      <div class="flex" style="margin:.3rem 0"><span style="width:110px">Dev cards</span><input type="number" id="c-dev" value="0" style="width:70px"></div>
+      <button class="btn primary" style="margin-top:.6rem" onclick="commitCatanDetailed()">Add VP</button>
+    `;
+  }
+}
+
+function commitCatanSimple(){
+  currentGame.players[scoringPlayer].score += +document.getElementById('catan-simple').value || 0;
   persistActive();
   renderLeaderboard();
 }
-function commit7Wonders(){
-  const pts = (+document.getElementById('w-mil').value||0) + (+document.getElementById('w-sci').value||0) + (+document.getElementById('w-civ').value||0) + (+document.getElementById('w-won').value||0) + (+document.getElementById('w-coin').value||0);
-  currentGame.players[scoringPlayer].score += pts;
-  persistActive();
-  renderLeaderboard();
-}
-function commitCatan(){
+function commitCatanDetailed(){
   const pts = (+document.getElementById('c-set').value||0) + (+document.getElementById('c-cit').value||0)*2 + (+document.getElementById('c-lr').value||0) + (+document.getElementById('c-la').value||0) + (+document.getElementById('c-dev').value||0);
   currentGame.players[scoringPlayer].score += pts;
   persistActive();
   renderLeaderboard();
 }
-function commitCarcassonne(){
-  const pts = (+document.getElementById('ca-cit').value||0) + (+document.getElementById('ca-road').value||0) + (+document.getElementById('ca-mon').value||0) + (+document.getElementById('ca-field').value||0);
-  currentGame.players[scoringPlayer].score += pts;
+function commitSimple(){
+  currentGame.players[scoringPlayer].score += +document.getElementById('simple-pts').value || 0;
   persistActive();
   renderLeaderboard();
 }
