@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0c0d10">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="score-tracker-build" content="v20-features-2026-11-27">
+<meta name="score-tracker-build" content="v20.1-clean-header-2026-11-27">
 <meta name="apple-mobile-web-app-title" content="TallyIt">
 <title>TallyIt — Score Tracker</title>
 <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png">
@@ -6779,18 +6779,46 @@ body.theme-seven-wonders .bottom-nav #nav-social {
 .v20-req-filters { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
 .v20-req-filters::-webkit-scrollbar { display: none; }
 .v20-filter-pill { flex: 0 0 auto; }
-.app-header-actions { min-width: 0; }
-.app-header-actions .v20-admin-trigger, .app-header-actions .v20-fs-wrap { flex: 0 0 auto; }
-body.v20-modal-open { overflow: hidden; }
-.v20-share-count, .v20-share-pct { white-space: nowrap; }
-.app-header-actions .v20-admin-trigger { width: 36px; height: 36px; padding: 0; justify-content: center; gap: 0; border-radius: 10px; }
-.app-header-actions .v20-admin-trigger span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-.app-header-actions .v20-admin-trigger svg { width: 17px; height: 17px; }
+/* v20.1 clean header: brand + tiny sync dot left, max 2 icon buttons right, everything in normal flex flow */
+.app-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; white-space: nowrap; min-height: 56px; box-sizing: border-box; }
+.app-header .app-brand { display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1 1 auto; overflow: hidden; }
+.app-header .app-brand h1 { min-width: 0; overflow: hidden; text-overflow: ellipsis; font-size: 1.12rem; letter-spacing: -0.02em; }
+.app-header-actions { display: flex; align-items: center; gap: 10px; flex: 0 0 auto; min-width: 0; }
+#sync-status { position: static; flex: 0 0 7px; width: 7px; height: 7px; min-width: 7px; max-width: 7px; margin: 0 0 0 -2px; padding: 0; border: 0; border-radius: 50%;
+  background: #4ade80; box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.13); font-size: 0; line-height: 0; color: transparent; overflow: hidden; gap: 0; }
+#sync-status::before { display: none; content: none; }
+#sync-status[data-state="error"] { background: #d4a853; border: 0; box-shadow: 0 0 0 3px rgba(212, 168, 83, 0.16); }
+#sync-status:empty { display: none; }
+.app-header .v20-fs-btn, .v20-hmenu-btn { width: 36px; height: 36px; border-radius: 11px; }
+.v20-hmenu-wrap { position: relative; display: inline-flex; align-items: center; }
+.v20-hmenu-btn { padding: 0; border: 1px solid var(--v20-border-hi); background: rgba(20, 22, 27, 0.85); color: var(--v20-muted); display: inline-flex; align-items: center; justify-content: center;
+  cursor: pointer; user-select: none; touch-action: manipulation; transition: color .15s ease, border-color .15s ease, background .15s ease; }
+.v20-hmenu-btn svg { width: 18px; height: 18px; }
+.v20-hmenu-btn:hover, .v20-hmenu-btn:active, .v20-hmenu-btn[aria-expanded="true"] { color: var(--v20-brass); border-color: var(--v20-brass-border); background: var(--v20-brass-soft); }
+.v20-hmenu { position: absolute; top: calc(100% + 8px); right: 0; z-index: 140; width: min(264px, calc(100vw - 24px)); box-sizing: border-box; padding: 6px; border-radius: 14px;
+  border: 1px solid var(--v20-brass-border); background: var(--v20-surface); box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6); white-space: normal; display: flex; flex-direction: column; gap: 2px; }
+.v20-hmenu[hidden], .v20-hmenu.hidden { display: none !important; }
+.v20-hmenu-status { display: flex; align-items: center; gap: 10px; padding: 10px 10px 11px; margin-bottom: 4px; border-bottom: 1px solid var(--v20-border); min-width: 0; }
+.v20-hmenu-dot { flex: 0 0 8px; width: 8px; height: 8px; border-radius: 50%; background: #4ade80; box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.13); }
+.v20-hmenu-dot[data-state="error"] { background: #d4a853; box-shadow: 0 0 0 3px rgba(212, 168, 83, 0.16); }
+.v20-hmenu-status-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.v20-hmenu-sync { font-size: 13px; font-weight: 600; color: var(--v20-text); }
+.v20-hmenu-email { font-size: 12px; color: var(--v20-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.v20-hmenu-email:empty { display: none; }
+.v20-hmenu-item, .v20-hmenu .v20-admin-trigger { display: flex; align-items: center; gap: 11px; width: 100%; box-sizing: border-box; padding: 11px 10px; border: 0; border-radius: 10px;
+  background: transparent; color: var(--v20-text); font: 500 14px/1.2 inherit; font-family: inherit; text-align: left; cursor: pointer; touch-action: manipulation; }
+.v20-hmenu .v20-admin-trigger { color: var(--v20-brass); font-weight: 600; }
+.v20-hmenu-item svg, .v20-hmenu .v20-admin-trigger svg { width: 17px; height: 17px; flex: 0 0 auto; color: var(--v20-muted); }
+.v20-hmenu .v20-admin-trigger svg { color: var(--v20-brass); }
+.v20-hmenu-item:hover, .v20-hmenu-item:active, .v20-hmenu .v20-admin-trigger:hover, .v20-hmenu .v20-admin-trigger:active { background: var(--v20-surface-2); }
+.v20-hmenu-signout { color: #f3b4b4; }
+.v20-hmenu-signout svg { color: #f3b4b4; }
+html.v20-standalone .app-header .v20-fs-wrap, html.v20-standalone #btn-fullscreen-toggle, html.v20-standalone #btn-menu-fullscreen { display: none !important; }
 
 </style>
 </head>
 <body>
-<!-- Build: v20-features-2026-11-27 -->
+<!-- Build: v20.1-clean-header-2026-11-27 -->
 
 <!-- Login: starts hidden until getSession() resolves -->
 <section id="login-view" class="auth-hidden" hidden aria-label="Sign in to Score Tracker">
@@ -6830,18 +6858,10 @@ body.v20-modal-open { overflow: hidden; }
           <line x1="4" y1="17" x2="20" y2="7"/>
         </svg>
       </span>
-      <h1>Score Tracker</h1>
+      <h1>TallyIt</h1>
+      <span id="sync-status" role="status" aria-live="polite" title="Sync status" aria-label="Sync status"></span>
     </div>
     <div class="app-header-actions">
-      <span id="sync-status" role="status" aria-live="polite"></span>
-<button type="button" id="btn-open-admin" aria-label="Admin Stats" title="Admin Stats" class="v20-admin-trigger hidden" hidden onclick="window.openAdminScreen && openAdminScreen()">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-    <line x1="18" y1="20" x2="18" y2="10"/>
-    <line x1="12" y1="20" x2="12" y2="4"/>
-    <line x1="6" y1="20" x2="6" y2="14"/>
-  </svg>
-  <span>Admin Stats</span>
-</button>
 <span class="v20-fs-wrap">
   <button type="button" id="btn-fullscreen-toggle" class="v20-fs-btn" aria-label="Toggle full screen" aria-pressed="false" title="Full Screen" onclick="window.toggleFullscreen && toggleFullscreen()">
     <svg class="v20-fs-ico-expand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -6858,7 +6878,40 @@ body.v20-modal-open { overflow: hidden; }
     </svg>
   </button>
 </span>
-      <button class="app-signout-btn" type="button" onclick="signOut()">Sign out</button>
+      <div class="v20-hmenu-wrap">
+        <button type="button" id="btn-header-menu" class="v20-hmenu-btn" aria-label="Account menu" title="Menu" aria-haspopup="menu" aria-expanded="false" aria-controls="v20-header-menu" onclick="window.toggleHeaderMenu && toggleHeaderMenu()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="5.5" r="1.15" fill="currentColor"/>
+            <circle cx="12" cy="12" r="1.15" fill="currentColor"/>
+            <circle cx="12" cy="18.5" r="1.15" fill="currentColor"/>
+          </svg>
+        </button>
+        <div id="v20-header-menu" class="v20-hmenu hidden" hidden role="menu" aria-label="Account menu">
+          <div class="v20-hmenu-status">
+            <span id="v20-hmenu-dot" class="v20-hmenu-dot" data-state="ok" aria-hidden="true"></span>
+            <span class="v20-hmenu-status-text">
+              <span id="v20-hmenu-sync" class="v20-hmenu-sync">Signed in</span>
+              <span id="v20-hmenu-email" class="v20-hmenu-email"></span>
+            </span>
+          </div>
+<button type="button" id="btn-open-admin" role="menuitem" class="v20-admin-trigger hidden" hidden onclick="window.closeHeaderMenu && closeHeaderMenu(); window.openAdminScreen && openAdminScreen()">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <line x1="18" y1="20" x2="18" y2="10"/>
+    <line x1="12" y1="20" x2="12" y2="4"/>
+    <line x1="6" y1="20" x2="6" y2="14"/>
+  </svg>
+  <span>Admin Stats</span>
+</button>
+          <button type="button" id="btn-menu-fullscreen" class="v20-hmenu-item" role="menuitem" onclick="window.closeHeaderMenu && closeHeaderMenu(); window.toggleFullscreen && toggleFullscreen()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+            <span id="btn-menu-fullscreen-label">Full Screen</span>
+          </button>
+          <button type="button" id="btn-signout" class="v20-hmenu-item v20-hmenu-signout" role="menuitem" onclick="window.closeHeaderMenu && closeHeaderMenu(); signOut()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 17l5-5-5-5"/><line x1="15" y1="12" x2="3.5" y2="12"/><path d="M14.5 4.5h4a1.5 1.5 0 0 1 1.5 1.5v12a1.5 1.5 0 0 1-1.5 1.5h-4"/></svg>
+            <span>Sign out</span>
+          </button>
+        </div>
+      </div>
     </div>
   </header>
 
@@ -18232,7 +18285,9 @@ window.SocialUI = (function () {
   async function onAuthChange(user) {
     const trig = $('btn-open-admin');
     adminOk = false; show(trig, false);
-    if (!user) { if (BE()) BE().clearCache(); closeAdminScreen(true); return; }
+    const em = $('v20-hmenu-email'); if (em) em.textContent = user && user.email ? user.email : '';
+    syncStatusMirror();
+    if (!user) { closeHeaderMenu(); if (BE()) BE().clearCache(); closeAdminScreen(true); return; }
     const seq = ++adminSeq;
     let ok = false;
     try { ok = BE() ? await BE().isAdmin({ force: true }) : false; } catch (_) { ok = false; }
@@ -18360,6 +18415,12 @@ window.SocialUI = (function () {
     b.setAttribute('aria-pressed', on ? 'true' : 'false');
     b.title = on ? 'Exit Full Screen' : 'Full Screen';
     doc.documentElement.classList.toggle('v20-is-fullscreen', on);
+    const standalone = isStandalone();
+    doc.documentElement.classList.toggle('v20-standalone', standalone);
+    const wrap = b.closest('.v20-fs-wrap'); if (wrap) wrap.hidden = standalone;
+    b.hidden = standalone;
+    const mi = $('btn-menu-fullscreen'); if (mi) mi.hidden = standalone;
+    const ml = $('btn-menu-fullscreen-label'); if (ml) ml.textContent = fsEl() ? 'Exit Full Screen' : 'Full Screen';
   }
   function showIosFullscreenHint() { show($('v20-ios-fs-popover'), true); }
   function closeIosFullscreenHint() { show($('v20-ios-fs-popover'), false); }
@@ -18378,12 +18439,39 @@ window.SocialUI = (function () {
     syncFullscreenUI();
   }
 
+  // ---------------------------------------------------------------- Header menu + sync dot (v20.1)
+  function syncStatusMirror() {
+    const el = $('sync-status'); if (!el) return;
+    const txt = (el.textContent || '').trim(), err = el.dataset.state === 'error';
+    const label = txt || 'Signed in';
+    if (el.getAttribute('title') !== label) el.setAttribute('title', label);
+    if (el.getAttribute('aria-label') !== label) el.setAttribute('aria-label', label);
+    const ms = $('v20-hmenu-sync'); if (ms) ms.textContent = label;
+    const md = $('v20-hmenu-dot'); if (md) md.dataset.state = err ? 'error' : 'ok';
+  }
+  function headerMenuOpen() { const m = $('v20-header-menu'); return !!(m && !m.hidden); }
+  function openHeaderMenu() {
+    syncStatusMirror(); syncFullscreenUI();
+    show($('v20-header-menu'), true);
+    const b = $('btn-header-menu'); if (b) b.setAttribute('aria-expanded', 'true');
+  }
+  function closeHeaderMenu() {
+    show($('v20-header-menu'), false);
+    const b = $('btn-header-menu'); if (b) b.setAttribute('aria-expanded', 'false');
+  }
+  function toggleHeaderMenu() { if (headerMenuOpen()) closeHeaderMenu(); else { closeIosFullscreenHint(); openHeaderMenu(); } }
+
   // ---------------------------------------------------------------- Shared
   function syncBodyLock() { const anyOpen = ['req-game-modal', 'var-compare-modal'].some((id) => $(id) && !$(id).hidden); doc.body.classList.toggle('v20-modal-open', anyOpen); }
   function init() {
     doc.addEventListener('fullscreenchange', syncFullscreenUI);
     doc.addEventListener('webkitfullscreenchange', syncFullscreenUI);
-    doc.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closeRequestGameModal(); closeVariationsModal(); closeIosFullscreenHint(); } });
+    doc.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closeRequestGameModal(); closeVariationsModal(); closeIosFullscreenHint(); closeHeaderMenu(); } });
+    doc.addEventListener('click', (e) => { if (headerMenuOpen() && !e.target.closest('.v20-hmenu-wrap')) closeHeaderMenu(); }, true);
+    if (global.matchMedia) { try { global.matchMedia('(display-mode: standalone)').addEventListener('change', syncFullscreenUI); } catch (_) {} }
+    const se = $('sync-status');
+    if (se && global.MutationObserver) new MutationObserver(syncStatusMirror).observe(se, { childList: true, characterData: true, subtree: true, attributes: true, attributeFilter: ['data-state'] });
+    syncStatusMirror();
     syncFullscreenUI();
     setAdminRequestFilter('all');
   }
@@ -18391,10 +18479,10 @@ window.SocialUI = (function () {
 
   const api = { openRequestGameModal, closeRequestGameModal, submitGameRequest, resetRequestGameForm, openVariationsModal, closeVariationsModal, selectVariation,
     onSetupRendered, onGameStarted, onAuthChange, openAdminScreen, closeAdminScreen, loadAdminStats, setAdminRequestFilter, renderAdminStats,
-    toggleFullscreen, closeIosFullscreenHint, showIosFullscreenHint, isAdminVisible: () => adminOk, _state: () => ({ setupGame, setupVersion, lastMerged, adminFilter, adminStats }) };
+    toggleFullscreen, closeIosFullscreenHint, showIosFullscreenHint, openHeaderMenu, closeHeaderMenu, toggleHeaderMenu, isAdminVisible: () => adminOk, _state: () => ({ setupGame, setupVersion, lastMerged, adminFilter, adminStats }) };
   global.TallyItV20 = api;
   Object.assign(global, { openRequestGameModal, closeRequestGameModal, submitGameRequest, resetRequestGameForm, openVariationsModal, closeVariationsModal,
-    openAdminScreen, closeAdminScreen, loadAdminStats, setAdminRequestFilter, toggleFullscreen, closeIosFullscreenHint });
+    openAdminScreen, closeAdminScreen, loadAdminStats, setAdminRequestFilter, toggleFullscreen, closeIosFullscreenHint, openHeaderMenu, closeHeaderMenu, toggleHeaderMenu });
 })(window);
 
 </script>
