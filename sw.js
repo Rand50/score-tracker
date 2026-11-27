@@ -1,6 +1,6 @@
 // Score Tracker service worker
-// v3: network-first for HTML so new builds show up immediately; cache is only an offline fallback.
-const CACHE_NAME = 'score-tracker-v3-2026-11-26';
+// v4: neutral shell + Catan-only theme. Network-first for HTML so new builds show up immediately; cache is only an offline fallback.
+const CACHE_NAME = 'score-tracker-v4-2026-11-26';
 const ASSETS = [
   './game_tracker.html',
   './manifest.json',

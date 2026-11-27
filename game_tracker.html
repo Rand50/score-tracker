@@ -3,9 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#180f08">
-<meta name="score-tracker-build" content="catan-parchment-2026-11-26">
-<title>Score Tracker — Catan</title>
+<meta name="theme-color" content="#0b1220">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="score-tracker-build" content="v4-neutral-shell-catan-theme-2026-11-26">
+<title>Score Tracker</title>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon-512.jpg" type="image/jpeg">
 <link rel="apple-touch-icon" href="icon-512.jpg">
@@ -13,22 +15,149 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
 
-<style>
+<!-- ===================== NEUTRAL (GAME-AGNOSTIC) THEME ===================== -->
+<style id="neutral-theme">
 :root {
-  /* Wood backdrop palette */
+  --bg: #0b1220; --surface: #151c2c; --surface2: #1e293b; --text: #f1f5f9; --muted: #94a3b8;
+  --accent: #22d3ee; --accent-dim: #0891b2; --success: #34d399; --danger: #f43f5e;
+  --border: rgba(255,255,255,0.08); --radius: 16px; --shadow: 0 10px 30px rgba(0,0,0,0.4);
+  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+.hidden, [hidden] { display: none !important; }
+html, body { margin: 0; padding: 0; }
+body { font-family: var(--font); background: var(--bg); color: var(--text); min-height: 100vh; }
+body:not(:has(#app-shell[hidden])) { padding-bottom: 84px; }
+
+/* ---------- Login (neutral navy) ---------- */
+#login-view { position: relative; z-index: 1; min-height: 100vh; min-height: 100dvh; padding: 1.5rem 1rem; align-items: center; justify-content: center;
+  background: radial-gradient(circle at 50% 20%, rgba(34,211,238,0.14), transparent 60%), linear-gradient(180deg, #0f172a 0%, var(--bg) 60%, #070c16 100%); }
+#login-view:not([hidden]):not(.auth-hidden) { display: flex; }
+#login-view[hidden], #login-view.auth-hidden, #app-shell[hidden], #app-shell.auth-hidden, .auth-hidden { display: none !important; }
+.auth-card { width: 100%; max-width: 390px; background: var(--surface); border: 1px solid rgba(148,163,184,0.18); border-radius: 18px; padding: 1.9rem 1.5rem 1.5rem; box-shadow: 0 20px 45px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.04); }
+.auth-crest { width: 54px; height: 54px; margin: 0 auto 0.8rem; border-radius: 16px; display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(145deg, var(--accent), var(--accent-dim)); box-shadow: 0 6px 18px rgba(34,211,238,0.3); user-select: none; }
+.auth-title { margin: 0; text-align: center; font-size: 1.6rem; font-weight: 700; letter-spacing: -0.4px; color: var(--text); }
+.auth-subtitle { margin: 0.35rem 0 1.4rem; text-align: center; font-size: 0.74rem; font-weight: 600; letter-spacing: 1.8px; text-transform: uppercase; color: var(--muted); }
+.auth-btn { width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem; padding: 0.8rem 1rem; border-radius: 12px; font: 600 0.98rem var(--font); cursor: pointer; transition: transform .08s ease, filter .15s ease, opacity .15s ease; }
+.auth-btn:active:not(:disabled) { transform: translateY(1px); }
+.auth-btn:disabled { opacity: .6; cursor: not-allowed; }
+.auth-btn-google { background: #fff; color: #1f2937; border: 1px solid #e2e8f0; box-shadow: 0 2px 6px rgba(0,0,0,0.25); }
+.auth-btn-google:hover:not(:disabled) { filter: brightness(0.97); }
+.auth-btn-primary { margin-top: 0.7rem; border: none; color: #0b1220; background: linear-gradient(135deg, var(--accent), var(--accent-dim)); box-shadow: 0 4px 14px rgba(34,211,238,0.25); }
+.auth-btn-primary:hover:not(:disabled) { filter: brightness(1.06); }
+.auth-divider { display: flex; align-items: center; gap: 0.75rem; margin: 1.15rem 0; color: var(--muted); font-size: 0.74rem; letter-spacing: 1.5px; text-transform: uppercase; }
+.auth-divider::before, .auth-divider::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, transparent, rgba(148,163,184,0.35), transparent); }
+.auth-label { display: block; font-size: 0.76rem; font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase; color: var(--muted); margin-bottom: 0.4rem; }
+#login-view .auth-input { width: 100%; padding: 0.75rem 0.85rem; border: 1px solid rgba(148,163,184,0.25); border-radius: 12px; background: var(--bg); color: var(--text); font: 0.98rem var(--font); outline: none; }
+#login-view .auth-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(34,211,238,0.18); }
+#login-msg { min-height: 1.25rem; margin: 0.9rem 0 0; text-align: center; font-size: 0.85rem; line-height: 1.35; color: var(--muted); }
+#login-msg[data-tone="error"] { color: var(--danger); }
+#login-msg[data-tone="success"] { color: var(--success); }
+
+/* ---------- App shell (neutral navy) ---------- */
+#app-shell { position: relative; z-index: 1; }
+.app-header { padding: 1.1rem 1.1rem 0.6rem; display: flex; justify-content: space-between; align-items: center; max-width: 900px; margin: 0 auto; }
+.app-header h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.5px; }
+.view { display: none; padding: 0 1rem 1rem; max-width: 900px; margin: 0 auto; }
+.view.active { display: block; }
+.card { background: var(--surface); border-radius: var(--radius); padding: 1.2rem; margin-bottom: 1rem; border: 1px solid var(--border); box-shadow: var(--shadow); }
+.card h2 { margin: 0 0 .6rem; font-size: 1.25rem; }
+.card h3 { margin: 0 0 .5rem; font-size: 1rem; }
+.btn { background: var(--surface2); color: var(--text); border: 1px solid var(--border); padding: 0.7rem 1.2rem; border-radius: 12px; font: 600 0.98rem var(--font); cursor: pointer; transition: transform .1s, filter .15s; }
+.btn:active { transform: scale(0.98); }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+.btn.primary { background: linear-gradient(135deg, var(--accent), var(--accent-dim)); color: #0b1220; border: none; }
+.btn.success { background: var(--success); color: #0b1220; border: none; }
+.btn.danger { background: var(--danger); color: #fff; border: none; }
+.btn.sm { padding: 0.4rem 0.75rem; font-size: 0.85rem; }
+.btn.block { width: 100%; }
+input, select, textarea { background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 0.7rem; border-radius: 10px; width: 100%; font: 1rem var(--font); }
+input[type="checkbox"] { width: auto; accent-color: var(--accent); }
+label.small, .field-label { display: block; margin: 0.7rem 0 0.3rem; color: var(--muted); font-size: 0.85rem; }
+.small { color: var(--muted); font-size: .85rem; }
+.flex { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; }
+.space-between { justify-content: space-between; }
+.hero { text-align: center; padding: 1.6rem 1rem; }
+.hero .emoji { font-size: 3rem; margin-bottom: .4rem; }
+.hero h2 { margin: 0 0 .35rem; }
+.hero p { margin: 0 0 1.1rem; }
+.hero .btn { width: 100%; max-width: 280px; padding: 0.95rem; }
+#sync-status { margin: .6rem 0 0; font-size: .78rem; color: var(--muted); }
+#sync-status[data-state="error"] { color: var(--danger); }
+.recent-item { padding: .6rem 0; border-bottom: 1px solid var(--border); }
+.recent-item:last-child { border-bottom: none; }
+
+/* Choose game */
+.game-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 0.7rem; margin: 0.8rem 0 0.4rem; }
+.game-card { position: relative; height: 150px; border-radius: 14px; overflow: hidden; cursor: pointer; background-color: var(--surface2); background-size: contain; background-repeat: no-repeat; background-position: center top; border: 2px solid transparent; transition: transform .15s, border-color .15s; }
+.game-card:hover { transform: translateY(-2px); }
+.game-card.selected { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(34,211,238,0.2); }
+.game-card .game-icon { position: absolute; inset: 0 0 34px 0; display: flex; align-items: center; justify-content: center; font-size: 2.6rem; color: var(--accent); }
+.game-card .overlay { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,.88)); padding: 1.1rem .5rem .55rem; color: #fff; font-weight: 600; font-size: .9rem; text-align: center; }
+.player-list { display: flex; flex-wrap: wrap; gap: .5rem; margin: .5rem 0; }
+.player-chip { background: var(--surface2); padding: .4rem .7rem; border-radius: 20px; display: inline-flex; align-items: center; gap: .45rem; font-size: .92rem; border: 1px solid var(--border); }
+.player-chip .chip-remove { background: none; border: none; color: var(--danger); font-size: 1.05rem; cursor: pointer; padding: 0 .1rem; line-height: 1; }
+
+/* Generic active game */
+.active-head { display: flex; justify-content: space-between; align-items: flex-start; gap: .5rem; }
+.active-head h2 { margin: 0; }
+.player-row { background: var(--surface2); border-radius: 14px; padding: 0.85rem 1rem; margin: 0.45rem 0; display: flex; justify-content: space-between; align-items: center; cursor: pointer; border: 1px solid transparent; }
+.player-row.selected { border-color: var(--accent); }
+.player-row.leader .p-score { color: var(--success); }
+.rank { width: 28px; font-weight: 700; color: var(--muted); }
+.p-score { font-size: 1.45rem; font-weight: 700; color: var(--accent); }
+#gen-pad { margin-top: .9rem; padding-top: .9rem; border-top: 1px solid var(--border); }
+.mode-toggle-n { display: grid; grid-template-columns: 1fr 1fr; gap: .4rem; margin: .5rem 0 .8rem; }
+.mode-toggle-n button.active { background: var(--accent); color: #0b1220; border-color: var(--accent); }
+.key { border-radius: 10px; padding: 0.8rem 0.3rem; text-align: center; font-weight: 700; font-size: 1.1rem; cursor: pointer; border: 1px solid #334155; color: #fff; user-select: none; }
+.key.active { outline: 3px solid var(--accent); outline-offset: 1px; }
+.key-grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-bottom: 8px; }
+.key-grid-6 { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; margin-bottom: 10px; }
+.form-row { display: flex; align-items: center; gap: .6rem; margin: .35rem 0; }
+.form-row > span { flex: 1; }
+.form-row input[type="number"] { width: 90px; flex: 0 0 90px; }
+.preview { margin: .6rem 0; font-weight: 600; color: var(--accent); }
+.action-bar { display: flex; gap: .5rem; margin-top: 1rem; }
+.action-bar .btn { flex: 1; }
+
+/* History */
+.history-item { padding: .85rem 0; border-bottom: 1px solid var(--border); }
+.history-item:last-child { border-bottom: none; }
+.history-item .winner { color: var(--success); font-size: .85rem; }
+
+/* Bottom nav (always neutral) */
+.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 50; display: flex; justify-content: space-around;
+  background: rgba(15, 23, 42, 0.96); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid var(--border); padding: .55rem 0 calc(.55rem + env(safe-area-inset-bottom, 0px)); font-family: var(--font); }
+.bottom-nav button { background: none; border: none; color: var(--muted); font: 600 .72rem var(--font); display: flex; flex-direction: column; align-items: center; gap: .2rem; cursor: pointer; min-width: 64px; }
+.bottom-nav button .icon { font-size: 1.3rem; line-height: 1; }
+.bottom-nav button.active { color: var(--accent); }
+
+/* Catan board is only shown when theme-catan is on */
+#catan-board { display: none; }
+body.theme-catan #catan-board { display: block; }
+body.theme-catan #generic-board { display: none; }
+body.theme-catan .app-header { display: none; }
+</style>
+
+<!-- ===================== CATAN THEME (scoped to body.theme-catan) ===================== -->
+<style id="catan-theme">
+body.theme-catan {
+  
   --wood-deep: #180f08;
   --wood-mid: #2b1a0e;
   --wood-warm: #3c2414;
   --wood-grain: rgba(14, 7, 3, 0.42);
 
-  /* Parchment palette */
+  
   --parchment-light: #fbf1d8;
   --parchment-base: #f2dfb6;
   --parchment-aged: #e3c891;
   --parchment-edge: #c7a464;
   --parchment-card: #faf2dd;
 
-  /* Ink & gold accents */
+  
   --ink-dark: #2c1a0c;
   --ink-mid: #53361b;
   --ink-muted: #7c5930;
@@ -41,22 +170,11 @@
   --royal: #2b598a;
   --plum: #6c3a7a;
 
-  /* Typography */
+  
   --font-display: 'Cinzel', Georgia, 'Times New Roman', serif;
   --font-body: 'Crimson Text', Georgia, 'Times New Roman', serif;
 }
-
-*, *::before, *::after {
-  box-sizing: border-box;
-}
-
-/* Guaranteed hiding utilities — NEVER overridden by ID selectors */
-.hidden,
-[hidden] {
-  display: none !important;
-}
-
-html, body {
+body.theme-catan {
   margin: 0;
   padding: 0;
   min-height: 100%;
@@ -64,9 +182,7 @@ html, body {
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
 }
-
-/* Rich layered dark wood-grain background (pure CSS, zero external image stubs) */
-body {
+body.theme-catan {
   background-color: var(--wood-deep);
   background-image:
     radial-gradient(ellipse at 50% 0%, rgba(160, 102, 42, 0.22) 0%, transparent 62%),
@@ -89,9 +205,7 @@ body {
   background-attachment: fixed;
   padding-bottom: 84px;
 }
-
-/* Subtle horizontal wood plank seams */
-body::before {
+body.theme-catan::before {
   content: '';
   position: fixed;
   inset: 0;
@@ -108,25 +222,7 @@ body::before {
     radial-gradient(circle at 20% 25%, rgba(255, 200, 120, 0.05), transparent 40%),
     radial-gradient(circle at 80% 70%, rgba(0, 0, 0, 0.35), transparent 45%);
 }
-
-/* Layout container */
-.view {
-  display: none;
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  max-width: 500px;
-  margin: 0 auto;
-  padding: 0.9rem 0.85rem 1.2rem;
-}
-
-.view.active {
-  display: block;
-}
-
-
-/* Ornate aged parchment card */
-.parchment {
+body.theme-catan #catan-board .parchment {
   position: relative;
   background:
     radial-gradient(ellipse at 15% 10%, rgba(255, 250, 232, 0.72) 0%, transparent 55%),
@@ -141,9 +237,7 @@ body::before {
     inset 0 0 0 2px rgba(244, 200, 76, 0.38),
     inset 0 0 22px rgba(139, 94, 18, 0.22);
 }
-
-/* Inner decorative hairline frame */
-.parchment::after {
+body.theme-catan #catan-board .parchment::after {
   content: '';
   position: absolute;
   inset: 5px;
@@ -151,13 +245,11 @@ body::before {
   border-radius: 6px;
   pointer-events: none;
 }
-
-.parchment-header {
+body.theme-catan #catan-board .parchment-header {
   text-align: center;
   padding: 0.95rem 1rem 0.85rem;
 }
-
-.header-crest {
+body.theme-catan #catan-board .header-crest {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -165,8 +257,7 @@ body::before {
   color: var(--gold-deep);
   margin-bottom: 0.15rem;
 }
-
-.header-title {
+body.theme-catan #catan-board .header-title {
   font-family: var(--font-display);
   font-size: 1.55rem;
   font-weight: 800;
@@ -176,8 +267,7 @@ body::before {
   text-align: center;
   text-shadow: 0 1px 0 rgba(255, 248, 224, 0.85);
 }
-
-.header-sub {
+body.theme-catan #catan-board .header-sub {
   font-family: var(--font-display);
   text-align: center;
   font-size: 0.72rem;
@@ -187,23 +277,20 @@ body::before {
   color: var(--gold-deep);
   margin: 0.3rem 0 0;
 }
-
-.ornate-divider {
+body.theme-catan #catan-board .ornate-divider {
   display: flex;
   align-items: center;
   gap: 0.55rem;
   margin: 0.45rem 0 0.65rem;
 }
-
-.ornate-divider::before,
-.ornate-divider::after {
+body.theme-catan #catan-board .ornate-divider::before,
+body.theme-catan #catan-board .ornate-divider::after {
   content: '';
   flex: 1;
   height: 1px;
   background: linear-gradient(90deg, transparent, rgba(139, 94, 18, 0.55), transparent);
 }
-
-.section-title {
+body.theme-catan #catan-board .section-title {
   font-family: var(--font-display);
   text-align: center;
   font-size: 0.78rem;
@@ -213,17 +300,12 @@ body::before {
   color: var(--gold-deep);
   margin: 0 0 0.55rem;
 }
-
-/* ==========================================================================
-   Leaderboard & Player Rows
-   ========================================================================== */
-#leaderboard {
+body.theme-catan #catan-board #leaderboard {
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
 }
-
-.player-row {
+body.theme-catan #catan-board .player-row {
   position: relative;
   display: flex;
   align-items: center;
@@ -235,29 +317,24 @@ body::before {
   cursor: pointer;
   transition: transform 0.12s ease, border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
 }
-
-.player-row:hover {
+body.theme-catan #catan-board .player-row:hover {
   background: rgba(255, 250, 238, 0.85);
   border-color: var(--gold-mid);
 }
-
-.player-row:active {
+body.theme-catan #catan-board .player-row:active {
   transform: scale(0.99);
 }
-
-.player-row.selected {
+body.theme-catan #catan-board .player-row.selected {
   background: linear-gradient(135deg, rgba(255, 248, 224, 0.96), rgba(244, 218, 152, 0.75));
   border-color: var(--gold-mid);
   box-shadow: 0 0 0 2px rgba(200, 146, 30, 0.35), 0 3px 10px rgba(107, 68, 12, 0.18);
 }
-
-.player-row.winner {
+body.theme-catan #catan-board .player-row.winner {
   background: linear-gradient(135deg, rgba(255, 247, 212, 0.98), rgba(242, 206, 114, 0.62));
   border-color: var(--gold-mid);
   box-shadow: 0 0 0 2px rgba(244, 200, 76, 0.45), 0 4px 12px rgba(139, 94, 18, 0.25);
 }
-
-.shield-wrap {
+body.theme-catan #catan-board .shield-wrap {
   flex-shrink: 0;
   width: 36px;
   height: 40px;
@@ -266,20 +343,17 @@ body::before {
   justify-content: center;
   filter: drop-shadow(0 2px 2px rgba(44, 26, 12, 0.32));
 }
-
-.player-meta {
+body.theme-catan #catan-board .player-meta {
   flex: 1;
   min-width: 0;
 }
-
-.player-name-line {
+body.theme-catan #catan-board .player-name-line {
   display: flex;
   align-items: center;
   gap: 0.4rem;
   flex-wrap: wrap;
 }
-
-.player-name {
+body.theme-catan #catan-board .player-name {
   font-family: var(--font-display);
   font-size: 1rem;
   font-weight: 700;
@@ -288,8 +362,7 @@ body::before {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
-.winner-badge {
+body.theme-catan #catan-board .winner-badge {
   display: inline-flex;
   align-items: center;
   gap: 0.22rem;
@@ -305,27 +378,23 @@ body::before {
   text-transform: uppercase;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.22);
 }
-
-.stars {
+body.theme-catan #catan-board .stars {
   display: flex;
   align-items: center;
   gap: 1.5px;
   margin-top: 0.16rem;
   line-height: 1;
 }
-
-.star-filled {
+body.theme-catan #catan-board .star-filled {
   color: #d49412;
   font-size: 0.82rem;
   text-shadow: 0 1px 1px rgba(92, 54, 6, 0.35);
 }
-
-.star-empty {
+body.theme-catan #catan-board .star-empty {
   color: rgba(139, 94, 18, 0.28);
   font-size: 0.82rem;
 }
-
-.vp-badge {
+body.theme-catan #catan-board .vp-badge {
   flex-shrink: 0;
   min-width: 48px;
   text-align: right;
@@ -334,8 +403,7 @@ body::before {
   align-items: flex-end;
   justify-content: center;
 }
-
-.vp-num {
+body.theme-catan #catan-board .vp-num {
   font-family: var(--font-display);
   font-size: 1.7rem;
   font-weight: 800;
@@ -346,8 +414,7 @@ body::before {
   color: transparent;
   filter: drop-shadow(0 1px 0 rgba(255, 248, 224, 0.9));
 }
-
-.vp-label {
+body.theme-catan #catan-board .vp-label {
   font-family: var(--font-display);
   font-size: 0.58rem;
   font-weight: 700;
@@ -355,19 +422,14 @@ body::before {
   color: var(--ink-muted);
   margin-top: 2px;
 }
-
-.leaderboard-hint {
+body.theme-catan #catan-board .leaderboard-hint {
   text-align: center;
   font-size: 0.85rem;
   font-style: italic;
   color: var(--ink-muted);
   margin: 0.55rem 0 0;
 }
-
-/* ==========================================================================
-   Adjust Victory Points Pad (Simple & Detailed Modes)
-   ========================================================================== */
-.pad-player-banner {
+body.theme-catan #catan-board .pad-player-banner {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -378,9 +440,7 @@ body::before {
   font-weight: 700;
   color: var(--ink-dark);
 }
-
-/* Segmented Simple / Detailed toggle */
-.mode-toggle {
+body.theme-catan #catan-board .mode-toggle {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.25rem;
@@ -390,8 +450,7 @@ body::before {
   border: 1.5px solid rgba(139, 94, 18, 0.45);
   border-radius: 8px;
 }
-
-.mode-toggle button {
+body.theme-catan #catan-board .mode-toggle button {
   font-family: var(--font-display);
   font-size: 0.78rem;
   font-weight: 700;
@@ -405,16 +464,13 @@ body::before {
   cursor: pointer;
   transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
 }
-
-.mode-toggle button.active {
+body.theme-catan #catan-board .mode-toggle button.active {
   background: linear-gradient(180deg, #4b3019 0%, #2d1b0c 100%);
   color: var(--parchment-light);
   border-color: var(--gold-mid);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.28);
 }
-
-/* Simple VP Stepper */
-.adj-box {
+body.theme-catan #catan-board .adj-box {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -425,8 +481,7 @@ body::before {
   border-radius: 8px;
   margin-bottom: 0.7rem;
 }
-
-.adj-btn {
+body.theme-catan #catan-board .adj-btn {
   width: 44px;
   height: 44px;
   border: 2px solid var(--gold-mid);
@@ -444,16 +499,13 @@ body::before {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.28);
   transition: transform 0.1s ease, filter 0.15s ease;
 }
-
-.adj-btn:hover {
+body.theme-catan #catan-board .adj-btn:hover {
   filter: brightness(1.12);
 }
-
-.adj-btn:active {
+body.theme-catan #catan-board .adj-btn:active {
   transform: scale(0.95);
 }
-
-#adj-val {
+body.theme-catan #catan-board #adj-val {
   min-width: 56px;
   text-align: center;
   font-family: var(--font-display);
@@ -461,15 +513,12 @@ body::before {
   font-weight: 800;
   color: var(--gold-deep);
 }
-
-/* Detailed Category Rows */
-.cat-list {
+body.theme-catan #catan-board .cat-list {
   display: flex;
   flex-direction: column;
   gap: 0.42rem;
 }
-
-.cat-row {
+body.theme-catan #catan-board .cat-row {
   display: flex;
   align-items: center;
   gap: 0.65rem;
@@ -481,23 +530,19 @@ body::before {
   transition: transform 0.1s ease, border-color 0.15s ease, box-shadow 0.15s ease;
   user-select: none;
 }
-
-.cat-row:hover {
+body.theme-catan #catan-board .cat-row:hover {
   border-color: var(--gold-mid);
   box-shadow: 0 2px 8px rgba(139, 94, 18, 0.18);
 }
-
-.cat-row:active {
+body.theme-catan #catan-board .cat-row:active {
   transform: scale(0.99);
 }
-
-.cat-row.has-count {
+body.theme-catan #catan-board .cat-row.has-count {
   border-color: var(--gold-mid);
   background: linear-gradient(180deg, #fff9e8 0%, #f5dfa2 100%);
   box-shadow: 0 0 0 1.5px rgba(200, 146, 30, 0.35);
 }
-
-.cat-icon {
+body.theme-catan #catan-board .cat-icon {
   flex-shrink: 0;
   width: 38px;
   height: 38px;
@@ -508,39 +553,33 @@ body::before {
   border: 1.5px solid rgba(44, 26, 12, 0.25);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 1px 3px rgba(0, 0, 0, 0.22);
 }
-
-.cat-icon--settlement { background: linear-gradient(135deg, #c9473a, #8d251b); }
-.cat-icon--city       { background: linear-gradient(135deg, #d49b24, #8f600b); }
-.cat-icon--road       { background: linear-gradient(135deg, #3a8f63, #1e593a); }
-.cat-icon--army       { background: linear-gradient(135deg, #864d9e, #542868); }
-.cat-icon--vpcard     { background: linear-gradient(135deg, #d9a928, #9c6e0e); }
-
-.cat-info {
+body.theme-catan #catan-board .cat-icon--settlement { background: linear-gradient(135deg, #c9473a, #8d251b); }
+body.theme-catan #catan-board .cat-icon--city { background: linear-gradient(135deg, #d49b24, #8f600b); }
+body.theme-catan #catan-board .cat-icon--road { background: linear-gradient(135deg, #3a8f63, #1e593a); }
+body.theme-catan #catan-board .cat-icon--army { background: linear-gradient(135deg, #864d9e, #542868); }
+body.theme-catan #catan-board .cat-icon--vpcard { background: linear-gradient(135deg, #d9a928, #9c6e0e); }
+body.theme-catan #catan-board .cat-info {
   flex: 1;
   min-width: 0;
 }
-
-.cat-name {
+body.theme-catan #catan-board .cat-name {
   font-family: var(--font-display);
   font-size: 0.92rem;
   font-weight: 700;
   color: var(--ink-dark);
   line-height: 1.15;
 }
-
-.cat-vp {
+body.theme-catan #catan-board .cat-vp {
   font-size: 0.82rem;
   font-weight: 600;
   color: var(--gold-deep);
 }
-
-.cat-right {
+body.theme-catan #catan-board .cat-right {
   display: flex;
   align-items: center;
   gap: 0.35rem;
 }
-
-.cat-count {
+body.theme-catan #catan-board .cat-count {
   min-width: 24px;
   text-align: center;
   font-family: var(--font-display);
@@ -548,8 +587,7 @@ body::before {
   font-weight: 800;
   color: var(--ink-dark);
 }
-
-.cat-step-btn {
+body.theme-catan #catan-board .cat-step-btn {
   width: 28px;
   height: 28px;
   border-radius: 6px;
@@ -565,8 +603,7 @@ body::before {
   justify-content: center;
   cursor: pointer;
 }
-
-.round-summary {
+body.theme-catan #catan-board .round-summary {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -576,15 +613,13 @@ body::before {
   border: 1px dashed rgba(139, 94, 18, 0.45);
   border-radius: 6px;
 }
-
-#round-total {
+body.theme-catan #catan-board #round-total {
   font-family: var(--font-display);
   font-size: 0.95rem;
   font-weight: 700;
   color: var(--ink-dark);
 }
-
-.btn-link-reset {
+body.theme-catan #catan-board .btn-link-reset {
   background: none;
   border: none;
   padding: 0.2rem 0.4rem;
@@ -596,11 +631,7 @@ body::before {
   color: var(--crimson);
   cursor: pointer;
 }
-
-/* ==========================================================================
-   Buttons & Inputs
-   ========================================================================== */
-.btn {
+body.theme-catan #catan-board .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -621,30 +652,25 @@ body::before {
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
   transition: transform 0.1s ease, filter 0.15s ease;
 }
-
-.btn:hover {
+body.theme-catan #catan-board .btn:hover {
   filter: brightness(1.08);
 }
-
-.btn:active {
+body.theme-catan #catan-board .btn:active {
   transform: scale(0.985);
 }
-
-.btn.gold {
+body.theme-catan #catan-board .btn.gold {
   background: linear-gradient(180deg, #e5b334 0%, #ba8114 55%, #93620a 100%);
   border-color: #6d4707;
   color: #241304;
   text-shadow: 0 1px 0 rgba(255, 240, 185, 0.55);
 }
-
-.btn.secondary {
+body.theme-catan #catan-board .btn.secondary {
   background: linear-gradient(180deg, #faf0d4 0%, #e5cda0 100%);
   border-color: var(--bronze-border);
   color: var(--ink-dark);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.16);
 }
-
-.btn.subtle {
+body.theme-catan #catan-board .btn.subtle {
   background: transparent;
   border: 1px solid rgba(139, 94, 18, 0.45);
   color: var(--ink-mid);
@@ -652,39 +678,22 @@ body::before {
   font-size: 0.76rem;
   padding: 0.52rem 0.8rem;
 }
-
-.btn.google-btn {
-  background: #fffdf8;
-  border: 1.5px solid rgba(122, 84, 24, 0.45);
-  color: #2c1a0c;
-  font-family: var(--font-body);
-  font-size: 1rem;
-  font-weight: 700;
-  letter-spacing: 0.2px;
-  text-transform: none;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.16);
-}
-
-.action-row {
+body.theme-catan #catan-board .action-row {
   display: flex;
   gap: 0.5rem;
   margin-top: 0.2rem;
 }
-
-.action-row .btn {
+body.theme-catan #catan-board .action-row .btn {
   margin-top: 0;
 }
-
-.action-row .btn-undo {
+body.theme-catan #catan-board .action-row .btn-undo {
   flex: 0 0 auto;
   width: auto;
   padding-left: 0.95rem;
   padding-right: 0.95rem;
 }
-
-input[type="text"],
-input[type="email"],
-input {
+body.theme-catan #catan-board input[type="text"],
+body.theme-catan #catan-board input[type="email"] {
   width: 100%;
   padding: 0.65rem 0.75rem;
   border: 1.5px solid rgba(139, 94, 18, 0.55);
@@ -696,76 +705,7 @@ input {
   outline: none;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
-
-input:focus {
-  border-color: var(--gold-mid);
-  box-shadow: 0 0 0 2px rgba(200, 146, 30, 0.25);
-}
-
-/* ==========================================================================
-   New Game — Player Chips & Add Row
-   ========================================================================== */
-#player-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.45rem;
-  min-height: 36px;
-  margin-bottom: 0.65rem;
-}
-
-.player-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.32rem 0.5rem 0.32rem 0.45rem;
-  background: linear-gradient(180deg, #fff9e8, #edd49e);
-  border: 1.5px solid var(--bronze-border);
-  border-radius: 999px;
-  font-family: var(--font-display);
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: var(--ink-dark);
-}
-
-.player-chip-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  border: 1px solid rgba(0, 0, 0, 0.25);
-}
-
-.player-chip-remove {
-  background: rgba(158, 42, 43, 0.14);
-  border: none;
-  color: var(--crimson);
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  font-size: 0.85rem;
-  font-weight: 700;
-  line-height: 1;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
-
-.add-player-row {
-  display: flex;
-  gap: 0.45rem;
-  align-items: stretch;
-  margin-bottom: 0.5rem;
-}
-
-.add-player-row .btn-add {
-  width: 48px;
-  flex-shrink: 0;
-  margin-top: 0;
-  font-size: 1.3rem;
-  padding: 0;
-}
-
-.empty-note {
+body.theme-catan #catan-board .empty-note {
   width: 100%;
   text-align: center;
   font-style: italic;
@@ -773,375 +713,25 @@ input:focus {
   font-size: 0.95rem;
   padding: 0.4rem 0;
 }
+body.theme-catan { color: var(--ink-dark); font-family: var(--font-body); }
+body.theme-catan #catan-board { position: relative; z-index: 1; max-width: 500px; margin: 0 auto; padding-top: .9rem; }
+body.theme-catan #catan-board .btn:disabled, body.theme-catan #catan-board .cat-step-btn:disabled { opacity: .45; cursor: not-allowed; filter: none; }
+body.theme-catan #catan-board .cat-step-btn.cat-dec:disabled { visibility: hidden; }
+body.theme-catan #catan-board .pad-player-banner .pad-current { font-family: var(--font-body); font-weight: 600; color: var(--gold-deep); font-size: .85rem; }
 
-/* ==========================================================================
-   History List
-   ========================================================================== */
-#history-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.55rem;
-}
-
-.history-card {
-  padding: 0.65rem 0.75rem;
-  background: rgba(255, 250, 236, 0.7);
-  border: 1.5px solid rgba(154, 114, 52, 0.45);
-  border-radius: 8px;
-}
-
-.history-card-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-  margin-bottom: 0.35rem;
-}
-
-.history-game-type {
-  font-family: var(--font-display);
-  font-size: 0.82rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: var(--gold-deep);
-}
-
-.history-date {
-  font-size: 0.82rem;
-  color: var(--ink-muted);
-}
-
-.history-scores {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem;
-}
-
-.history-score-pill {
-  padding: 0.16rem 0.5rem;
-  border-radius: 5px;
-  background: rgba(139, 94, 18, 0.12);
-  border: 1px solid rgba(139, 94, 18, 0.28);
-  font-size: 0.88rem;
-  color: var(--ink-dark);
-}
-
-.history-score-pill.winner {
-  background: rgba(244, 200, 76, 0.35);
-  border-color: var(--gold-mid);
-  font-weight: 700;
-}
-
-/* ==========================================================================
-   Fixed Bottom Navigation Bar
-   ========================================================================== */
-.bottom-nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 20;
-  background: linear-gradient(180deg, #321f10 0%, #1d1108 100%);
-  border-top: 2px solid var(--bronze-border);
-  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.55);
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  padding: 0.45rem 0.4rem calc(0.45rem + env(safe-area-inset-bottom, 0px));
-}
-
-.bottom-nav button {
-  flex: 1;
-  max-width: 120px;
-  background: none;
-  border: none;
-  color: #bda073;
-  font-family: var(--font-display);
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.18rem;
-  padding: 0.25rem 0.3rem;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: color 0.15s ease, background 0.15s ease;
-}
-
-.bottom-nav button.active {
-  color: var(--gold-bright);
-  background: rgba(244, 200, 76, 0.1);
-}
-
-.bottom-nav button.nav-signout {
-  flex: 0.75;
-  color: #9b7d53;
-}
-
-.bottom-nav button.nav-signout:hover {
-  color: #e6b87a;
-}
-
-/* Login helper text */
-#login-msg {
-  text-align: center;
-  font-size: 0.9rem;
-  color: var(--gold-deep);
-  min-height: 1.2rem;
-  margin: 0.65rem 0 0;
-}
-
-.login-divider {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  margin: 0.9rem 0 0.7rem;
-  font-family: var(--font-display);
-  font-size: 0.7rem;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: var(--ink-muted);
-}
-
-.login-divider::before,
-.login-divider::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: rgba(139, 94, 18, 0.35);
-}
-
-/* --- Assembly additions --- */
-body:has(#app-shell[hidden]) { padding-bottom: 0; }
-#app-shell { position: relative; z-index: 1; }
-.btn:disabled, .cat-step-btn:disabled { opacity: 0.45; cursor: not-allowed; filter: none; }
-.cat-step-btn.cat-dec:disabled { visibility: hidden; }
-.pad-player-banner .pad-current { font-family: var(--font-body); font-weight: 600; color: var(--gold-deep); font-size: 0.85rem; }
-#sync-status { text-align: center; font-size: 0.8rem; font-style: italic; color: var(--ink-muted); margin: 0.4rem 0 0; min-height: 1rem; }
-#sync-status[data-state="error"] { color: var(--crimson); }
-</style>
-<style id="score-auth-styles">
-  :root {
-    --auth-wood-dark: #140d07;
-    --auth-wood: #1a120b;
-    --auth-wood-mid: #2a1d12;
-    --auth-parchment: #f5e6c8;
-    --auth-parchment-deep: #ead4aa;
-    --auth-parchment-input: #fbf5e6;
-    --auth-ink: #3d2914;
-    --auth-ink-muted: #6e5230;
-    --auth-gold: #c4921e;
-    --auth-gold-dark: #8b6914;
-    --auth-border: #8b6914;
-    --auth-border-soft: #c4a574;
-    --auth-error: #8f241c;
-    --auth-success: #2a623d;
-  }
-
-  /* Hard-hide guarantee so login and app shell can never overlap */
-  [hidden],
-  .auth-hidden,
-  #login-view[hidden],
-  #login-view.auth-hidden,
-  #app-shell[hidden],
-  #app-shell.auth-hidden {
-    display: none !important;
-  }
-
-  /* Centered full-viewport login gate — display only applies while NOT hidden */
-  #login-view:not([hidden]):not(.auth-hidden) {
-    display: flex;
-  }
-  #login-view {
-    position: relative;
-    z-index: 1;
-    min-height: 100vh;
-    min-height: 100dvh;
-    box-sizing: border-box;
-    align-items: center;
-    justify-content: center;
-    padding: 1.5rem 1rem;
-    background:
-      radial-gradient(circle at 50% 25%, rgba(184, 134, 11, 0.16), transparent 60%),
-      linear-gradient(180deg, var(--auth-wood-mid) 0%, var(--auth-wood) 55%, var(--auth-wood-dark) 100%);
-    font-family: Georgia, "Times New Roman", serif;
-    color: var(--auth-ink);
-  }
-
-  .auth-card {
-    width: 100%;
-    max-width: 390px;
-    box-sizing: border-box;
-    background: linear-gradient(180deg, var(--auth-parchment) 0%, var(--auth-parchment-deep) 100%);
-    border: 3px solid var(--auth-border);
-    border-radius: 10px;
-    padding: 1.75rem 1.5rem 1.5rem;
-    box-shadow:
-      0 18px 40px rgba(0, 0, 0, 0.55),
-      inset 0 0 0 2px rgba(255, 248, 228, 0.55),
-      inset 0 0 18px rgba(139, 105, 20, 0.18);
-    position: relative;
-  }
-
-  .auth-crest {
-    width: 48px;
-    height: 48px;
-    margin: 0 auto 0.65rem;
-    border-radius: 50%;
-    background: linear-gradient(145deg, var(--auth-gold), var(--auth-gold-dark));
-    border: 2px solid var(--auth-ink);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--auth-parchment);
-    font-size: 1.35rem;
-    box-shadow: 0 3px 10px rgba(61, 41, 20, 0.35);
-    user-select: none;
-  }
-
-  .auth-title {
-    margin: 0;
-    text-align: center;
-    font-size: 1.65rem;
-    letter-spacing: 0.5px;
-    color: var(--auth-ink);
-  }
-
-  .auth-subtitle {
-    margin: 0.3rem 0 1.35rem;
-    text-align: center;
-    font-size: 0.78rem;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--auth-gold-dark);
-  }
-
-  .auth-btn {
-    width: 100%;
-    box-sizing: border-box;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.6rem;
-    padding: 0.78rem 1rem;
-    border-radius: 6px;
-    font-family: Georgia, "Times New Roman", serif;
-    font-size: 0.96rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: transform 0.08s ease, filter 0.15s ease, opacity 0.15s ease;
-  }
-
-  .auth-btn:active:not(:disabled) {
-    transform: translateY(1px);
-  }
-
-  .auth-btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-
-  .auth-btn-google {
-    background: #fffdf8;
-    color: #2c241b;
-    border: 1.5px solid var(--auth-border-soft);
-    box-shadow: 0 2px 5px rgba(61, 41, 20, 0.14);
-  }
-
-  .auth-btn-google:hover:not(:disabled) {
-    filter: brightness(0.98);
-    border-color: var(--auth-border);
-  }
-
-  .auth-btn-gold {
-    background: linear-gradient(135deg, var(--auth-gold) 0%, var(--auth-gold-dark) 100%);
-    color: #fffaf0;
-    border: 1.5px solid #6b4e0d;
-    box-shadow: 0 3px 8px rgba(61, 41, 20, 0.28);
-    margin-top: 0.65rem;
-  }
-
-  .auth-btn-gold:hover:not(:disabled) {
-    filter: brightness(1.06);
-  }
-
-  .auth-divider {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    margin: 1.15rem 0;
-    color: var(--auth-ink-muted);
-    font-size: 0.75rem;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-  }
-
-  .auth-divider::before,
-  .auth-divider::after {
-    content: "";
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--auth-border-soft), transparent);
-  }
-
-  .auth-label {
-    display: block;
-    font-size: 0.78rem;
-    letter-spacing: 0.8px;
-    text-transform: uppercase;
-    color: var(--auth-ink-muted);
-    margin-bottom: 0.35rem;
-  }
-
-  #login-view .auth-input {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 0.72rem 0.8rem;
-    border: 1.5px solid var(--auth-border-soft);
-    border-radius: 6px;
-    background: var(--auth-parchment-input);
-    color: var(--auth-ink);
-    font-family: Georgia, "Times New Roman", serif;
-    font-size: 0.95rem;
-    outline: none;
-    transition: border-color 0.15s ease, box-shadow 0.15s ease;
-  }
-
-  #login-view .auth-input:focus {
-    border-color: var(--auth-border);
-    box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.18);
-  }
-
-  #login-msg {
-    min-height: 1.25rem;
-    margin: 0.85rem 0 0;
-    text-align: center;
-    font-size: 0.84rem;
-    line-height: 1.35;
-    color: var(--auth-ink-muted);
-  }
-
-  #login-msg[data-tone="error"] {
-    color: var(--auth-error);
-  }
-
-  #login-msg[data-tone="success"] {
-    color: var(--auth-success);
-  }
 </style>
 </head>
 <body>
-<!-- Build: catan-parchment-2026-11-26 -->
+<!-- Build: v4-neutral-shell-catan-theme-2026-11-26 -->
+
+<!-- Login: starts hidden until getSession() resolves -->
 <section id="login-view" class="auth-hidden" hidden aria-label="Sign in to Score Tracker">
   <div class="auth-card">
-    <div class="auth-crest" aria-hidden="true">&#9733;</div>
+    <div class="auth-crest" aria-hidden="true">
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="4.5" fill="#0b1220" opacity=".9"/><circle cx="8" cy="8" r="1.6" fill="#22d3ee"/><circle cx="16" cy="8" r="1.6" fill="#22d3ee"/><circle cx="12" cy="12" r="1.6" fill="#22d3ee"/><circle cx="8" cy="16" r="1.6" fill="#22d3ee"/><circle cx="16" cy="16" r="1.6" fill="#22d3ee"/></svg>
+    </div>
     <h1 class="auth-title">Score Tracker</h1>
     <p class="auth-subtitle">Sign in to sync your games</p>
-
     <button id="btn-google-signin" type="button" class="auth-btn auth-btn-google">
       <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
         <path fill="#4285F4" d="M17.64 9.2c0-.64-.06-1.25-.16-1.84H9v3.48h4.84a4.14 4.14 0 0 1-1.8 2.72v2.26h2.92c1.7-1.57 2.68-3.88 2.68-6.62z"/>
@@ -1151,140 +741,110 @@ body:has(#app-shell[hidden]) { padding-bottom: 0; }
       </svg>
       <span>Continue with Google</span>
     </button>
-
     <div class="auth-divider"><span>or</span></div>
-
     <form id="magic-link-form" novalidate>
       <label class="auth-label" for="email">Email magic link</label>
-      <input
-        id="email"
-        class="auth-input"
-        type="email"
-        autocomplete="email"
-        inputmode="email"
-        placeholder="you@example.com"
-        required
-      >
-      <button id="btn-email-signin" type="submit" class="auth-btn auth-btn-gold">
-        Send magic link
-      </button>
+      <input id="email" class="auth-input" type="email" autocomplete="email" inputmode="email" placeholder="you@example.com" required>
+      <button id="btn-email-signin" type="submit" class="auth-btn auth-btn-primary">Send magic link</button>
     </form>
-
     <p id="login-msg" role="status" aria-live="polite"></p>
   </div>
 </section>
 
-<div id="app-shell" class="hidden" hidden>
+<div id="app-shell" class="hidden auth-hidden" hidden>
+  <header class="app-header">
+    <h1>Score Tracker</h1>
+    <button class="btn sm" type="button" onclick="signOut()">Sign out</button>
+  </header>
 
-  <!-- HOME VIEW -->
+  <!-- HOME -->
   <section id="view-home" class="view">
-    <div class="parchment parchment-header">
-      <div class="header-crest" aria-hidden="true">
-        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-          <polygon points="14,2 25,8.5 25,19.5 14,26 3,19.5 3,8.5" fill="#e6b73c" stroke="#6d4707" stroke-width="1.8"/>
-          <polygon points="14,6 21,10 21,18 14,22 7,18 7,10" fill="#f8e6b4" stroke="#8b5e12" stroke-width="1.2"/>
-          <path d="M14 9l1.4 3 3.3.4-2.4 2.2.6 3.2L14 16.2 11.1 17.8l.6-3.2-2.4-2.2 3.3-.4L14 9z" fill="#b87d12"/>
-        </svg>
-      </div>
-      <h1 class="header-title">Score Tracker</h1>
-      <p class="header-sub">CATAN VICTORY LEDGER</p>
-      <div class="ornate-divider"></div>
-      <button class="btn gold" onclick="showView('new')">Start a Game</button>
-      <button id="btn-resume-game" class="btn secondary hidden" hidden onclick="showView('active')">Resume Active Game</button>
-      <button id="btn-signout" class="btn subtle" onclick="signOut()">Sign Out</button>
+    <div class="card hero">
+      <div class="emoji" aria-hidden="true">🎲</div>
+      <h2>Ready to play?</h2>
+      <p class="small">Track scores live for any game night.</p>
+      <button class="btn primary" type="button" onclick="showView('new')">Start a Game</button>
+      <div><button id="btn-resume-game" class="btn hidden" type="button" style="margin-top:.6rem" hidden onclick="showView('active')">Resume Active Game</button></div>
       <p id="sync-status" role="status" aria-live="polite"></p>
     </div>
+    <div class="card"><h3>Recent</h3><div id="recent-list"></div></div>
   </section>
 
-  <!-- NEW GAME VIEW -->
+  <!-- CHOOSE GAME -->
   <section id="view-new" class="view">
-    <div class="parchment parchment-header">
-      <h1 class="header-title">New Catan Game</h1>
-      <p class="header-sub">GATHER YOUR SETTLERS</p>
-    </div>
-    <div class="parchment">
-      <div class="section-title">Players</div>
-      <div id="player-chips"></div>
-      <div class="add-player-row">
-        <input id="new-player-name" type="text" placeholder="Add player name..." autocomplete="off" onkeydown="if(event.key==='Enter'){addPlayer();}">
-        <button class="btn btn-add" type="button" onclick="addPlayer()" aria-label="Add player">+</button>
+    <div class="card">
+      <h2>Choose Game</h2>
+      <div class="game-grid" id="game-grid"></div>
+      <label class="small" for="version-select">Version / Scoring rules</label>
+      <select id="version-select"></select>
+      <h3 style="margin-top:1.1rem">Players</h3>
+      <div class="player-list" id="player-chips"></div>
+      <div class="flex" style="flex-wrap:nowrap">
+        <input type="text" id="new-player-name" placeholder="Add player" autocomplete="off" style="flex:1">
+        <button class="btn" type="button" id="btn-add-player" onclick="addPlayer()">+</button>
       </div>
-      <button class="btn gold" type="button" onclick="startGame()">Start Playing</button>
+      <button class="btn primary block" type="button" id="btn-start-game" style="margin-top:1.2rem" onclick="startGame()">Start Playing</button>
     </div>
   </section>
 
-  <!-- ACTIVE GAME VIEW -->
+  <!-- ACTIVE GAME -->
   <section id="view-active" class="view">
-    <div class="parchment parchment-header">
-      <h1 class="header-title">Score Tracker</h1>
-      <p class="header-sub">FIRST TO 10 VICTORY POINTS</p>
-    </div>
-
-    <div class="parchment">
-      <div class="section-title">Victory Points</div>
-      <div id="leaderboard"></div>
-      <p class="leaderboard-hint">Tap a player to adjust their Victory Points</p>
-    </div>
-
-    <div class="parchment" id="pad" style="display:none">
-      <div class="section-title">Adjust Victory Points</div>
-      <div id="pad-player-banner" class="pad-player-banner"></div>
-      <div class="mode-toggle" role="tablist" aria-label="Scoring Mode">
-        <button id="mode-simple" type="button" class="active" role="tab" aria-selected="true" onclick="setMode('simple')">Simple</button>
-        <button id="mode-detailed" type="button" role="tab" aria-selected="false" onclick="setMode('detailed')">Detailed</button>
+    <!-- Neutral board for every game except Catan -->
+    <div id="generic-board" class="card">
+      <div class="active-head">
+        <div><h2 id="gen-title"></h2><div id="gen-sub" class="small"></div></div>
+        <button class="btn sm" type="button" title="Discard game" onclick="discardGame()">✕</button>
       </div>
-      <div id="score-form"></div>
+      <div id="gen-leaderboard" style="margin-top:.7rem"></div>
+      <p class="small" style="margin:.3rem 0 0;text-align:center">Tap a player to score</p>
+      <div id="gen-pad" class="hidden"></div>
+      <div class="action-bar">
+        <button class="btn hidden" id="gen-undo" type="button" hidden onclick="undoLastRound()">Undo</button>
+        <button class="btn success" id="gen-save" type="button" onclick="endGame()">Save Game</button>
+      </div>
     </div>
 
-    <div class="action-row">
-      <button id="btn-undo" type="button" class="btn secondary btn-undo hidden" hidden onclick="undoLastAction()">Undo</button>
-      <button type="button" class="btn" onclick="endGame()">Save Game</button>
+    <!-- Catan board: only visible with body.theme-catan -->
+    <div id="catan-board">
+      <div class="parchment parchment-header">
+        <h1 class="header-title" id="catan-title">Catan</h1>
+        <p class="header-sub" id="catan-sub">FIRST TO 10 VICTORY POINTS</p>
+      </div>
+      <div class="parchment">
+        <div class="section-title">Victory Points</div>
+        <div id="leaderboard"></div>
+        <p class="leaderboard-hint">Tap a player to adjust their Victory Points</p>
+      </div>
+      <div class="parchment" id="pad" style="display:none">
+        <div class="section-title">Adjust Victory Points</div>
+        <div id="pad-player-banner" class="pad-player-banner"></div>
+        <div class="mode-toggle" role="tablist" aria-label="Scoring Mode">
+          <button id="mode-simple" type="button" class="active" role="tab" aria-selected="true" onclick="setCatanMode('simple')">Simple</button>
+          <button id="mode-detailed" type="button" role="tab" aria-selected="false" onclick="setCatanMode('detailed')">Detailed</button>
+        </div>
+        <div id="score-form"></div>
+      </div>
+      <div class="action-row">
+        <button id="btn-undo" type="button" class="btn secondary btn-undo hidden" hidden onclick="undoLastRound()">Undo</button>
+        <button id="btn-save-catan" type="button" class="btn" onclick="endGame()">Save Game</button>
+      </div>
     </div>
   </section>
 
-  <!-- HISTORY VIEW -->
+  <!-- HISTORY -->
   <section id="view-history" class="view">
-    <div class="parchment parchment-header">
-      <h1 class="header-title">Chronicle</h1>
-      <p class="header-sub">PAST CATAN MATCHES</p>
-    </div>
-    <div class="parchment">
-      <div class="section-title">Completed Games</div>
-      <div id="history-list"></div>
-    </div>
+    <div class="card"><h2>History</h2><div id="history-list"></div></div>
   </section>
 
-  <!-- FIXED BOTTOM NAVIGATION -->
   <nav class="bottom-nav" aria-label="Main navigation">
-    <button type="button" onclick="showView('home')" id="nav-home">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V20h14V9.5"/>
-      </svg>
-      <span>Home</span>
-    </button>
-    <button type="button" onclick="showView('new')" id="nav-new">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <polygon points="12 2 21 7 21 17 12 22 3 17 3 7 12 2"/>
-        <polygon points="10 8 16 12 10 16 10 8" fill="currentColor" stroke="none"/>
-      </svg>
-      <span>Play</span>
-    </button>
-    <button type="button" onclick="showView('history')" id="nav-history">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M4 5h16M4 12h16M4 19h10"/>
-      </svg>
-      <span>History</span>
-    </button>
-    <button type="button" class="nav-signout" id="nav-signout" onclick="signOut()" title="Sign out">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
-      </svg>
-      <span>Exit</span>
-    </button>
+    <button type="button" id="nav-home" onclick="showView('home')"><span class="icon">🏠</span>Home</button>
+    <button type="button" id="nav-new" onclick="showView('new')"><span class="icon">➕</span>Play</button>
+    <button type="button" id="nav-history" onclick="showView('history')"><span class="icon">📜</span>History</button>
+    <button type="button" id="nav-signout" onclick="signOut()"><span class="icon">⎋</span>Exit</button>
   </nav>
 </div>
 
-<!-- UI helpers (window.ScoreTrackerUI) -->
+<!-- Catan render helpers (window.ScoreTrackerUI) -->
 <script>
 window.ScoreTrackerUI = (function () {
   const SHIELD_COLORS = ['#b52b27', '#2b6cb0', '#2f7a4d', '#d48a1c', '#76418c', '#8c5230'];
@@ -1492,907 +1052,600 @@ window.ScoreTrackerUI = (function () {
 })();
 </script>
 
-<!-- Supabase client library -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<!-- Scoring engine: defines window.onAuthReady / window.onAuthSignedOut BEFORE auth init runs -->
-<script id="score-scoring-script">
-/* ==========================================================================
-   Score Tracker — Catan Scoring, Persistence & Supabase Sync Engine
-   ==========================================================================
-   Integration contract:
-   - Auth provides `window.sb` (Supabase v2 client) and calls:
-       window.onAuthReady(user)
-       window.onAuthSignedOut()
-   - Supabase table `score_history`:
-       select('*').eq('user_id', user.id).maybeSingle()
-       upsert({ user_id: user.id, players, history, updated_at })
-   - localStorage keys:
-       gst_active : active Catan game state
-       gst_cache  : { userId, players, history, pendingSync, updatedAt }
-   - DOM hooks:
-       #player-chips, #new-player-name, #leaderboard, #pad,
-       #mode-simple, #mode-detailed, #score-form, #history-list,
-       #nav-home, #nav-new, #nav-history
-   ========================================================================== */
-
+<!-- App engine: defines window.onAuthReady / window.onAuthSignedOut before auth init -->
+<script id="score-engine">
+/* Score Tracker engine — game-agnostic shell, per-game scoring, Catan-only parchment theme. */
 (function (global) {
   'use strict';
 
-  const STORAGE_ACTIVE_KEY = 'gst_active';
-  const STORAGE_CACHE_KEY = 'gst_cache';
-  const DEFAULT_TARGET_VP = 10;
+  const KEY_ACTIVE = 'gst_active';
+  const KEY_CACHE = 'gst_cache';
 
-  const SHIELDS = ['#c0392b', '#27ae60', '#2980b9', '#8e44ad', '#d35400', '#16a085'];
-
-  const DETAILED_CATEGORIES = [
-    { key: 'settlements', label: 'Settlements', vp: 1, color: '#c0392b', maxPerRound: 5 },
-    { key: 'cities',      label: 'Cities',       vp: 2, color: '#b8860b', maxPerRound: 4 },
-    { key: 'longestRoad', label: 'Longest Road', vp: 2, color: '#27ae60', maxPerRound: 1 },
-    { key: 'largestArmy', label: 'Largest Army', vp: 2, color: '#8e44ad', maxPerRound: 1 },
-    { key: 'vpCards',     label: 'VP Card',      vp: 1, color: '#d4a017', maxPerRound: 5 }
+  // ---------------- Games ----------------
+  const GAMES = [
+    { id: 'flip7', name: 'Flip 7', img: 'flip7.jpg', icon: '🃏',
+      versions: ['Standard (to 200)', 'With a Vengeance', 'Thematic / Promo'],
+      target: () => 200, detailedLabel: 'Card Pad' },
+    { id: '7wonders', name: '7 Wonders', img: '7wonders.jpg', icon: '🏛️',
+      versions: ['Base (1st/2nd Ed)', 'With Leaders', 'With Cities', 'With Armada', 'Other expansion'],
+      target: () => null, detailedLabel: 'Categories' },
+    { id: 'carcassonne', name: 'Carcassonne', img: '', icon: '🏰',
+      versions: ['Classic (current scoring)', 'Older edition (small cities)', 'With Inns & Cathedrals', 'With other expansions'],
+      target: () => null, detailedLabel: 'Features' },
+    { id: 'catan', name: 'Catan', img: '', icon: '⬢',
+      versions: ['Base (to 10 VP)', 'Cities & Knights (to 13 VP)', 'Seafarers (to 12 VP)', '5-6 Player (to 10 VP)'],
+      target: (v) => { const m = /to (\d+)/i.exec(v || ''); return m ? Number(m[1]) : 10; } },
+    { id: 'ohhell', name: 'Oh Hell', img: 'ohhell.jpg', icon: '♠️',
+      versions: ['Exact: 10+bid (miss=0)', '1 per trick +10 if exact', 'Other variant'],
+      target: () => null, detailedLabel: 'Bid & Tricks' },
+    { id: 'hearts', name: 'Hearts', img: '', icon: '♥️', low: true,
+      versions: ['Standard (to 100)', 'Short (to 50)', 'With Jack of Diamonds'],
+      target: (v) => (/50/.test(v || '') ? 50 : 100), detailedLabel: 'Hand' },
+    { id: 'nertz', name: 'Nertz', img: 'nertz.png', icon: '🂠',
+      versions: ['Standard (+1/-2, optional bonus)', 'To 100', 'To 150', 'No bonus for calling'],
+      target: (v) => (/150/.test(v || '') ? 150 : 100), detailedLabel: 'Round' },
+    { id: 'other', name: 'Custom', img: '', icon: '✏️',
+      versions: ['Custom rules'], target: () => null, detailedLabel: null }
   ];
+  const gameById = (id) => GAMES.find((g) => g.id === id) || GAMES[GAMES.length - 1];
 
-  // --- UI bridge (window.ScoreTrackerUI from the UI module) ---
-  const UI_KEY = { settlements: 'settlement', cities: 'city', longestRoad: 'road', largestArmy: 'army', vpCards: 'vpcard' };
-  const UI_ICON_CLASS = { settlements: 'cat-icon--settlement', cities: 'cat-icon--city', longestRoad: 'cat-icon--road', largestArmy: 'cat-icon--army', vpCards: 'cat-icon--vpcard' };
-  function UI() { return global.ScoreTrackerUI || null; }
-  function setHidden(el, hide) {
-    if (!el) return;
-    el.hidden = !!hide;
-    el.classList.toggle('hidden', !!hide);
+  const FLIP7_COLORS = {
+    0: '#1a1a1a', 1: '#4a90d9', 2: '#f4d03f', 3: '#e74c3c', 4: '#27ae60', 5: '#2ecc71', 6: '#8e44ad',
+    7: '#e67e22', 8: '#16a085', 9: '#d35400', 10: '#c0392b', 11: '#2c3e50', 12: '#7f8c8d'
+  };
+
+  const CATAN_CATS = [
+    { key: 'settlements', label: 'Settlements',  vp: 1, max: 5, ui: 'settlement', icon: 'cat-icon--settlement' },
+    { key: 'cities',      label: 'Cities',       vp: 2, max: 4, ui: 'city',       icon: 'cat-icon--city' },
+    { key: 'longestRoad', label: 'Longest Road', vp: 2, max: 1, ui: 'road',       icon: 'cat-icon--road' },
+    { key: 'largestArmy', label: 'Largest Army', vp: 2, max: 1, ui: 'army',       icon: 'cat-icon--army' },
+    { key: 'vpCards',     label: 'VP Card',      vp: 1, max: 5, ui: 'vpcard',     icon: 'cat-icon--vpcard' }
+  ];
+  const emptyBreakdown = () => ({ settlements: 0, cities: 0, longestRoad: 0, largestArmy: 0, vpCards: 0 });
+  const catanTotal = (d) => CATAN_CATS.reduce((s, c) => s + (Number(d[c.key]) || 0) * c.vp, 0);
+
+  // ---------------- State ----------------
+  let currentUser = null, initializedUserId = null;
+  let players = [], history = [], pendingSync = false, syncInFlight = false;
+  let currentGame = null, currentView = 'home';
+  let selectedGame = 'flip7', selectedVersion = null;
+  const deselected = new Set();
+  let scoringPlayer = null, padMode = 'simple';
+  let catanAdj = 1, catanDraft = emptyBreakdown();
+  let flip = null;
+
+  // ---------------- Utils ----------------
+  const byId = (id) => document.getElementById(id);
+  const esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  const num = (id) => { const el = byId(id); return el ? (Number(el.value) || 0) : 0; };
+  const checked = (id) => { const el = byId(id); return !!(el && el.checked); };
+  const signed = (n) => (n > 0 ? '+' + n : String(n));
+  function setHidden(el, hide) { if (!el) return; el.hidden = !!hide; el.classList.toggle('hidden', !!hide); }
+  const isCatan = () => !!(currentGame && currentGame.type === 'catan');
+
+  // ---------------- Persistence ----------------
+  function persistActive() {
+    try { currentGame ? localStorage.setItem(KEY_ACTIVE, JSON.stringify(currentGame)) : localStorage.removeItem(KEY_ACTIVE); }
+    catch (e) { console.warn('[tracker] persist failed', e); }
   }
-
-  // --- Runtime State ---
-  let currentView = 'home';
-  let currentUser = null;
-  let initializedUserId = null;
-  let players = [];
-  let history = [];
-  let currentGame = null;
-  let scoringPlayer = null;
-  let mode = 'simple';
-  let adjVal = 1;
-  let detailedDraft = emptyBreakdown();
-  let pendingSync = false;
-  let syncInFlight = false;
-
-  // --- Helpers ---
-  function emptyBreakdown() {
-    return {
-      settlements: 0,
-      cities: 0,
-      longestRoad: 0,
-      largestArmy: 0,
-      vpCards: 0
-    };
-  }
-
-  function calcDetailedTotal(draft) {
-    if (!draft) return 0;
-    return DETAILED_CATEGORIES.reduce((sum, cat) => {
-      const count = Math.max(0, Number(draft[cat.key]) || 0);
-      return sum + count * cat.vp;
-    }, 0);
-  }
-
-  function escapeHtml(str) {
-    return String(str ?? '')
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#39;');
-  }
-
-  function getDoc() {
-    return typeof document !== 'undefined' ? document : null;
-  }
-
-  function byId(id) {
-    const doc = getDoc();
-    return doc ? doc.getElementById(id) : null;
-  }
-
-  function getStorage() {
+  function loadActive() {
     try {
-      return typeof localStorage !== 'undefined' ? localStorage : null;
-    } catch (_) {
-      return null;
-    }
+      const raw = localStorage.getItem(KEY_ACTIVE);
+      if (!raw) return null;
+      const g = JSON.parse(raw);
+      if (!g || !Array.isArray(g.players)) return null;
+      g.rounds = Array.isArray(g.rounds) ? g.rounds : [];
+      g.players.forEach((p) => { p.score = Number(p.score) || 0; if (g.type === 'catan') p.breakdown = { ...emptyBreakdown(), ...(p.breakdown || {}) }; });
+      if (g.type === 'catan' && !g.targetVp) g.targetVp = gameById('catan').target(g.version);
+      return g;
+    } catch (_) { return null; }
   }
-
-  function getSupabase() {
-    return global.sb || null;
+  function saveCache(pending) {
+    if (typeof pending === 'boolean') pendingSync = pending;
+    try {
+      localStorage.setItem(KEY_CACHE, JSON.stringify({ userId: currentUser ? currentUser.id : null, players, history, pendingSync, updatedAt: new Date().toISOString() }));
+    } catch (e) { console.warn('[tracker] cache failed', e); }
   }
-
-  function normalizeGame(raw) {
-    if (!raw || typeof raw !== 'object' || !Array.isArray(raw.players)) return null;
-    const targetVp = Number(raw.targetVp) > 0 ? Number(raw.targetVp) : DEFAULT_TARGET_VP;
-    const normalizedPlayers = raw.players.map((p) => ({
-      name: String(p.name || ''),
-      score: Math.max(0, Number(p.score) || 0),
-      breakdown: {
-        ...emptyBreakdown(),
-        ...(p.breakdown && typeof p.breakdown === 'object' ? p.breakdown : {})
-      }
-    }));
-    const game = {
-      id: raw.id || ('catan_' + Date.now()),
-      type: raw.type || 'catan',
-      targetVp,
-      startTime: raw.startTime || new Date().toISOString(),
-      endTime: raw.endTime || null,
-      winner: raw.winner || null,
-      players: normalizedPlayers,
-      rounds: Array.isArray(raw.rounds) ? raw.rounds : []
-    };
-    game.winner = computeWinner(game);
-    return game;
+  function loadCache(userId) {
+    try {
+      const c = JSON.parse(localStorage.getItem(KEY_CACHE) || 'null');
+      if (!c || (c.userId && userId && c.userId !== userId)) return null;
+      return { players: Array.isArray(c.players) ? c.players : [], history: Array.isArray(c.history) ? c.history : [], pendingSync: !!c.pendingSync };
+    } catch (_) { return null; }
   }
-
-  function computeWinner(game) {
-    if (!game || !Array.isArray(game.players) || !game.players.length) return null;
-    const target = game.targetVp || DEFAULT_TARGET_VP;
-    const leaders = [...game.players].sort((a, b) => b.score - a.score);
-    if (leaders[0].score >= target) {
-      return leaders[0].name;
-    }
-    return null;
-  }
-
-  function mergeUniquePlayers(listA, listB) {
-    const seen = new Set();
-    const out = [];
-    for (const raw of [...(listA || []), ...(listB || [])]) {
-      const name = String(raw || '').trim();
-      if (!name) continue;
-      const key = name.toLowerCase();
-      if (!seen.has(key)) {
-        seen.add(key);
-        out.push(name);
-      }
-    }
+  function mergePlayers(a, b) {
+    const seen = new Set(), out = [];
+    [...(a || []), ...(b || [])].forEach((n) => { n = String(n || '').trim(); if (n && !seen.has(n.toLowerCase())) { seen.add(n.toLowerCase()); out.push(n); } });
     return out;
   }
-
-  function mergeHistory(localList, remoteList) {
-    const map = new Map();
-    const keyOf = (g) => (g && (g.id || g.endTime || JSON.stringify(g)));
-    for (const g of (remoteList || [])) {
-      if (g) map.set(keyOf(g), g);
-    }
-    for (const g of (localList || [])) {
-      if (g) map.set(keyOf(g), g);
-    }
-    return Array.from(map.values()).sort((a, b) => {
-      const ta = Date.parse(a.endTime || a.startTime || 0) || 0;
-      const tb = Date.parse(b.endTime || b.startTime || 0) || 0;
-      return tb - ta;
-    });
+  function mergeHistory(local, remote) {
+    const map = new Map(), k = (g) => g && (g.id || g.endTime || JSON.stringify(g));
+    (remote || []).forEach((g) => g && map.set(k(g), g));
+    (local || []).forEach((g) => g && map.set(k(g), g));
+    return [...map.values()].sort((a, b) => (Date.parse(b.endTime || b.startTime || 0) || 0) - (Date.parse(a.endTime || a.startTime || 0) || 0));
   }
-
-  // --- localStorage Persistence ---
-  function persist() {
-    const store = getStorage();
-    if (!store) return;
-    try {
-      if (currentGame) {
-        store.setItem(STORAGE_ACTIVE_KEY, JSON.stringify(currentGame));
-      } else {
-        store.removeItem(STORAGE_ACTIVE_KEY);
-      }
-    } catch (e) {
-      console.warn('[scoring] Failed to persist active game:', e);
-    }
-  }
-
-  function loadActiveFromStorage() {
-    const store = getStorage();
-    if (!store) return null;
-    try {
-      const raw = store.getItem(STORAGE_ACTIVE_KEY);
-      if (!raw) return null;
-      return normalizeGame(JSON.parse(raw));
-    } catch (e) {
-      console.warn('[scoring] Failed to parse gst_active:', e);
-      return null;
-    }
-  }
-
-  function saveCache(isPending) {
-    if (typeof isPending === 'boolean') {
-      pendingSync = isPending;
-    }
-    const store = getStorage();
-    if (!store) return;
-    try {
-      store.setItem(STORAGE_CACHE_KEY, JSON.stringify({
-        userId: currentUser ? currentUser.id : null,
-        players,
-        history,
-        pendingSync,
-        updatedAt: new Date().toISOString()
-      }));
-    } catch (e) {
-      console.warn('[scoring] Failed to save gst_cache:', e);
-    }
-  }
-
-  function loadCache(userId) {
-    const store = getStorage();
-    if (!store) return null;
-    try {
-      const raw = store.getItem(STORAGE_CACHE_KEY);
-      if (!raw) return null;
-      const parsed = JSON.parse(raw);
-      if (!parsed || typeof parsed !== 'object') return null;
-      // Only reuse cache if it belongs to this user or has no userId attached
-      if (parsed.userId && userId && parsed.userId !== userId) return null;
-      return {
-        userId: parsed.userId || null,
-        players: Array.isArray(parsed.players) ? parsed.players : [],
-        history: Array.isArray(parsed.history) ? parsed.history : [],
-        pendingSync: Boolean(parsed.pendingSync),
-        updatedAt: parsed.updatedAt || null
-      };
-    } catch (e) {
-      console.warn('[scoring] Failed to parse gst_cache:', e);
-      return null;
-    }
-  }
-
-  function updateSyncStatus(text, isError) {
-    const el = byId('sync-status');
-    if (!el) return;
-    el.textContent = text || '';
-    el.dataset.state = isError ? 'error' : 'ok';
-  }
-
-  // --- Supabase Sync ---
-  async function resolveUser() {
-    if (currentUser) return currentUser;
-    const sb = getSupabase();
-    if (!sb || !sb.auth) return null;
-    try {
-      const { data } = await sb.auth.getUser();
-      if (data && data.user) {
-        currentUser = data.user;
-        return currentUser;
-      }
-    } catch (_) {}
-    return null;
-  }
+  function syncStatus(text, isErr) { const el = byId('sync-status'); if (el) { el.textContent = text || ''; el.dataset.state = isErr ? 'error' : 'ok'; } }
+  const sb = () => global.sb || null;
 
   async function loadData() {
-    const user = await resolveUser();
+    const user = currentUser;
     const cached = loadCache(user ? user.id : null);
-    if (cached) {
-      players = [...cached.players];
-      history = [...cached.history];
-      pendingSync = cached.pendingSync;
-    }
-
-    const sb = getSupabase();
-    if (!user || !sb) return { synced: false };
-
+    if (cached) { players = [...cached.players]; history = [...cached.history]; pendingSync = cached.pendingSync; }
+    const client = sb();
+    if (!user || !client) return;
     try {
-      const { data, error } = await sb
-        .from('score_history')
-        .select('*')
-        .eq('user_id', user.id)
-        .maybeSingle();
-
-      if (error) {
-        console.warn('[scoring] Supabase load error:', error);
-        updateSyncStatus('Offline — using local data', true);
-        return { synced: false, error };
-      }
-
-      const remotePlayers = (data && Array.isArray(data.players)) ? data.players : [];
-      const remoteHistory = (data && Array.isArray(data.history)) ? data.history : [];
-
-      if (pendingSync) {
-        // Local changes happened offline; merge with remote and push back up
-        players = mergeUniquePlayers(players, remotePlayers);
-        history = mergeHistory(history, remoteHistory);
-        saveCache(true);
-        await saveData();
-      } else if (data) {
-        players = remotePlayers;
-        history = remoteHistory;
-        saveCache(false);
-        updateSyncStatus('Synced', false);
-      } else {
-        // No remote row yet; keep local cache and push if non-empty
-        saveCache(false);
-        if (players.length || history.length) {
-          await saveData();
-        }
-      }
-      return { synced: true };
-    } catch (e) {
-      console.warn('[scoring] Supabase load exception:', e);
-      updateSyncStatus('Offline — using local data', true);
-      return { synced: false, error: e };
-    }
+      const { data, error } = await client.from('score_history').select('*').eq('user_id', user.id).maybeSingle();
+      if (error) { syncStatus('Offline — using local data', true); return; }
+      const rp = data && Array.isArray(data.players) ? data.players : [];
+      const rh = data && Array.isArray(data.history) ? data.history : [];
+      if (pendingSync) { players = mergePlayers(players, rp); history = mergeHistory(history, rh); saveCache(true); await saveData(); }
+      else if (data) { players = rp; history = rh; saveCache(false); syncStatus('Synced', false); }
+      else { saveCache(false); if (players.length || history.length) await saveData(); }
+    } catch (e) { syncStatus('Offline — using local data', true); }
   }
-
   async function saveData() {
-    // Always persist to local cache first so data is never lost
     saveCache(true);
-
-    const user = await resolveUser();
-    const sb = getSupabase();
-    if (!user || !sb) {
-      updateSyncStatus('Saved locally', false);
-      return { synced: false };
-    }
-
-    if (syncInFlight) {
-      return { synced: false, queued: true };
-    }
-
+    const client = sb();
+    if (!currentUser || !client) { syncStatus('Saved locally', false); return; }
+    if (syncInFlight) return;
     syncInFlight = true;
     try {
-      const payload = {
-        user_id: user.id,
-        players,
-        history,
-        updated_at: new Date().toISOString()
-      };
-      const { error } = await sb.from('score_history').upsert(payload);
-      if (error) {
-        console.warn('[scoring] Supabase save error:', error);
-        saveCache(true);
-        updateSyncStatus('Saved locally (sync pending)', true);
-        return { synced: false, error };
-      }
-      saveCache(false);
-      updateSyncStatus('Synced', false);
-      return { synced: true };
-    } catch (e) {
-      console.warn('[scoring] Supabase save exception:', e);
-      saveCache(true);
-      updateSyncStatus('Saved locally (sync pending)', true);
-      return { synced: false, error: e };
-    } finally {
-      syncInFlight = false;
-    }
+      const { error } = await client.from('score_history').upsert({ user_id: currentUser.id, players, history, updated_at: new Date().toISOString() });
+      if (error) { syncStatus('Saved locally (sync pending)', true); return; }
+      saveCache(false); syncStatus('Synced', false);
+    } catch (e) { syncStatus('Saved locally (sync pending)', true); }
+    finally { syncInFlight = false; }
   }
 
-  // --- Auth Lifecycle Callbacks ---
+  // ---------------- Auth lifecycle ----------------
   async function onAuthReady(user) {
     if (!user) return;
-    const isSameUser = initializedUserId && initializedUserId === user.id;
-    currentUser = user;
-
-    if (isSameUser) {
-      // Token refresh / duplicate auth event: don't clobber active view, just retry pending sync
-      if (pendingSync) {
-        await saveData();
-      }
-      return;
-    }
-
-    initializedUserId = user.id;
-    currentGame = loadActiveFromStorage();
+    if (initializedUserId === user.id) { if (pendingSync) await saveData(); return; }
+    currentUser = user; initializedUserId = user.id;
+    currentGame = loadActive();
     showView(currentGame ? 'active' : 'home');
     await loadData();
     if (initializedUserId === user.id) showView(currentView);
   }
-
   function onAuthSignedOut() {
-    currentUser = null;
-    initializedUserId = null;
-    players = [];
-    history = [];
-    currentGame = null;
-    scoringPlayer = null;
-    adjVal = 1;
-    detailedDraft = emptyBreakdown();
-    pendingSync = false;
-    currentView = 'home';
-    const pad = byId('pad');
-    if (pad) pad.style.display = 'none';
-    const doc = getDoc();
-    if (doc) doc.querySelectorAll('#app-shell .view').forEach((el) => el.classList.remove('active'));
-    ['leaderboard', 'score-form', 'history-list', 'player-chips', 'pad-player-banner'].forEach((id) => {
-      const el = byId(id);
-      if (el) el.innerHTML = '';
-    });
-    setHidden(byId('btn-undo'), true);
-    setHidden(byId('btn-resume-game'), true);
+    currentUser = null; initializedUserId = null; players = []; history = []; currentGame = null; pendingSync = false;
+    scoringPlayer = null; currentView = 'home';
+    document.body.classList.remove('theme-catan');
+    document.querySelectorAll('#app-shell .view').forEach((el) => el.classList.remove('active'));
+    ['gen-leaderboard', 'gen-pad', 'leaderboard', 'score-form', 'history-list', 'recent-list', 'player-chips'].forEach((id) => { const el = byId(id); if (el) el.innerHTML = ''; });
   }
 
-  // --- Navigation ---
+  // ---------------- Theme + navigation ----------------
+  function applyTheme() {
+    const on = currentView === 'active' && isCatan();
+    document.body.classList.toggle('theme-catan', on);
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', on ? '#180f08' : '#0b1220');
+  }
   function showView(v) {
-    const doc = getDoc();
-    if (!doc) return;
-
-    doc.querySelectorAll('#app-shell .view').forEach((el) => {
-      el.classList.remove('active');
-    });
-    const target = byId('view-' + v);
-    if (target) target.classList.add('active');
-
-    doc.querySelectorAll('.bottom-nav button').forEach((btn) => {
-      btn.classList.remove('active');
-    });
-    const navBtn = byId('nav-' + v);
-    if (navBtn) navBtn.classList.add('active');
-
+    if (!byId('view-' + v)) v = 'home';
     currentView = v;
-    setHidden(byId('btn-resume-game'), !currentGame);
+    document.querySelectorAll('#app-shell .view').forEach((el) => el.classList.toggle('active', el.id === 'view-' + v));
+    document.querySelectorAll('.bottom-nav button').forEach((b) => b.classList.toggle('active', b.id === 'nav-' + v));
+    applyTheme();
+    if (v === 'home') renderHome();
     if (v === 'new') renderNew();
-    if (v === 'active') {
-      if (currentGame) renderLeaderboard();
-      else { const lb = byId('leaderboard'); if (lb) lb.innerHTML = '<div class="empty-note">No active game. Tap Play to start one.</div>'; setHidden(byId('btn-undo'), true); }
-    }
     if (v === 'history') renderHistory();
+    if (v === 'active') renderActive();
+    window.scrollTo(0, 0);
   }
 
-  // --- Player Management ---
+  // ---------------- Home ----------------
+  function gameLabel(g) { return gameById(g.type).name; }
+  function renderHome() {
+    setHidden(byId('btn-resume-game'), !currentGame);
+    const el = byId('recent-list');
+    if (!el) return;
+    el.innerHTML = history.length
+      ? history.slice(0, 5).map((g) => `<div class="recent-item"><strong>${esc(gameLabel(g))}</strong> · ${esc(g.winner || '—')}
+          <div class="small">${esc(new Date(g.endTime || g.startTime || Date.now()).toLocaleDateString())} · ${(g.players || []).map((p) => esc(p.name) + ' ' + p.score).join(', ')}</div></div>`).join('')
+      : '<p class="small">No games yet — tap Play to start.</p>';
+  }
+
+  // ---------------- Choose game ----------------
   function renderNew() {
-    const container = byId('player-chips');
-    if (!container) return;
-    if (!players.length) {
-      container.innerHTML = '<div class="empty-note">Add players to start a game</div>';
-      return;
-    }
-    const ui = UI();
-    container.innerHTML = players.map((name, idx) => ui.renderPlayerChip(name, idx)).join('');
+    const grid = byId('game-grid');
+    grid.innerHTML = GAMES.map((g) => `
+      <div class="game-card ${g.id === selectedGame ? 'selected' : ''}" data-game="${g.id}" role="button" tabindex="0" onclick="selectGame('${g.id}')"
+           style="${g.img ? `background-image:url('${g.img}')` : ''}">
+        ${g.img ? '' : `<div class="game-icon" aria-hidden="true">${g.icon}</div>`}
+        <div class="overlay">${esc(g.name)}</div>
+      </div>`).join('');
+    const g = gameById(selectedGame);
+    if (!selectedVersion || !g.versions.includes(selectedVersion)) selectedVersion = g.versions[0];
+    const sel = byId('version-select');
+    sel.innerHTML = g.versions.map((v) => `<option ${v === selectedVersion ? 'selected' : ''}>${esc(v)}</option>`).join('');
+    sel.onchange = () => { selectedVersion = sel.value; };
+    byId('player-chips').innerHTML = players.length
+      ? players.map((p, i) => `<label class="player-chip"><input type="checkbox" data-player="${i}" ${deselected.has(p) ? '' : 'checked'} onchange="togglePlayer(${i}, this.checked)"> ${esc(p)}
+          <button type="button" class="chip-remove" aria-label="Remove ${esc(p)}" onclick="event.preventDefault(); removePlayer(${i})">×</button></label>`).join('')
+      : '<span class="small">Add players below</span>';
   }
-
+  function selectGame(id) { selectedGame = id; selectedVersion = null; renderNew(); }
+  function togglePlayer(i, on) { const n = players[i]; if (n === undefined) return; on ? deselected.delete(n) : deselected.add(n); }
   function addPlayer() {
     const input = byId('new-player-name');
-    const name = input ? input.value.trim() : '';
-    if (!name) return false;
-
-    const exists = players.some((p) => p.toLowerCase() === name.toLowerCase());
-    if (exists) {
-      if (input) input.value = '';
-      return false;
-    }
-
-    players.push(name);
-    if (input) input.value = '';
-    renderNew();
-    saveData();
-    return true;
+    const name = (input.value || '').trim();
+    input.value = '';
+    if (!name || players.some((p) => p.toLowerCase() === name.toLowerCase())) return;
+    players.push(name); renderNew(); saveData();
   }
-
-  function removePlayer(name) {
-    if (typeof name === 'number' && players[name] !== undefined) name = players[name];
-    if (typeof name !== 'string') return false;
-    const target = name.trim().toLowerCase();
-    const next = players.filter((p) => p.toLowerCase() !== target);
-    if (next.length === players.length) return false;
-
-    players = next;
-    renderNew();
-    saveData();
-    return true;
+  function removePlayer(i) {
+    if (players[i] === undefined) return;
+    deselected.delete(players[i]); players.splice(i, 1); renderNew(); saveData();
   }
-
   function startGame() {
-    if (!players.length) {
-      if (typeof global.alert === 'function') {
-        global.alert('Add at least one player to start.');
-      }
-      return null;
-    }
-
+    const chosen = players.filter((p) => !deselected.has(p));
+    if (!chosen.length) { alert('Add and select at least one player'); return null; }
+    if (currentGame && !confirm('Replace the current ' + gameLabel(currentGame) + ' game?')) return null;
+    const g = gameById(selectedGame);
+    const version = selectedVersion || g.versions[0];
     currentGame = {
-      id: 'catan_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
-      type: 'catan',
-      targetVp: DEFAULT_TARGET_VP,
-      startTime: new Date().toISOString(),
-      endTime: null,
-      winner: null,
-      players: players.map((name) => ({
-        name,
-        score: 0,
-        breakdown: emptyBreakdown()
-      })),
+      id: g.id + '_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+      type: g.id, version, target: g.target(version), startTime: new Date().toISOString(), endTime: null, winner: null,
+      players: chosen.map((name) => (g.id === 'catan' ? { name, score: 0, breakdown: emptyBreakdown() } : { name, score: 0 })),
       rounds: []
     };
-
-    scoringPlayer = null;
-    adjVal = 1;
-    detailedDraft = emptyBreakdown();
-    persist();
+    if (g.id === 'catan') currentGame.targetVp = currentGame.target;
+    scoringPlayer = null; padMode = 'simple';
+    persistActive();
     showView('active');
     return currentGame;
   }
+  function discardGame() {
+    if (!currentGame || !confirm('Discard this game without saving?')) return;
+    currentGame = null; scoringPlayer = null; persistActive(); showView('home');
+  }
 
-  // --- Active Game Leaderboard & Scoring Pad ---
-  function renderLeaderboard() {
-    const lb = byId('leaderboard');
-    if (!lb || !currentGame) return;
-    const ui = UI();
-    const sorted = currentGame.players
-      .map((p, idx) => ({ ...p, idx }))
-      .sort((a, b) => (b.score - a.score) || (a.idx - b.idx));
-    lb.innerHTML = sorted.map((p) => ui.renderLeaderboardRow(p, p.idx, p.idx === scoringPlayer)).join('');
-
-    setHidden(byId('btn-undo'), !currentGame.rounds.length);
-
-    const pad = byId('pad');
-    if (pad && scoringPlayer === null) {
-      pad.style.display = 'none';
+  // ---------------- Rounds (shared by every game) ----------------
+  function commitRound(deltas, mode, detail) {
+    const prev = currentGame.players.map((p) => p.score);
+    currentGame.players.forEach((p, i) => { p.score = prev[i] + (Number(deltas[i]) || 0); });
+    if (isCatan()) {
+      currentGame.players.forEach((p) => { if (p.score < 0) p.score = 0; });
+      if (detail && detail.breakdown) {
+        const p = currentGame.players[detail.player];
+        CATAN_CATS.forEach((c) => { p.breakdown[c.key] = (p.breakdown[c.key] || 0) + (detail.breakdown[c.key] || 0); });
+      }
     }
-  }
-
-  function renderPadBanner() {
-    const banner = byId('pad-player-banner');
-    if (!banner) return;
-    if (!currentGame || scoringPlayer === null || !currentGame.players[scoringPlayer]) { banner.innerHTML = ''; return; }
-    const p = currentGame.players[scoringPlayer];
-    banner.innerHTML =
-      `<span class="shield-wrap">${UI().shieldSvg(scoringPlayer, p.name)}</span>` +
-      `<span>${escapeHtml(p.name)}</span>` +
-      `<span class="pad-current">· ${p.score} VP</span>`;
-  }
-
-  function openPad(idx) {
-    if (!currentGame || !currentGame.players[idx]) return;
-    scoringPlayer = idx;
-    const pad = byId('pad');
-    if (pad) pad.style.display = 'block';
-    renderLeaderboard();
-    setMode(mode);
-  }
-
-  function setMode(m) {
-    if (m !== 'simple' && m !== 'detailed') return;
-    mode = m;
-
-    const btnSimple = byId('mode-simple');
-    const btnDetailed = byId('mode-detailed');
-    if (btnSimple) { btnSimple.classList.toggle('active', m === 'simple'); btnSimple.setAttribute('aria-selected', String(m === 'simple')); }
-    if (btnDetailed) { btnDetailed.classList.toggle('active', m === 'detailed'); btnDetailed.setAttribute('aria-selected', String(m === 'detailed')); }
-    renderPadBanner();
-
-    const form = byId('score-form');
-    if (!form || !currentGame || scoringPlayer === null || !currentGame.players[scoringPlayer]) {
-      return;
-    }
-
-    const player = currentGame.players[scoringPlayer];
-    const safeName = escapeHtml(player.name);
-
-    if (m === 'simple') {
-      adjVal = 1;
-      form.innerHTML = renderSimpleFormHtml(safeName, adjVal);
-    } else {
-      detailedDraft = emptyBreakdown();
-      form.innerHTML = renderDetailedFormHtml(safeName, detailedDraft);
-    }
-  }
-
-  function formatSigned(n) {
-    return n > 0 ? `+${n}` : `${n}`;
-  }
-
-  function renderSimpleFormHtml(safeName, value) {
-    const label = value >= 0 ? `Add ${formatSigned(value)} to ${safeName}` : `Adjust ${value} for ${safeName}`;
-    return (
-      `<div class="adj-box">` +
-        `<button type="button" class="adj-btn" onclick="adj(-1)">−</button>` +
-        `<div id="adj-val">${formatSigned(value)}</div>` +
-        `<button type="button" class="adj-btn" onclick="adj(1)">+</button>` +
-      `</div>` +
-      `<button type="button" id="commit-simple-btn" class="btn gold" onclick="commitSimple()" ${value === 0 ? 'disabled' : ''}>` +
-        `${label}` +
-      `</button>`
-    );
-  }
-
-  function renderDetailedFormHtml(safeName, draft) {
-    const ui = UI();
-    const total = calcDetailedTotal(draft);
-    const rows = DETAILED_CATEGORIES.map((cat) => {
-      const count = draft[cat.key] || 0;
-      const atMax = count >= cat.maxPerRound;
-      return (
-        `<div class="cat-row ${count > 0 ? 'has-count' : ''}" data-cat="${cat.key}" onclick="adjDetailed('${cat.key}', 1)">` +
-          `<div class="cat-icon ${UI_ICON_CLASS[cat.key]}">${ui.categoryIconSvg(UI_KEY[cat.key])}</div>` +
-          `<div class="cat-info">` +
-            `<div class="cat-name">${cat.label}</div>` +
-            `<div class="cat-vp">+${cat.vp} VP</div>` +
-          `</div>` +
-          `<div class="cat-right">` +
-            `<button type="button" class="cat-step-btn cat-dec" onclick="event.stopPropagation(); adjDetailed('${cat.key}', -1)" aria-label="Remove ${cat.label}" ${count <= 0 ? 'disabled' : ''}>−</button>` +
-            `<span class="cat-count" id="cat-count-${cat.key}">${count}</span>` +
-            `<button type="button" class="cat-step-btn cat-inc" onclick="event.stopPropagation(); adjDetailed('${cat.key}', 1)" aria-label="Add ${cat.label}" ${atMax ? 'disabled' : ''}>+</button>` +
-          `</div>` +
-        `</div>`
-      );
-    }).join('');
-
-    return (
-      `<div class="cat-list">${rows}</div>` +
-      `<div class="round-summary">` +
-        `<div id="round-total">Round Total: +${total} VP</div>` +
-        `<button type="button" class="btn-link-reset" onclick="resetDetailed()">Reset</button>` +
-      `</div>` +
-      `<button type="button" id="commit-detailed-btn" class="btn gold" onclick="commitDetailed()" ${total === 0 ? 'disabled' : ''}>` +
-        `Add +${total} VP to ${safeName}` +
-      `</button>`
-    );
-  }
-
-  // --- Simple Mode Actions ---
-  function adj(delta) {
-    const step = Number(delta);
-    if (!Number.isFinite(step) || step === 0) return adjVal;
-    adjVal += step;
-
-    const valEl = byId('adj-val');
-    if (valEl) valEl.textContent = formatSigned(adjVal);
-
-    const btn = byId('commit-simple-btn');
-    if (btn && currentGame && scoringPlayer !== null && currentGame.players[scoringPlayer]) {
-      const safeName = escapeHtml(currentGame.players[scoringPlayer].name);
-      btn.disabled = adjVal === 0;
-      btn.innerHTML = adjVal >= 0
-        ? `Add ${formatSigned(adjVal)} to ${safeName}`
-        : `Adjust ${adjVal} for ${safeName}`;
-    }
-    return adjVal;
-  }
-
-  function commitSimple() {
-    if (!currentGame || scoringPlayer === null || !currentGame.players[scoringPlayer]) return null;
-    if (adjVal === 0) return null;
-
-    const player = currentGame.players[scoringPlayer];
-    const prevScore = player.score;
-    const newScore = Math.max(0, prevScore + adjVal);
-    const appliedDelta = newScore - prevScore;
-
-    player.score = newScore;
-
-    const round = {
-      id: 'r_' + Date.now() + '_' + (currentGame.rounds.length + 1),
-      timestamp: new Date().toISOString(),
-      playerIdx: scoringPlayer,
-      playerName: player.name,
-      mode: 'simple',
-      delta: appliedDelta,
-      requestedDelta: adjVal,
-      prevScore,
-      newScore
-    };
-    currentGame.rounds.push(round);
-    currentGame.winner = computeWinner(currentGame);
-
+    currentGame.rounds.push({ ts: new Date().toISOString(), by: scoringPlayer, mode, prev, deltas: currentGame.players.map((p, i) => p.score - prev[i]), detail: detail || null });
     scoringPlayer = null;
-    adjVal = 1;
-    persist();
-    renderLeaderboard();
-    return round;
+    persistActive();
+    renderActive();
   }
-
-  // --- Detailed Mode Actions ---
-  function adjDetailed(catKey, delta) {
-    const cat = DETAILED_CATEGORIES.find((c) => c.key === catKey);
-    if (!cat) return 0;
-
-    const current = detailedDraft[catKey] || 0;
-    const next = Math.max(0, Math.min(cat.maxPerRound, current + (Number(delta) || 0)));
-    detailedDraft[catKey] = next;
-
-    const form = byId('score-form');
-    if (form && currentGame && scoringPlayer !== null && currentGame.players[scoringPlayer]) {
-      const safeName = escapeHtml(currentGame.players[scoringPlayer].name);
-      form.innerHTML = renderDetailedFormHtml(safeName, detailedDraft);
-    }
-    return calcDetailedTotal(detailedDraft);
-  }
-
-  function resetDetailed() {
-    detailedDraft = emptyBreakdown();
-    const form = byId('score-form');
-    if (form && currentGame && scoringPlayer !== null && currentGame.players[scoringPlayer]) {
-      const safeName = escapeHtml(currentGame.players[scoringPlayer].name);
-      form.innerHTML = renderDetailedFormHtml(safeName, detailedDraft);
-    }
-    return 0;
-  }
-
-  function commitDetailed() {
-    if (!currentGame || scoringPlayer === null || !currentGame.players[scoringPlayer]) return null;
-    const total = calcDetailedTotal(detailedDraft);
-    if (total <= 0) return null;
-
-    const player = currentGame.players[scoringPlayer];
-    const prevScore = player.score;
-    const newScore = Math.max(0, prevScore + total);
-
-    player.score = newScore;
-    if (!player.breakdown) player.breakdown = emptyBreakdown();
-    const snapshot = { ...detailedDraft };
-    for (const cat of DETAILED_CATEGORIES) {
-      player.breakdown[cat.key] = (player.breakdown[cat.key] || 0) + (snapshot[cat.key] || 0);
-    }
-
-    const round = {
-      id: 'r_' + Date.now() + '_' + (currentGame.rounds.length + 1),
-      timestamp: new Date().toISOString(),
-      playerIdx: scoringPlayer,
-      playerName: player.name,
-      mode: 'detailed',
-      delta: total,
-      breakdown: snapshot,
-      prevScore,
-      newScore
-    };
-    currentGame.rounds.push(round);
-    currentGame.winner = computeWinner(currentGame);
-
-    detailedDraft = emptyBreakdown();
-    scoringPlayer = null;
-    persist();
-    renderLeaderboard();
-    return round;
-  }
-
-  // --- Undo & End Game ---
   function undoLastRound() {
     if (!currentGame || !currentGame.rounds.length) return null;
-    const last = currentGame.rounds.pop();
-    const player = currentGame.players[last.playerIdx];
-
-    if (player) {
-      if (typeof last.prevScore === 'number') {
-        player.score = Math.max(0, last.prevScore);
-      } else {
-        player.score = Math.max(0, player.score - (Number(last.delta) || 0));
-      }
-
-      if (last.mode === 'detailed' && last.breakdown && player.breakdown) {
-        for (const cat of DETAILED_CATEGORIES) {
-          const dec = Number(last.breakdown[cat.key]) || 0;
-          player.breakdown[cat.key] = Math.max(0, (player.breakdown[cat.key] || 0) - dec);
-        }
-      }
+    const r = currentGame.rounds.pop();
+    currentGame.players.forEach((p, i) => { p.score = Array.isArray(r.prev) ? r.prev[i] : p.score - (r.deltas[i] || 0); });
+    if (isCatan() && r.detail && r.detail.breakdown) {
+      const p = currentGame.players[r.detail.player];
+      CATAN_CATS.forEach((c) => { p.breakdown[c.key] = Math.max(0, (p.breakdown[c.key] || 0) - (r.detail.breakdown[c.key] || 0)); });
     }
-
-    currentGame.winner = computeWinner(currentGame);
-    persist();
-    renderLeaderboard();
-    return last;
-  }
-
-  async function endGame() {
-    if (!currentGame) return null;
-
-    const finished = {
-      ...currentGame,
-      endTime: new Date().toISOString()
-    };
-    if (!finished.winner && finished.players.length) {
-      const sorted = [...finished.players].sort((a, b) => b.score - a.score);
-      finished.winner = sorted[0].name;
-    }
-
-    history.unshift(finished);
-    currentGame = null;
     scoringPlayer = null;
-    adjVal = 1;
-    detailedDraft = emptyBreakdown();
+    persistActive();
+    renderActive();
+    return r;
+  }
+  function onlyFor(idx, pts) { return currentGame.players.map((_, i) => (i === idx ? pts : 0)); }
 
-    persist(); // removes gst_active
-    saveCache(true); // immediately protects finished game locally
+  function computeWinner(game) {
+    const g = gameById(game.type);
+    if (!game.players.length) return '';
+    const scores = game.players.map((p) => p.score);
+    const best = g.low ? Math.min(...scores) : Math.max(...scores);
+    return game.players.filter((p) => p.score === best).map((p) => p.name).join(', ');
+  }
+  function endGame() {
+    if (!currentGame) return null;
+    const finished = { ...currentGame, endTime: new Date().toISOString() };
+    finished.winner = computeWinner(finished);
+    history.unshift(finished);
+    currentGame = null; scoringPlayer = null;
+    persistActive();
+    saveCache(true);
     showView('history');
-    await saveData();
+    saveData();
     return finished;
   }
 
-  // --- History Rendering ---
-  function renderHistory() {
-    const list = byId('history-list');
-    if (!list) return;
-    if (!history.length) {
-      list.innerHTML = '<div class="empty-note">No finished games yet.</div>';
+  // ---------------- Active game ----------------
+  function renderActive() {
+    applyTheme();
+    if (!currentGame) {
+      byId('gen-title').textContent = 'No active game';
+      byId('gen-sub').textContent = 'Tap Play to start one.';
+      byId('gen-leaderboard').innerHTML = '';
+      setHidden(byId('gen-pad'), true); setHidden(byId('gen-undo'), true);
       return;
     }
-    const ui = UI();
-    list.innerHTML = history.map((g) => ui.renderHistoryCard(g)).join('');
+    if (isCatan()) renderCatan(); else renderGeneric();
   }
 
-  // --- Wire Enter key on #new-player-name when DOM is ready ---
-  function bindInputHandlers() {
+  // ----- Generic (neutral) games -----
+  function renderGeneric() {
+    const g = gameById(currentGame.type);
+    byId('gen-title').textContent = g.name;
+    const t = currentGame.target;
+    byId('gen-sub').textContent = [currentGame.version, t ? (g.low ? `Ends at ${t} · lowest wins` : `First to ${t}`) : '', `Round ${currentGame.rounds.length + 1}`].filter(Boolean).join(' · ');
+    const sorted = currentGame.players.map((p, idx) => ({ ...p, idx })).sort((a, b) => (g.low ? a.score - b.score : b.score - a.score) || a.idx - b.idx);
+    const lead = sorted.length ? sorted[0].score : null;
+    byId('gen-leaderboard').innerHTML = sorted.map((p, r) => `
+      <div class="player-row ${p.idx === scoringPlayer ? 'selected' : ''} ${currentGame.rounds.length && p.score === lead ? 'leader' : ''}" data-player-idx="${p.idx}" onclick="openPad(${p.idx})">
+        <div class="flex"><span class="rank">${r + 1}</span><strong class="p-name">${esc(p.name)}</strong></div>
+        <div class="p-score">${p.score}</div>
+      </div>`).join('');
+    setHidden(byId('gen-undo'), !currentGame.rounds.length);
+    if (scoringPlayer === null) { setHidden(byId('gen-pad'), true); byId('gen-pad').innerHTML = ''; }
+  }
+  function openPad(idx) {
+    if (!currentGame || !currentGame.players[idx]) return;
+    scoringPlayer = idx;
+    if (isCatan()) { byId('pad').style.display = 'block'; renderCatanLeaderboard(); setCatanMode(padMode); return; }
+    renderGeneric();
+    const g = gameById(currentGame.type);
+    const pad = byId('gen-pad');
+    setHidden(pad, false);
+    pad.innerHTML = `
+      <div class="small">Scoring for <strong>${esc(currentGame.players[idx].name)}</strong></div>
+      ${g.detailedLabel ? `<div class="mode-toggle-n">
+        <button type="button" class="btn ${padMode === 'simple' ? 'active' : ''}" id="gen-mode-simple" onclick="setPadMode('simple')">Simple Points</button>
+        <button type="button" class="btn ${padMode === 'detailed' ? 'active' : ''}" id="gen-mode-detailed" onclick="setPadMode('detailed')">${esc(g.detailedLabel)}</button>
+      </div>` : ''}
+      <div id="gen-form"></div>`;
+    renderGenericForm();
+  }
+  function setPadMode(m) {
+    padMode = m === 'detailed' ? 'detailed' : 'simple';
+    ['simple', 'detailed'].forEach((k) => { const b = byId('gen-mode-' + k); if (b) b.classList.toggle('active', k === padMode); });
+    renderGenericForm();
+  }
+  function closePad() { scoringPlayer = null; renderActive(); }
+  const cancelBtn = '<button class="btn" type="button" onclick="closePad()">Cancel</button>';
+
+  function renderGenericForm() {
+    const form = byId('gen-form');
+    if (!form) return;
+    const g = gameById(currentGame.type);
+    if (padMode === 'simple' || !g.detailedLabel) {
+      form.innerHTML = `<label class="small" for="simple-pts">Points this round (negative allowed)</label>
+        <input type="number" id="simple-pts" value="0" inputmode="numeric">
+        <div class="action-bar"><button class="btn primary" type="button" id="commit-simple" onclick="commitSimplePoints()">Add</button>${cancelBtn}</div>`;
+      return;
+    }
+    const v = currentGame.version || '';
+    const row = (id, label, extra) => `<div class="form-row"><span>${label}</span><input type="number" id="${id}" value="0" inputmode="numeric" oninput="updateGenericPreview()" ${extra || ''}></div>`;
+    const box = (id, label) => `<label class="form-row"><span>${label}</span><input type="checkbox" id="${id}" onchange="updateGenericPreview()"></label>`;
+    const commit = `<div class="preview" id="gen-preview"></div><div class="action-bar"><button class="btn primary" type="button" id="commit-detailed" onclick="commitGenericDetailed()">Add</button>${cancelBtn}</div>`;
+    switch (g.id) {
+      case 'flip7': {
+        flip = { numbers: [], x2: false, mods: [], bust: false };
+        form.innerHTML = `
+          <div class="key-grid-5">${Object.keys(FLIP7_COLORS).map((n) => `<div class="key" id="f7n${n}" style="background:${FLIP7_COLORS[n]}" onclick="flipToggle('n', ${n})">${n}</div>`).join('')}</div>
+          <div class="key-grid-6"><div class="key" id="f7x2" style="background:#1e293b" onclick="flipToggle('x2')">×2</div>
+            ${[2, 4, 6, 8, 10].map((m) => `<div class="key" id="f7m${m}" style="background:#1e293b" onclick="flipToggle('m', ${m})">+${m}</div>`).join('')}</div>
+          <div class="key" id="f7bust" style="background:#3f1d2a" onclick="flipToggle('bust')">Bust (0 this round)</div>${commit}`;
+        break;
+      }
+      case '7wonders': {
+        const cats = [['w-mil', 'Military'], ['w-coin', 'Treasury (coins)'], ['w-won', 'Wonder'], ['w-civ', 'Civilian (blue)'], ['w-com', 'Commercial (yellow)'], ['w-gld', 'Guilds (purple)'], ['w-sci', 'Science (green)']];
+        if (/Leaders/.test(v)) cats.push(['w-ldr', 'Leaders']);
+        if (/Cities/.test(v)) cats.push(['w-cty', 'Cities (black)']);
+        if (/Armada/.test(v)) cats.push(['w-arm', 'Armada (naval)']);
+        if (/Other/.test(v)) cats.push(['w-oth', 'Expansion extras']);
+        form.innerHTML = cats.map(([id, l]) => row(id, l)).join('') + commit;
+        form.dataset.fields = cats.map((c) => c[0]).join(',');
+        break;
+      }
+      case 'carcassonne': {
+        const cats = [['ca-cit', 'Cities'], ['ca-road', 'Roads'], ['ca-mon', 'Monasteries'], ['ca-field', 'Fields / farms']];
+        if (/Inns|other/.test(v)) cats.push(['ca-ext', 'Expansion bonuses']);
+        form.innerHTML = cats.map(([id, l]) => row(id, l)).join('') + commit;
+        form.dataset.fields = cats.map((c) => c[0]).join(',');
+        break;
+      }
+      case 'ohhell':
+        form.innerHTML = row('oh-bid', 'Bid', 'min="0"') + row('oh-tricks', 'Tricks taken', 'min="0"') + `<div class="small">${esc(v)}</div>` + commit;
+        break;
+      case 'hearts':
+        form.innerHTML = row('h-hearts', 'Hearts taken (0-13)', 'min="0" max="13"') + box('h-queen', 'Queen of Spades (+13)') +
+          (/Jack/.test(v) ? box('h-jack', 'Jack of Diamonds (−10)') : '') + box('h-moon', 'Shot the moon (everyone else +26)') + commit;
+        break;
+      case 'nertz':
+        form.innerHTML = row('n-played', 'Cards played to center (+1)', 'min="0"') + row('n-left', 'Left in Nertz pile (−2)', 'min="0"') +
+          (/No bonus/.test(v) ? '' : box('n-called', 'Called Nertz (+10)')) + commit;
+        break;
+      default:
+        form.innerHTML = row('simple-pts', 'Points') + commit;
+    }
+    updateGenericPreview();
+  }
+  function flipCalc() {
+    if (!flip || flip.bust) return 0;
+    let s = flip.numbers.reduce((a, b) => a + b, 0);
+    if (flip.x2) s *= 2;
+    s += flip.mods.reduce((a, b) => a + b, 0);
+    if (flip.numbers.length === 7) s += 15;
+    return s;
+  }
+  function flipToggle(kind, val) {
+    if (!flip) return;
+    const tog = (arr, x) => { const i = arr.indexOf(x); i >= 0 ? arr.splice(i, 1) : arr.push(x); };
+    if (kind === 'n') { tog(flip.numbers, val); byId('f7n' + val).classList.toggle('active', flip.numbers.includes(val)); }
+    if (kind === 'm') { tog(flip.mods, val); byId('f7m' + val).classList.toggle('active', flip.mods.includes(val)); }
+    if (kind === 'x2') { flip.x2 = !flip.x2; byId('f7x2').classList.toggle('active', flip.x2); }
+    if (kind === 'bust') { flip.bust = !flip.bust; byId('f7bust').classList.toggle('active', flip.bust); }
+    updateGenericPreview();
+  }
+  function genericDetailedDeltas() {
+    const g = gameById(currentGame.type), idx = scoringPlayer, v = currentGame.version || '';
+    const form = byId('gen-form');
+    switch (g.id) {
+      case 'flip7': return { deltas: onlyFor(idx, flipCalc()), detail: { ...flip } };
+      case '7wonders': case 'carcassonne': {
+        const fields = (form.dataset.fields || '').split(',').filter(Boolean);
+        const parts = Object.fromEntries(fields.map((f) => [f, num(f)]));
+        return { deltas: onlyFor(idx, Object.values(parts).reduce((a, b) => a + b, 0)), detail: parts };
+      }
+      case 'ohhell': {
+        const bid = num('oh-bid'), took = num('oh-tricks'), exact = bid === took;
+        const pts = /1 per trick/.test(v) ? took + (exact ? 10 : 0) : (exact ? 10 + bid : 0);
+        return { deltas: onlyFor(idx, pts), detail: { bid, took } };
+      }
+      case 'hearts': {
+        if (checked('h-moon')) return { deltas: currentGame.players.map((_, i) => (i === idx ? 0 : 26)), detail: { moon: true } };
+        const pts = Math.max(0, Math.min(13, num('h-hearts'))) + (checked('h-queen') ? 13 : 0) - (checked('h-jack') ? 10 : 0);
+        return { deltas: onlyFor(idx, pts), detail: { hearts: num('h-hearts'), queen: checked('h-queen'), jack: checked('h-jack') } };
+      }
+      case 'nertz': {
+        const pts = num('n-played') - 2 * num('n-left') + (checked('n-called') ? 10 : 0);
+        return { deltas: onlyFor(idx, pts), detail: { played: num('n-played'), left: num('n-left'), called: checked('n-called') } };
+      }
+      default: return { deltas: onlyFor(idx, num('simple-pts')), detail: null };
+    }
+  }
+  function updateGenericPreview() {
+    const el = byId('gen-preview');
+    if (!el || scoringPlayer === null) return;
+    const { deltas } = genericDetailedDeltas();
+    const name = currentGame.players[scoringPlayer].name;
+    if (currentGame.type === 'hearts' && checked('h-moon')) el.textContent = `${name} shot the moon: everyone else +26`;
+    else el.textContent = `This round: ${signed(deltas[scoringPlayer])}` + (currentGame.type === 'flip7' && flip && flip.numbers.length === 7 && !flip.bust ? ' (includes Flip 7 +15)' : '');
+  }
+  function commitSimplePoints() {
+    if (!currentGame || scoringPlayer === null) return;
+    commitRound(onlyFor(scoringPlayer, num('simple-pts')), 'simple');
+  }
+  function commitGenericDetailed() {
+    if (!currentGame || scoringPlayer === null) return;
+    const { deltas, detail } = genericDetailedDeltas();
+    commitRound(deltas, 'detailed', detail);
+    const g = gameById(currentGame ? currentGame.type : 'other');
+    if (currentGame && currentGame.target && currentGame.players.some((p) => p.score >= currentGame.target)) {
+      const t = byId('gen-sub'); if (t) t.textContent += g.low ? ' · Target reached — lowest score wins' : ' · Target reached!';
+    }
+  }
+
+  // ----- Catan (parchment theme) -----
+  function renderCatan() {
+    const t = currentGame.targetVp || 10;
+    byId('catan-title').textContent = 'Catan';
+    byId('catan-sub').textContent = `FIRST TO ${t} VICTORY POINTS`;
+    renderCatanLeaderboard();
+    if (scoringPlayer === null) byId('pad').style.display = 'none';
+  }
+  function renderCatanLeaderboard() {
+    const UI = global.ScoreTrackerUI, t = currentGame.targetVp || 10;
+    const sorted = currentGame.players.map((p, idx) => ({ ...p, idx })).sort((a, b) => (b.score - a.score) || (a.idx - b.idx));
+    byId('leaderboard').innerHTML = sorted.map((p) => {
+      const win = p.score >= t;
+      const cls = ['player-row', p.idx === scoringPlayer ? 'selected' : '', win ? 'winner' : ''].filter(Boolean).join(' ');
+      return `<div class="${cls}" data-player-idx="${p.idx}" onclick="openPad(${p.idx})" role="button" tabindex="0">
+          <div class="shield-wrap">${UI.shieldSvg(p.idx, p.name)}</div>
+          <div class="player-meta">
+            <div class="player-name-line"><span class="player-name">${esc(p.name)}</span>${win ? `<span class="winner-badge">${UI.crownSvg()} Winner</span>` : ''}</div>
+            ${UI.starsHtml(p.score, t)}
+          </div>
+          <div class="vp-badge"><div class="vp-num">${p.score}</div><div class="vp-label">VP</div></div>
+        </div>`;
+    }).join('');
+    setHidden(byId('btn-undo'), !currentGame.rounds.length);
+  }
+  function setCatanMode(m) {
+    padMode = m === 'detailed' ? 'detailed' : 'simple';
+    ['simple', 'detailed'].forEach((k) => { const b = byId('mode-' + k); if (b) { b.classList.toggle('active', k === padMode); b.setAttribute('aria-selected', String(k === padMode)); } });
+    if (!isCatan() || scoringPlayer === null) return;
+    const p = currentGame.players[scoringPlayer];
+    byId('pad-player-banner').innerHTML = `<span class="shield-wrap">${global.ScoreTrackerUI.shieldSvg(scoringPlayer, p.name)}</span><span>${esc(p.name)}</span><span class="pad-current">· ${p.score} VP</span>`;
+    if (padMode === 'simple') { catanAdj = 1; renderCatanSimple(); } else { catanDraft = emptyBreakdown(); renderCatanDetailed(); }
+  }
+  function renderCatanSimple() {
+    const name = esc(currentGame.players[scoringPlayer].name);
+    byId('score-form').innerHTML = `<div class="adj-box">
+        <button type="button" class="adj-btn" id="catan-minus" onclick="catanStep(-1)" aria-label="Decrease">−</button>
+        <div id="adj-val">${signed(catanAdj)}</div>
+        <button type="button" class="adj-btn" id="catan-plus" onclick="catanStep(1)" aria-label="Increase">+</button>
+      </div>
+      <button type="button" id="commit-simple-btn" class="btn gold" onclick="commitCatanSimple()" ${catanAdj === 0 ? 'disabled' : ''}>${catanAdj >= 0 ? `Add ${signed(catanAdj)} VP to ${name}` : `Adjust ${catanAdj} VP for ${name}`}</button>`;
+  }
+  function catanStep(d) { catanAdj += d; renderCatanSimple(); }
+  function commitCatanSimple() { if (isCatan() && scoringPlayer !== null && catanAdj !== 0) commitRound(onlyFor(scoringPlayer, catanAdj), 'simple'); }
+  function renderCatanDetailed() {
+    const UI = global.ScoreTrackerUI, name = esc(currentGame.players[scoringPlayer].name), total = catanTotal(catanDraft);
+    byId('score-form').innerHTML = `<div class="cat-list">${CATAN_CATS.map((c) => {
+      const n = catanDraft[c.key] || 0;
+      return `<div class="cat-row ${n > 0 ? 'has-count' : ''}" data-cat="${c.key}" onclick="catanCat('${c.key}', 1)">
+          <div class="cat-icon ${c.icon}">${UI.categoryIconSvg(c.ui)}</div>
+          <div class="cat-info"><div class="cat-name">${c.label}</div><div class="cat-vp">+${c.vp} VP</div></div>
+          <div class="cat-right">
+            <button type="button" class="cat-step-btn cat-dec" onclick="event.stopPropagation(); catanCat('${c.key}', -1)" aria-label="Remove ${c.label}" ${n <= 0 ? 'disabled' : ''}>−</button>
+            <span class="cat-count" id="cat-count-${c.key}">${n}</span>
+            <button type="button" class="cat-step-btn cat-inc" onclick="event.stopPropagation(); catanCat('${c.key}', 1)" aria-label="Add ${c.label}" ${n >= c.max ? 'disabled' : ''}>+</button>
+          </div></div>`;
+    }).join('')}</div>
+      <div class="round-summary"><div id="round-total">Round Total: +${total} VP</div><button type="button" class="btn-link-reset" onclick="catanReset()">Reset</button></div>
+      <button type="button" id="commit-detailed-btn" class="btn gold" onclick="commitCatanDetailed()" ${total === 0 ? 'disabled' : ''}>Add +${total} VP to ${name}</button>`;
+  }
+  function catanCat(key, d) {
+    const c = CATAN_CATS.find((x) => x.key === key);
+    if (!c) return;
+    catanDraft[key] = Math.max(0, Math.min(c.max, (catanDraft[key] || 0) + d));
+    renderCatanDetailed();
+  }
+  function catanReset() { catanDraft = emptyBreakdown(); renderCatanDetailed(); }
+  function commitCatanDetailed() {
+    if (!isCatan() || scoringPlayer === null) return;
+    const total = catanTotal(catanDraft);
+    if (!total) return;
+    const idx = scoringPlayer, bd = { ...catanDraft };
+    catanDraft = emptyBreakdown();
+    commitRound(onlyFor(idx, total), 'detailed', { player: idx, breakdown: bd });
+  }
+
+  // ---------------- History ----------------
+  function renderHistory() {
+    const el = byId('history-list');
+    if (!history.length) { el.innerHTML = '<p class="small">Nothing here yet.</p>'; return; }
+    el.innerHTML = history.map((g, i) => `
+      <div class="history-item">
+        <div class="flex space-between" style="flex-wrap:nowrap">
+          <div><strong>${esc(gameLabel(g))}</strong>${g.version ? ` <span class="small">· ${esc(g.version)}</span>` : ''}
+            <div class="small">${esc(new Date(g.endTime || g.startTime || Date.now()).toLocaleDateString())}</div></div>
+          <button class="btn danger sm" type="button" aria-label="Delete game" onclick="deleteGame(${i})">×</button>
+        </div>
+        <div style="margin-top:.3rem">${[...(g.players || [])].sort((a, b) => (gameById(g.type).low ? a.score - b.score : b.score - a.score)).map((p) => `${esc(p.name)}: <strong>${p.score}</strong>`).join(' · ')}</div>
+        <div class="winner">Winner: ${esc(g.winner || '—')}</div>
+      </div>`).join('');
+  }
+  function deleteGame(i) {
+    if (!history[i] || !confirm('Delete this game from history?')) return;
+    history.splice(i, 1); renderHistory(); saveData();
+  }
+
+  // Enter key on the add-player input
+  document.addEventListener('DOMContentLoaded', () => {
     const input = byId('new-player-name');
-    if (input && !input.dataset.scoringBound && !input.hasAttribute('onkeydown')) {
-      input.dataset.scoringBound = '1';
-      input.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-          e.preventDefault();
-          addPlayer();
-        }
-      });
-    }
-  }
+    if (input) input.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); addPlayer(); } });
+  });
 
-  if (typeof document !== 'undefined') {
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', bindInputHandlers);
-    } else {
-      bindInputHandlers();
-    }
-  }
-
-  // --- Public Global API (for inline HTML handlers & Auth/UI integration) ---
-  const api = {
-    // Auth lifecycle
-    onAuthReady,
-    onAuthSignedOut,
-    // Persistence & sync
-    loadData,
-    saveData,
-    persist,
-    // Navigation
-    showView,
-    // Players
-    renderNew,
-    addPlayer,
-    removePlayer,
-    startGame,
-    // Active game & scoring
-    renderLeaderboard,
-    openPad,
-    setMode,
-    adj,
-    commitSimple,
-    adjDetailed,
-    resetDetailed,
-    commitDetailed,
-    undoLastRound,
-    undoLastAction: undoLastRound,
-    endGame,
-    renderHistory,
-    // Read-only state accessors for UI/testing
-    getState: () => ({
-      currentUser,
-      players: [...players],
-      history: [...history],
-      currentGame,
-      scoringPlayer,
-      mode,
-      adjVal,
-      detailedDraft: { ...detailedDraft },
-      roundTotal: calcDetailedTotal(detailedDraft),
-      pendingSync
-    }),
-    // Constants
-    SHIELDS,
-    DETAILED_CATEGORIES
-  };
-
-  Object.assign(global, api);
-
-  // Keep `players` accessible for inline chip remove handlers if referenced directly
-  if (typeof Object.defineProperty === 'function' && typeof window !== 'undefined') {
-    try {
-      Object.defineProperty(global, 'players', {
-        get: () => players,
-        set: (v) => { if (Array.isArray(v)) players = v; },
-        configurable: true
-      });
-    } catch (_) {}
-  }
-
-  if (typeof module !== 'undefined' && module.exports) {
-    module.exports = api;
-  }
-})(typeof window !== 'undefined' ? window : globalThis);
+  Object.assign(global, {
+    onAuthReady, onAuthSignedOut, showView, selectGame, togglePlayer, addPlayer, removePlayer, startGame, discardGame,
+    openPad, setPadMode, closePad, flipToggle, updateGenericPreview, commitSimplePoints, commitGenericDetailed,
+    setCatanMode, catanStep, commitCatanSimple, catanCat, catanReset, commitCatanDetailed,
+    undoLastRound, undoLastAction: undoLastRound, endGame, deleteGame,
+    ScoreTracker: { GAMES, getState: () => ({ players: [...players], history: [...history], currentGame, currentView, scoringPlayer, padMode, pendingSync }) }
+  });
+})(window);
 
 </script>
 
-<!-- Auth: creates window.sb, then runs getSession() and toggles #login-view / #app-shell -->
+<!-- Auth -->
 <script id="score-auth-script">
 (function () {
   const SUPABASE_URL = 'https://lezfdnqqfejqyxqwlcfg.supabase.co';
@@ -2401,15 +1654,13 @@ window.ScoreTrackerUI = (function () {
 
   if (!window.supabase || typeof window.supabase.createClient !== 'function') {
     const showOffline = () => {
-      const lv = document.getElementById('login-view');
-      const as = document.getElementById('app-shell');
+      const lv = document.getElementById('login-view'), as = document.getElementById('app-shell');
       if (as) { as.hidden = true; as.classList.add('auth-hidden', 'hidden'); }
       if (lv) { lv.hidden = false; lv.classList.remove('auth-hidden'); lv.style.display = 'flex'; }
       const m = document.getElementById('login-msg');
       if (m) { m.textContent = 'Could not load the sign-in service. Check your connection and reload.'; m.setAttribute('data-tone', 'error'); }
     };
-    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', showOffline, { once: true });
-    else showOffline();
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', showOffline, { once: true }); else showOffline();
     return;
   }
   const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
@@ -2483,6 +1734,7 @@ window.ScoreTrackerUI = (function () {
   }
 
   function showSignedOutUI() {
+    document.body.classList.remove('theme-catan');
     const { loginView, appShell } = getEls();
     if (appShell) {
       appShell.hidden = true;
