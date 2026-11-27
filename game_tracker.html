@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0b1220">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="score-tracker-build" content="v8-carcassonne-theme-2026-11-26">
+<meta name="score-tracker-build" content="v9-social-friends-groups-2026-11-26">
 <title>Score Tracker</title>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon-512.jpg" type="image/jpeg">
@@ -155,6 +155,568 @@ body.theme-catan .app-header { display: none; }
 #flip7-board { display: none; }
 /* Carcassonne tally is only shown when theme-carcassonne is on */
 #carc-board { display: none; }
+/* Friends tab lives only in the neutral nav: themed game navs stay clean 4-tab bars */
+body.theme-catan .bottom-nav #nav-social, body.theme-flip7 .bottom-nav #nav-social, body.theme-carcassonne .bottom-nav #nav-social { display: none !important; }
+#soc-create-group-modal { z-index: 80; }
+</style>
+
+<!-- ===================== SOCIAL LAYER (neutral navy/cyan: Friends, Groups, setup, history badges) ===================== -->
+<style id="social-theme">
+/* Touch & mobile-safe defaults */
+.soc-tab, .soc-pill, .soc-preset-pill, .soc-friend-pick, .soc-copy-btn,
+.soc-icon-btn, .soc-filter-pill, .soc-modal-close {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* ---------- Player Chips (Signed-in You / Friend / Guest) ---------- */
+.player-chip.is-self {
+  background: rgba(34, 211, 238, 0.14);
+  border-color: rgba(34, 211, 238, 0.45);
+}
+.player-chip.is-friend {
+  background: rgba(30, 41, 59, 0.95);
+  border-color: rgba(148, 163, 184, 0.28);
+}
+.soc-you-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.1rem 0.42rem;
+  border-radius: 999px;
+  background: rgba(34, 211, 238, 0.2);
+  color: var(--accent);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+.soc-friend-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+
+/* ---------- Choose Game / Player Setup Quick-Pickers ---------- */
+.soc-setup-block {
+  margin-top: 0.8rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+}
+.soc-setup-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 0.45rem;
+}
+.soc-setup-link {
+  background: none;
+  border: none;
+  padding: 0.15rem 0.25rem;
+  color: var(--accent);
+  font: 600 0.78rem var(--font);
+  letter-spacing: 0;
+  text-transform: none;
+  cursor: pointer;
+}
+.soc-strip {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.45rem;
+  overflow-x: auto;
+  padding-bottom: 0.25rem;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.soc-strip::-webkit-scrollbar { display: none; }
+
+.soc-preset-pill {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.48rem 0.8rem;
+  border-radius: 12px;
+  background: var(--surface2);
+  border: 1px solid rgba(34, 211, 238, 0.25);
+  color: var(--text);
+  font: 600 0.86rem var(--font);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, transform 0.08s;
+}
+.soc-preset-pill:active { transform: scale(0.97); }
+.soc-preset-pill.active {
+  background: rgba(34, 211, 238, 0.18);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.soc-preset-count {
+  font-size: 0.74rem;
+  color: var(--muted);
+  font-weight: 600;
+}
+.soc-preset-pill.active .soc-preset-count { color: var(--accent); }
+
+.soc-friend-pick {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.42rem 0.72rem;
+  border-radius: 999px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font: 600 0.85rem var(--font);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+.soc-friend-pick.included {
+  background: rgba(52, 211, 153, 0.14);
+  border-color: rgba(52, 211, 153, 0.5);
+  color: var(--success);
+}
+.soc-active-group-note {
+  margin: 0.45rem 0 0;
+  font-size: 0.8rem;
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+/* ---------- Profile Strip (#view-social) ---------- */
+.soc-profile-card {
+  background: linear-gradient(135deg, rgba(34, 211, 238, 0.09), rgba(21, 28, 44, 0.96) 55%);
+  border: 1px solid rgba(34, 211, 238, 0.22);
+}
+.soc-profile-top {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 0.85rem;
+}
+.soc-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent-dim));
+  color: #0b1220;
+  font-weight: 800;
+  font-size: 1.15rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.soc-avatar.sm {
+  width: 34px;
+  height: 34px;
+  font-size: 0.9rem;
+  background: var(--surface2);
+  color: var(--accent);
+  border: 1px solid rgba(34, 211, 238, 0.28);
+}
+.soc-profile-name-row {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  gap: 0.45rem;
+  align-items: center;
+}
+.soc-profile-name-row input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.55rem 0.7rem;
+  font-size: 16px !important;
+}
+.soc-code-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+}
+.soc-code-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.9px;
+  color: var(--muted);
+  display: block;
+}
+.soc-code-val {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 1.02rem;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  color: var(--accent);
+}
+.soc-copy-btn {
+  padding: 0.45rem 0.8rem;
+  border-radius: 10px;
+  background: var(--surface2);
+  border: 1px solid rgba(34, 211, 238, 0.3);
+  color: var(--accent);
+  font: 600 0.84rem var(--font);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.soc-copy-btn.copied {
+  background: rgba(52, 211, 153, 0.16);
+  border-color: var(--success);
+  color: var(--success);
+}
+
+/* ---------- Friends / Groups Sub-tabs ---------- */
+.soc-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.35rem;
+  padding: 0.3rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  margin-bottom: 1rem;
+}
+.soc-tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.65rem 0.8rem;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font: 600 0.94rem var(--font);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.soc-tab.active {
+  background: linear-gradient(135deg, var(--accent), var(--accent-dim));
+  color: #0b1220;
+}
+.soc-badge-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 0.35rem;
+  border-radius: 999px;
+  background: var(--danger);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+.soc-tab.active .soc-badge-count {
+  background: #0b1220;
+  color: var(--accent);
+}
+
+/* ---------- Friends & Pending Lists ---------- */
+.soc-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.soc-row:last-child { border-bottom: none; padding-bottom: 0.1rem; }
+.soc-row:first-child { padding-top: 0.2rem; }
+.soc-row-main {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-width: 0;
+  flex: 1;
+}
+.soc-row-info { min-width: 0; }
+.soc-row-name {
+  font-weight: 600;
+  font-size: 0.96rem;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.soc-row-sub {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+.soc-row-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+.soc-icon-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.soc-icon-btn:hover { color: var(--danger); border-color: rgba(244, 63, 94, 0.45); }
+.soc-status-msg {
+  margin: 0.55rem 0 0;
+  font-size: 0.84rem;
+  min-height: 1.15rem;
+  color: var(--muted);
+}
+.soc-status-msg[data-tone="success"] { color: var(--success); }
+.soc-status-msg[data-tone="error"] { color: var(--danger); }
+
+/* ---------- Group Cards & Group Leaderboard ---------- */
+.soc-group-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.1rem;
+  margin-bottom: 0.9rem;
+  box-shadow: var(--shadow);
+}
+.soc-group-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.65rem;
+  margin-bottom: 0.7rem;
+}
+.soc-group-title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text);
+}
+.soc-group-members {
+  font-size: 0.82rem;
+  color: var(--muted);
+  margin-top: 0.2rem;
+}
+.soc-group-cta-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.85rem;
+}
+.soc-group-cta-row .btn.primary { flex: 1; }
+
+.soc-lb-wrap {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.soc-lb-head, .soc-lb-row {
+  display: grid;
+  grid-template-columns: 28px 1fr 48px 44px 56px;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.52rem 0.7rem;
+}
+.soc-lb-head {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.02);
+}
+.soc-lb-row {
+  font-size: 0.88rem;
+  border-bottom: 1px solid var(--border);
+}
+.soc-lb-row:last-child { border-bottom: none; }
+.soc-lb-rank { font-weight: 700; color: var(--muted); }
+.soc-lb-row.is-first .soc-lb-rank { color: var(--accent); }
+.soc-lb-player {
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+.soc-lb-num { text-align: right; font-variant-numeric: tabular-nums; color: var(--muted); }
+.soc-lb-wins { text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--success); }
+.soc-lb-rate { text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--accent); }
+
+.soc-group-recent {
+  margin-top: 0.75rem;
+  padding-top: 0.65rem;
+  border-top: 1px solid var(--border);
+}
+.soc-group-recent-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 0.4rem;
+}
+.soc-group-recent-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.35rem 0;
+  font-size: 0.84rem;
+}
+.soc-group-recent-item .winner { color: var(--success); font-weight: 600; }
+
+/* ---------- Create Group Modal Sheet ---------- */
+.soc-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  background: rgba(4, 8, 18, 0.78);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0.75rem;
+}
+@media (min-width: 560px) {
+  .soc-modal-backdrop { align-items: center; }
+}
+.soc-modal {
+  width: 100%;
+  max-width: 460px;
+  max-height: 88vh;
+  overflow-y: auto;
+  background: var(--surface);
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  border-radius: 18px;
+  padding: 1.2rem;
+  box-shadow: 0 24px 55px rgba(0, 0, 0, 0.6);
+}
+.soc-modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.85rem;
+}
+.soc-modal-head h3 { margin: 0; font-size: 1.12rem; }
+.soc-modal-close {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 1rem;
+  cursor: pointer;
+}
+.soc-check-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin: 0.4rem 0 0.75rem;
+}
+
+/* ---------- History Filter Bar & Shared/Group Badges ---------- */
+.soc-filter-strip {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.45rem;
+  overflow-x: auto;
+  margin: 0 0 0.85rem;
+  padding-bottom: 0.2rem;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.soc-filter-strip::-webkit-scrollbar { display: none; }
+.soc-filter-pill {
+  flex: 0 0 auto;
+  padding: 0.42rem 0.8rem;
+  border-radius: 999px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font: 600 0.82rem var(--font);
+  cursor: pointer;
+}
+.soc-filter-pill.active {
+  background: rgba(34, 211, 238, 0.16);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.soc-history-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.35rem;
+}
+.soc-tag-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.14rem 0.5rem;
+  border-radius: 999px;
+  background: rgba(34, 211, 238, 0.12);
+  border: 1px solid rgba(34, 211, 238, 0.28);
+  color: var(--accent);
+  font-size: 0.74rem;
+  font-weight: 600;
+}
+.soc-tag-shared {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.14rem 0.5rem;
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.12);
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  color: var(--muted);
+  font-size: 0.74rem;
+  font-weight: 600;
+}
+
+/* ---------- Bottom Nav Pending Dot ---------- */
+.bottom-nav button { position: relative; }
+.soc-nav-dot {
+  position: absolute;
+  top: 2px;
+  right: 14px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.96);
+}
+
+/* ---------- Assembly additions (v9) ---------- */
+.soc-demo-banner { margin: 0 0 1rem; padding: .7rem .9rem; border-radius: 12px; font-size: .84rem; line-height: 1.4;
+  background: rgba(34, 211, 238, 0.08); border: 1px dashed rgba(34, 211, 238, 0.4); color: var(--muted); }
+.soc-demo-banner strong { color: var(--accent); }
+.soc-lb-filter-row { display: flex; align-items: center; justify-content: space-between; gap: .6rem; margin: .2rem 0 .55rem; }
+.soc-lb-filter-row .soc-code-label { margin: 0; }
+.soc-lb-filter-row select { width: auto; max-width: 60%; padding: .35rem .6rem; border-radius: 10px; }
+.soc-add-self { margin: 0; }
+.soc-outgoing-note { font-size: .8rem; color: var(--muted); }
+
 </style>
 
 <!-- ===================== CATAN THEME (scoped to body.theme-catan) ===================== -->
@@ -563,7 +1125,7 @@ body.theme-carcassonne .bottom-nav #nav-signout { --cc-ic: url("data:image/svg+x
 </style>
 </head>
 <body>
-<!-- Build: v8-carcassonne-theme-2026-11-26 -->
+<!-- Build: v9-social-friends-groups-2026-11-26 -->
 
 <!-- Login: starts hidden until getSession() resolves -->
 <section id="login-view" class="auth-hidden" hidden aria-label="Sign in to Score Tracker">
@@ -618,13 +1180,45 @@ body.theme-carcassonne .bottom-nav #nav-signout { --cc-ic: url("data:image/svg+x
       <div class="game-grid" id="game-grid"></div>
       <label class="small" for="version-select">Version / Scoring rules</label>
       <select id="version-select"></select>
-      <h3 style="margin-top:1.1rem">Players</h3>
-      <div class="player-list" id="player-chips"></div>
-      <div class="flex" style="flex-wrap:nowrap">
-        <input type="text" id="new-player-name" placeholder="Add player" autocomplete="off" style="flex:1">
-        <button class="btn" type="button" id="btn-add-player" onclick="addPlayer()">+</button>
+      <div id="setup-players-section">
+        <h3 style="margin-top:1.1rem">Players</h3>
+
+        <!-- Signed-in user pre-selected as a (You) chip + selected friends/guests -->
+        <div class="player-list" id="player-chips"></div>
+        <div id="setup-active-group-note" class="soc-active-group-note hidden" hidden>
+          <span id="setup-active-group-label"></span>
+          <button type="button" class="soc-setup-link" onclick="clearSetupGroup && clearSetupGroup()">Clear group</button>
+        </div>
+
+        <!-- One-tap Group Presets -->
+        <div id="setup-groups-wrap" class="soc-setup-block hidden" hidden>
+          <div class="soc-setup-label">
+            <span>Load a Group</span>
+            <button type="button" class="soc-setup-link" onclick="showView('social'); SocialUI.switchSocialTab('groups')">Manage</button>
+          </div>
+          <div class="soc-strip" id="setup-group-presets" role="list" aria-label="Group presets"></div>
+        </div>
+
+        <!-- Quick-pick from Accepted Friends -->
+        <div id="setup-friends-wrap" class="soc-setup-block hidden" hidden>
+          <div class="soc-setup-label">
+            <span>Quick-add Friends</span>
+            <button type="button" class="soc-setup-link" onclick="showView('social'); SocialUI.switchSocialTab('friends')">All friends</button>
+          </div>
+          <div class="soc-strip" id="setup-friend-picks" role="list" aria-label="Quick add friends"></div>
+        </div>
+
+        <!-- Casual guest name input -->
+        <div class="soc-setup-block">
+          <div class="soc-setup-label"><span>Add Casual Guest</span></div>
+          <div class="flex" style="flex-wrap:nowrap">
+            <input type="text" id="new-player-name" placeholder="Type guest name..." autocomplete="off" style="flex:1">
+            <button class="btn" type="button" id="btn-add-player" onclick="addPlayer()" aria-label="Add guest player">+</button>
+          </div>
+        </div>
+
+        <button class="btn primary block" type="button" id="btn-start-game" style="margin-top:1.2rem" onclick="startGame()">Start Playing</button>
       </div>
-      <button class="btn primary block" type="button" id="btn-start-game" style="margin-top:1.2rem" onclick="startGame()">Start Playing</button>
     </div>
   </section>
 
@@ -767,13 +1361,126 @@ body.theme-carcassonne .bottom-nav #nav-signout { --cc-ic: url("data:image/svg+x
 
   <!-- HISTORY -->
   <section id="view-history" class="view">
-    <div class="card"><h2>History</h2><div id="history-list"></div></div>
+    <div class="card">
+      <h2>History</h2>
+      <div id="history-filter-bar" class="soc-filter-strip" role="tablist" aria-label="Filter history by group">
+        <button type="button" class="soc-filter-pill active" data-group-id="all" onclick="setHistoryFilter && setHistoryFilter('all')">All My Games</button>
+      </div>
+      <div id="history-list"></div>
+    </div>
   </section>
+
+  <!-- FRIENDS & GROUPS (neutral navy/cyan) -->
+  <section id="view-social" class="view" aria-label="Friends and Groups">
+    <div id="soc-demo-banner" class="soc-demo-banner hidden" hidden role="status">
+      <strong>Local demo mode</strong> — friends, groups and shared history are saved on this device until the Supabase social migration is applied.
+    </div>
+    <!-- Your Profile Strip -->
+    <div class="card soc-profile-card">
+      <div class="soc-profile-top">
+        <div class="soc-avatar" id="soc-my-avatar" aria-hidden="true">?</div>
+        <div class="soc-profile-name-row">
+          <input type="text" id="soc-display-name" placeholder="Your display name" autocomplete="name" maxlength="32" aria-label="Display name">
+          <button type="button" class="btn sm primary" id="btn-save-display-name" onclick="saveDisplayName && saveDisplayName()">Save</button>
+        </div>
+      </div>
+      <div class="soc-code-strip">
+        <div>
+          <span class="soc-code-label">Your Friend Code</span>
+          <span class="soc-code-val" id="soc-friend-code">—</span>
+        </div>
+        <button type="button" class="soc-copy-btn" id="btn-copy-code" onclick="SocialUI.copyFriendCode()">Copy code</button>
+      </div>
+      <p id="soc-profile-msg" class="soc-status-msg" role="status" aria-live="polite"></p>
+    </div>
+
+    <!-- Sub-tabs: Friends | Groups -->
+    <div class="soc-tabs" role="tablist" aria-label="Social sections">
+      <button type="button" class="soc-tab active" id="soc-tab-friends" role="tab" aria-selected="true" onclick="SocialUI.switchSocialTab('friends')">
+        <span>Friends</span>
+        <span id="soc-pending-badge" class="soc-badge-count hidden" hidden>0</span>
+      </button>
+      <button type="button" class="soc-tab" id="soc-tab-groups" role="tab" aria-selected="false" onclick="SocialUI.switchSocialTab('groups')">
+        <span>Groups</span>
+      </button>
+    </div>
+
+    <!-- FRIENDS PANEL -->
+    <div id="soc-panel-friends" role="tabpanel" aria-labelledby="soc-tab-friends">
+      <!-- Add Friend -->
+      <div class="card">
+        <h3>Add a Friend</h3>
+        <div class="flex" style="flex-wrap:nowrap">
+          <input type="text" id="soc-add-friend-input" placeholder="Email or friend code" autocomplete="off" style="flex:1" onkeydown="if(event.key==='Enter'){sendFriendRequest && sendFriendRequest();}">
+          <button type="button" class="btn primary sm" id="btn-send-friend-req" onclick="sendFriendRequest && sendFriendRequest()">Add</button>
+        </div>
+        <p id="soc-friend-msg" class="soc-status-msg" role="status" aria-live="polite"></p>
+      </div>
+
+      <!-- Pending Requests -->
+      <div class="card hidden" id="soc-pending-card" hidden>
+        <h3>Pending Requests</h3>
+        <div id="soc-pending-list"></div>
+      </div>
+
+      <!-- Accepted Friends -->
+      <div class="card">
+        <h3>Your Friends</h3>
+        <div id="soc-friends-list">
+          <p class="small" style="margin:0.2rem 0 0">No friends yet. Share your code or add someone above.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- GROUPS PANEL -->
+    <div id="soc-panel-groups" class="hidden" hidden role="tabpanel" aria-labelledby="soc-tab-groups">
+      <div class="flex space-between" style="margin-bottom:0.85rem">
+        <h2 style="margin:0;font-size:1.15rem">Game Groups</h2>
+        <button type="button" class="btn primary sm" id="btn-open-create-group" onclick="openCreateGroup()">+ Create Group</button>
+      </div>
+      <div id="soc-groups-list">
+        <div class="card">
+          <p class="small" style="margin:0">Create a group (like "Friday Catan Crew") to load your regulars in one tap and track a group leaderboard.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Create Group Modal Sheet -->
+  <div id="soc-create-group-modal" class="soc-modal-backdrop hidden" hidden role="dialog" aria-modal="true" aria-labelledby="soc-modal-title" onclick="if(event.target===this)SocialUI.closeCreateGroupModal()">
+    <div class="soc-modal">
+      <div class="soc-modal-head">
+        <h3 id="soc-modal-title">Create Group</h3>
+        <button type="button" class="soc-modal-close" aria-label="Close" onclick="SocialUI.closeCreateGroupModal()">✕</button>
+      </div>
+
+      <label class="field-label" for="soc-group-name">Group Name</label>
+      <input type="text" id="soc-group-name" placeholder="e.g. Friday Game Night" maxlength="40" autocomplete="off">
+
+      <label class="field-label" style="margin-top:0.9rem">Pick Friends (You are included automatically)</label>
+      <div id="soc-group-friend-picks" class="soc-check-grid"></div>
+
+      <label class="field-label" for="soc-group-guest-input">Optional Guest Names</label>
+      <div class="flex" style="flex-wrap:nowrap">
+        <input type="text" id="soc-group-guest-input" placeholder="Add regular guest..." autocomplete="off" style="flex:1" onkeydown="if(event.key==='Enter'){addGroupModalGuest && addGroupModalGuest();}">
+        <button type="button" class="btn sm" onclick="addGroupModalGuest && addGroupModalGuest()">+</button>
+      </div>
+      <div id="soc-group-guest-chips" class="player-list" style="margin-top:0.5rem"></div>
+
+      <p id="soc-group-modal-msg" class="soc-status-msg" role="status" aria-live="polite"></p>
+
+      <div class="action-bar" style="margin-top:0.9rem">
+        <button type="button" class="btn" onclick="SocialUI.closeCreateGroupModal()">Cancel</button>
+        <button type="button" class="btn primary" id="btn-confirm-create-group" onclick="createGroupFromModal && createGroupFromModal()">Create Group</button>
+      </div>
+    </div>
+  </div>
 
   <nav class="bottom-nav" aria-label="Main navigation">
     <button type="button" id="nav-home" onclick="showView('home')"><span class="icon">🏠</span>Home</button>
     <button type="button" id="nav-new" onclick="showView('new')"><span class="icon">➕</span>Play</button>
     <button type="button" id="nav-active" onclick="showView('active')"><span class="icon">▦</span>Tracker</button>
+    <button type="button" id="nav-social" onclick="showView('social')"><span class="icon">👥</span>Friends<span id="nav-social-dot" class="soc-nav-dot hidden" hidden aria-hidden="true"></span></button>
     <button type="button" id="nav-history" onclick="showView('history')"><span class="icon">📜</span>History</button>
     <button type="button" id="nav-signout" onclick="signOut()"><span class="icon">⎋</span>Exit</button>
   </nav>
@@ -781,9 +1488,2071 @@ body.theme-carcassonne .bottom-nav #nav-signout { --cc-ic: url("data:image/svg+x
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+<!-- Social layer: SocialScoring (players, payloads, leaderboards), SocialAPI (Supabase + local fallback), SocialUI (templates) -->
+<script id="social-scoring">
+/* ==========================================================================
+   Score Tracker — Social Scoring, Shared Game Serialization & Leaderboards
+   ==========================================================================
+   Clean, zero-dependency module designed to integrate into v3/engine.js.
+   Exposes `window.SocialScoring` in browsers and `module.exports` in Node.
+
+   Provides:
+   1. Participant-Aware Player Model (100% backwards-compatible with legacy
+      string player arrays across all 8 games):
+      - normalizeParticipant(entry, opts)
+      - normalizeRoster(list, currentUserId)
+      - participantKey(participant)
+      - toLegacyPlayerNames(participants)
+      - buildDefaultPlayers(currentUserProfile, savedRoster)
+      - applyGroupPreset(group, optsOrActiveGame)
+      - buildGamePlayers(gameId, participants)
+   2. Shared Game Record Serialization:
+      - buildSharedGamePayload(activeGame, currentUser)
+   3. Personal History & Group Leaderboard Engine:
+      - mergePersonalHistory(sharedGames, legacyHistory, currentUserId, opts)
+      - computeGroupLeaderboard(groupGames, groupMembers, optsOrGameType)
+   ========================================================================== */
+
+(function (global) {
+  'use strict';
+
+  const GAMES_META = {
+    flip7:       { id: 'flip7',       name: 'Flip 7',       low: false },
+    '7wonders':  { id: '7wonders',    name: '7 Wonders',    low: false },
+    carcassonne: { id: 'carcassonne', name: 'Carcassonne',  low: false },
+    catan:       { id: 'catan',       name: 'Catan',        low: false },
+    ohhell:      { id: 'ohhell',      name: 'Oh Hell',      low: false },
+    hearts:      { id: 'hearts',      name: 'Hearts',       low: true  },
+    nertz:       { id: 'nertz',       name: 'Nertz',        low: false },
+    other:       { id: 'other',       name: 'Custom',       low: false }
+  };
+
+  const CATAN_BREAKDOWN_KEYS = ['settlements', 'cities', 'longestRoad', 'largestArmy', 'vpCards'];
+  const CC_DEFAULT_COLORS = ['blue', 'red', 'yellow', 'green', 'black', 'pink'];
+
+  function gameMeta(gameType) {
+    const key = String(gameType || 'other').toLowerCase();
+    return GAMES_META[key] || { id: key || 'other', name: gameType || 'Custom', low: false };
+  }
+
+  function emptyCatanBreakdown() {
+    return { settlements: 0, cities: 0, longestRoad: 0, largestArmy: 0, vpCards: 0 };
+  }
+
+  function cleanName(val) {
+    return String(val ?? '').trim();
+  }
+
+  function extractProfileName(profile) {
+    if (!profile) return '';
+    if (typeof profile === 'string') return cleanName(profile);
+    const direct =
+      cleanName(profile.display_name) ||
+      cleanName(profile.displayName) ||
+      cleanName(profile.name) ||
+      cleanName(profile.full_name) ||
+      cleanName(profile.fullName) ||
+      cleanName(profile.username);
+    if (direct) return direct;
+    const meta = profile.user_metadata;
+    if (meta && typeof meta === 'object') {
+      const fromMeta =
+        cleanName(meta.display_name) ||
+        cleanName(meta.full_name) ||
+        cleanName(meta.name);
+      if (fromMeta) return fromMeta;
+    }
+    const email = cleanName(profile.email);
+    if (email && email.includes('@')) return email.split('@')[0];
+    return '';
+  }
+
+  function extractUserId(obj, allowGenericId) {
+    if (!obj || typeof obj !== 'object') return null;
+    const raw =
+      obj.userId !== undefined ? obj.userId :
+      obj.user_id !== undefined ? obj.user_id :
+      (obj.profile && obj.profile.id !== undefined ? obj.profile.id :
+      (allowGenericId && obj.id !== undefined ? obj.id : null));
+    if (raw === null || raw === undefined || raw === '') return null;
+    return String(raw);
+  }
+
+  // =========================================================================
+  // 1. Participant-Aware Player Model
+  // =========================================================================
+
+  /**
+   * Normalizes a legacy string name OR any participant/member/profile object
+   * into `{ name, userId, isSelf, isGuest }` (optionally keeping extra game fields).
+   */
+  function normalizeParticipant(entry, opts) {
+    const options = opts || {};
+    const currentUserId = options.currentUserId ? String(options.currentUserId) : null;
+
+    if (typeof entry === 'string') {
+      const name = cleanName(entry);
+      if (!name) return null;
+      return { name, userId: null, isSelf: false, isGuest: true };
+    }
+
+    if (!entry || typeof entry !== 'object') return null;
+
+    const nestedProfile = entry.profile && typeof entry.profile === 'object' ? entry.profile : null;
+    const userId = extractUserId(entry, Boolean(options.allowIdAsUserId));
+    const name =
+      extractProfileName(entry) ||
+      extractProfileName(nestedProfile) ||
+      (userId ? 'Player' : '');
+
+    if (!name) return null;
+
+    const isSelf = Boolean(
+      entry.isSelf ||
+      entry.is_self ||
+      (currentUserId && userId && userId === currentUserId)
+    );
+    const isGuest =
+      entry.isGuest !== undefined ? Boolean(entry.isGuest) :
+      entry.is_guest !== undefined ? Boolean(entry.is_guest) :
+      !userId;
+
+    const base = { name, userId, isSelf, isGuest };
+
+    if (options.preserveExtras) {
+      return { ...entry, ...base };
+    }
+    return base;
+  }
+
+  /**
+   * Stable dedupe/selection key for a participant or legacy string name.
+   */
+  function participantKey(entry) {
+    if (typeof entry === 'string') return 'name:' + cleanName(entry).toLowerCase();
+    if (!entry || typeof entry !== 'object') return '';
+    const uid = extractUserId(entry, false);
+    if (uid) return 'uid:' + uid;
+    return 'name:' + extractProfileName(entry).toLowerCase();
+  }
+
+  /**
+   * Normalizes and deduplicates a mixed roster of strings and participant objects.
+   * When a linked participant (userId != null) and a guest share a name, the
+   * linked participant wins.
+   */
+  function normalizeRoster(list, currentUserId) {
+    const out = [];
+    const byUserId = new Map();
+    const byName = new Map();
+
+    for (const raw of (Array.isArray(list) ? list : [])) {
+      const p = normalizeParticipant(raw, { currentUserId });
+      if (!p) continue;
+
+      const lower = p.name.toLowerCase();
+      if (p.userId && byUserId.has(p.userId)) {
+        const idx = byUserId.get(p.userId);
+        if (p.isSelf) out[idx].isSelf = true;
+        continue;
+      }
+
+      if (byName.has(lower)) {
+        const idx = byName.get(lower);
+        const existing = out[idx];
+        // Upgrade guest entry to linked entry if same name
+        if (!existing.userId && p.userId) {
+          out[idx] = p;
+          byUserId.set(p.userId, idx);
+        } else if (p.isSelf) {
+          existing.isSelf = true;
+        }
+        continue;
+      }
+
+      const idx = out.length;
+      out.push(p);
+      byName.set(lower, idx);
+      if (p.userId) byUserId.set(p.userId, idx);
+    }
+
+    return out;
+  }
+
+  function toLegacyPlayerNames(participants) {
+    return (Array.isArray(participants) ? participants : [])
+      .map((p) => (typeof p === 'string' ? cleanName(p) : extractProfileName(p)))
+      .filter(Boolean);
+  }
+
+  /**
+   * Always defaults the signed-in user in as Player 1 (while allowing them to be
+   * removed/deselected later), followed by the deduplicated saved roster.
+   */
+  function buildDefaultPlayers(currentUserProfile, savedRoster) {
+    const selfId = extractUserId(currentUserProfile, true);
+    const selfName = extractProfileName(currentUserProfile) || (selfId ? 'Me' : '');
+
+    const list = [];
+    if (selfName) {
+      list.push({
+        name: selfName,
+        userId: selfId,
+        isSelf: true,
+        isGuest: !selfId
+      });
+    }
+
+    const roster = normalizeRoster(savedRoster, selfId);
+    for (const p of roster) {
+      if (selfId && p.userId && p.userId === selfId) continue;
+      if (selfName && !p.userId && p.name.toLowerCase() === selfName.toLowerCase()) continue;
+      list.push({ ...p, isSelf: Boolean(selfId && p.userId === selfId) });
+    }
+
+    return list;
+  }
+
+  /**
+   * Loads a group's members (linked friends + any guests) into participant entries
+   * and tags `activeGame.groupId` and `activeGame.groupName` if an activeGame is provided.
+   *
+   * Supports:
+   *   applyGroupPreset(group)
+   *   applyGroupPreset(group, activeGame)
+   *   applyGroupPreset(group, { activeGame, currentUserId, includeSelfIfMissing, currentUserProfile })
+   */
+  function applyGroupPreset(group, optsOrActiveGame) {
+    const isDirectGame = Boolean(
+      optsOrActiveGame &&
+      typeof optsOrActiveGame === 'object' &&
+      Array.isArray(optsOrActiveGame.players)
+    );
+    const opts = isDirectGame ? { activeGame: optsOrActiveGame } : (optsOrActiveGame || {});
+    const currentUserId = opts.currentUserId
+      ? String(opts.currentUserId)
+      : extractUserId(opts.currentUserProfile, true);
+
+    if (!group || typeof group !== 'object') {
+      return { players: [], groupId: null, groupName: '', activeGame: opts.activeGame || null };
+    }
+
+    const groupId = group.id !== undefined && group.id !== null ? String(group.id) : null;
+    const groupName = cleanName(group.name || group.title || '');
+    const rawMembers =
+      Array.isArray(group.members) ? group.members :
+      Array.isArray(group.group_members) ? group.group_members :
+      Array.isArray(group.players) ? group.players : [];
+
+    const normalizedMembers = normalizeRoster(rawMembers, currentUserId);
+
+    // Optional: ensure signed-in user is first if they are in the group
+    normalizedMembers.sort((a, b) => (b.isSelf ? 1 : 0) - (a.isSelf ? 1 : 0));
+
+    if (opts.includeSelfIfMissing && opts.currentUserProfile) {
+      const hasSelf = normalizedMembers.some((m) => m.isSelf);
+      if (!hasSelf) {
+        const selfEntry = normalizeParticipant(opts.currentUserProfile, {
+          currentUserId,
+          allowIdAsUserId: true
+        });
+        if (selfEntry) {
+          selfEntry.isSelf = true;
+          normalizedMembers.unshift(selfEntry);
+        }
+      }
+    }
+
+    const activeGame = opts.activeGame || null;
+    if (activeGame && typeof activeGame === 'object') {
+      activeGame.groupId = groupId;
+      activeGame.groupName = groupName;
+    }
+
+    return {
+      players: normalizedMembers,
+      groupId,
+      groupName,
+      activeGame
+    };
+  }
+
+  /**
+   * Builds game-specific initial player objects for any of the 8 games while
+   * keeping participant identity fields (`userId`, `isSelf`, `isGuest`).
+   */
+  function buildGamePlayers(gameId, participants, opts) {
+    const type = String(gameId || 'other').toLowerCase();
+    const list = normalizeRoster(participants, opts && opts.currentUserId);
+
+    return list.map((p, idx) => {
+      const base = {
+        name: p.name,
+        userId: p.userId,
+        isSelf: Boolean(p.isSelf),
+        isGuest: Boolean(p.isGuest),
+        score: 0
+      };
+      if (type === 'catan') {
+        return { ...base, breakdown: emptyCatanBreakdown() };
+      }
+      if (type === 'flip7') {
+        return { ...base, flip7Count: 0 };
+      }
+      if (type === 'carcassonne') {
+        return { ...base, color: CC_DEFAULT_COLORS[idx % CC_DEFAULT_COLORS.length] };
+      }
+      return base;
+    });
+  }
+
+  // =========================================================================
+  // 2. Shared Game Record Serialization
+  // =========================================================================
+
+  function computeWinnersForGame(game) {
+    const players = Array.isArray(game && game.players) ? game.players : [];
+    if (!players.length) return { winnerIndices: new Set(), winnerNames: [] };
+
+    const meta = gameMeta(game.type || game.game_type);
+    const scores = players.map((p) => Number(p.score) || 0);
+    const best = meta.low ? Math.min(...scores) : Math.max(...scores);
+
+    const winnerIndices = new Set();
+    const winnerNames = [];
+    players.forEach((p, idx) => {
+      if ((Number(p.score) || 0) === best) {
+        winnerIndices.add(idx);
+        winnerNames.push(extractProfileName(p) || 'Player');
+      }
+    });
+    return { winnerIndices, winnerNames };
+  }
+
+  function extractPlayerRoundScores(rounds, playerIdx) {
+    if (!Array.isArray(rounds) || !rounds.length) return [];
+    const out = [];
+    for (const r of rounds) {
+      if (!r || typeof r !== 'object') continue;
+      if (Array.isArray(r.deltas) && r.deltas[playerIdx] !== undefined) {
+        out.push(Number(r.deltas[playerIdx]) || 0);
+      } else if (Array.isArray(r.scores) && r.scores[playerIdx] !== undefined) {
+        out.push(Number(r.scores[playerIdx]) || 0);
+      } else if (r.playerIdx === playerIdx && r.delta !== undefined) {
+        out.push(Number(r.delta) || 0);
+      }
+    }
+    return out;
+  }
+
+  /**
+   * Serializes an active/finished game from v3/engine.js into the shared
+   * Supabase payload shape across all 8 games:
+   * `{ game_type, variant, group_id, played_at, winner_names, summary, participants }`
+   */
+  function buildSharedGamePayload(activeGame, currentUser) {
+    if (!activeGame || typeof activeGame !== 'object') {
+      throw new Error('buildSharedGamePayload requires an activeGame object');
+    }
+
+    const gameType = String(activeGame.type || activeGame.game_type || 'other').toLowerCase();
+    const meta = gameMeta(gameType);
+    const creatorId =
+      typeof currentUser === 'string'
+        ? currentUser
+        : extractUserId(currentUser, true);
+    const playedAt = activeGame.endTime || activeGame.played_at || new Date().toISOString();
+    const rounds = Array.isArray(activeGame.rounds) ? activeGame.rounds : [];
+    const { winnerIndices, winnerNames } = computeWinnersForGame(activeGame);
+
+    const participants = (Array.isArray(activeGame.players) ? activeGame.players : []).map((rawP, idx) => {
+      const p = normalizeParticipant(rawP, { currentUserId: creatorId, preserveExtras: true }) || {
+        name: 'Player',
+        userId: null,
+        isSelf: false,
+        isGuest: true
+      };
+      const score = Number(rawP && rawP.score) || 0;
+      const pMeta = {
+        is_guest: !p.userId,
+        is_self: Boolean(p.isSelf)
+      };
+
+      if (gameType === 'catan') {
+        const bd = rawP && rawP.breakdown && typeof rawP.breakdown === 'object' ? rawP.breakdown : {};
+        const normalizedBd = emptyCatanBreakdown();
+        for (const k of CATAN_BREAKDOWN_KEYS) {
+          normalizedBd[k] = Math.max(0, Number(bd[k]) || 0);
+        }
+        pMeta.breakdown = normalizedBd;
+        pMeta.target_vp = activeGame.targetVp ?? activeGame.target ?? 10;
+      } else if (gameType === 'flip7') {
+        pMeta.flip7Count = Math.max(0, Number(rawP && rawP.flip7Count) || 0);
+        const busts = rounds.filter((r) => {
+          if (!r || !r.detail) return false;
+          if (r.playerIdx === idx && r.detail.bust) return true;
+          if (Array.isArray(r.detail.busts) && r.detail.busts[idx]) return true;
+          return false;
+        }).length;
+        if (busts > 0) pMeta.busts = busts;
+      } else if (gameType === 'carcassonne') {
+        pMeta.scoring_mode = 'final_tally';
+        if (rawP && rawP.color) pMeta.color = rawP.color;
+      }
+
+      const roundScores = extractPlayerRoundScores(rounds, idx);
+      if (roundScores.length) {
+        pMeta.round_scores = roundScores;
+      }
+
+      return {
+        user_id: p.userId,
+        display_name: p.name,
+        score,
+        is_winner: winnerIndices.has(idx),
+        meta: pMeta
+      };
+    });
+
+    const summary = {
+      local_game_id: activeGame.id || null,
+      game_name: meta.name,
+      version: activeGame.version || activeGame.variant || null,
+      target: activeGame.target ?? activeGame.targetVp ?? null,
+      low_wins: Boolean(meta.low),
+      rounds_count: rounds.length,
+      rounds,
+      start_time: activeGame.startTime || null,
+      end_time: playedAt,
+      group_name: activeGame.groupName || activeGame.group_name || null,
+      created_by: creatorId
+    };
+
+    return {
+      game_type: gameType,
+      variant: activeGame.version || activeGame.variant || null,
+      group_id: activeGame.groupId ?? activeGame.group_id ?? null,
+      played_at: playedAt,
+      winner_names: winnerNames,
+      summary,
+      participants
+    };
+  }
+
+  // =========================================================================
+  // 3. Personal History & Group Leaderboard Engine
+  // =========================================================================
+
+  function normalizeSharedGameRecord(raw, currentUserId) {
+    if (!raw || typeof raw !== 'object') return null;
+    const summary = (raw.summary && typeof raw.summary === 'object') ? raw.summary : {};
+    const gameType = String(raw.game_type || raw.type || 'other').toLowerCase();
+    const meta = gameMeta(gameType);
+    const rawParticipants = Array.isArray(raw.participants)
+      ? raw.participants
+      : (Array.isArray(raw.game_participants) ? raw.game_participants : []);
+
+    const players = rawParticipants.map((p) => {
+      const userId = extractUserId(p, false);
+      const name = extractProfileName(p) || 'Player';
+      const pMeta = (p && p.meta && typeof p.meta === 'object') ? p.meta : {};
+      const out = {
+        name,
+        userId,
+        isSelf: Boolean(currentUserId && userId && userId === currentUserId),
+        isGuest: !userId,
+        score: Number(p && p.score) || 0,
+        isWinner: Boolean(p && (p.is_winner ?? p.isWinner)),
+        meta: pMeta
+      };
+      if (gameType === 'catan' && pMeta.breakdown) out.breakdown = { ...emptyCatanBreakdown(), ...pMeta.breakdown };
+      if (gameType === 'flip7' && pMeta.flip7Count !== undefined) out.flip7Count = Number(pMeta.flip7Count) || 0;
+      if (gameType === 'carcassonne' && pMeta.color) out.color = pMeta.color;
+      return out;
+    });
+
+    const winnerNames = Array.isArray(raw.winner_names) && raw.winner_names.length
+      ? raw.winner_names
+      : players.filter((p) => p.isWinner).map((p) => p.name);
+
+    const endTime = raw.played_at || summary.end_time || raw.endTime || raw.created_at || null;
+    const myEntry = currentUserId
+      ? players.find((p) => p.userId === currentUserId) || null
+      : null;
+
+    return {
+      id: summary.local_game_id || raw.id || ('shared_' + (endTime || Date.now())),
+      sharedGameId: raw.id ? String(raw.id) : null,
+      source: 'shared',
+      isShared: true,
+      type: gameType,
+      gameName: summary.game_name || meta.name,
+      version: raw.variant || summary.version || null,
+      target: summary.target ?? null,
+      groupId: raw.group_id !== undefined && raw.group_id !== null ? String(raw.group_id) : null,
+      groupName: raw.group_name || summary.group_name || null,
+      createdBy: raw.created_by || summary.created_by || null,
+      startTime: summary.start_time || endTime,
+      endTime,
+      playedAt: endTime,
+      winner: winnerNames.join(', '),
+      winnerNames,
+      players,
+      rounds: Array.isArray(summary.rounds) ? summary.rounds : [],
+      roundsCount: summary.rounds_count ?? (Array.isArray(summary.rounds) ? summary.rounds.length : 0),
+      myScore: myEntry ? myEntry.score : null,
+      didIWin: myEntry ? Boolean(myEntry.isWinner) : false
+    };
+  }
+
+  function normalizeLegacyGameRecord(raw, currentUserId) {
+    if (!raw || typeof raw !== 'object') return null;
+    const gameType = String(raw.type || raw.game_type || 'other').toLowerCase();
+    const meta = gameMeta(gameType);
+    const { winnerIndices, winnerNames } = computeWinnersForGame(raw);
+
+    const players = (Array.isArray(raw.players) ? raw.players : []).map((p, idx) => {
+      const userId = extractUserId(p, false);
+      const name = typeof p === 'string' ? cleanName(p) : (extractProfileName(p) || 'Player');
+      return {
+        ...(typeof p === 'object' && p ? p : {}),
+        name,
+        userId,
+        isSelf: Boolean((p && p.isSelf) || (currentUserId && userId && userId === currentUserId)),
+        isGuest: !userId,
+        score: Number(p && p.score) || 0,
+        isWinner: winnerIndices.has(idx)
+      };
+    });
+
+    const endTime = raw.endTime || raw.played_at || raw.startTime || null;
+    const myEntry = currentUserId
+      ? players.find((p) => p.userId === currentUserId || p.isSelf) || null
+      : null;
+
+    return {
+      ...raw,
+      id: raw.id || ('legacy_' + (endTime || Date.now())),
+      sharedGameId: raw.sharedGameId || null,
+      source: 'legacy',
+      isShared: false,
+      type: gameType,
+      gameName: meta.name,
+      version: raw.version || raw.variant || null,
+      target: raw.target ?? raw.targetVp ?? null,
+      groupId: raw.groupId ?? raw.group_id ?? null,
+      groupName: raw.groupName ?? raw.group_name ?? null,
+      createdBy: raw.createdBy || currentUserId || null,
+      startTime: raw.startTime || endTime,
+      endTime,
+      playedAt: endTime,
+      winner: raw.winner || winnerNames.join(', '),
+      winnerNames,
+      players,
+      rounds: Array.isArray(raw.rounds) ? raw.rounds : [],
+      roundsCount: Array.isArray(raw.rounds) ? raw.rounds.length : 0,
+      myScore: myEntry ? myEntry.score : null,
+      didIWin: myEntry ? Boolean(myEntry.isWinner) : false
+    };
+  }
+
+  function gameContentSignature(rec) {
+    const type = String(rec.type || 'other').toLowerCase();
+    const ts = Date.parse(rec.endTime || rec.playedAt || rec.startTime || 0) || 0;
+    // Bucket timestamp to 5-second window to match local vs server save skew
+    const bucket = Math.round(ts / 5000);
+    const sigPlayers = [...(rec.players || [])]
+      .map((p) => `${String(p.name || '').toLowerCase()}:${Number(p.score) || 0}`)
+      .sort()
+      .join('|');
+    return `${type}::${bucket}::${sigPlayers}`;
+  }
+
+  /**
+   * Produces a deduplicated, newest-first personal timeline combining:
+   * - `sharedGames`: games from Supabase where the user participated (or created)
+   * - `legacyHistory`: existing `score_history.history` items
+   */
+  function mergePersonalHistory(sharedGames, legacyHistory, currentUserId, opts) {
+    const uid = currentUserId ? String(currentUserId) : null;
+    const options = opts || {};
+    const byLocalId = new Map();
+    const bySharedId = new Map();
+    const bySignature = new Map();
+    const merged = [];
+
+    const addRecord = (rec) => {
+      if (!rec) return;
+      if (rec.sharedGameId && bySharedId.has(rec.sharedGameId)) return;
+      if (rec.id && byLocalId.has(rec.id)) {
+        // If shared record already exists, merge missing rounds from legacy
+        const existing = byLocalId.get(rec.id);
+        if (existing.source === 'shared' && rec.source === 'legacy') {
+          if (!existing.rounds.length && rec.rounds.length) {
+            existing.rounds = rec.rounds;
+            existing.roundsCount = rec.rounds.length;
+          }
+        }
+        return;
+      }
+      const sig = gameContentSignature(rec);
+      if (bySignature.has(sig)) {
+        const existing = bySignature.get(sig);
+        if (existing.source === 'shared' && rec.source === 'legacy') {
+          if (!existing.rounds.length && rec.rounds.length) {
+            existing.rounds = rec.rounds;
+            existing.roundsCount = rec.rounds.length;
+          }
+        }
+        return;
+      }
+
+      merged.push(rec);
+      if (rec.sharedGameId) bySharedId.set(rec.sharedGameId, rec);
+      if (rec.id) byLocalId.set(rec.id, rec);
+      bySignature.set(sig, rec);
+    };
+
+    // 1. Add shared games first so they take precedence over legacy duplicates
+    for (const raw of (Array.isArray(sharedGames) ? sharedGames : [])) {
+      const rec = normalizeSharedGameRecord(raw, uid);
+      if (!rec) continue;
+      if (uid && !options.includeAllShared) {
+        const participated = rec.players.some((p) => p.userId === uid);
+        const created = rec.createdBy && String(rec.createdBy) === uid;
+        if (!participated && !created) continue;
+      }
+      addRecord(rec);
+    }
+
+    // 2. Add legacy history items (deduplicated against shared)
+    for (const raw of (Array.isArray(legacyHistory) ? legacyHistory : [])) {
+      const rec = normalizeLegacyGameRecord(raw, uid);
+      if (!rec) continue;
+      addRecord(rec);
+    }
+
+    // 3. Optional gameType filter
+    const filterType = options.gameType && options.gameType !== 'all'
+      ? String(options.gameType).toLowerCase()
+      : null;
+
+    const filtered = filterType
+      ? merged.filter((g) => g.type === filterType)
+      : merged;
+
+    filtered.sort((a, b) => {
+      const ta = Date.parse(a.endTime || a.playedAt || a.startTime || 0) || 0;
+      const tb = Date.parse(b.endTime || b.playedAt || b.startTime || 0) || 0;
+      return tb - ta;
+    });
+
+    return filtered;
+  }
+
+  /**
+   * Computes ranked per-player statistics for a group's games.
+   *
+   * Supports:
+   *   computeGroupLeaderboard(groupGames, groupMembers)
+   *   computeGroupLeaderboard(groupGames, groupMembers, 'catan')
+   *   computeGroupLeaderboard(groupGames, groupMembers, { gameType: 'catan', recentFormLength: 5 })
+   *
+   * Returns array of:
+   *   { rank, name, userId, gamesPlayed, wins, winRate, winRatePct, avgScore, bestScore, recentForm }
+   */
+  function computeGroupLeaderboard(groupGames, groupMembers, optsOrGameType) {
+    const opts = typeof optsOrGameType === 'string'
+      ? { gameType: optsOrGameType }
+      : (optsOrGameType || {});
+    const gameTypeFilter = opts.gameType && opts.gameType !== 'all'
+      ? String(opts.gameType).toLowerCase()
+      : null;
+    const recentFormLength = Number(opts.recentFormLength) > 0 ? Number(opts.recentFormLength) : 5;
+    const isLowFilter = Boolean(gameTypeFilter && gameMeta(gameTypeFilter).low);
+
+    // Seed stats map from groupMembers so 0-game members still appear
+    const statsList = [];
+    const byUserId = new Map();
+    const byName = new Map();
+
+    const ensureBucket = (name, userId) => {
+      const clean = cleanName(name) || 'Player';
+      const lower = clean.toLowerCase();
+      const uid = userId ? String(userId) : null;
+
+      if (uid && byUserId.has(uid)) {
+        return byUserId.get(uid);
+      }
+      if (byName.has(lower)) {
+        const existing = byName.get(lower);
+        if (!existing.userId && uid) {
+          existing.userId = uid;
+          byUserId.set(uid, existing);
+        }
+        return existing;
+      }
+
+      const bucket = {
+        name: clean,
+        userId: uid,
+        gamesPlayed: 0,
+        wins: 0,
+        totalScore: 0,
+        bestScore: null,
+        recentForm: []
+      };
+      statsList.push(bucket);
+      byName.set(lower, bucket);
+      if (uid) byUserId.set(uid, bucket);
+      return bucket;
+    };
+
+    for (const rawMember of (Array.isArray(groupMembers) ? groupMembers : [])) {
+      const p = normalizeParticipant(rawMember, {});
+      if (p) ensureBucket(p.name, p.userId);
+    }
+
+    // Filter games by gameType and sort chronologically (oldest -> newest) for recentForm
+    const normalizedGames = (Array.isArray(groupGames) ? groupGames : [])
+      .map((raw) => {
+        if (!raw || typeof raw !== 'object') return null;
+        if (Array.isArray(raw.participants) || Array.isArray(raw.game_participants)) {
+          return normalizeSharedGameRecord(raw, null);
+        }
+        return normalizeLegacyGameRecord(raw, null);
+      })
+      .filter((g) => g && (!gameTypeFilter || g.type === gameTypeFilter))
+      .sort((a, b) => {
+        const ta = Date.parse(a.endTime || a.playedAt || a.startTime || 0) || 0;
+        const tb = Date.parse(b.endTime || b.playedAt || b.startTime || 0) || 0;
+        return ta - tb;
+      });
+
+    for (const game of normalizedGames) {
+      const players = Array.isArray(game.players) ? game.players : [];
+      if (!players.length) continue;
+
+      const meta = gameMeta(game.type);
+      const hasExplicitWinners = players.some((p) => p.isWinner === true);
+      const fallbackWinners = hasExplicitWinners ? null : computeWinnersForGame(game).winnerIndices;
+
+      players.forEach((p, idx) => {
+        const bucket = ensureBucket(p.name, p.userId);
+        const score = Number(p.score) || 0;
+        const won = hasExplicitWinners ? Boolean(p.isWinner) : fallbackWinners.has(idx);
+
+        bucket.gamesPlayed += 1;
+        if (won) bucket.wins += 1;
+        bucket.totalScore += score;
+
+        if (bucket.bestScore === null) {
+          bucket.bestScore = score;
+        } else if (isLowFilter || (gameTypeFilter && meta.low)) {
+          bucket.bestScore = Math.min(bucket.bestScore, score);
+        } else {
+          bucket.bestScore = Math.max(bucket.bestScore, score);
+        }
+
+        bucket.recentForm.push(won ? 'W' : 'L');
+        if (bucket.recentForm.length > recentFormLength) {
+          bucket.recentForm.shift();
+        }
+      });
+    }
+
+    const ranked = statsList.map((b) => {
+      const winRate = b.gamesPlayed > 0 ? Number((b.wins / b.gamesPlayed).toFixed(4)) : 0;
+      const winRatePct = b.gamesPlayed > 0 ? Math.round((b.wins / b.gamesPlayed) * 100) : 0;
+      const avgScore = b.gamesPlayed > 0 ? Number((b.totalScore / b.gamesPlayed).toFixed(1)) : 0;
+      return {
+        name: b.name,
+        userId: b.userId,
+        gamesPlayed: b.gamesPlayed,
+        wins: b.wins,
+        winRate,
+        winRatePct,
+        avgScore,
+        bestScore: b.bestScore,
+        recentForm: [...b.recentForm]
+      };
+    });
+
+    ranked.sort((a, b) => {
+      // Active players before 0-game members
+      const aHas = a.gamesPlayed > 0 ? 1 : 0;
+      const bHas = b.gamesPlayed > 0 ? 1 : 0;
+      if (bHas !== aHas) return bHas - aHas;
+      // Wins desc
+      if (b.wins !== a.wins) return b.wins - a.wins;
+      // Win rate desc
+      if (b.winRate !== a.winRate) return b.winRate - a.winRate;
+      // Games played desc
+      if (b.gamesPlayed !== a.gamesPlayed) return b.gamesPlayed - a.gamesPlayed;
+      // Average score (asc for Hearts, desc otherwise)
+      if (b.avgScore !== a.avgScore) {
+        return isLowFilter ? a.avgScore - b.avgScore : b.avgScore - a.avgScore;
+      }
+      return a.name.localeCompare(b.name);
+    });
+
+    return ranked.map((row, idx) => ({ rank: idx + 1, ...row }));
+  }
+
+  // =========================================================================
+  // Exports
+  // =========================================================================
+
+  const api = {
+    GAMES_META,
+    normalizeParticipant,
+    normalizeRoster,
+    participantKey,
+    toLegacyPlayerNames,
+    buildDefaultPlayers,
+    applyGroupPreset,
+    buildGamePlayers,
+    buildSharedGamePayload,
+    mergePersonalHistory,
+    computeGroupLeaderboard
+  };
+
+  global.SocialScoring = api;
+
+  if (typeof module !== 'undefined' && module.exports) {
+    module.exports = api;
+  }
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+<script id="social-auth">
+/**
+ * Score Tracker — Social & Identity Client Layer (window.SocialAPI)
+ * Drop-in module for game_tracker.html. Depends on window.sb (Supabase v2 client).
+ *
+ * Exposes window.SocialAPI:
+ *   - ensureProfile(user?, preferredName?)
+ *   - updateDisplayName(newName)
+ *   - lookupUser(identifier)
+ *   - listFriends()
+ *   - sendFriendRequest(identifier)
+ *   - respondFriendRequest(friendshipId, action) // 'accept' | 'decline'
+ *   - removeFriend(friendshipId)
+ *   - listGroups()
+ *   - createGroup(name, memberUserIds?)
+ *   - deleteGroup(groupId)
+ *   - saveSharedGame(game, options?)
+ *   - loadMyGames(options?)
+ *   - loadGroupGames(groupId)
+ *   - getCachedProfile()
+ *   - getDefaultPlayer()
+ *   - isMigrationReady()
+ *   - reset()
+ *
+ * Gracefully falls back to localStorage / legacy `score_history` whenever the
+ * Supabase social migration hasn't been applied yet or the client is offline.
+ */
+(function (global) {
+  'use strict';
+
+  const LS_PREFIX = 'gst_social_v1_';
+  let cachedProfile = null;
+  let migrationReady = null; // null = unknown, true = ready, false = not migrated yet
+
+  function getClient() {
+    return global.sb || null;
+  }
+
+  async function getAuthUser(explicitUser) {
+    if (explicitUser && explicitUser.id) return explicitUser;
+    if (global.ScoreAuth && typeof global.ScoreAuth.getUser === 'function') {
+      try {
+        const u = await global.ScoreAuth.getUser();
+        if (u && u.id) return u;
+      } catch (_) {}
+    }
+    const client = getClient();
+    if (!client) return cachedProfile ? { id: cachedProfile.id, email: cachedProfile.email } : null;
+    try {
+      const { data: { session } } = await client.auth.getSession();
+      return session && session.user ? session.user : null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function isMissingMigrationError(err) {
+    if (!err) return false;
+    const code = String(err.code || '').toUpperCase();
+    const msg = String(err.message || err.details || err.hint || '').toLowerCase();
+    if (code === '42P01' || code === '42883' || code === '42703' || code === 'PGRST202' || code === 'PGRST205') return true;
+    return (
+      msg.includes('does not exist') ||
+      msg.includes('could not find the table') ||
+      msg.includes('could not find the function') ||
+      msg.includes('schema cache')
+    );
+  }
+
+  function lsKey(uid, bucket) {
+    return LS_PREFIX + (uid || 'anon') + '_' + bucket;
+  }
+
+  function readLocal(uid, bucket, fallback) {
+    try {
+      const raw = global.localStorage && global.localStorage.getItem(lsKey(uid, bucket));
+      return raw ? JSON.parse(raw) : fallback;
+    } catch (_) {
+      return fallback;
+    }
+  }
+
+  function writeLocal(uid, bucket, value) {
+    try {
+      if (global.localStorage) {
+        global.localStorage.setItem(lsKey(uid, bucket), JSON.stringify(value));
+      }
+    } catch (_) {}
+  }
+
+  function deriveDisplayName(user, preferredName) {
+    const pref = String(preferredName || '').trim();
+    if (pref) return pref.slice(0, 40);
+    const meta = (user && user.user_metadata) || {};
+    const fromMeta = String(
+      meta.full_name || meta.name || meta.display_name || meta.preferred_username || ''
+    ).trim();
+    if (fromMeta) return fromMeta.slice(0, 40);
+    const email = String((user && user.email) || '').trim();
+    if (email && email.includes('@')) {
+      const local = email.split('@')[0].replace(/[._-]+/g, ' ').trim();
+      if (local) {
+        return local
+          .split(/\s+/)
+          .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+          .join(' ')
+          .slice(0, 40);
+      }
+    }
+    return 'Player';
+  }
+
+  function deterministicLocalCode(name, uid) {
+    const clean = String(name || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+    const prefix = clean.length >= 2 ? clean.slice(0, 4) : 'PLYR';
+    let hash = 0;
+    const seed = String(uid || name || '0');
+    for (let i = 0; i < seed.length; i++) {
+      hash = (hash * 31 + seed.charCodeAt(i)) % 9000;
+    }
+    const num = 1000 + Math.abs(hash);
+    return prefix + '-' + String(num);
+  }
+
+  function buildFallbackProfile(user, preferredName) {
+    const saved = readLocal(user.id, 'profile', null);
+    const displayName = preferredName
+      ? String(preferredName).trim().slice(0, 40)
+      : (saved && saved.display_name) || deriveDisplayName(user);
+    const profile = {
+      id: user.id,
+      display_name: displayName,
+      email: (user.email || '').toLowerCase() || null,
+      friend_code: (saved && saved.friend_code) || deterministicLocalCode(displayName, user.id),
+      is_fallback: true
+    };
+    writeLocal(user.id, 'profile', profile);
+    cachedProfile = profile;
+    return profile;
+  }
+
+  function defaultPlayerFromProfile(profile) {
+    if (!profile) return null;
+    return {
+      name: profile.display_name,
+      user_id: profile.id,
+      friend_code: profile.friend_code,
+      isSelf: true
+    };
+  }
+
+  // ---------------------------------------------------------------------------
+  // 0. Local demo-mode friends (used until the Supabase social migration is applied)
+  // ---------------------------------------------------------------------------
+  const isLocalId = (id) => /^local-/.test(String(id || ''));
+  function readLocalFriends(uid) { return readLocal(uid, 'friends', []); }
+  function writeLocalFriends(uid, list) { writeLocal(uid, 'friends', list); }
+  function splitLocalFriends(list) {
+    const accepted = [], incoming = [], outgoing = [];
+    (list || []).forEach((f) => {
+      const e = { ...f, isLocal: true };
+      if (f.status === 'accepted') accepted.push(e);
+      else if (f.status === 'pending') (f.direction === 'incoming' ? incoming : outgoing).push(e);
+    });
+    return { accepted, incoming, outgoing };
+  }
+  function addLocalFriend(user, ident) {
+    const raw = String(ident || '').trim();
+    const lower = raw.toLowerCase();
+    const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(raw);
+    const isCode = /^[a-z0-9]{2,6}-[a-z0-9]{3,8}$/i.test(raw);
+    const me = cachedProfile || {};
+    if ((isEmail && lower === String(user.email || me.email || '').toLowerCase()) ||
+        (isCode && raw.toUpperCase() === String(me.friend_code || '').toUpperCase())) {
+      return { ok: false, isFallback: true, error: 'You cannot add yourself as a friend.' };
+    }
+    const list = readLocalFriends(user.id);
+    const existing = list.find((f) => (isEmail && f.email === lower) || (isCode && String(f.friendCode || '').toUpperCase() === raw.toUpperCase()) ||
+      (!isEmail && !isCode && String(f.displayName || '').toLowerCase() === lower));
+    if (existing) return { ok: true, status: existing.status === 'accepted' ? 'already_friends' : 'already_pending', isFallback: true, target: existing };
+    const displayName = isEmail ? deriveDisplayName({ email: raw }) : isCode ? raw.toUpperCase() : raw.slice(0, 40);
+    const slug = (isEmail ? lower : isCode ? raw.toUpperCase() : lower).replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '').slice(0, 40) || 'friend';
+    const entry = {
+      friendshipId: 'local-fr-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+      userId: 'local-friend-' + slug,
+      displayName,
+      friendCode: isCode ? raw.toUpperCase() : '',
+      email: isEmail ? lower : null,
+      status: 'accepted',
+      since: new Date().toISOString()
+    };
+    list.unshift(entry);
+    writeLocalFriends(user.id, list);
+    return { ok: true, status: 'accepted', isFallback: true, target: entry };
+  }
+
+  // ---------------------------------------------------------------------------
+  // 1. Profiles & Default Signed-In Player
+  // ---------------------------------------------------------------------------
+  async function ensureProfile(explicitUser, preferredName) {
+    const user = await getAuthUser(explicitUser);
+    if (!user) return { profile: null, defaultPlayer: null, isFallback: true };
+
+    const client = getClient();
+    if (!client) {
+      const fallback = buildFallbackProfile(user, preferredName);
+      return { profile: fallback, defaultPlayer: defaultPlayerFromProfile(fallback), isFallback: true };
+    }
+
+    try {
+      const { data, error } = await client.rpc('ensure_my_profile', {
+        p_display_name: preferredName ? String(preferredName).trim() : null
+      });
+
+      if (error) {
+        if (isMissingMigrationError(error)) {
+          migrationReady = false;
+        }
+        const fallback = buildFallbackProfile(user, preferredName);
+        return {
+          profile: fallback,
+          defaultPlayer: defaultPlayerFromProfile(fallback),
+          isFallback: true,
+          error: error.message
+        };
+      }
+
+      migrationReady = true;
+      const profile = Array.isArray(data) ? data[0] : data;
+      if (!profile) {
+        const fallback = buildFallbackProfile(user, preferredName);
+        return { profile: fallback, defaultPlayer: defaultPlayerFromProfile(fallback), isFallback: true };
+      }
+
+      cachedProfile = profile;
+      writeLocal(user.id, 'profile', profile);
+      return {
+        profile,
+        defaultPlayer: defaultPlayerFromProfile(profile),
+        isFallback: false
+      };
+    } catch (err) {
+      const fallback = buildFallbackProfile(user, preferredName);
+      return {
+        profile: fallback,
+        defaultPlayer: defaultPlayerFromProfile(fallback),
+        isFallback: true,
+        error: err && err.message
+      };
+    }
+  }
+
+  async function updateDisplayName(newName) {
+    const cleaned = String(newName || '').trim().slice(0, 40);
+    if (!cleaned) return { ok: false, error: 'Display name cannot be empty.' };
+
+    const user = await getAuthUser();
+    if (!user) return { ok: false, error: 'Not signed in.' };
+
+    const client = getClient();
+    if (!client || migrationReady === false) {
+      const profile = buildFallbackProfile(user, cleaned);
+      return { ok: true, profile, isFallback: true };
+    }
+
+    try {
+      const { data, error } = await client
+        .from('profiles')
+        .update({ display_name: cleaned, updated_at: new Date().toISOString() })
+        .eq('id', user.id)
+        .select('*')
+        .single();
+
+      if (error) {
+        if (isMissingMigrationError(error)) migrationReady = false;
+        const profile = buildFallbackProfile(user, cleaned);
+        return { ok: true, profile, isFallback: true, warning: error.message };
+      }
+
+      migrationReady = true;
+      cachedProfile = data;
+      writeLocal(user.id, 'profile', data);
+      return { ok: true, profile: data, isFallback: false };
+    } catch (err) {
+      const profile = buildFallbackProfile(user, cleaned);
+      return { ok: true, profile, isFallback: true, warning: err && err.message };
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // 2. Friends (Lookup via SECURITY DEFINER RPC, Requests, Accept/Decline/Remove)
+  // ---------------------------------------------------------------------------
+  async function lookupUser(identifier) {
+    const ident = String(identifier || '').trim();
+    if (ident.length < 3) return { ok: false, user: null, error: 'Enter an email or friend code.' };
+
+    const client = getClient();
+    if (!client || migrationReady === false) {
+      return { ok: false, user: null, isFallback: true, error: 'Social sync is not enabled yet.' };
+    }
+
+    try {
+      const { data, error } = await client.rpc('lookup_profile', { identifier: ident });
+      if (error) {
+        if (isMissingMigrationError(error)) migrationReady = false;
+        return { ok: false, user: null, isFallback: isMissingMigrationError(error), error: error.message };
+      }
+      migrationReady = true;
+      const row = Array.isArray(data) ? data[0] : data;
+      return { ok: !!row, user: row || null, error: row ? null : 'No player found.' };
+    } catch (err) {
+      return { ok: false, user: null, error: (err && err.message) || 'Lookup failed.' };
+    }
+  }
+
+  async function listFriends() {
+    const user = await getAuthUser();
+    const empty = { accepted: [], incoming: [], outgoing: [], isFallback: true };
+    if (!user) return empty;
+
+    const client = getClient();
+    const local = splitLocalFriends(readLocalFriends(user.id));
+    if (!client || migrationReady === false) {
+      return { ...local, isFallback: true };
+    }
+
+    try {
+      const { data: rows, error } = await client
+        .from('friendships')
+        .select('id, requester_id, addressee_id, status, created_at, updated_at')
+        .or(`requester_id.eq.${user.id},addressee_id.eq.${user.id}`)
+        .neq('status', 'declined')
+        .order('updated_at', { ascending: false });
+
+      if (error) {
+        if (isMissingMigrationError(error)) migrationReady = false;
+        return { ...local, isFallback: isMissingMigrationError(error), error: error.message };
+      }
+
+      migrationReady = true;
+      const list = rows || [];
+      const otherIds = [...new Set(list.map((r) => (r.requester_id === user.id ? r.addressee_id : r.requester_id)))];
+      const profileMap = new Map();
+
+      if (otherIds.length) {
+        const { data: profs } = await client
+          .from('profiles')
+          .select('id, display_name, friend_code')
+          .in('id', otherIds);
+        (profs || []).forEach((p) => profileMap.set(p.id, p));
+      }
+
+      const accepted = [];
+      const incoming = [];
+      const outgoing = [];
+
+      list.forEach((r) => {
+        const isRequester = r.requester_id === user.id;
+        const otherId = isRequester ? r.addressee_id : r.requester_id;
+        const p = profileMap.get(otherId) || { id: otherId, display_name: 'Player', friend_code: '' };
+        const entry = {
+          friendshipId: r.id,
+          userId: p.id,
+          displayName: p.display_name,
+          friendCode: p.friend_code,
+          status: r.status,
+          since: r.updated_at || r.created_at
+        };
+
+        if (r.status === 'accepted') accepted.push(entry);
+        else if (r.status === 'pending') {
+          if (isRequester) outgoing.push(entry);
+          else incoming.push(entry);
+        }
+      });
+
+      return { accepted: [...accepted, ...local.accepted], incoming, outgoing, isFallback: false };
+    } catch (err) {
+      return { ...local, isFallback: true, error: err && err.message };
+    }
+  }
+
+  async function sendFriendRequest(identifier) {
+    const ident = String(identifier || '').trim();
+    if (ident.length < 3) return { ok: false, error: 'Enter a friend email or friend code.' };
+
+    const user = await getAuthUser();
+    if (!user) return { ok: false, error: 'Sign in to add friends.' };
+
+    const client = getClient();
+    if (!client || migrationReady === false) {
+      return addLocalFriend(user, ident);
+    }
+
+    try {
+      const { data, error } = await client.rpc('send_friend_request', { identifier: ident });
+      if (error) {
+        if (isMissingMigrationError(error)) {
+          migrationReady = false;
+          return addLocalFriend(user, ident);
+        }
+        return { ok: false, error: error.message };
+      }
+      migrationReady = true;
+      return data || { ok: false, error: 'Unexpected response.' };
+    } catch (err) {
+      return { ok: false, error: (err && err.message) || 'Could not send friend request.' };
+    }
+  }
+
+  async function respondFriendRequest(friendshipId, action) {
+    if (!friendshipId) return { ok: false, error: 'Missing friendship ID.' };
+    const normalized = String(action || '').toLowerCase();
+    const nextStatus = normalized === 'accept' || normalized === 'accepted'
+      ? 'accepted'
+      : normalized === 'decline' || normalized === 'declined'
+        ? 'declined'
+        : null;
+
+    if (!nextStatus) return { ok: false, error: 'Action must be "accept" or "decline".' };
+
+    const client = getClient();
+    if (!client || migrationReady === false || isLocalId(friendshipId)) {
+      const user = await getAuthUser();
+      if (!user) return { ok: false, error: 'Not signed in.' };
+      const list = readLocalFriends(user.id);
+      const f = list.find((x) => x.friendshipId === friendshipId);
+      if (!f) return { ok: false, isFallback: true, error: 'Friend request not found.' };
+      const next = nextStatus === 'declined' ? list.filter((x) => x !== f) : list.map((x) => (x === f ? { ...x, status: 'accepted' } : x));
+      writeLocalFriends(user.id, next);
+      return { ok: true, status: nextStatus, isFallback: true };
+    }
+
+    try {
+      const { data, error } = await client
+        .from('friendships')
+        .update({ status: nextStatus, updated_at: new Date().toISOString() })
+        .eq('id', friendshipId)
+        .select('*')
+        .single();
+
+      if (error) {
+        if (isMissingMigrationError(error)) migrationReady = false;
+        return { ok: false, error: error.message };
+      }
+      migrationReady = true;
+      return { ok: true, status: nextStatus, friendship: data };
+    } catch (err) {
+      return { ok: false, error: (err && err.message) || 'Could not update friend request.' };
+    }
+  }
+
+  async function removeFriend(friendshipId) {
+    if (!friendshipId) return { ok: false, error: 'Missing friendship ID.' };
+    const client = getClient();
+    if (!client || migrationReady === false || isLocalId(friendshipId)) {
+      const user = await getAuthUser();
+      if (!user) return { ok: false, error: 'Not signed in.' };
+      const list = readLocalFriends(user.id);
+      writeLocalFriends(user.id, list.filter((x) => x.friendshipId !== friendshipId));
+      return { ok: true, isFallback: true };
+    }
+
+    try {
+      const { error } = await client.from('friendships').delete().eq('id', friendshipId);
+      if (error) {
+        if (isMissingMigrationError(error)) migrationReady = false;
+        return { ok: false, error: error.message };
+      }
+      migrationReady = true;
+      return { ok: true };
+    } catch (err) {
+      return { ok: false, error: (err && err.message) || 'Could not remove friend.' };
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // 3. Groups
+  // ---------------------------------------------------------------------------
+  async function listGroups() {
+    const user = await getAuthUser();
+    if (!user) return { groups: [], isFallback: true };
+
+    const client = getClient();
+    if (!client || migrationReady === false) {
+      return { groups: readLocal(user.id, 'groups', []), isFallback: true };
+    }
+
+    try {
+      const { data: groups, error } = await client
+        .from('groups')
+        .select('id, name, created_by, created_at, guest_names, group_members(user_id, role, joined_at)')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        if (isMissingMigrationError(error)) migrationReady = false;
+        return { groups: readLocal(user.id, 'groups', []), isFallback: true, error: error.message };
+      }
+
+      migrationReady = true;
+      const allUserIds = new Set();
+      (groups || []).forEach((g) => {
+        (g.group_members || []).forEach((m) => allUserIds.add(m.user_id));
+      });
+
+      const profileMap = new Map();
+      if (allUserIds.size) {
+        const { data: profs } = await client
+          .from('profiles')
+          .select('id, display_name, friend_code')
+          .in('id', [...allUserIds]);
+        (profs || []).forEach((p) => profileMap.set(p.id, p));
+      }
+
+      const formatted = (groups || []).map((g) => ({
+        id: g.id,
+        name: g.name,
+        created_by: g.created_by,
+        created_at: g.created_at,
+        isOwner: g.created_by === user.id,
+        members: (g.group_members || []).map((m) => {
+          const p = profileMap.get(m.user_id) || { id: m.user_id, display_name: 'Player', friend_code: '' };
+          return {
+            userId: p.id,
+            displayName: p.display_name,
+            friendCode: p.friend_code,
+            role: m.role
+          };
+        }).concat((Array.isArray(g.guest_names) ? g.guest_names : []).filter(Boolean).map((n) => ({
+          userId: null, displayName: String(n), friendCode: '', role: 'guest', isGuest: true
+        })))
+      }));
+
+      writeLocal(user.id, 'groups', formatted);
+      return { groups: formatted, isFallback: false };
+    } catch (err) {
+      return { groups: readLocal(user.id, 'groups', []), isFallback: true, error: err && err.message };
+    }
+  }
+
+  async function createGroup(name, memberUserIds, options) {
+    const gopts = options || {};
+    const pickedMembers = Array.isArray(gopts.members) ? gopts.members : [];
+    const guestNames = [...new Set((gopts.guests || []).map((n) => String(n || '').trim()).filter(Boolean))];
+    const cleaned = String(name || '').trim().slice(0, 60);
+    if (!cleaned) return { ok: false, error: 'Group name cannot be empty.' };
+
+    const user = await getAuthUser();
+    if (!user) return { ok: false, error: 'Not signed in.' };
+
+    const extras = [...new Set((memberUserIds || []).filter((id) => id && id !== user.id))];
+    const remoteExtras = extras.filter((id) => !isLocalId(id));
+    // Local demo friends can't be linked server-side yet: keep them in the group as named guests.
+    const memberInfo = (id) => pickedMembers.find((m) => (m.userId || m.id) === id) || {};
+    const remoteGuestNames = [...new Set([...extras.filter(isLocalId).map((id) => memberInfo(id).displayName || memberInfo(id).name).filter(Boolean), ...guestNames])];
+
+    const saveLocalGroup = () => {
+      const localGroups = readLocal(user.id, 'groups', []);
+      const group = {
+        id: 'local-grp-' + Date.now(),
+        name: cleaned,
+        created_by: user.id,
+        created_at: new Date().toISOString(),
+        isOwner: true,
+        members: [
+          {
+            userId: user.id,
+            displayName: (cachedProfile && cachedProfile.display_name) || deriveDisplayName(user),
+            friendCode: (cachedProfile && cachedProfile.friend_code) || '',
+            role: 'owner'
+          },
+          ...extras.map((id) => ({
+            userId: id,
+            displayName: memberInfo(id).displayName || memberInfo(id).name || 'Friend',
+            friendCode: memberInfo(id).friendCode || '',
+            role: 'member'
+          })),
+          ...guestNames.map((n) => ({ userId: null, displayName: n, friendCode: '', role: 'guest', isGuest: true }))
+        ],
+        is_fallback: true
+      };
+      localGroups.unshift(group);
+      writeLocal(user.id, 'groups', localGroups);
+      return { ok: true, group, isFallback: true };
+    };
+
+    const client = getClient();
+    if (!client || migrationReady === false) {
+      return saveLocalGroup();
+    }
+
+    try {
+      // Make sure caller has a profile row first
+      if (!cachedProfile) await ensureProfile(user);
+
+      const { data: groupRow, error: grpErr } = await client
+        .from('groups')
+        .insert({ name: cleaned, created_by: user.id, guest_names: remoteGuestNames })
+        .select('*')
+        .single();
+
+      if (grpErr) {
+        if (isMissingMigrationError(grpErr)) {
+          migrationReady = false;
+          return saveLocalGroup();
+        }
+        return { ok: false, error: grpErr.message };
+      }
+
+      migrationReady = true;
+      const memberRows = [
+        { group_id: groupRow.id, user_id: user.id, role: 'owner' },
+        ...remoteExtras.map((uid) => ({ group_id: groupRow.id, user_id: uid, role: 'member' }))
+      ];
+
+      const { error: memErr } = await client
+        .from('group_members')
+        .insert(memberRows);
+
+      if (memErr) {
+        return { ok: false, group: groupRow, error: memErr.message };
+      }
+
+      const refreshed = await listGroups();
+      const fullGroup = (refreshed.groups || []).find((g) => g.id === groupRow.id) || groupRow;
+      return { ok: true, group: fullGroup, isFallback: false };
+    } catch (err) {
+      return { ok: false, error: (err && err.message) || 'Could not create group.' };
+    }
+  }
+
+  async function deleteGroup(groupId) {
+    if (!groupId) return { ok: false, error: 'Missing group ID.' };
+    const user = await getAuthUser();
+    if (!user) return { ok: false, error: 'Not signed in.' };
+
+    const removeLocal = () => {
+      const next = readLocal(user.id, 'groups', []).filter((g) => g.id !== groupId);
+      writeLocal(user.id, 'groups', next);
+      return { ok: true, isFallback: true };
+    };
+
+    const client = getClient();
+    if (!client || migrationReady === false || String(groupId).startsWith('local-grp-')) {
+      return removeLocal();
+    }
+
+    try {
+      const { error } = await client.from('groups').delete().eq('id', groupId);
+      if (error) {
+        if (isMissingMigrationError(error)) {
+          migrationReady = false;
+          return removeLocal();
+        }
+        return { ok: false, error: error.message };
+      }
+      migrationReady = true;
+      removeLocal();
+      return { ok: true, isFallback: false };
+    } catch (err) {
+      return { ok: false, error: (err && err.message) || 'Could not delete group.' };
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // 4. Shared Games & History (Backwards-compatible with score_history)
+  // ---------------------------------------------------------------------------
+  function normalizeGameRow(row, groupMap, profileMap) {
+    const payload = (row && row.payload) || {};
+    const participants = Array.isArray(row.game_participants)
+      ? [...row.game_participants].sort((a, b) => (a.seat_order || 0) - (b.seat_order || 0))
+      : [];
+
+    const players = participants.length
+      ? participants.map((p) => ({
+          name: p.display_name,
+          score: Number(p.score) || 0,
+          user_id: p.user_id || null,
+          is_winner: !!p.is_winner
+        }))
+      : Array.isArray(payload.players)
+        ? payload.players
+        : [];
+
+    const creator = profileMap && row.created_by ? profileMap.get(row.created_by) : null;
+    const grp = groupMap && row.group_id ? groupMap.get(row.group_id) : null;
+
+    return {
+      ...payload,
+      id: row.id,
+      client_game_id: row.client_game_id || payload.id || null,
+      type: row.game_type || payload.type || 'custom',
+      version: row.version != null ? row.version : payload.version || null,
+      target: row.target != null ? row.target : payload.target || null,
+      winner: row.winner || payload.winner || '',
+      startTime: row.started_at || payload.startTime || null,
+      endTime: row.ended_at || payload.endTime || row.created_at,
+      players,
+      rounds: Array.isArray(payload.rounds) ? payload.rounds : [],
+      group_id: row.group_id || null,
+      group_name: grp ? grp.name : null,
+      created_by: row.created_by || null,
+      created_by_name: creator ? creator.display_name : null,
+      shared: true
+    };
+  }
+
+  async function saveSharedGame(game, options) {
+    const opts = options || {};
+    const user = await getAuthUser();
+    if (!user || !game) return { ok: false, error: 'Missing user or game.' };
+
+    const groupId = opts.groupId || game.group_id || null;
+    const clientGameId = String(game.client_game_id || game.id || (game.endTime ? 'g-' + game.endTime : 'g-' + Date.now()));
+    const winnerNames = new Set(
+      String(game.winner || '')
+        .split(',')
+        .map((s) => s.trim().toLowerCase())
+        .filter(Boolean)
+    );
+
+    const saveLocalGame = () => {
+      const localGames = readLocal(user.id, 'games', []);
+      const entry = {
+        ...game,
+        id: game.id || clientGameId,
+        client_game_id: clientGameId,
+        group_id: groupId,
+        created_by: user.id,
+        shared: false
+      };
+      const filtered = localGames.filter((g) => g.client_game_id !== clientGameId && g.id !== entry.id);
+      filtered.unshift(entry);
+      writeLocal(user.id, 'games', filtered.slice(0, 200));
+      return { ok: true, game: entry, isFallback: true };
+    };
+
+    const client = getClient();
+    if (!client || migrationReady === false) {
+      return saveLocalGame();
+    }
+
+    try {
+      if (!cachedProfile) await ensureProfile(user);
+
+      const gameRecord = {
+        client_game_id: clientGameId,
+        created_by: user.id,
+        group_id: groupId && !String(groupId).startsWith('local-grp-') ? groupId : null,
+        game_type: String(game.type || 'custom'),
+        version: game.version || null,
+        target: typeof game.target === 'number' ? game.target : null,
+        winner: game.winner || null,
+        started_at: game.startTime || null,
+        ended_at: game.endTime || new Date().toISOString(),
+        payload: {
+          rounds: Array.isArray(game.rounds) ? game.rounds : [],
+          players: Array.isArray(game.players) ? game.players : [],
+          version: game.version || null,
+          target: game.target || null
+        }
+      };
+
+      const { data: inserted, error: gameErr } = await client
+        .from('games')
+        .upsert(gameRecord, { onConflict: 'created_by,client_game_id' })
+        .select('*')
+        .single();
+
+      if (gameErr) {
+        if (isMissingMigrationError(gameErr)) {
+          migrationReady = false;
+          return saveLocalGame();
+        }
+        return { ok: false, error: gameErr.message, fallback: saveLocalGame() };
+      }
+
+      migrationReady = true;
+
+      // Replace participants cleanly for idempotency
+      await client.from('game_participants').delete().eq('game_id', inserted.id);
+
+      const participantRows = (game.players || []).map((p, idx) => {
+        const name = String(p.name || p.display_name || 'Player').trim();
+        const isWin = typeof p.is_winner === 'boolean'
+          ? p.is_winner
+          : winnerNames.has(name.toLowerCase());
+        return {
+          game_id: inserted.id,
+          user_id: (p.user_id || p.userId) && !isLocalId(p.user_id || p.userId) ? (p.user_id || p.userId) : null,
+          display_name: name,
+          score: Number(p.score) || 0,
+          is_winner: isWin,
+          seat_order: idx
+        };
+      });
+
+      if (participantRows.length) {
+        const { error: partErr } = await client.from('game_participants').insert(participantRows);
+        if (partErr) {
+          return { ok: false, game: inserted, error: partErr.message };
+        }
+      }
+
+      return { ok: true, game: inserted, isFallback: false };
+    } catch (err) {
+      return { ok: false, error: (err && err.message) || 'Could not save shared game.', fallback: saveLocalGame() };
+    }
+  }
+
+  async function enrichAndNormalizeGames(client, rows) {
+    const list = rows || [];
+    const groupIds = [...new Set(list.map((r) => r.group_id).filter(Boolean))];
+    const creatorIds = [...new Set(list.map((r) => r.created_by).filter(Boolean))];
+
+    const groupMap = new Map();
+    const profileMap = new Map();
+
+    if (groupIds.length) {
+      const { data: grps } = await client.from('groups').select('id, name').in('id', groupIds);
+      (grps || []).forEach((g) => groupMap.set(g.id, g));
+    }
+    if (creatorIds.length) {
+      const { data: profs } = await client
+        .from('profiles')
+        .select('id, display_name, friend_code')
+        .in('id', creatorIds);
+      (profs || []).forEach((p) => profileMap.set(p.id, p));
+    }
+
+    return list.map((r) => normalizeGameRow(r, groupMap, profileMap));
+  }
+
+  async function loadMyGames(options) {
+    const opts = options || {};
+    const limit = opts.limit || 100;
+    const includeLegacy = opts.includeLegacy !== false;
+    const user = await getAuthUser();
+    if (!user) return { games: [], isFallback: true };
+
+    const client = getClient();
+
+    async function loadLegacyGames() {
+      const out = [];
+      // Local fallback games
+      out.push(...readLocal(user.id, 'games', []));
+      if (includeLegacy && client) {
+        try {
+          const { data } = await client
+            .from('score_history')
+            .select('history')
+            .eq('user_id', user.id)
+            .maybeSingle();
+          if (data && Array.isArray(data.history)) out.push(...data.history);
+        } catch (_) {}
+      }
+      return out;
+    }
+
+    function mergeDedup(primary, secondary) {
+      const seen = new Map();
+      const keyOf = (g) => (g && (g.client_game_id || g.id || g.endTime || JSON.stringify(g)));
+      (secondary || []).forEach((g) => { if (g) seen.set(keyOf(g), g); });
+      (primary || []).forEach((g) => { if (g) seen.set(keyOf(g), g); });
+      return [...seen.values()].sort(
+        (a, b) => (Date.parse(b.endTime || b.startTime || 0) || 0) - (Date.parse(a.endTime || a.startTime || 0) || 0)
+      );
+    }
+
+    if (!client || migrationReady === false) {
+      const legacy = await loadLegacyGames();
+      return { games: mergeDedup([], legacy), isFallback: true };
+    }
+
+    try {
+      // RLS automatically returns games where user is creator, participant, or group member
+      const { data: rows, error } = await client
+        .from('games')
+        .select('id, client_game_id, created_by, group_id, game_type, version, target, winner, started_at, ended_at, payload, created_at, game_participants(id, user_id, display_name, score, is_winner, seat_order)')
+        .order('ended_at', { ascending: false })
+        .limit(limit);
+
+      if (error) {
+        if (isMissingMigrationError(error)) migrationReady = false;
+        const legacy = await loadLegacyGames();
+        return { games: mergeDedup([], legacy), isFallback: true, error: error.message };
+      }
+
+      migrationReady = true;
+      const sharedGames = await enrichAndNormalizeGames(client, rows);
+      const legacy = includeLegacy ? await loadLegacyGames() : [];
+      return { games: mergeDedup(sharedGames, legacy), isFallback: false };
+    } catch (err) {
+      const legacy = await loadLegacyGames();
+      return { games: mergeDedup([], legacy), isFallback: true, error: err && err.message };
+    }
+  }
+
+  async function loadGroupGames(groupId, options) {
+    if (!groupId) return { games: [], isFallback: false };
+    const limit = (options && options.limit) || 100;
+    const user = await getAuthUser();
+    if (!user) return { games: [], isFallback: true };
+
+    const localGroupGames = () =>
+      readLocal(user.id, 'games', []).filter((g) => g.group_id === groupId);
+
+    const client = getClient();
+    if (!client || migrationReady === false || String(groupId).startsWith('local-grp-')) {
+      return { games: localGroupGames(), isFallback: true };
+    }
+
+    try {
+      const { data: rows, error } = await client
+        .from('games')
+        .select('id, client_game_id, created_by, group_id, game_type, version, target, winner, started_at, ended_at, payload, created_at, game_participants(id, user_id, display_name, score, is_winner, seat_order)')
+        .eq('group_id', groupId)
+        .order('ended_at', { ascending: false })
+        .limit(limit);
+
+      if (error) {
+        if (isMissingMigrationError(error)) migrationReady = false;
+        return { games: localGroupGames(), isFallback: true, error: error.message };
+      }
+
+      migrationReady = true;
+      const games = await enrichAndNormalizeGames(client, rows);
+      return { games, isFallback: false };
+    } catch (err) {
+      return { games: localGroupGames(), isFallback: true, error: err && err.message };
+    }
+  }
+
+  function reset() {
+    cachedProfile = null;
+    migrationReady = null;
+  }
+
+  global.SocialAPI = {
+    ensureProfile,
+    updateDisplayName,
+    lookupUser,
+    listFriends,
+    sendFriendRequest,
+    respondFriendRequest,
+    removeFriend,
+    listGroups,
+    createGroup,
+    deleteGroup,
+    saveSharedGame,
+    loadMyGames,
+    loadGroupGames,
+    getCachedProfile: () => cachedProfile,
+    getDefaultPlayer: () => defaultPlayerFromProfile(cachedProfile),
+    isMigrationReady: () => migrationReady,
+    reset
+  };
+})(window);
+
+</script>
+<script id="social-ui-helpers">
+window.SocialUI = (function () {
+  function esc(str) {
+    return String(str ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function initial(name) {
+    return esc((String(name || '?').trim().charAt(0) || '?').toUpperCase());
+  }
+
+  /**
+   * Player chip for Choose Game / Player Setup (#player-chips)
+   * player: { name, userId?, isSelf?, isFriend? }
+   */
+  function renderPlayerChip(player, idx) {
+    const p = typeof player === 'string' ? { name: player } : (player || { name: '' });
+    const cls = ['player-chip', p.isSelf ? 'is-self' : '', p.isFriend ? 'is-friend' : ''].filter(Boolean).join(' ');
+    const dot = (!p.isSelf && p.isFriend) ? '<span class="soc-friend-dot" aria-hidden="true"></span>' : '';
+    const you = p.isSelf ? '<span class="soc-you-badge">You</span>' : '';
+    return `
+      <span class="${cls}">
+        ${dot}
+        <span>${esc(p.name)}</span>
+        ${you}
+        <button type="button" class="chip-remove" onclick="removePlayer(${idx})" aria-label="Remove ${esc(p.name)}">×</button>
+      </span>
+    `;
+  }
+
+  /** One-tap Group preset pill for #setup-group-presets */
+  function renderGroupPresetPill(group, isActive) {
+    const count = (group.members || []).length;
+    return `
+      <button type="button" class="soc-preset-pill ${isActive ? 'active' : ''}" onclick="applyGroupPreset && applyGroupPreset('${esc(group.id)}')">
+        <span>${esc(group.name)}</span>
+        <span class="soc-preset-count">${count}</span>
+      </button>
+    `;
+  }
+
+  /** Quick-add Friend pill for #setup-friend-picks */
+  function renderFriendPickPill(friend, isIncluded) {
+    const label = friend.displayName || friend.name || friend.email || 'Friend';
+    return `
+      <button type="button" class="soc-friend-pick ${isIncluded ? 'included' : ''}" onclick="toggleSetupFriend && toggleSetupFriend('${esc(friend.userId || friend.id)}')">
+        <span>${isIncluded ? '✓' : '+'}</span>
+        <span>${esc(label)}</span>
+      </button>
+    `;
+  }
+
+  /** Pending friend request row for #soc-pending-list */
+  function renderPendingRequestRow(req) {
+    const name = req.displayName || req.name || req.email || 'Player';
+    const sub = req.friendCode ? `Code: ${req.friendCode}` : (req.email || 'Wants to connect');
+    return `
+      <div class="soc-row">
+        <div class="soc-row-main">
+          <div class="soc-avatar sm" aria-hidden="true">${initial(name)}</div>
+          <div class="soc-row-info">
+            <div class="soc-row-name">${esc(name)}</div>
+            <div class="soc-row-sub">${esc(sub)}</div>
+          </div>
+        </div>
+        <div class="soc-row-actions">
+          <button type="button" class="btn success sm" onclick="respondFriendRequest && respondFriendRequest('${esc(req.id)}', true)">Accept</button>
+          <button type="button" class="btn sm" onclick="respondFriendRequest && respondFriendRequest('${esc(req.id)}', false)">Decline</button>
+        </div>
+      </div>
+    `;
+  }
+
+  /** Accepted friend row for #soc-friends-list */
+  function renderFriendRow(friend, isIncluded) {
+    const name = friend.displayName || friend.name || friend.email || 'Friend';
+    const sub = friend.friendCode ? `Code: ${friend.friendCode}` : (friend.email || 'Friend');
+    const fid = esc(friend.userId || friend.id);
+    return `
+      <div class="soc-row">
+        <div class="soc-row-main">
+          <div class="soc-avatar sm" aria-hidden="true">${initial(name)}</div>
+          <div class="soc-row-info">
+            <div class="soc-row-name">${esc(name)}</div>
+            <div class="soc-row-sub">${esc(sub)}</div>
+          </div>
+        </div>
+        <div class="soc-row-actions">
+          <button type="button" class="btn sm ${isIncluded ? 'success' : ''}" onclick="includeFriendInNextGame && includeFriendInNextGame('${fid}')">
+            ${isIncluded ? '✓ Added' : '+ Include'}
+          </button>
+          <button type="button" class="soc-icon-btn" title="Remove friend" aria-label="Remove ${esc(name)}" onclick="removeFriend && removeFriend('${fid}')">✕</button>
+        </div>
+      </div>
+    `;
+  }
+
+  /**
+   * Group card with Start Game CTA + Group Leaderboard + Recent Group Games
+   * group: {
+   *   id, name,
+   *   members: [{ name, userId?, isSelf? }],
+   *   leaderboard: [{ name, wins, gamesPlayed, winRate, isSelf? }],
+   *   recentGames: [{ gameName, winnerName, dateLabel }]
+   * }
+   */
+  function renderGroupCard(group) {
+    const memberNames = (group.members || []).map(m => m.name || m).join(', ');
+    const lb = group.leaderboard || [];
+    const lbRows = lb.length
+      ? lb.map((row, idx) => {
+          const rate = typeof row.winRate === 'number'
+            ? `${Math.round(row.winRate)}%`
+            : (row.gamesPlayed ? `${Math.round((row.wins / row.gamesPlayed) * 100)}%` : '0%');
+          return `
+            <div class="soc-lb-row ${idx === 0 && row.wins > 0 ? 'is-first' : ''}">
+              <span class="soc-lb-rank">${idx + 1}</span>
+              <span class="soc-lb-player">
+                <span>${esc(row.name)}</span>
+                ${row.isSelf ? '<span class="soc-you-badge">You</span>' : ''}
+              </span>
+              <span class="soc-lb-wins">${row.wins || 0}</span>
+              <span class="soc-lb-num">${row.gamesPlayed || 0}</span>
+              <span class="soc-lb-rate">${rate}</span>
+            </div>
+          `;
+        }).join('')
+      : `<div style="padding:0.7rem;font-size:0.84rem;color:var(--muted);text-align:center">No games logged for this group yet.</div>`;
+
+    const recent = group.recentGames || [];
+    const recentHtml = recent.length
+      ? `
+        <div class="soc-group-recent">
+          <div class="soc-group-recent-title">Recent Games</div>
+          ${recent.slice(0, 3).map(g => `
+            <div class="soc-group-recent-item">
+              <span>${esc(g.gameName || g.type || 'Game')} <span class="small">· ${esc(g.dateLabel || '')}</span></span>
+              <span class="winner">🏆 ${esc(g.winnerName || '—')}</span>
+            </div>
+          `).join('')}
+        </div>
+      `
+      : '';
+
+    return `
+      <article class="soc-group-card" data-group-id="${esc(group.id)}">
+        <div class="soc-group-head">
+          <div>
+            <h3 class="soc-group-title">${esc(group.name)}</h3>
+            <div class="soc-group-members">${esc(memberNames || 'Just you')}</div>
+          </div>
+          <button type="button" class="soc-icon-btn" title="Delete group" aria-label="Delete ${esc(group.name)}" onclick="deleteGroup && deleteGroup('${esc(group.id)}')">✕</button>
+        </div>
+        <div class="soc-group-cta-row">
+          <button type="button" class="btn primary sm" onclick="startGameWithGroup && startGameWithGroup('${esc(group.id)}')">Start Game with Group</button>
+        </div>
+        ${group.filterHtml || ''}
+        <div class="soc-lb-wrap" role="table" aria-label="${esc(group.name)} leaderboard">
+          <div class="soc-lb-head" role="row">
+            <span>#</span><span>Player</span><span style="text-align:right">Wins</span><span style="text-align:right">GP</span><span style="text-align:right">Win %</span>
+          </div>
+          ${lbRows}
+        </div>
+        ${recentHtml}
+      </article>
+    `;
+  }
+
+  /** Filter pills for #history-filter-bar */
+  function renderHistoryFilterBar(groups, activeGroupId) {
+    const active = activeGroupId || 'all';
+    const pills = [
+      `<button type="button" class="soc-filter-pill ${active === 'all' ? 'active' : ''}" data-group-id="all" onclick="setHistoryFilter && setHistoryFilter('all')">All My Games</button>`
+    ];
+    (groups || []).forEach(g => {
+      pills.push(
+        `<button type="button" class="soc-filter-pill ${active === g.id ? 'active' : ''}" data-group-id="${esc(g.id)}" onclick="setHistoryFilter && setHistoryFilter('${esc(g.id)}')">${esc(g.name)}</button>`
+      );
+    });
+    return pills.join('');
+  }
+
+  /** Subtle badges for a .history-item (group tag + "Shared by <friend>") */
+  function renderHistoryBadges(game) {
+    const tags = [];
+    if (game && game.groupName) {
+      tags.push(`<span class="soc-tag-group">👥 ${esc(game.groupName)}</span>`);
+    }
+    if (game && game.sharedByName) {
+      tags.push(`<span class="soc-tag-shared">Shared by ${esc(game.sharedByName)}</span>`);
+    }
+    return tags.length ? `<div class="soc-history-badges">${tags.join('')}</div>` : '';
+  }
+
+  /** Sub-tab switcher inside #view-social */
+  function switchSocialTab(tab) {
+    const isFriends = tab !== 'groups';
+    const tF = document.getElementById('soc-tab-friends');
+    const tG = document.getElementById('soc-tab-groups');
+    const pF = document.getElementById('soc-panel-friends');
+    const pG = document.getElementById('soc-panel-groups');
+    if (tF) { tF.classList.toggle('active', isFriends); tF.setAttribute('aria-selected', String(isFriends)); }
+    if (tG) { tG.classList.toggle('active', !isFriends); tG.setAttribute('aria-selected', String(!isFriends)); }
+    if (pF) { pF.classList.toggle('hidden', !isFriends); pF.hidden = !isFriends; }
+    if (pG) { pG.classList.toggle('hidden', isFriends); pG.hidden = isFriends; }
+  }
+
+  function openCreateGroupModal() {
+    const m = document.getElementById('soc-create-group-modal');
+    if (!m) return;
+    m.classList.remove('hidden');
+    m.hidden = false;
+    const inp = document.getElementById('soc-group-name');
+    if (inp) setTimeout(() => inp.focus(), 60);
+  }
+
+  function closeCreateGroupModal() {
+    const m = document.getElementById('soc-create-group-modal');
+    if (!m) return;
+    m.classList.add('hidden');
+    m.hidden = true;
+  }
+
+  function copyFriendCode() {
+    const codeEl = document.getElementById('soc-friend-code');
+    const btn = document.getElementById('btn-copy-code');
+    const code = codeEl ? codeEl.textContent.trim() : '';
+    if (!code || code === '—') return;
+    const done = () => {
+      if (!btn) return;
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'Copy code'; btn.classList.remove('copied'); }, 1800);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(code).then(done).catch(done);
+    } else {
+      done();
+    }
+  }
+
+  return {
+    esc,
+    initial,
+    renderPlayerChip,
+    renderGroupPresetPill,
+    renderFriendPickPill,
+    renderPendingRequestRow,
+    renderFriendRow,
+    renderGroupCard,
+    renderHistoryFilterBar,
+    renderHistoryBadges,
+    switchSocialTab,
+    openCreateGroupModal,
+    closeCreateGroupModal,
+    copyFriendCode
+  };
+})();
+
+</script>
+
 <!-- App engine: defines window.onAuthReady / window.onAuthSignedOut before auth init -->
 <script id="score-engine">
-/* Score Tracker engine — game-agnostic shell, per-game scoring, Catan wood/parchment theme, Flip 7 coastal card theme, Carcassonne sunlit meadow tally. */
+/* Score Tracker engine — social layer (you, friends, groups, shared history), game-agnostic shell, per-game scoring, Catan wood/parchment theme, Flip 7 coastal card theme, Carcassonne sunlit meadow tally. */
 (function (global) {
   'use strict';
 
@@ -840,6 +3609,12 @@ body.theme-carcassonne .bottom-nav #nav-signout { --cc-ic: url("data:image/svg+x
   const deselected = new Set();
   let scoringPlayer = null, padMode = 'simple';
   let flip = null;
+  // Social layer state (signed-in "you" chip, friends, groups, shared games)
+  let selfPlayer = null, selfIncluded = true, setupFriends = [], setupGroup = null;
+  let social = { profile: null, friends: { accepted: [], incoming: [], outgoing: [] }, groups: [], shared: [], groupShared: {}, ready: false };
+  let historyFilter = 'all', groupModalGuests = [], groupModalPicks = new Set();
+  const groupLbFilter = {};
+  const SAPI = () => global.SocialAPI || null, SSC = () => global.SocialScoring || null, SUI = () => global.SocialUI || null;
 
   // ---------------- Utils ----------------
   const byId = (id) => document.getElementById(id);
@@ -931,17 +3706,22 @@ body.theme-carcassonne .bottom-nav #nav-signout { --cc-ic: url("data:image/svg+x
     if (!user) return;
     if (initializedUserId === user.id) { if (pendingSync) await saveData(); return; }
     currentUser = user; initializedUserId = user.id;
+    selfPlayer = provisionalSelf(user); selfIncluded = true; setupFriends = []; setupGroup = null;
     currentGame = loadActive();
     showView(currentGame ? 'active' : 'home');
+    const socialReady = socialInit(user);
     await loadData();
     if (initializedUserId === user.id) showView(currentView);
+    await socialReady;
   }
   function onAuthSignedOut() {
     currentUser = null; initializedUserId = null; players = []; history = []; currentGame = null; pendingSync = false;
     scoringPlayer = null; currentView = 'home';
     document.body.classList.remove('theme-catan', 'theme-flip7', 'theme-carcassonne'); f7 = null;
+    resetSocialState();
     document.querySelectorAll('#app-shell .view').forEach((el) => el.classList.remove('active'));
-    ['gen-leaderboard', 'gen-pad', 'leaderboard', 'score-form', 'history-list', 'recent-list', 'player-chips', 'f7-board', 'f7-drawer', 'cc-list'].forEach((id) => { const el = byId(id); if (el) el.innerHTML = ''; });
+    ['gen-leaderboard', 'gen-pad', 'leaderboard', 'score-form', 'history-list', 'recent-list', 'player-chips', 'f7-board', 'f7-drawer', 'cc-list',
+      'soc-friends-list', 'soc-pending-list', 'soc-groups-list', 'setup-group-presets', 'setup-friend-picks', 'soc-group-friend-picks', 'soc-group-guest-chips'].forEach((id) => { const el = byId(id); if (el) el.innerHTML = ''; });
   }
 
   // ---------------- Theme + navigation ----------------
@@ -966,6 +3746,7 @@ body.theme-carcassonne .bottom-nav #nav-signout { --cc-ic: url("data:image/svg+x
     if (v === 'home') renderHome();
     if (v === 'new') renderNew();
     if (v === 'history') renderHistory();
+    if (v === 'social') { renderSocial(); refreshSocial(); }
     if (v === 'active') renderActive();
     window.scrollTo(0, 0);
   }
@@ -995,10 +3776,7 @@ body.theme-carcassonne .bottom-nav #nav-signout { --cc-ic: url("data:image/svg+x
     const sel = byId('version-select');
     sel.innerHTML = g.versions.map((v) => `<option ${v === selectedVersion ? 'selected' : ''}>${esc(v)}</option>`).join('');
     sel.onchange = () => { selectedVersion = sel.value; };
-    byId('player-chips').innerHTML = players.length
-      ? players.map((p, i) => `<label class="player-chip"><input type="checkbox" data-player="${i}" ${deselected.has(p) ? '' : 'checked'} onchange="togglePlayer(${i}, this.checked)"> ${esc(p)}
-          <button type="button" class="chip-remove" aria-label="Remove ${esc(p)}" onclick="event.preventDefault(); removePlayer(${i})">×</button></label>`).join('')
-      : '<span class="small">Add players below</span>';
+    renderSetupPlayers();
   }
   function selectGame(id) { selectedGame = id; selectedVersion = null; renderNew(); }
   function togglePlayer(i, on) { const n = players[i]; if (n === undefined) return; on ? deselected.delete(n) : deselected.add(n); }
@@ -1007,14 +3785,14 @@ body.theme-carcassonne .bottom-nav #nav-signout { --cc-ic: url("data:image/svg+x
     const name = (input.value || '').trim();
     input.value = '';
     if (!name || players.some((p) => p.toLowerCase() === name.toLowerCase())) return;
-    players.push(name); renderNew(); saveData();
+    players.push(name); renderSetupPlayers(); saveData();
   }
   function removePlayer(i) {
     if (players[i] === undefined) return;
-    deselected.delete(players[i]); players.splice(i, 1); renderNew(); saveData();
+    deselected.delete(players[i]); players.splice(i, 1); renderSetupPlayers(); saveData();
   }
   function startGame() {
-    const chosen = players.filter((p) => !deselected.has(p));
+    const chosen = setupParticipants();
     if (!chosen.length) { alert('Add and select at least one player'); return null; }
     if (currentGame && !confirm('Replace the current ' + gameLabel(currentGame) + ' game?')) return null;
     const g = gameById(selectedGame);
@@ -1022,9 +3800,19 @@ body.theme-carcassonne .bottom-nav #nav-signout { --cc-ic: url("data:image/svg+x
     currentGame = {
       id: g.id + '_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
       type: g.id, version, target: g.target(version), startTime: new Date().toISOString(), endTime: null, winner: null,
-      players: chosen.map((name) => (g.id === 'catan' ? { name, score: 0, breakdown: emptyBreakdown() } : g.id === 'flip7' ? { name, score: 0, flip7Count: 0 } : { name, score: 0 })),
+      players: chosen.map((pt) => {
+        const base = { name: pt.name, score: 0 };
+        if (pt.userId) base.userId = pt.userId;
+        if (pt.isSelf) base.isSelf = true;
+        return g.id === 'catan' ? { ...base, breakdown: emptyBreakdown() } : g.id === 'flip7' ? { ...base, flip7Count: 0 } : base;
+      }),
       rounds: []
     };
+    if (setupGroup) {
+      const sc = SSC();
+      if (sc) sc.applyGroupPreset({ id: setupGroup.id, name: setupGroup.name, members: [] }, currentGame);
+      else { currentGame.groupId = setupGroup.id; currentGame.groupName = setupGroup.name; }
+    }
     if (g.id === 'catan') currentGame.targetVp = currentGame.target;
     if (g.id === 'carcassonne') ccNormalize(currentGame);
     scoringPlayer = null; padMode = 'simple'; f7 = null;
@@ -1090,6 +3878,7 @@ body.theme-carcassonne .bottom-nav #nav-signout { --cc-ic: url("data:image/svg+x
     saveCache(true);
     showView('history');
     saveData();
+    shareFinishedGame(finished);
     return finished;
   }
 
@@ -1723,21 +4512,372 @@ body.theme-carcassonne .bottom-nav #nav-signout { --cc-ic: url("data:image/svg+x
   // ---------------- History ----------------
   function renderHistory() {
     const el = byId('history-list');
-    if (!history.length) { el.innerHTML = '<p class="small">Nothing here yet.</p>'; return; }
-    el.innerHTML = history.map((g, i) => `
-      <div class="history-item">
+    renderHistoryFilter();
+    const entries = historyEntries().filter((g) => historyFilter === 'all' || String(g.groupId || '') === historyFilter);
+    if (!entries.length) { el.innerHTML = `<p class="small">${historyFilter === 'all' ? 'Nothing here yet.' : 'No games for this group yet.'}</p>`; return; }
+    const ui = SUI(), uid = currentUser ? currentUser.id : null;
+    el.innerHTML = entries.map((g) => {
+      const i = history.findIndex((h) => h && h.id && h.id === g.id);
+      const sharedBy = g.createdBy && uid && String(g.createdBy) !== String(uid) ? (g.sharedByName || 'a friend') : '';
+      const badges = ui ? ui.renderHistoryBadges({ groupName: g.groupName, sharedByName: sharedBy }) : '';
+      return `
+      <div class="history-item" data-game-id="${esc(g.id)}"${g.groupId ? ` data-group-id="${esc(g.groupId)}"` : ''}>
         <div class="flex space-between" style="flex-wrap:nowrap">
           <div><strong>${esc(gameLabel(g))}</strong>${g.version ? ` <span class="small">· ${esc(g.version)}</span>` : ''}
             <div class="small">${esc(new Date(g.endTime || g.startTime || Date.now()).toLocaleDateString())}</div></div>
-          <button class="btn danger sm" type="button" aria-label="Delete game" onclick="deleteGame(${i})">×</button>
-        </div>
+          ${i >= 0 ? `<button class="btn danger sm" type="button" aria-label="Delete game" onclick="deleteGame(${i})">×</button>` : ''}
+        </div>${badges}
         <div style="margin-top:.3rem">${[...(g.players || [])].sort((a, b) => (gameById(g.type).low ? a.score - b.score : b.score - a.score)).map((p) => `${esc(p.name)}: <strong>${p.score}</strong>`).join(' · ')}</div>
         <div class="winner">Winner: ${esc(g.winner || '—')}</div>
-      </div>`).join('');
+      </div>`;
+    }).join('');
   }
   function deleteGame(i) {
     if (!history[i] || !confirm('Delete this game from history?')) return;
     history.splice(i, 1); renderHistory(); saveData();
+  }
+
+  // ---------------- Social layer: you + friends + groups ----------------
+  const lc = (s) => String(s || '').trim().toLowerCase();
+  function provisionalSelf(user) {
+    const api = SAPI(), dp = api && api.getDefaultPlayer ? api.getDefaultPlayer() : null;
+    if (dp && dp.user_id === user.id) return { name: dp.name, userId: dp.user_id, friendCode: dp.friend_code || '', isSelf: true };
+    const meta = user.user_metadata || {};
+    let name = String(meta.full_name || meta.name || meta.display_name || '').trim();
+    if (!name && user.email) name = String(user.email).split('@')[0].replace(/[._-]+/g, ' ').trim().split(/\s+/).map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+    return { name: (name || 'Me').slice(0, 40), userId: user.id, friendCode: '', isSelf: true };
+  }
+  function resetSocialState() {
+    const api = SAPI(); if (api && api.reset) api.reset();
+    selfPlayer = null; selfIncluded = true; setupFriends = []; setupGroup = null; historyFilter = 'all';
+    groupModalGuests = []; groupModalPicks = new Set();
+    social = { profile: null, friends: { accepted: [], incoming: [], outgoing: [] }, groups: [], shared: [], groupShared: {}, ready: false };
+    const ui = SUI(); if (ui) ui.closeCreateGroupModal();
+    setHidden(byId('nav-social-dot'), true); setHidden(byId('soc-demo-banner'), true);
+  }
+  async function socialInit(user) {
+    const api = SAPI(); if (!api || !user) return;
+    try {
+      const r = await api.ensureProfile(user);
+      if (!currentUser || currentUser.id !== user.id) return;
+      if (r && r.profile) {
+        social.profile = r.profile;
+        const dp = r.defaultPlayer;
+        if (dp) selfPlayer = { name: dp.name, userId: dp.user_id || user.id, friendCode: dp.friend_code || '', isSelf: true };
+      }
+      await refreshSocial();
+    } catch (e) { console.warn('[social] init failed', e); }
+  }
+  let refreshSeq = 0;
+  async function refreshSocial() {
+    const api = SAPI(), user = currentUser; if (!api || !user) return;
+    const seq = ++refreshSeq;
+    try {
+      const [fr, gr, mg] = await Promise.all([
+        api.listFriends().catch(() => null), api.listGroups().catch(() => null), api.loadMyGames({ includeLegacy: false }).catch(() => null)]);
+      if (!currentUser || currentUser.id !== user.id || seq !== refreshSeq) return;
+      if (fr) social.friends = { accepted: fr.accepted || [], incoming: fr.incoming || [], outgoing: fr.outgoing || [] };
+      if (gr) social.groups = gr.groups || [];
+      if (mg) social.shared = (mg.games || []).filter((g) => g && g.shared === true);
+      // Group games played without you (visible to members once the migration is live)
+      const groupShared = {};
+      if (api.isMigrationReady() === true) {
+        await Promise.all(social.groups.filter((g) => !/^local-/.test(String(g.id))).map(async (g) => {
+          const r = await api.loadGroupGames(g.id).catch(() => null);
+          if (r && !r.isFallback) groupShared[g.id] = (r.games || []).filter((x) => x && x.shared === true);
+        }));
+      }
+      if (!currentUser || currentUser.id !== user.id || seq !== refreshSeq) return;
+      social.groupShared = groupShared;
+      const me = social.friends && social.profile;
+      if (me && selfPlayer && social.profile.display_name) selfPlayer.name = social.profile.display_name;
+      // keep quick-added friends in sync with the accepted list
+      setupFriends = setupFriends.filter((f) => social.friends.accepted.some((a) => a.userId === f.userId));
+      if (setupGroup && !social.groups.some((g) => g.id === setupGroup.id)) setupGroup = null;
+      social.ready = true;
+    } catch (e) { console.warn('[social] refresh failed', e); }
+    rerenderSocialViews();
+  }
+  function rerenderSocialViews() {
+    updateNavDot();
+    if (currentView === 'new') renderSetupPlayers();
+    else if (currentView === 'social') renderSocial();
+    else if (currentView === 'history') renderHistory();
+  }
+  function updateNavDot() { setHidden(byId('nav-social-dot'), !(social.friends.incoming || []).length); }
+  const memberName = (m) => (m && (m.displayName || m.display_name || m.name)) || 'Player';
+
+  // ----- Setup (Choose Game) players: (You) + friends + guests -----
+  function hiddenRosterNames() {
+    const set = new Set();
+    if (selfPlayer) set.add(lc(selfPlayer.name));
+    setupFriends.forEach((f) => set.add(lc(f.name)));
+    return set;
+  }
+  function setupParticipants() {
+    const out = [], seen = new Set();
+    const push = (pt) => { const k = lc(pt.name); if (!k || seen.has(k)) return; seen.add(k); out.push(pt); };
+    if (selfPlayer && selfIncluded) push({ name: selfPlayer.name, userId: selfPlayer.userId, isSelf: true });
+    setupFriends.forEach((f) => push({ name: f.name, userId: f.userId }));
+    const hide = hiddenRosterNames();
+    players.filter((p) => !deselected.has(p) && !hide.has(lc(p))).forEach((p) => push({ name: p }));
+    return out;
+  }
+  function renderSetupPlayers() {
+    const chipsEl = byId('player-chips'); if (!chipsEl) return;
+    const ui = SUI(), chips = [], hide = hiddenRosterNames();
+    if (selfPlayer && selfIncluded) chips.push(`<span class="player-chip is-self" id="chip-self"><span>${esc(selfPlayer.name)}</span> <span class="soc-you-badge">You</span>
+        <button type="button" class="chip-remove" id="btn-remove-self" aria-label="Remove yourself" onclick="removeSelf()">×</button></span>`);
+    setupFriends.forEach((f) => chips.push(`<span class="player-chip is-friend" data-friend="${esc(f.userId)}"><span class="soc-friend-dot" aria-hidden="true"></span><span>${esc(f.name)}</span>
+        <button type="button" class="chip-remove" aria-label="Remove ${esc(f.name)}" onclick="removeSetupFriend('${esc(f.userId)}')">×</button></span>`));
+    players.forEach((p, i) => {
+      if (hide.has(lc(p))) return;
+      chips.push(`<label class="player-chip"><input type="checkbox" data-player="${i}" ${deselected.has(p) ? '' : 'checked'} onchange="togglePlayer(${i}, this.checked)"> ${esc(p)}
+          <button type="button" class="chip-remove" aria-label="Remove ${esc(p)}" onclick="event.preventDefault(); removePlayer(${i})">×</button></label>`);
+    });
+    if (selfPlayer && !selfIncluded) chips.push(`<button type="button" class="soc-friend-pick soc-add-self" id="btn-add-self" onclick="addSelf()"><span>+</span><span>Add me (${esc(selfPlayer.name)})</span></button>`);
+    chipsEl.innerHTML = chips.length ? chips.join('') : '<span class="small">Add players below</span>';
+    const note = byId('setup-active-group-note');
+    setHidden(note, !setupGroup);
+    if (setupGroup && byId('setup-active-group-label')) byId('setup-active-group-label').textContent = '👥 Playing as group: ' + setupGroup.name;
+    const groups = social.groups || [], acc = social.friends.accepted || [];
+    setHidden(byId('setup-groups-wrap'), !groups.length);
+    setHidden(byId('setup-friends-wrap'), !acc.length);
+    if (ui) {
+      const gp = byId('setup-group-presets'); if (gp) gp.innerHTML = groups.map((g) => ui.renderGroupPresetPill(g, !!(setupGroup && setupGroup.id === g.id))).join('');
+      const fp = byId('setup-friend-picks'); if (fp) fp.innerHTML = acc.map((f) => ui.renderFriendPickPill(f, setupFriends.some((s) => s.userId === f.userId))).join('');
+    }
+  }
+  function removeSelf() { selfIncluded = false; renderSetupPlayers(); }
+  function addSelf() { selfIncluded = true; renderSetupPlayers(); }
+  function removeSetupFriend(uid) { setupFriends = setupFriends.filter((f) => f.userId !== uid); renderSetupPlayers(); }
+  function toggleSetupFriend(uid) {
+    if (setupFriends.some((f) => f.userId === uid)) { setupFriends = setupFriends.filter((f) => f.userId !== uid); }
+    else {
+      const f = (social.friends.accepted || []).find((a) => a.userId === uid);
+      if (!f) return false;
+      setupFriends.push({ name: memberName(f), userId: f.userId });
+    }
+    if (currentView === 'new') renderSetupPlayers();
+    return setupFriends.some((f) => f.userId === uid);
+  }
+  function includeFriendInNextGame(uid) {
+    const on = toggleSetupFriend(uid);
+    const f = (social.friends.accepted || []).find((a) => a.userId === uid);
+    socMsg('soc-friend-msg', f ? (on ? `${memberName(f)} will be in your next game.` : `${memberName(f)} removed from your next game.`) : '', 'success');
+    renderSocial();
+  }
+  function groupPresetSource(g) {
+    return { id: g.id, name: g.name, members: (g.members || []).map((m) => ({ name: memberName(m), userId: m.userId || null, isGuest: !m.userId })) };
+  }
+  function applyGroupPreset(groupId) {
+    const g = (social.groups || []).find((x) => String(x.id) === String(groupId)); if (!g) return null;
+    const sc = SSC(), uid = currentUser ? currentUser.id : null;
+    const res = sc ? sc.applyGroupPreset(groupPresetSource(g), { currentUserId: uid })
+      : { players: groupPresetSource(g).members.map((m) => ({ ...m, isSelf: m.userId === uid })), groupId: g.id, groupName: g.name };
+    selfIncluded = true;
+    setupFriends = res.players.filter((p) => p.userId && !p.isSelf && String(p.userId) !== String(uid)).map((p) => ({ name: p.name, userId: p.userId }));
+    const guests = res.players.filter((p) => !p.userId).map((p) => p.name);
+    let changed = false;
+    guests.forEach((n) => { if (!players.some((p) => lc(p) === lc(n))) { players.push(n); changed = true; } });
+    const keep = new Set(guests.map(lc));
+    players.forEach((p) => { if (keep.has(lc(p))) deselected.delete(p); else deselected.add(p); });
+    setupGroup = { id: String(res.groupId), name: res.groupName || g.name };
+    if (currentView === 'new') renderSetupPlayers();
+    if (changed) saveData();
+    return setupGroup;
+  }
+  function clearSetupGroup() { setupGroup = null; renderSetupPlayers(); }
+  function startGameWithGroup(groupId) { if (applyGroupPreset(groupId)) showView('new'); }
+
+  // ----- Friends & Groups view -----
+  function socMsg(id, text, tone) { const el = byId(id); if (el) { el.textContent = text || ''; el.dataset.tone = tone || ''; } }
+  function groupGames(g) {
+    const sc = SSC(), uid = currentUser ? currentUser.id : null;
+    const local = history.filter((h) => h && String(h.groupId || h.group_id || '') === String(g.id));
+    const shared = [...(social.shared || []), ...((social.groupShared || {})[g.id] || [])].filter((x) => String(x.group_id || '') === String(g.id)).map(adaptShared);
+    if (!sc) return local;
+    return sc.mergePersonalHistory(shared, local, uid, { includeAllShared: true }).filter((r) => String(r.groupId || '') === String(g.id));
+  }
+  function groupForUi(g) {
+    const sc = SSC(), uid = currentUser ? currentUser.id : null;
+    const games = groupGames(g);
+    const members = (g.members || []).map((m) => ({ name: m.userId && String(m.userId) === String(uid) && selfPlayer ? selfPlayer.name : memberName(m), userId: m.userId || null }));
+    const type = groupLbFilter[g.id] || 'all';
+    const lb = sc ? sc.computeGroupLeaderboard(games, members, { gameType: type }) : [];
+    const typesPlayed = [...new Set(games.map((x) => x.type))];
+    const filterHtml = `<div class="soc-lb-filter-row"><span class="soc-code-label">Group Leaderboard</span>
+        <select class="soc-lb-filter" data-group-id="${esc(g.id)}" aria-label="Filter leaderboard by game" onchange="setGroupLbFilter('${esc(g.id)}', this.value)">
+          <option value="all"${type === 'all' ? ' selected' : ''}>All games</option>
+          ${GAMES.filter((x) => typesPlayed.includes(x.id) || x.id === type).map((x) => `<option value="${x.id}"${type === x.id ? ' selected' : ''}>${esc(x.name)}</option>`).join('')}
+        </select></div>`;
+    return {
+      id: g.id, name: g.name, members: members.map((m) => ({ name: m.name + (m.userId && String(m.userId) === String(uid) ? ' (You)' : '') })),
+      leaderboard: lb.map((r) => ({ name: r.name, wins: r.wins, gamesPlayed: r.gamesPlayed, winRate: r.winRatePct, isSelf: !!(r.userId && String(r.userId) === String(uid)) })),
+      recentGames: games.filter((x) => type === 'all' || x.type === type).slice(0, 3).map((x) => ({ gameName: gameById(x.type).name, winnerName: x.winner || '—', dateLabel: new Date(x.endTime || x.startTime || Date.now()).toLocaleDateString() })),
+      filterHtml
+    };
+  }
+  function renderSocial() {
+    const view = byId('view-social'); if (!view) return;
+    const api = SAPI(), ui = SUI();
+    setHidden(byId('soc-demo-banner'), !(api && api.isMigrationReady() === false));
+    const prof = social.profile || {};
+    const name = prof.display_name || (selfPlayer && selfPlayer.name) || '';
+    const inp = byId('soc-display-name');
+    if (inp && document.activeElement !== inp) inp.value = name;
+    if (byId('soc-friend-code')) byId('soc-friend-code').textContent = prof.friend_code || '—';
+    if (byId('soc-my-avatar')) byId('soc-my-avatar').textContent = (name.trim().charAt(0) || '?').toUpperCase();
+    const fr = social.friends, incoming = fr.incoming || [], outgoing = fr.outgoing || [], accepted = fr.accepted || [];
+    const badge = byId('soc-pending-badge'); if (badge) { badge.textContent = String(incoming.length); setHidden(badge, !incoming.length); }
+    updateNavDot();
+    setHidden(byId('soc-pending-card'), !incoming.length && !outgoing.length);
+    if (ui) {
+      byId('soc-pending-list').innerHTML = incoming.map((r) => ui.renderPendingRequestRow({ id: r.friendshipId, displayName: r.displayName, friendCode: r.friendCode })).join('')
+        + outgoing.map((r) => `<div class="soc-row soc-outgoing"><div class="soc-row-main"><div class="soc-avatar sm" aria-hidden="true">${ui.initial(r.displayName)}</div>
+            <div class="soc-row-info"><div class="soc-row-name">${esc(r.displayName || 'Player')}</div><div class="soc-row-sub soc-outgoing-note">Request sent · waiting for them to accept</div></div></div></div>`).join('');
+      byId('soc-friends-list').innerHTML = accepted.length
+        ? accepted.map((f) => ui.renderFriendRow(f, setupFriends.some((s) => s.userId === f.userId))).join('')
+        : '<p class="small" style="margin:0.2rem 0 0">No friends yet. Share your code or add someone above.</p>';
+      const groups = social.groups || [];
+      byId('soc-groups-list').innerHTML = groups.length
+        ? groups.map((g) => ui.renderGroupCard(groupForUi(g))).join('')
+        : '<div class="card"><p class="small" style="margin:0">Create a group (like "Friday Catan Crew") to load your regulars in one tap and track a group leaderboard.</p></div>';
+    }
+  }
+  async function saveDisplayName() {
+    const api = SAPI(), inp = byId('soc-display-name'); if (!api || !inp) return;
+    const r = await api.updateDisplayName(inp.value);
+    if (!r || !r.ok) { socMsg('soc-profile-msg', (r && r.error) || 'Could not save your name.', 'error'); return; }
+    social.profile = r.profile || social.profile;
+    if (selfPlayer && r.profile) selfPlayer.name = r.profile.display_name;
+    inp.blur();
+    socMsg('soc-profile-msg', 'Saved — you’ll show up as ' + (r.profile ? r.profile.display_name : inp.value) + '.', 'success');
+    renderSocial();
+  }
+  async function sendFriendRequest() {
+    const api = SAPI(), inp = byId('soc-add-friend-input'); if (!api || !inp) return;
+    const ident = inp.value.trim();
+    if (!ident) { socMsg('soc-friend-msg', 'Enter an email or friend code.', 'error'); return; }
+    const r = await api.sendFriendRequest(ident);
+    if (!r || !r.ok) { socMsg('soc-friend-msg', (r && r.error) || 'Could not send that request.', 'error'); return; }
+    const who = (r.target && (r.target.display_name || r.target.displayName)) || ident;
+    const msgs = { pending: `Friend request sent to ${who}.`, accepted: `You’re now friends with ${who}.`, already_friends: `You’re already friends with ${who}.`, already_pending: `Request to ${who} is still pending.` };
+    socMsg('soc-friend-msg', msgs[r.status] || `Added ${who}.`, 'success');
+    inp.value = '';
+    await refreshSocial();
+  }
+  async function respondFriendRequest(friendshipId, accept) {
+    const api = SAPI(); if (!api) return;
+    const r = await api.respondFriendRequest(friendshipId, accept ? 'accept' : 'decline');
+    if (!r || !r.ok) { socMsg('soc-friend-msg', (r && r.error) || 'Could not update that request.', 'error'); return; }
+    socMsg('soc-friend-msg', accept ? 'Friend request accepted.' : 'Request declined.', 'success');
+    await refreshSocial();
+  }
+  async function removeFriend(uid) {
+    const api = SAPI(); if (!api) return;
+    const f = (social.friends.accepted || []).find((a) => a.userId === uid);
+    if (!f || !confirm('Remove ' + memberName(f) + ' from your friends?')) return;
+    const r = await api.removeFriend(f.friendshipId);
+    if (!r || !r.ok) { socMsg('soc-friend-msg', (r && r.error) || 'Could not remove that friend.', 'error'); return; }
+    setupFriends = setupFriends.filter((s) => s.userId !== uid);
+    await refreshSocial();
+  }
+  function renderGroupModal() {
+    const picks = byId('soc-group-friend-picks'), acc = social.friends.accepted || [];
+    if (picks) picks.innerHTML = acc.length
+      ? acc.map((f) => `<button type="button" class="soc-friend-pick ${groupModalPicks.has(f.userId) ? 'included' : ''}" data-friend="${esc(f.userId)}" onclick="toggleGroupModalFriend('${esc(f.userId)}')"><span>${groupModalPicks.has(f.userId) ? '✓' : '+'}</span><span>${esc(memberName(f))}</span></button>`).join('')
+      : '<span class="small">No friends yet — add guests below, or add friends first.</span>';
+    const gc = byId('soc-group-guest-chips');
+    if (gc) gc.innerHTML = groupModalGuests.map((n, i) => `<span class="player-chip">${esc(n)}<button type="button" class="chip-remove" aria-label="Remove ${esc(n)}" onclick="removeGroupModalGuest(${i})">×</button></span>`).join('');
+  }
+  function openCreateGroup() {
+    groupModalGuests = []; groupModalPicks = new Set();
+    if (byId('soc-group-name')) byId('soc-group-name').value = '';
+    if (byId('soc-group-guest-input')) byId('soc-group-guest-input').value = '';
+    socMsg('soc-group-modal-msg', '');
+    renderGroupModal();
+    const ui = SUI(); if (ui) ui.openCreateGroupModal();
+  }
+  function toggleGroupModalFriend(uid) { groupModalPicks.has(uid) ? groupModalPicks.delete(uid) : groupModalPicks.add(uid); renderGroupModal(); }
+  function addGroupModalGuest() {
+    const inp = byId('soc-group-guest-input'); if (!inp) return;
+    const n = inp.value.trim(); inp.value = '';
+    if (n && !groupModalGuests.some((g) => lc(g) === lc(n))) groupModalGuests.push(n.slice(0, 24));
+    renderGroupModal();
+  }
+  function removeGroupModalGuest(i) { groupModalGuests.splice(i, 1); renderGroupModal(); }
+  async function createGroupFromModal() {
+    const api = SAPI(); if (!api) return null;
+    const name = (byId('soc-group-name') && byId('soc-group-name').value.trim()) || '';
+    if (!name) { socMsg('soc-group-modal-msg', 'Give your group a name.', 'error'); return null; }
+    addGroupModalGuest();
+    const ids = [...groupModalPicks];
+    const members = (social.friends.accepted || []).filter((f) => groupModalPicks.has(f.userId));
+    const r = await api.createGroup(name, ids, { members, guests: groupModalGuests });
+    if (!r || !r.ok) { socMsg('soc-group-modal-msg', (r && r.error) || 'Could not create that group.', 'error'); return null; }
+    const ui = SUI(); if (ui) { ui.closeCreateGroupModal(); ui.switchSocialTab('groups'); }
+    await refreshSocial();
+    return r.group || null;
+  }
+  async function deleteGroup(groupId) {
+    const api = SAPI(); if (!api) return;
+    const g = (social.groups || []).find((x) => String(x.id) === String(groupId));
+    if (!g || !confirm('Delete the group "' + g.name + '"? Games already played stay in everyone’s history.')) return;
+    const r = await api.deleteGroup(groupId);
+    if (!r || !r.ok) { alert((r && r.error) || 'Could not delete that group.'); return; }
+    if (setupGroup && String(setupGroup.id) === String(groupId)) setupGroup = null;
+    if (historyFilter === String(groupId)) historyFilter = 'all';
+    await refreshSocial();
+  }
+  function setGroupLbFilter(groupId, type) { groupLbFilter[groupId] = type || 'all'; renderSocial(); }
+
+  // ----- Shared games + merged personal history -----
+  function adaptShared(g) {
+    return {
+      id: g.id, game_type: g.type, variant: g.version || null, group_id: g.group_id || null, group_name: g.group_name || null,
+      created_by: g.created_by || null, played_at: g.endTime || null,
+      summary: { local_game_id: g.client_game_id || null, target: g.target ?? null, rounds: g.rounds || [], start_time: g.startTime || null },
+      participants: (g.players || []).map((p) => ({ user_id: p.user_id || p.userId || null, display_name: p.name, score: p.score, is_winner: !!p.is_winner, meta: {} }))
+    };
+  }
+  function historyEntries() {
+    const sc = SSC(), uid = currentUser ? currentUser.id : null;
+    if (!sc) return history.map((g) => ({ ...g, groupId: g.groupId || null, groupName: g.groupName || null }));
+    const creators = new Map(), groupNames = new Map((social.groups || []).map((g) => [String(g.id), g.name]));
+    (social.shared || []).forEach((g) => { if (g.created_by && g.created_by_name) creators.set(String(g.created_by), g.created_by_name); });
+    return sc.mergePersonalHistory((social.shared || []).map(adaptShared), history, uid).map((r) => ({
+      ...r, groupName: r.groupName || (r.groupId ? groupNames.get(String(r.groupId)) : null) || null,
+      sharedByName: r.createdBy ? creators.get(String(r.createdBy)) || null : null
+    }));
+  }
+  function renderHistoryFilter() {
+    const bar = byId('history-filter-bar'); if (!bar) return;
+    const map = new Map((social.groups || []).map((g) => [String(g.id), g.name]));
+    history.forEach((h) => { if (h && h.groupId && !map.has(String(h.groupId))) map.set(String(h.groupId), h.groupName || 'Group'); });
+    const groups = [...map].map(([id, name]) => ({ id, name }));
+    if (historyFilter !== 'all' && !map.has(historyFilter)) historyFilter = 'all';
+    const ui = SUI();
+    setHidden(bar, !groups.length);
+    bar.innerHTML = ui ? ui.renderHistoryFilterBar(groups, historyFilter) : '';
+  }
+  function setHistoryFilter(id) { historyFilter = id ? String(id) : 'all'; renderHistory(); }
+  async function shareFinishedGame(fin) {
+    const api = SAPI(), sc = SSC(), user = currentUser;
+    if (!api || !sc || !user || !fin) return null;
+    try {
+      const payload = sc.buildSharedGamePayload(fin, user);
+      const game = {
+        ...fin, client_game_id: fin.id, group_id: payload.group_id || null,
+        winner: (payload.winner_names || []).join(', ') || fin.winner,
+        players: fin.players.map((p, i) => ({ ...p, user_id: (payload.participants[i] || {}).user_id || null, is_winner: !!(payload.participants[i] || {}).is_winner, meta: (payload.participants[i] || {}).meta || {} })),
+        summary: payload.summary
+      };
+      const r = await api.saveSharedGame(game, { groupId: payload.group_id || null });
+      if (r && !r.ok) console.warn('[social] shared save failed', r.error);
+      if (currentUser && currentUser.id === user.id) await refreshSocial();
+      return r;
+    } catch (e) { console.warn('[social] share failed', e); return null; }
   }
 
   // Enter key on the add-player input
@@ -1753,7 +4893,11 @@ body.theme-carcassonne .bottom-nav #nav-signout { --cc-ic: url("data:image/svg+x
     f7Select, f7Toggle, f7SetMode, f7Num, f7Close, f7Confirm, f7Undo, f7ToggleSort, f7OpenSheet, f7CloseSheet, f7SetTarget, f7AddPlayer, f7ResetScores,
     ccInput, ccKey, ccCycleColor, ccShowAdd, ccHideAdd, ccAddPlayer, ccReset,
     undoLastRound, undoLastAction: undoLastRound, endGame, deleteGame,
-    ScoreTracker: { GAMES, getState: () => ({ players: [...players], history: [...history], currentGame, currentView, scoringPlayer, padMode, pendingSync }) }
+    onAuthSignedIn: onAuthReady, removeSelf, addSelf, removeSetupFriend, toggleSetupFriend, includeFriendInNextGame, applyGroupPreset, clearSetupGroup,
+    startGameWithGroup, saveDisplayName, sendFriendRequest, respondFriendRequest, removeFriend, openCreateGroup, toggleGroupModalFriend,
+    addGroupModalGuest, removeGroupModalGuest, createGroupFromModal, deleteGroup, setHistoryFilter, setGroupLbFilter, refreshSocial,
+    ScoreTracker: { GAMES, getState: () => ({ players: [...players], history: [...history], currentGame, currentView, scoringPlayer, padMode, pendingSync,
+      selfPlayer, selfIncluded, setupFriends: [...setupFriends], setupGroup, historyFilter, social }) }
   });
 })(window);
 
