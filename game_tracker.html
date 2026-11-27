@@ -6,14 +6,14 @@
 <meta name="theme-color" content="#0b1220">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="score-tracker-build" content="v7-flip7-theme-2026-11-26">
+<meta name="score-tracker-build" content="v8-carcassonne-theme-2026-11-26">
 <title>Score Tracker</title>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon-512.jpg" type="image/jpeg">
 <link rel="apple-touch-icon" href="icon-512.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Cinzel:wght@600;700;800&family=Marcellus&family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Cinzel:wght@600;700;800&family=Marcellus&family=EB+Garamond:wght@500;600;700;800&family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
 
 <!-- ===================== NEUTRAL (GAME-AGNOSTIC) THEME ===================== -->
 <style id="neutral-theme">
@@ -140,7 +140,7 @@ label.small, .field-label { display: block; margin: 0.7rem 0 0.3rem; color: var(
 /* ---------- No tap-zoom / no tap-select (all themes) ---------- */
 html, body, button, a, input, select, textarea, label, [role="button"], [role="option"], [onclick] { touch-action: manipulation; }
 button, a, [role="button"], [role="option"], [onclick], .btn, .key, .game-card, .player-row, .player-chip, .bottom-nav button,
-.cg-row, .cg-act, .cg-wood-btn, .cg-wood-bar, .cg-reset, .auth-btn, #catan-minus, #catan-plus {
+.cg-row, .cg-act, .cg-wood-btn, .cg-wood-bar, .cg-reset, .auth-btn, #catan-minus, #catan-plus, .cc-meeple, .cc-finish, .cc-pill {
   touch-action: manipulation; -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
 input, select, textarea, #login-view .auth-input { font-size: 16px !important; }
 input, textarea { -webkit-user-select: text; user-select: text; }
@@ -153,6 +153,8 @@ body.theme-catan .app-header { display: none; }
 #nav-active { display: none; }
 /* Flip 7 board is only shown when theme-flip7 is on */
 #flip7-board { display: none; }
+/* Carcassonne tally is only shown when theme-carcassonne is on */
+#carc-board { display: none; }
 </style>
 
 <!-- ===================== CATAN THEME (scoped to body.theme-catan) ===================== -->
@@ -443,9 +445,125 @@ body.theme-flip7 .bottom-nav #nav-new { display: none; }
 body.theme-flip7 .bottom-nav #nav-active { display: flex; }
 
 </style>
+
+<!-- ===================== CARCASSONNE THEME (scoped to body.theme-carcassonne) ===================== -->
+<style id="carcassonne-theme">
+
+body.theme-carcassonne {
+  --cc-walnut: #2a1d0f; --cc-walnut2: #5c4324; --cc-stitch: rgba(94,68,36,0.35); --cc-cream: #faf3e0;
+  --cc-serif: 'EB Garamond', 'Cinzel', Georgia, 'Times New Roman', serif; --cc-caps: 'Cinzel', 'EB Garamond', Georgia, serif;
+  background-color: #8fb86a;
+  background-image: url('./assets/carcassonne/meadow-bg.svg');
+  background-size: cover; background-position: center top; background-attachment: fixed; background-repeat: no-repeat;
+  color: var(--cc-walnut); font-family: var(--cc-serif);
+  padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px));
+}
+body.theme-carcassonne .app-header, body.theme-carcassonne #generic-board { display: none; }
+body.theme-carcassonne #carc-board { display: block; }
+body.theme-carcassonne #view-active { max-width: 480px; padding: calc(14px + env(safe-area-inset-top, 0px)) 18px 1rem; }
+body.theme-carcassonne #carc-board button, body.theme-carcassonne #carc-board [role="button"], body.theme-carcassonne .bottom-nav button {
+  touch-action: manipulation; -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; cursor: pointer; }
+
+
+body.theme-carcassonne .cc-parch {
+  position: relative; border-radius: 16px 13px 17px 12px / 13px 16px 12px 17px;
+  background:
+    radial-gradient(ellipse at 18% 8%, rgba(255,252,240,.45), transparent 55%),
+    radial-gradient(ellipse at 88% 92%, rgba(168,122,56,.20), transparent 58%),
+    radial-gradient(ellipse at 4% 96%, rgba(150,108,48,.16), transparent 40%),
+    linear-gradient(180deg, #f5e9c8 0%, #e7d3a3 100%);
+  border: 1px solid rgba(122,88,44,.55);
+  box-shadow: 0 8px 22px rgba(34,24,8,.34), 0 2px 4px rgba(34,24,8,.22), inset 0 0 26px rgba(152,110,48,.28), inset 0 1px 0 rgba(255,255,255,.55);
+}
+body.theme-carcassonne .cc-parch::before {
+  content: ""; position: absolute; inset: 6px; border: 1.5px dashed var(--cc-stitch); border-radius: 11px 9px 12px 8px / 9px 11px 8px 12px; pointer-events: none; }
+
+
+body.theme-carcassonne .cc-banner { padding: 16px 18px 12px; text-align: center; }
+body.theme-carcassonne .cc-title { margin: 0; font: 700 2.15rem/1.05 var(--cc-caps); letter-spacing: 1.5px; text-transform: uppercase; color: var(--cc-walnut);
+  text-shadow: 0 1px 0 rgba(255,250,235,.7), 0 -1px 0 rgba(90,60,20,.18); }
+body.theme-carcassonne .cc-sub-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 6px; }
+body.theme-carcassonne .cc-sub { margin: 0; font: 700 .95rem/1 var(--cc-caps); letter-spacing: 2.4px; text-transform: uppercase; color: var(--cc-walnut2); white-space: nowrap; }
+body.theme-carcassonne .cc-olive { width: 44px; height: 18px; flex: 0 0 44px; }
+body.theme-carcassonne .cc-olive-r { transform: scaleX(-1); }
+
+
+body.theme-carcassonne .cc-tally { margin: clamp(26px, 9vh, 84px) 0 0; padding: 10px 16px; }
+body.theme-carcassonne #cc-list { position: relative; z-index: 1; }
+body.theme-carcassonne .cc-row { display: flex; align-items: center; gap: 12px; padding: 10px 2px; min-height: 76px; }
+body.theme-carcassonne .cc-row + .cc-row { border-top: 1px solid rgba(94,68,36,.28); box-shadow: inset 0 1px 0 rgba(255,250,232,.55); }
+body.theme-carcassonne .cc-meeple { flex: 0 0 58px; width: 58px; height: 58px; padding: 0; border: none; background: none; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; }
+body.theme-carcassonne .cc-meeple:active { transform: scale(.92); }
+body.theme-carcassonne .cc-meeple:focus-visible { outline: 2px dashed var(--cc-walnut2); outline-offset: 2px; }
+body.theme-carcassonne .cc-meeple-svg { width: 52px; height: 54px; display: block; overflow: visible;
+  filter: drop-shadow(0 3px 2px rgba(30,18,4,.38)) drop-shadow(0 1px 0 rgba(255,250,235,.4)); }
+body.theme-carcassonne .cc-meeple.hop .cc-meeple-svg { animation: cc-hop .32s ease-out; }
+@keyframes cc-hop { 0% { transform: translateY(0) scale(1); } 40% { transform: translateY(-6px) scale(1.06); } 100% { transform: translateY(0) scale(1); } }
+body.theme-carcassonne .cc-name-wrap { flex: 1; min-width: 0; display: flex; align-items: center; gap: 6px; }
+body.theme-carcassonne .cc-name { font: 600 22px/1.15 var(--cc-serif); color: var(--cc-walnut); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; letter-spacing: .2px; }
+body.theme-carcassonne .cc-crown-slot { display: inline-flex; flex: 0 0 auto; }
+body.theme-carcassonne .cc-crown { width: 22px; height: 22px; filter: drop-shadow(0 1px 1px rgba(60,40,10,.35)); animation: cc-pop .28s ease-out; }
+@keyframes cc-pop { 0% { transform: scale(.4); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+body.theme-carcassonne .cc-score {
+  flex: 0 0 104px; width: 104px; height: 54px; padding: 0 12px; margin: 0;
+  background-color: var(--cc-cream); background-image: linear-gradient(180deg, #fffaf0 0%, var(--cc-cream) 60%, #f2e7c9 100%); color: var(--cc-walnut);
+  border: 1.5px solid var(--cc-walnut2); border-radius: 8px;
+  box-shadow: inset 0 2px 3px rgba(94,68,36,.18), 0 1px 0 rgba(255,250,235,.8);
+  font-family: var(--cc-serif); font-weight: 700; font-size: 24px !important; line-height: 1; text-align: right; font-variant-numeric: lining-nums tabular-nums;
+  -moz-appearance: textfield; appearance: textfield; touch-action: manipulation; -webkit-tap-highlight-color: transparent; outline: none; }
+body.theme-carcassonne .cc-score::-webkit-outer-spin-button, body.theme-carcassonne .cc-score::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+body.theme-carcassonne .cc-score::placeholder { color: rgba(92,67,36,.35); }
+body.theme-carcassonne .cc-score:focus { border-color: #3b7430; box-shadow: inset 0 2px 3px rgba(94,68,36,.15), 0 0 0 3px rgba(59,116,48,.25); }
+body.theme-carcassonne .cc-row.leader .cc-score { border-color: #a8741a; box-shadow: inset 0 2px 3px rgba(94,68,36,.15), 0 0 0 2px rgba(226,176,66,.45); }
+
+
+body.theme-carcassonne .cc-add { position: relative; z-index: 1; display: flex; gap: 8px; align-items: center; padding: 10px 2px 8px; border-top: 1px solid rgba(94,68,36,.28); }
+body.theme-carcassonne .cc-add[hidden] { display: none !important; }
+body.theme-carcassonne .cc-add input { flex: 1; min-width: 0; height: 44px; background: var(--cc-cream); color: var(--cc-walnut); border: 1.5px solid var(--cc-walnut2); border-radius: 8px; font: 600 16px var(--cc-serif); padding: 0 10px; }
+body.theme-carcassonne .cc-add input::placeholder { color: rgba(92,67,36,.45); }
+
+
+body.theme-carcassonne .cc-finish {
+  position: relative; display: block; width: 100%; margin: 18px 0 0; height: 58px; border-radius: 999px; border: 1px solid #173512;
+  background: linear-gradient(180deg, #3b7430 0%, #244f1d 100%); color: #f6ecd2; font: 600 1.4rem/1 var(--cc-serif); letter-spacing: .4px;
+  text-shadow: 0 1px 1px rgba(0,0,0,.45);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.28), inset 0 -2px 0 rgba(0,0,0,.25), 0 4px 0 #18380f, 0 9px 18px rgba(16,30,8,.38);
+  transition: transform .08s ease, box-shadow .08s ease, filter .15s; }
+body.theme-carcassonne .cc-finish::before { content: ""; position: absolute; inset: 5px 8px; border: 1.5px dashed rgba(255,255,255,0.22); border-radius: 999px; pointer-events: none; }
+body.theme-carcassonne .cc-finish:active { transform: translateY(3px); box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 1px 0 #18380f, 0 4px 10px rgba(16,30,8,.35); }
+body.theme-carcassonne .cc-mini { display: flex; justify-content: center; gap: 10px; margin: 16px 0 4px; }
+body.theme-carcassonne .cc-pill {
+  height: 36px; padding: 0 16px; border-radius: 999px; border: 1px solid rgba(94,68,36,.45);
+  background: rgba(245,233,200,.84); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  color: var(--cc-walnut); font: 600 1rem/1 var(--cc-serif); letter-spacing: .3px; box-shadow: 0 2px 6px rgba(34,24,8,.22), inset 0 1px 0 rgba(255,255,255,.55); }
+body.theme-carcassonne .cc-pill:active { transform: translateY(1px); }
+body.theme-carcassonne .cc-add .cc-pill { height: 44px; flex: 0 0 auto; }
+body.theme-carcassonne .cc-add-go { background: linear-gradient(180deg, #3b7430, #244f1d); color: #f6ecd2; border-color: #173512; }
+
+
+body.theme-carcassonne .bottom-nav {
+  left: 12px; right: 12px; bottom: calc(8px + env(safe-area-inset-bottom, 0px)); padding: 6px 4px; border-radius: 14px;
+  background: radial-gradient(ellipse at 20% 0%, rgba(255,252,240,.5), transparent 60%), linear-gradient(180deg, #f5e9c8 0%, #f1e2be 55%, #e7d3a3 100%);
+  background-color: #f1e2be; border: 1px solid rgba(122,88,44,.6); -webkit-backdrop-filter: none; backdrop-filter: none;
+  box-shadow: 0 8px 20px rgba(34,24,8,.34), inset 0 0 18px rgba(152,110,48,.22); max-width: 456px; margin: 0 auto; }
+body.theme-carcassonne .bottom-nav::before { content: ""; position: absolute; inset: 4px; border: 1.5px dashed var(--cc-stitch); border-radius: 10px; pointer-events: none; }
+body.theme-carcassonne .bottom-nav button { position: relative; flex: 1; min-width: 0; padding: 6px 2px 5px; margin: 2px 0; border-radius: 8px; color: var(--cc-walnut2); font: 600 .9rem/1 var(--cc-serif); letter-spacing: .3px; gap: 4px; }
+body.theme-carcassonne .bottom-nav button + button { border-left: 1px solid rgba(94,68,36,.32); border-radius: 0; }
+body.theme-carcassonne .bottom-nav button.active { color: var(--cc-walnut); background: rgba(94,68,36,.13); box-shadow: inset 0 1px 3px rgba(94,68,36,.22); border-radius: 8px; }
+body.theme-carcassonne .bottom-nav button.active + button { border-left-color: transparent; }
+body.theme-carcassonne .bottom-nav #nav-new { display: none; }
+body.theme-carcassonne .bottom-nav #nav-active { display: flex; }
+body.theme-carcassonne .bottom-nav button .icon { font-size: 0; width: 26px; height: 26px; display: block; background-color: currentColor;
+  -webkit-mask: var(--cc-ic) center / contain no-repeat; mask: var(--cc-ic) center / contain no-repeat; }
+body.theme-carcassonne .bottom-nav #nav-home { --cc-ic: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2.6 1.8 11.4l1.3 1.5 1.4-1.2V21.4h5.6v-6.2h3.8v6.2h5.6V11.7l1.4 1.2 1.3-1.5z'/%3E%3C/svg%3E"); }
+body.theme-carcassonne .bottom-nav #nav-active { --cc-ic: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 1.8l3.1 6.5 7.1.9-5.2 4.9 1.3 7.1L12 17.7l-6.3 3.5 1.3-7.1-5.2-4.9 7.1-.9z'/%3E%3C/svg%3E"); }
+body.theme-carcassonne .bottom-nav #nav-history { --cc-ic: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='9.2'/%3E%3Cpath d='M12 6.6V12l3.8 2.6'/%3E%3C/svg%3E"); }
+body.theme-carcassonne .bottom-nav #nav-signout { --cc-ic: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 4H6.5A1.5 1.5 0 0 0 5 5.5v13A1.5 1.5 0 0 0 6.5 20H14'/%3E%3Cpath d='M10.5 12H21M17.2 8l3.8 4-3.8 4'/%3E%3C/svg%3E"); }
+
+</style>
 </head>
 <body>
-<!-- Build: v7-flip7-theme-2026-11-26 -->
+<!-- Build: v8-carcassonne-theme-2026-11-26 -->
 
 <!-- Login: starts hidden until getSession() resolves -->
 <section id="login-view" class="auth-hidden" hidden aria-label="Sign in to Score Tracker">
@@ -550,6 +668,48 @@ body.theme-flip7 .bottom-nav #nav-active { display: flex; }
       <div id="f7-sheet" class="f7-sheet hidden" hidden onclick="if(event.target===this)f7CloseSheet()"></div>
     </div>
 
+
+    <!-- Carcassonne final-score tally: only visible with body.theme-carcassonne (Option 1: Sunlit Meadow & Castle Wall) -->
+    <div id="carc-board">
+      <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+        <defs>
+          <path id="cc-mp" d="M50 6C60.5 6 67.5 13.8 67.5 23.5c0 6-2.8 11.2-7.2 14.4l27.6 9.6c7.6 2.7 8.6 12.3 1.6 16.2L68 70.5l12.3 21.8c2 3.6-.4 6.7-4.4 6.7H58.6L50 83.5 41.4 99H24.1c-4 0-6.4-3.1-4.4-6.7L32 70.5 10.5 63.7c-7-3.9-6-13.5 1.6-16.2l27.6-9.6c-4.4-3.2-7.2-8.4-7.2-14.4C32.5 13.8 39.5 6 50 6z"/>
+          <linearGradient id="cc-shade" x1="0" y1="0" x2=".35" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".34"/><stop offset=".42" stop-color="#fff" stop-opacity="0"/><stop offset=".7" stop-color="#000" stop-opacity=".06"/><stop offset="1" stop-color="#000" stop-opacity=".34"/></linearGradient>
+          <radialGradient id="cc-hi" cx=".38" cy=".16" r=".32"><stop offset="0" stop-color="#fff" stop-opacity=".4"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+          <pattern id="cc-grain" patternUnits="userSpaceOnUse" width="100" height="9"><path d="M0 4.5C20 2 32 7 52 4.2S84 2.5 100 5" fill="none" stroke="#000" stroke-opacity=".14" stroke-width=".9"/><path d="M0 8C24 7 40 9.5 60 7.6S88 7 100 8.4" fill="none" stroke="#fff" stroke-opacity=".08" stroke-width=".7"/></pattern>
+          <linearGradient id="cc-gold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fbe7a0"/><stop offset=".5" stop-color="#e2b042"/><stop offset="1" stop-color="#a8741a"/></linearGradient>
+          <symbol id="cc-crown-s" viewBox="0 0 24 24"><path d="M3 17.5h18l-1.5-9.5-4.7 4L12 5l-2.8 7-4.7-4z" fill="url(#cc-gold)" stroke="#6e4a12" stroke-width="1.1" stroke-linejoin="round"/><rect x="3" y="17.6" width="18" height="2.8" rx=".9" fill="#b07a1c" stroke="#6e4a12" stroke-width=".8"/><circle cx="12" cy="4.6" r="1.3" fill="#fbe7a0" stroke="#6e4a12" stroke-width=".7"/></symbol>
+          <symbol id="cc-olive" viewBox="0 0 64 26"><path d="M62 21C46 20 26 15 4 4" fill="none" stroke="#5f6b2e" stroke-width="1.6" stroke-linecap="round"/>
+            <g fill="#6f7d36" stroke="#4c5622" stroke-width=".6"><ellipse cx="14" cy="5" rx="5.4" ry="2" transform="rotate(-18 14 5)"/><ellipse cx="17" cy="13.5" rx="5.4" ry="2" transform="rotate(32 17 13.5)"/><ellipse cx="27" cy="9.4" rx="5.6" ry="2.1" transform="rotate(-12 27 9.4)"/><ellipse cx="30" cy="18" rx="5.6" ry="2.1" transform="rotate(30 30 18)"/><ellipse cx="41" cy="13.6" rx="5.6" ry="2.1" transform="rotate(-8 41 13.6)"/><ellipse cx="44" cy="22" rx="5" ry="1.9" transform="rotate(24 44 22)"/><ellipse cx="54" cy="17" rx="5" ry="1.9" transform="rotate(-6 54 17)"/></g>
+            <g fill="#3f4a1c"><circle cx="22" cy="12.8" r="1.7"/><circle cx="36" cy="15.6" r="1.6"/></g></symbol>
+        </defs>
+      </svg>
+
+      <header class="cc-parch cc-banner">
+        <h1 class="cc-title" id="cc-title">Carcassonne</h1>
+        <div class="cc-sub-row">
+          <svg class="cc-olive cc-olive-l" viewBox="0 0 64 26" aria-hidden="true"><use href="#cc-olive"/></svg>
+          <p class="cc-sub" id="cc-sub">Final Score Tally</p>
+          <svg class="cc-olive cc-olive-r" viewBox="0 0 64 26" aria-hidden="true"><use href="#cc-olive"/></svg>
+        </div>
+      </header>
+
+      <section class="cc-parch cc-tally" aria-label="Final scores">
+        <div id="cc-list" role="list"></div>
+        <div id="cc-add" class="cc-add hidden" hidden>
+          <input type="text" id="cc-add-name" placeholder="Player name" autocomplete="off" enterkeyhint="done" maxlength="24" onkeydown="if(event.key==='Enter'){event.preventDefault();ccAddPlayer();}if(event.key==='Escape')ccHideAdd();">
+          <button type="button" class="cc-pill cc-add-go" id="cc-add-go" onclick="ccAddPlayer()">Add</button>
+          <button type="button" class="cc-pill cc-add-x" id="cc-add-cancel" aria-label="Cancel adding player" onclick="ccHideAdd()">✕</button>
+        </div>
+      </section>
+
+      <button type="button" class="cc-finish" id="cc-finish" onclick="endGame()"><span>Finish and Save Game</span></button>
+      <div class="cc-mini">
+        <button type="button" class="cc-pill" id="cc-add-player" onclick="ccShowAdd()">+ Player</button>
+        <button type="button" class="cc-pill" id="cc-reset" onclick="ccReset()">Reset</button>
+      </div>
+    </div>
+
     <!-- Catan board: only visible with body.theme-catan (layout from the approved rendering) -->
     <div id="catan-board">
       <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
@@ -623,7 +783,7 @@ body.theme-flip7 .bottom-nav #nav-active { display: flex; }
 
 <!-- App engine: defines window.onAuthReady / window.onAuthSignedOut before auth init -->
 <script id="score-engine">
-/* Score Tracker engine — game-agnostic shell, per-game scoring, Catan wood/parchment theme, Flip 7 coastal card theme. */
+/* Score Tracker engine — game-agnostic shell, per-game scoring, Catan wood/parchment theme, Flip 7 coastal card theme, Carcassonne sunlit meadow tally. */
 (function (global) {
   'use strict';
 
@@ -689,6 +849,7 @@ body.theme-flip7 .bottom-nav #nav-active { display: flex; }
   const signed = (n) => (n > 0 ? '+' + n : String(n));
   function setHidden(el, hide) { if (!el) return; el.hidden = !!hide; el.classList.toggle('hidden', !!hide); }
   const isCatan = () => !!(currentGame && currentGame.type === 'catan');
+  const isCarc = () => !!(currentGame && currentGame.type === 'carcassonne');
 
   // ---------------- Persistence ----------------
   function persistActive() {
@@ -703,6 +864,7 @@ body.theme-flip7 .bottom-nav #nav-active { display: flex; }
       if (!g || !Array.isArray(g.players)) return null;
       g.rounds = Array.isArray(g.rounds) ? g.rounds : [];
       g.players.forEach((p) => { p.score = Number(p.score) || 0; if (g.type === 'catan') p.breakdown = { ...emptyBreakdown(), ...(p.breakdown || {}) }; if (g.type === 'flip7') p.flip7Count = Number(p.flip7Count) || 0; });
+      if (g.type === 'carcassonne') ccNormalize(g);
       if (g.type === 'catan' && !g.targetVp) g.targetVp = gameById('catan').target(g.version);
       return g;
     } catch (_) { return null; }
@@ -777,20 +939,23 @@ body.theme-flip7 .bottom-nav #nav-active { display: flex; }
   function onAuthSignedOut() {
     currentUser = null; initializedUserId = null; players = []; history = []; currentGame = null; pendingSync = false;
     scoringPlayer = null; currentView = 'home';
-    document.body.classList.remove('theme-catan', 'theme-flip7'); f7 = null;
+    document.body.classList.remove('theme-catan', 'theme-flip7', 'theme-carcassonne'); f7 = null;
     document.querySelectorAll('#app-shell .view').forEach((el) => el.classList.remove('active'));
-    ['gen-leaderboard', 'gen-pad', 'leaderboard', 'score-form', 'history-list', 'recent-list', 'player-chips', 'f7-board', 'f7-drawer'].forEach((id) => { const el = byId(id); if (el) el.innerHTML = ''; });
+    ['gen-leaderboard', 'gen-pad', 'leaderboard', 'score-form', 'history-list', 'recent-list', 'player-chips', 'f7-board', 'f7-drawer', 'cc-list'].forEach((id) => { const el = byId(id); if (el) el.innerHTML = ''; });
   }
 
   // ---------------- Theme + navigation ----------------
   function applyTheme() {
     const on = currentView === 'active' && isCatan();
     const f7on = currentView === 'active' && isFlip7();
+    const ccon = currentView === 'active' && isCarc();
     document.body.classList.toggle('theme-catan', on);
     document.body.classList.toggle('theme-flip7', f7on);
+    document.body.classList.toggle('theme-carcassonne', ccon);
+    if (!ccon) ccHideAdd();
     if (!f7on) { const s = byId('f7-sheet'); if (s && !s.hidden) { setHidden(s, true); s.innerHTML = ''; } }
     const meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.setAttribute('content', on ? '#180f08' : f7on ? '#4bbdb8' : '#0b1220');
+    if (meta) meta.setAttribute('content', on ? '#180f08' : f7on ? '#4bbdb8' : ccon ? '#6fa6d8' : '#0b1220');
   }
   function showView(v) {
     if (!byId('view-' + v)) v = 'home';
@@ -861,6 +1026,7 @@ body.theme-flip7 .bottom-nav #nav-active { display: flex; }
       rounds: []
     };
     if (g.id === 'catan') currentGame.targetVp = currentGame.target;
+    if (g.id === 'carcassonne') ccNormalize(currentGame);
     scoringPlayer = null; padMode = 'simple'; f7 = null;
     persistActive();
     showView('active');
@@ -915,6 +1081,7 @@ body.theme-flip7 .bottom-nav #nav-active { display: flex; }
   }
   function endGame() {
     if (!currentGame) return null;
+    if (isCarc()) { const a = document.activeElement; if (a && a.classList && a.classList.contains('cc-score')) ccInput(Number(a.dataset.idx), a); ccHideAdd(); }
     const finished = { ...currentGame, endTime: new Date().toISOString() };
     finished.winner = computeWinner(finished);
     history.unshift(finished);
@@ -936,7 +1103,7 @@ body.theme-flip7 .bottom-nav #nav-active { display: flex; }
       setHidden(byId('gen-pad'), true); setHidden(byId('gen-undo'), true);
       return;
     }
-    if (isCatan()) renderCatan(); else if (isFlip7()) renderFlip7(); else renderGeneric();
+    if (isCatan()) renderCatan(); else if (isFlip7()) renderFlip7(); else if (isCarc()) renderCarc(); else renderGeneric();
   }
 
   // ----- Generic (neutral) games -----
@@ -1441,6 +1608,118 @@ body.theme-flip7 .bottom-nav #nav-active { display: flex; }
     cgToast('Scores reset');
   }
 
+
+  // ----- Carcassonne (sunlit meadow + stitched parchment final-score tally) -----
+  const CC_COLORS = [
+    { key: 'blue', label: 'Blue', hex: '#1d5bbf' }, { key: 'red', label: 'Red', hex: '#c72b2b' },
+    { key: 'green', label: 'Green', hex: '#3a8a34' }, { key: 'yellow', label: 'Yellow', hex: '#dfa418' },
+    { key: 'black', label: 'Black', hex: '#2b2b2b' }, { key: 'pink', label: 'Pink', hex: '#d64b8a' }
+  ];
+  const ccColor = (key) => CC_COLORS.find((c) => c.key === key) || CC_COLORS[0];
+  const ccClamp = (v) => { const raw = String(v ?? '').trim(), x = Number(raw); const n = Number.isFinite(x) ? Math.floor(x) : Math.floor(Number(raw.replace(/[^0-9]/g, '')) || 0); return Math.max(0, Math.min(9999, n)); };
+  function ccFreeColor(game, exceptIdx, startKey) {
+    const used = new Set(game.players.filter((_, i) => i !== exceptIdx).map((p) => p.color));
+    const start = startKey ? CC_COLORS.findIndex((c) => c.key === startKey) : -1;
+    for (let k = 1; k <= CC_COLORS.length; k++) {
+      const c = CC_COLORS[(start + k + CC_COLORS.length) % CC_COLORS.length];
+      if (!used.has(c.key)) return c.key;
+    }
+    return CC_COLORS[(start + 1 + CC_COLORS.length) % CC_COLORS.length].key;
+  }
+  function ccNormalize(game) {
+    game.players.forEach((p, i) => {
+      p.score = ccClamp(p.score);
+      if (!CC_COLORS.some((c) => c.key === p.color)) p.color = ccFreeColor({ players: game.players.slice(0, i) }, -1, null);
+    });
+  }
+  function ccLeaders() {
+    if (!isCarc()) return [];
+    const best = Math.max(0, ...currentGame.players.map((p) => p.score));
+    return best > 0 ? currentGame.players.map((p, i) => (p.score === best ? i : -1)).filter((i) => i >= 0) : [];
+  }
+  const ccMeeple = (hex) => `<svg class="cc-meeple-svg" viewBox="0 0 100 104" aria-hidden="true" style="color:${hex}">
+      <use href="#cc-mp" transform="translate(0 5)" fill="currentColor"/><use href="#cc-mp" transform="translate(0 5)" fill="#000" opacity=".42"/>
+      <use href="#cc-mp" fill="currentColor"/><use href="#cc-mp" fill="url(#cc-shade)"/><use href="#cc-mp" fill="url(#cc-grain)" opacity=".85"/><use href="#cc-mp" fill="url(#cc-hi)"/>
+      <use href="#cc-mp" fill="none" stroke="#000" stroke-opacity=".38" stroke-width="1.6"/><use href="#cc-mp" fill="none" stroke="#fff" stroke-opacity=".28" stroke-width="1.2" transform="translate(50 46) scale(.93) translate(-50 -46)"/></svg>`;
+  const ccCrown = '<svg class="cc-crown" viewBox="0 0 24 24" role="img" aria-label="Leader"><use href="#cc-crown-s"/></svg>';
+  function renderCarc() {
+    const list = byId('cc-list');
+    if (!list || !isCarc()) return;
+    const leaders = ccLeaders();
+    list.innerHTML = currentGame.players.map((p, i) => {
+      const c = ccColor(p.color);
+      return `<div class="cc-row${leaders.includes(i) ? ' leader' : ''}" role="listitem" data-idx="${i}" data-player="${esc(p.name)}">
+        <button type="button" class="cc-meeple" data-color="${c.key}" aria-label="${esc(p.name)} meeple color: ${c.label}. Tap to change" onclick="ccCycleColor(${i})">${ccMeeple(c.hex)}</button>
+        <div class="cc-name-wrap"><span class="cc-name">${esc(p.name)}</span><span class="cc-crown-slot">${leaders.includes(i) ? ccCrown : ''}</span></div>
+        <input class="cc-score" type="number" inputmode="numeric" pattern="[0-9]*" min="0" max="9999" step="1" enterkeyhint="${i < currentGame.players.length - 1 ? 'next' : 'done'}"
+          data-idx="${i}" aria-label="${esc(p.name)} final score" placeholder="0" value="${p.score > 0 ? p.score : ''}"
+          oninput="ccInput(${i}, this)" onchange="ccInput(${i}, this, true)" onfocus="this.select()" onkeydown="ccKey(event, ${i})">
+      </div>`;
+    }).join('');
+  }
+  function ccRefreshLeader() {
+    const leaders = ccLeaders();
+    document.querySelectorAll('#cc-list .cc-row').forEach((row) => {
+      const i = Number(row.dataset.idx), on = leaders.includes(i);
+      row.classList.toggle('leader', on);
+      const slot = row.querySelector('.cc-crown-slot');
+      if (slot && (!!slot.firstChild) !== on) slot.innerHTML = on ? ccCrown : '';
+    });
+  }
+  function ccInput(idx, el, final) {
+    if (!isCarc() || !currentGame.players[idx]) return;
+    const raw = String(el && el.value != null ? el.value : '');
+    const v = ccClamp(raw);
+    if (el && raw !== '' && (String(v) !== raw)) el.value = String(v);
+    if (el && final && v === 0) el.value = '';
+    currentGame.players[idx].score = v;
+    persistActive();
+    ccRefreshLeader();
+  }
+  function ccKey(e, idx) {
+    if (e.key !== 'Enter') return;
+    e.preventDefault();
+    const next = document.querySelector(`#cc-list .cc-score[data-idx="${idx + 1}"]`);
+    if (next) next.focus(); else if (e.target) e.target.blur();
+  }
+  function ccCycleColor(idx) {
+    if (!isCarc() || !currentGame.players[idx]) return null;
+    const p = currentGame.players[idx];
+    p.color = ccFreeColor(currentGame, idx, p.color);
+    persistActive();
+    const row = document.querySelector(`#cc-list .cc-row[data-idx="${idx}"]`);
+    if (row) {
+      const c = ccColor(p.color), btn = row.querySelector('.cc-meeple');
+      btn.dataset.color = c.key; btn.setAttribute('aria-label', `${p.name} meeple color: ${c.label}. Tap to change`);
+      btn.innerHTML = ccMeeple(c.hex);
+      btn.classList.remove('hop'); void btn.offsetWidth; btn.classList.add('hop');
+    } else renderCarc();
+    return p.color;
+  }
+  function ccShowAdd() {
+    if (!isCarc()) return;
+    const box = byId('cc-add'); setHidden(box, false);
+    const inp = byId('cc-add-name'); if (inp) { inp.value = ''; inp.focus(); }
+  }
+  function ccHideAdd() { const box = byId('cc-add'); if (box && !box.hidden) setHidden(box, true); }
+  function ccAddPlayer() {
+    if (!isCarc()) return null;
+    const inp = byId('cc-add-name');
+    const name = ((inp && inp.value) || '').trim();
+    if (!name) { if (inp) inp.focus(); return null; }
+    if (currentGame.players.some((p) => p.name.toLowerCase() === name.toLowerCase())) { inp.select(); return null; }
+    currentGame.players.push({ name, score: 0, color: ccFreeColor(currentGame, -1, null) });
+    if (!players.some((p) => p.toLowerCase() === name.toLowerCase())) { players.push(name); saveData(); }
+    persistActive(); ccHideAdd(); renderCarc();
+    return name;
+  }
+  function ccReset() {
+    if (!isCarc()) return;
+    if (currentGame.players.some((p) => p.score) && !confirm('Reset every score to 0?')) return;
+    currentGame.players.forEach((p) => { p.score = 0; });
+    persistActive(); renderCarc();
+  }
+
   // ---------------- History ----------------
   function renderHistory() {
     const el = byId('history-list');
@@ -1472,6 +1751,7 @@ body.theme-flip7 .bottom-nav #nav-active { display: flex; }
     openPad, setPadMode, closePad, flipToggle, updateGenericPreview, commitSimplePoints, commitGenericDetailed,
     selectCatanPlayer, catanStep, catanAction, resetCatanScores,
     f7Select, f7Toggle, f7SetMode, f7Num, f7Close, f7Confirm, f7Undo, f7ToggleSort, f7OpenSheet, f7CloseSheet, f7SetTarget, f7AddPlayer, f7ResetScores,
+    ccInput, ccKey, ccCycleColor, ccShowAdd, ccHideAdd, ccAddPlayer, ccReset,
     undoLastRound, undoLastAction: undoLastRound, endGame, deleteGame,
     ScoreTracker: { GAMES, getState: () => ({ players: [...players], history: [...history], currentGame, currentView, scoringPlayer, padMode, pendingSync }) }
   });
@@ -1568,7 +1848,7 @@ body.theme-flip7 .bottom-nav #nav-active { display: flex; }
   }
 
   function showSignedOutUI() {
-    document.body.classList.remove('theme-catan', 'theme-flip7');
+    document.body.classList.remove('theme-catan', 'theme-flip7', 'theme-carcassonne');
     const { loginView, appShell } = getEls();
     if (appShell) {
       appShell.hidden = true;

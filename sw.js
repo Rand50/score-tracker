@@ -1,11 +1,12 @@
 // Score Tracker service worker
-// v7: Flip 7 coastal card theme (body.theme-flip7); v6: no tap-zoom + box art for every game; v5: neutral shell + Catan screen matched to the approved rendering (real cropped art in assets/catan). Network-first for HTML so new builds show up immediately; cache is only an offline fallback.
-const CACHE_NAME = 'score-tracker-v7-2026-11-26';
+// v8: Carcassonne sunlit meadow final-score tally (body.theme-carcassonne); v7: Flip 7 coastal card theme (body.theme-flip7); v6: no tap-zoom + box art for every game; v5: neutral shell + Catan screen matched to the approved rendering (real cropped art in assets/catan). Network-first for HTML so new builds show up immediately; cache is only an offline fallback.
+const CACHE_NAME = 'score-tracker-v8-2026-11-26';
 const ASSETS = [
   './game_tracker.html',
   './manifest.json',
   './icon-512.jpg',
   './assets/catan/wood-bg.svg',
+  './assets/carcassonne/meadow-bg.svg',
   './assets/catan/shield-red.svg',
   './assets/catan/shield-green.svg',
   './assets/catan/shield-blue.svg',
