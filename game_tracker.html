@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0b1220">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="score-tracker-build" content="v10-carcassonne-polish-2026-11-26">
+<meta name="score-tracker-build" content="v11-nertz-midnight-parlor-2026-11-26">
 <title>Score Tracker</title>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon-512.jpg" type="image/jpeg">
@@ -155,6 +155,8 @@ body.theme-catan .app-header { display: none; }
 #flip7-board { display: none; }
 /* Carcassonne tally is only shown when theme-carcassonne is on */
 #carc-board { display: none; }
+/* Nertz parlor table is only shown when theme-nertz is on */
+#nz-shell { display: none; }
 /* Friends tab lives only in the neutral nav: themed game navs stay clean 4-tab bars */
 body.theme-catan .bottom-nav #nav-social, body.theme-flip7 .bottom-nav #nav-social, body.theme-carcassonne .bottom-nav #nav-social { display: none !important; }
 #soc-create-group-modal { z-index: 80; }
@@ -1220,9 +1222,946 @@ body.theme-carcassonne .bottom-nav #nav-history { --cc-ic: url("data:image/svg+x
 body.theme-carcassonne .bottom-nav #nav-signout { --cc-ic: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 4H6.5A1.5 1.5 0 0 0 5 5.5v13A1.5 1.5 0 0 0 6.5 20H14'/%3E%3Cpath d='M10.5 12H21M17.2 8l3.8 4-3.8 4'/%3E%3C/svg%3E"); }
 
 </style>
+
+<!-- ===================== NERTZ THEME (scoped to body.theme-nertz) ===================== -->
+<style id="nertz-theme">
+
+body.theme-nertz {
+  --nz-bg: #071222;
+  --nz-bg2: #0c1d36;
+  --nz-panel: #081529;
+  --nz-gold: #e6c677;
+  --nz-gold-hi: #f5df9c;
+  --nz-gold-lo: #b08837;
+  --nz-gold-line: rgba(214, 179, 101, 0.62);
+  --nz-gold-soft: rgba(214, 179, 101, 0.24);
+  --nz-ivory: #faf3e1;
+  --nz-ivory2: #ebdcba;
+  --nz-ink: #0f1b2d;
+  --nz-crimson: #d13838;
+  --nz-serif: 'Cinzel', 'EB Garamond', Georgia, 'Times New Roman', serif;
+  --nz-body: 'EB Garamond', Georgia, 'Times New Roman', serif;
+  --nz-damask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%23d6b365' stroke-opacity='0.06' stroke-width='1'%3E%3Cpath d='M32 4C37 14 44 20 56 32 44 44 37 50 32 60 27 50 20 44 8 32 20 20 27 14 32 4z'/%3E%3Ccircle cx='32' cy='32' r='6'/%3E%3Cpath d='M0 0l12 12M64 0L52 12M0 64l12-12M64 64L52 52'/%3E%3C/g%3E%3C/svg%3E");
+  background-color: var(--nz-bg);
+  background-image:
+    radial-gradient(ellipse at 50% 8%, rgba(30, 62, 112, 0.48), transparent 55%),
+    radial-gradient(ellipse at 50% 100%, rgba(16, 36, 68, 0.52), transparent 60%),
+    var(--nz-damask);
+  background-attachment: fixed;
+  color: var(--nz-gold);
+  font-family: var(--nz-body);
+  padding-bottom: calc(92px + env(safe-area-inset-bottom, 0px));
+}
+body.theme-nertz .app-header,
+body.theme-nertz #generic-board,
+body.theme-nertz #catan-board,
+body.theme-nertz #flip7-board,
+body.theme-nertz #carc-board { display: none; }
+body.theme-nertz #nz-shell { display: block; }
+body.theme-nertz #view-active {
+  max-width: 470px;
+  padding: calc(10px + env(safe-area-inset-top, 0px)) 12px 1rem;
+}
+body.theme-nertz #nz-shell button,
+body.theme-nertz #nz-shell [role="button"],
+body.theme-nertz #nz-shell [role="tab"],
+body.theme-nertz .bottom-nav button {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  cursor: pointer;
+}
+body.theme-nertz #nz-shell input {
+  font-size: 16px !important;
+  touch-action: manipulation;
+}
+
+
+body.theme-nertz .nz-frame {
+  position: relative;
+  border-radius: 16px;
+  padding: 12px 13px 16px;
+  background: linear-gradient(180deg, rgba(10, 24, 46, 0.92) 0%, rgba(6, 15, 30, 0.96) 100%);
+  border: 1.5px solid var(--nz-gold-line);
+  box-shadow:
+    0 18px 44px rgba(0, 0, 0, 0.65),
+    inset 0 0 0 4px rgba(7, 18, 34, 0.95),
+    inset 0 0 0 5px rgba(214, 179, 101, 0.28),
+    inset 0 0 40px rgba(0, 0, 0, 0.45);
+}
+
+
+body.theme-nertz .nz-head {
+  text-align: center;
+  padding: 2px 4px 10px;
+}
+body.theme-nertz .nz-fan-wrap {
+  display: flex;
+  justify-content: center;
+  margin: -4px auto 2px;
+  height: 46px;
+}
+body.theme-nertz .nz-fan-svg {
+  width: 210px;
+  height: 48px;
+  display: block;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.55));
+}
+body.theme-nertz .nz-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 2px;
+}
+body.theme-nertz .nz-spade {
+  color: var(--nz-gold);
+  font-size: 1.15rem;
+  line-height: 1;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7);
+}
+body.theme-nertz .nz-title {
+  margin: 0;
+  font: 700 2.35rem/1 var(--nz-serif);
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  background: linear-gradient(180deg, #fbf0c4 0%, #e4be67 48%, #b3842d 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.65));
+}
+body.theme-nertz .nz-rule {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px auto 7px;
+  max-width: 280px;
+}
+body.theme-nertz .nz-rule::before,
+body.theme-nertz .nz-rule::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--nz-gold-line), transparent);
+}
+body.theme-nertz .nz-rule i {
+  width: 6px;
+  height: 6px;
+  background: var(--nz-gold);
+  transform: rotate(45deg);
+  display: block;
+}
+body.theme-nertz .nz-sub-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+body.theme-nertz .nz-target-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(214, 179, 101, 0.1);
+  border: 1px solid rgba(214, 179, 101, 0.42);
+  color: var(--nz-gold-hi);
+  font: 600 0.78rem/1.2 var(--nz-serif);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+body.theme-nertz .nz-target-pill:active { transform: scale(0.97); }
+body.theme-nertz .nz-dot-sep { color: var(--nz-gold-lo); font-size: 0.78rem; }
+body.theme-nertz .nz-round-label {
+  font: 600 0.8rem/1.2 var(--nz-serif);
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--nz-gold);
+}
+
+
+body.theme-nertz .nz-mode-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 10px 0 4px;
+}
+body.theme-nertz .nz-mode-pill {
+  display: inline-grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 3px;
+  border-radius: 999px;
+  background: rgba(5, 12, 24, 0.85);
+  border: 1px solid rgba(214, 179, 101, 0.42);
+}
+body.theme-nertz .nz-mode-btn {
+  padding: 6px 14px;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(230, 198, 119, 0.72);
+  font: 600 0.78rem/1 var(--nz-serif);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: background 0.15s, color 0.15s;
+}
+body.theme-nertz .nz-mode-btn.active {
+  background: linear-gradient(180deg, #efd282 0%, #c89c42 100%);
+  color: #091426;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+}
+body.theme-nertz .nz-teams-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 6px 0 2px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  background: rgba(214, 179, 101, 0.08);
+  border: 1px dashed rgba(214, 179, 101, 0.35);
+  font-size: 0.84rem;
+  color: var(--nz-gold);
+}
+body.theme-nertz .nz-teams-bar[hidden] { display: none !important; }
+body.theme-nertz .nz-mini-gold {
+  padding: 5px 10px;
+  border-radius: 8px;
+  background: rgba(214, 179, 101, 0.14);
+  border: 1px solid rgba(214, 179, 101, 0.5);
+  color: var(--nz-gold-hi);
+  font: 600 0.76rem/1 var(--nz-serif);
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+body.theme-nertz .nz-mini-gold:active { transform: scale(0.97); }
+
+
+body.theme-nertz .nz-roster {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin: 8px 0 14px;
+}
+body.theme-nertz .nz-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 7px 14px 7px 7px;
+  border-radius: 11px;
+  background: linear-gradient(180deg, var(--nz-ivory) 0%, var(--nz-ivory2) 100%);
+  border: 1.5px solid #c9a14a;
+  box-shadow:
+    0 5px 14px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    inset 0 0 0 2px rgba(201, 161, 74, 0.22);
+  color: var(--nz-ink);
+  cursor: pointer;
+  transition: transform 0.08s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+body.theme-nertz .nz-row:active { transform: scale(0.99); }
+body.theme-nertz .nz-row.picker-open { z-index: 35; }
+body.theme-nertz .nz-row.selected {
+  border-color: #f6e19e;
+  box-shadow:
+    0 0 0 2px rgba(245, 223, 156, 0.85),
+    0 8px 22px rgba(230, 198, 119, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.92);
+}
+body.theme-nertz .nz-row.leader .nz-score { color: #7a4e08; }
+
+
+body.theme-nertz .nz-deck-btn {
+  position: relative;
+  flex: 0 0 54px;
+  width: 54px;
+  height: 54px;
+  padding: 3px;
+  border-radius: 8px;
+  border: 1.5px solid #c9a14a;
+  background: var(--nz-deck-bg, #7c1818);
+  box-shadow: inset 0 0 0 2px rgba(246, 225, 158, 0.45), 0 2px 5px rgba(0, 0, 0, 0.35);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.08s ease;
+}
+body.theme-nertz .nz-deck-btn:active { transform: scale(0.93); }
+body.theme-nertz .nz-deck-btn[data-deck="crimson"] { --nz-deck-bg: linear-gradient(145deg, #8e1d20, #5a0e10); }
+body.theme-nertz .nz-deck-btn[data-deck="emerald"] { --nz-deck-bg: linear-gradient(145deg, #155c47, #0a3629); }
+body.theme-nertz .nz-deck-btn[data-deck="sapphire"] { --nz-deck-bg: linear-gradient(145deg, #1b3b6f, #0d2040); }
+body.theme-nertz .nz-deck-btn[data-deck="plum"] { --nz-deck-bg: linear-gradient(145deg, #4b2354, #2a1030); }
+body.theme-nertz .nz-deck-btn[data-deck="gold"] { --nz-deck-bg: linear-gradient(145deg, #9a7022, #5e410d); }
+body.theme-nertz .nz-deck-btn[data-deck="obsidian"] { --nz-deck-bg: linear-gradient(145deg, #334155, #18202c); }
+body.theme-nertz .nz-deck-btn[data-deck="teal"] { --nz-deck-bg: linear-gradient(145deg, #146b74, #0a3b41); }
+body.theme-nertz .nz-deck-btn[data-deck="burgundy"] { --nz-deck-bg: linear-gradient(145deg, #6e1d36, #3d0d1d); }
+body.theme-nertz .nz-deck-svg { width: 46px; height: 46px; display: block; }
+body.theme-nertz .nz-deck-caret {
+  position: absolute;
+  right: -3px;
+  bottom: -3px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #09162a;
+  border: 1.5px solid var(--nz-gold);
+  color: var(--nz-gold-hi);
+  font: 700 9px/13px var(--nz-body);
+  text-align: center;
+  pointer-events: none;
+}
+
+body.theme-nertz .nz-color-pop {
+  position: absolute;
+  left: 64px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 45;
+  padding: 9px 10px;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #0d1f3a 0%, #071222 100%);
+  border: 1.5px solid var(--nz-gold);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.72), inset 0 0 0 2px rgba(214, 179, 101, 0.2);
+  animation: nz-pop-in 0.14s ease-out;
+}
+@keyframes nz-pop-in {
+  0% { opacity: 0; transform: translateY(-50%) scale(0.92); }
+  100% { opacity: 1; transform: translateY(-50%) scale(1); }
+}
+body.theme-nertz .nz-color-pop-title {
+  margin: 0 0 6px;
+  font: 700 0.68rem/1 var(--nz-serif);
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--nz-gold);
+  text-align: center;
+}
+body.theme-nertz .nz-swatch-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 44px);
+  gap: 6px;
+}
+body.theme-nertz .nz-swatch {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  padding: 2px;
+  border-radius: 8px;
+  border: 1.5px solid rgba(214, 179, 101, 0.45);
+  background: #1b3b6f;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+body.theme-nertz .nz-swatch[data-deck="crimson"] { background: linear-gradient(145deg, #8e1d20, #5a0e10); }
+body.theme-nertz .nz-swatch[data-deck="emerald"] { background: linear-gradient(145deg, #155c47, #0a3629); }
+body.theme-nertz .nz-swatch[data-deck="sapphire"] { background: linear-gradient(145deg, #1b3b6f, #0d2040); }
+body.theme-nertz .nz-swatch[data-deck="plum"] { background: linear-gradient(145deg, #4b2354, #2a1030); }
+body.theme-nertz .nz-swatch[data-deck="gold"] { background: linear-gradient(145deg, #9a7022, #5e410d); }
+body.theme-nertz .nz-swatch[data-deck="obsidian"] { background: linear-gradient(145deg, #334155, #18202c); }
+body.theme-nertz .nz-swatch[data-deck="teal"] { background: linear-gradient(145deg, #146b74, #0a3b41); }
+body.theme-nertz .nz-swatch[data-deck="burgundy"] { background: linear-gradient(145deg, #6e1d36, #3d0d1d); }
+body.theme-nertz .nz-swatch.active {
+  border-color: #fbf0c4;
+  box-shadow: 0 0 0 2px rgba(245, 223, 156, 0.75);
+}
+body.theme-nertz .nz-swatch-check {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  background: var(--nz-gold);
+  color: #071222;
+  border: 1.5px solid #071222;
+  font: 800 10px/14px var(--nz-body);
+  text-align: center;
+}
+
+body.theme-nertz .nz-info {
+  flex: 1;
+  min-width: 0;
+  padding-left: 4px;
+  border-left: 1px solid rgba(176, 136, 55, 0.32);
+}
+body.theme-nertz .nz-name-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+body.theme-nertz .nz-name {
+  font: 600 1.45rem/1.1 var(--nz-body);
+  color: var(--nz-ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+body.theme-nertz .nz-crown {
+  font-size: 0.9rem;
+  color: #b07a1c;
+  flex-shrink: 0;
+}
+body.theme-nertz .nz-partners {
+  margin-top: 2px;
+  font: 500 0.84rem/1.15 var(--nz-body);
+  color: #4a5568;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+body.theme-nertz .nz-round-tag {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  font: 700 0.72rem/1.2 var(--nz-serif);
+  background: rgba(15, 27, 45, 0.1);
+  color: #1e4d3b;
+}
+body.theme-nertz .nz-round-tag.neg { color: #b91c1c; }
+body.theme-nertz .nz-score {
+  font: 700 2rem/1 var(--nz-body);
+  font-variant-numeric: lining-nums tabular-nums;
+  color: var(--nz-ink);
+  flex-shrink: 0;
+  min-width: 44px;
+  text-align: right;
+}
+
+
+body.theme-nertz .nz-scorer {
+  position: relative;
+  border-radius: 14px;
+  padding: 12px 12px 14px;
+  background: linear-gradient(180deg, rgba(8, 22, 42, 0.94) 0%, rgba(5, 14, 28, 0.98) 100%);
+  border: 1.5px solid var(--nz-gold-line);
+  box-shadow: inset 0 0 0 3px rgba(7, 18, 34, 0.9), inset 0 0 0 4px rgba(214, 179, 101, 0.22);
+}
+body.theme-nertz .nz-scorer-head {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+body.theme-nertz .nz-scorer-head::before,
+body.theme-nertz .nz-scorer-head::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--nz-gold-line));
+}
+body.theme-nertz .nz-scorer-head::after {
+  background: linear-gradient(90deg, var(--nz-gold-line), transparent);
+}
+body.theme-nertz .nz-scorer-who {
+  font: 600 0.8rem/1 var(--nz-serif);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--nz-gold-hi);
+  white-space: nowrap;
+}
+body.theme-nertz .nz-entry-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+body.theme-nertz .nz-entry-tab {
+  padding: 4px 11px;
+  border-radius: 999px;
+  background: transparent;
+  border: 1px solid rgba(214, 179, 101, 0.3);
+  color: rgba(230, 198, 119, 0.72);
+  font: 600 0.72rem/1.2 var(--nz-serif);
+  letter-spacing: 0.9px;
+  text-transform: uppercase;
+}
+body.theme-nertz .nz-entry-tab.active {
+  background: rgba(214, 179, 101, 0.18);
+  border-color: var(--nz-gold);
+  color: var(--nz-gold-hi);
+}
+
+
+body.theme-nertz .nz-entry-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+body.theme-nertz .nz-entry-grid[hidden],
+body.theme-nertz .nz-net-wrap[hidden] { display: none !important; }
+body.theme-nertz .nz-box {
+  border-radius: 11px;
+  padding: 9px 7px 10px;
+  background: rgba(4, 11, 22, 0.72);
+  border: 1px solid rgba(214, 179, 101, 0.48);
+  text-align: center;
+}
+body.theme-nertz .nz-box-label {
+  font: 600 0.72rem/1.1 var(--nz-serif);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--nz-gold-hi);
+  margin-bottom: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+body.theme-nertz .nz-stepper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+}
+body.theme-nertz .nz-circ {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(214, 179, 101, 0.08);
+  border: 1.5px solid var(--nz-gold);
+  color: var(--nz-gold-hi);
+  font: 600 1.35rem/1 var(--nz-body);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+body.theme-nertz .nz-circ:active { transform: scale(0.92); background: rgba(214, 179, 101, 0.22); }
+body.theme-nertz .nz-box-num {
+  width: 52px;
+  min-width: 0;
+  padding: 2px 0;
+  background: transparent;
+  border: none;
+  border-bottom: 1px dashed rgba(214, 179, 101, 0.32);
+  border-radius: 0;
+  color: var(--nz-gold-hi);
+  font: 700 1.65rem/1 var(--nz-body);
+  text-align: center;
+  font-variant-numeric: lining-nums tabular-nums;
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+body.theme-nertz .nz-box-num::-webkit-outer-spin-button,
+body.theme-nertz .nz-box-num::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+body.theme-nertz .nz-box-num.is-neg { color: var(--nz-crimson); }
+body.theme-nertz .nz-box-sub {
+  margin-top: 5px;
+  font-size: 0.72rem;
+  color: rgba(230, 198, 119, 0.65);
+}
+
+
+body.theme-nertz .nz-net-wrap {
+  padding: 10px 8px;
+  border-radius: 11px;
+  background: rgba(4, 11, 22, 0.72);
+  border: 1px solid rgba(214, 179, 101, 0.45);
+}
+body.theme-nertz .nz-net-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+body.theme-nertz .nz-net-input {
+  width: 88px;
+  height: 44px;
+  text-align: center;
+  background: rgba(8, 22, 42, 0.9);
+  border: 1.5px solid var(--nz-gold);
+  border-radius: 10px;
+  color: var(--nz-gold-hi);
+  font: 700 1.4rem/1 var(--nz-body);
+}
+body.theme-nertz .nz-net-step {
+  padding: 0 10px;
+  height: 40px;
+  border-radius: 9px;
+  background: rgba(214, 179, 101, 0.12);
+  border: 1px solid rgba(214, 179, 101, 0.48);
+  color: var(--nz-gold-hi);
+  font: 700 0.88rem/1 var(--nz-serif);
+}
+body.theme-nertz .nz-net-step:active { transform: scale(0.95); }
+
+
+body.theme-nertz .nz-bonus-row {
+  display: flex;
+  justify-content: center;
+  margin-top: 8px;
+}
+body.theme-nertz .nz-bonus-chip {
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: rgba(214, 179, 101, 0.08);
+  border: 1px solid rgba(214, 179, 101, 0.38);
+  color: rgba(230, 198, 119, 0.82);
+  font: 600 0.76rem/1.2 var(--nz-serif);
+  letter-spacing: 0.7px;
+}
+body.theme-nertz .nz-bonus-chip.active {
+  background: rgba(230, 198, 119, 0.24);
+  border-color: var(--nz-gold-hi);
+  color: var(--nz-gold-hi);
+}
+
+
+body.theme-nertz .nz-preview-wrap {
+  text-align: center;
+  margin-top: 10px;
+  padding-top: 9px;
+  border-top: 1px solid rgba(214, 179, 101, 0.34);
+}
+body.theme-nertz .nz-preview-label {
+  font: 600 0.72rem/1.1 var(--nz-serif);
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: rgba(230, 198, 119, 0.82);
+}
+body.theme-nertz .nz-preview-val {
+  margin: 4px 0 10px;
+  font: 700 2rem/1 var(--nz-body);
+  font-variant-numeric: lining-nums tabular-nums;
+  color: var(--nz-gold-hi);
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.55);
+}
+body.theme-nertz .nz-preview-val.is-neg { color: var(--nz-crimson); }
+body.theme-nertz .nz-confirm {
+  width: 100%;
+  height: 48px;
+  border-radius: 10px;
+  border: 1.5px solid #f7e4a8;
+  background: linear-gradient(180deg, #efd282 0%, #cf9f43 55%, #b17f28 100%);
+  color: #0b1629;
+  font: 700 1.05rem/1 var(--nz-serif);
+  letter-spacing: 2.2px;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 0 5px 16px rgba(0, 0, 0, 0.52), inset 0 1px 0 rgba(255, 250, 224, 0.75);
+  transition: transform 0.08s ease, filter 0.12s ease;
+}
+body.theme-nertz .nz-confirm:active { transform: translateY(2px); filter: brightness(0.96); }
+
+
+body.theme-nertz .nz-actions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 7px;
+  margin-top: 12px;
+}
+body.theme-nertz .nz-act-btn {
+  height: 38px;
+  border-radius: 9px;
+  background: rgba(214, 179, 101, 0.08);
+  border: 1px solid rgba(214, 179, 101, 0.4);
+  color: var(--nz-gold-hi);
+  font: 600 0.78rem/1 var(--nz-serif);
+  letter-spacing: 0.7px;
+  text-transform: uppercase;
+}
+body.theme-nertz .nz-act-btn:active { transform: scale(0.97); }
+body.theme-nertz .nz-act-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+body.theme-nertz .nz-finish {
+  width: 100%;
+  margin-top: 9px;
+  height: 44px;
+  border-radius: 10px;
+  background: rgba(214, 179, 101, 0.14);
+  border: 1.5px solid var(--nz-gold);
+  color: var(--nz-gold-hi);
+  font: 700 0.88rem/1 var(--nz-serif);
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+}
+body.theme-nertz .nz-finish.ready {
+  background: linear-gradient(180deg, #efd282 0%, #c6963c 100%);
+  color: #071222;
+}
+body.theme-nertz .nz-history-drawer {
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 11px;
+  background: rgba(4, 11, 22, 0.82);
+  border: 1px solid rgba(214, 179, 101, 0.36);
+}
+body.theme-nertz .nz-history-drawer[hidden] { display: none !important; }
+body.theme-nertz .nz-hist-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 5px 0;
+  font-size: 0.86rem;
+  border-bottom: 1px solid rgba(214, 179, 101, 0.14);
+  color: var(--nz-ivory);
+}
+body.theme-nertz .nz-hist-row:last-child { border-bottom: none; }
+
+
+body.theme-nertz .nz-sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  background: rgba(3, 8, 16, 0.8);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 12px;
+}
+body.theme-nertz .nz-sheet[hidden] { display: none !important; }
+body.theme-nertz .nz-sheet-card {
+  width: 100%;
+  max-width: 440px;
+  max-height: 84vh;
+  overflow-y: auto;
+  border-radius: 16px;
+  padding: 14px;
+  background: linear-gradient(180deg, #0d1f3a 0%, #071222 100%);
+  border: 1.5px solid var(--nz-gold);
+  box-shadow: 0 22px 48px rgba(0, 0, 0, 0.75);
+  color: var(--nz-ivory);
+}
+body.theme-nertz .nz-sheet-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+body.theme-nertz .nz-sheet-head h3 {
+  margin: 0;
+  font: 700 1rem/1.1 var(--nz-serif);
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--nz-gold-hi);
+}
+body.theme-nertz .nz-team-card {
+  padding: 10px;
+  border-radius: 10px;
+  background: rgba(4, 11, 22, 0.65);
+  border: 1px solid rgba(214, 179, 101, 0.34);
+  margin-bottom: 8px;
+}
+body.theme-nertz .nz-partner-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+body.theme-nertz .nz-partner-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: rgba(214, 179, 101, 0.14);
+  border: 1px solid rgba(214, 179, 101, 0.4);
+  color: var(--nz-ivory);
+  font-size: 0.84rem;
+}
+
+
+body.theme-nertz .bottom-nav {
+  background: rgba(7, 18, 34, 0.97);
+  border-top: 1.5px solid var(--nz-gold-line);
+  box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.55);
+  font-family: var(--nz-body);
+}
+body.theme-nertz .bottom-nav button {
+  color: rgba(230, 198, 119, 0.66);
+  font: 600 0.78rem/1 var(--nz-body);
+  letter-spacing: 0.4px;
+}
+body.theme-nertz .bottom-nav button.active {
+  color: var(--nz-gold-hi);
+}
+body.theme-nertz .bottom-nav button.active::after {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--nz-gold-hi);
+  margin-top: 2px;
+}
+body.theme-nertz .bottom-nav #nav-new,
+body.theme-nertz .bottom-nav #nav-social { display: none !important; }
+body.theme-nertz .bottom-nav #nav-active { display: flex; }
+
+
+body.theme-nertz .nz-winner-banner {
+  margin: 2px 0 4px;
+  padding: 9px 12px;
+  border-radius: 10px;
+  text-align: center;
+  font: 700 0.9rem/1.25 var(--nz-serif);
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: #071222;
+  background: linear-gradient(180deg, #f5df9c 0%, #d9ae55 60%, #b8862d 100%);
+  border: 1.5px solid #fbf0c4;
+  box-shadow: 0 6px 18px rgba(230, 198, 119, 0.3);
+}
+body.theme-nertz .nz-called-badge {
+  display: inline-block;
+  margin-left: 4px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  font: 700 0.7rem/1.3 var(--nz-serif);
+  letter-spacing: 0.8px;
+  color: #fbf0c4;
+  background: linear-gradient(180deg, #b3262a, #7a1216);
+  border: 1px solid #e6c677;
+  flex-shrink: 0;
+}
+body.theme-nertz .nz-calls {
+  margin-left: 4px;
+  font: 600 0.72rem/1 var(--nz-body);
+  color: #7a4e08;
+  flex-shrink: 0;
+}
+body.theme-nertz .nz-score.neg { color: #b91c1c; }
+body.theme-nertz .nz-row.done::after {
+  content: "\2713";
+  position: absolute;
+  top: 4px;
+  right: 7px;
+  font: 700 0.7rem/1 var(--nz-body);
+  color: #1e6b52;
+}
+body.theme-nertz .nz-progress {
+  margin: -4px 0 8px;
+  text-align: center;
+  font: 600 0.74rem/1.2 var(--nz-body);
+  letter-spacing: 0.5px;
+  color: rgba(230, 198, 119, 0.7);
+}
+body.theme-nertz .nz-sheet-close {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(214, 179, 101, 0.5);
+  background: transparent;
+  color: var(--nz-gold-hi);
+  font: 700 1rem/1 var(--nz-body);
+}
+body.theme-nertz .nz-field {
+  width: 100%;
+  min-width: 0;
+  height: 40px;
+  padding: 0 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(214, 179, 101, 0.45);
+  background: rgba(250, 243, 225, 0.96);
+  color: var(--nz-ink);
+  font-family: var(--nz-body);
+}
+body.theme-nertz .nz-field-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  margin-top: 7px;
+}
+body.theme-nertz .nz-sheet-btn {
+  flex-shrink: 0;
+  height: 40px;
+  padding: 0 12px;
+  border-radius: 8px;
+  border: 1px solid var(--nz-gold);
+  background: rgba(214, 179, 101, 0.14);
+  color: var(--nz-gold-hi);
+  font: 700 0.76rem/1 var(--nz-serif);
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+body.theme-nertz .nz-sheet-btn.primary {
+  background: linear-gradient(180deg, #efd282 0%, #c6963c 100%);
+  color: #071222;
+}
+body.theme-nertz .nz-sheet-btn.wide { width: 100%; margin-top: 10px; }
+body.theme-nertz .nz-sheet-btn.danger { border-color: rgba(209, 56, 56, 0.7); color: #f3a3a3; background: rgba(209, 56, 56, 0.1); }
+body.theme-nertz .nz-team-head {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+body.theme-nertz .nz-team-swatch {
+  flex: 0 0 28px;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 1.5px solid #c9a14a;
+}
+body.theme-nertz .nz-chip-x {
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border-radius: 50%;
+  border: none;
+  background: rgba(209, 56, 56, 0.25);
+  color: #fbe3e3;
+  font: 700 0.8rem/1 var(--nz-body);
+}
+body.theme-nertz .nz-move-sel {
+  height: 24px;
+  max-width: 92px;
+  border-radius: 6px;
+  border: 1px solid rgba(214, 179, 101, 0.4);
+  background: #0a1830;
+  color: var(--nz-gold-hi);
+  font-size: 0.74rem !important;
+}
+body.theme-nertz .nz-quick-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+body.theme-nertz .nz-quick {
+  height: 34px;
+  padding: 0 11px;
+  border-radius: 999px;
+  border: 1px dashed rgba(214, 179, 101, 0.6);
+  background: transparent;
+  color: var(--nz-gold-hi);
+  font: 600 0.84rem/1 var(--nz-body);
+}
+body.theme-nertz .nz-quick.active { border-style: solid; background: rgba(214, 179, 101, 0.2); }
+body.theme-nertz .nz-sheet-note {
+  margin: 4px 0 0;
+  font-size: 0.8rem;
+  color: rgba(250, 243, 225, 0.66);
+}
+body.theme-nertz .nz-hist-empty { color: rgba(250, 243, 225, 0.6); font-size: 0.86rem; text-align: center; padding: 4px 0; }
+body.theme-nertz .nz-hist-round { font: 700 0.74rem/1.2 var(--nz-serif); letter-spacing: 1px; color: var(--nz-gold); padding-top: 6px; }
+body.theme-nertz .nz-hist-row .neg { color: #f19a9a; }
+body.theme-nertz .nz-sub-line {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+  margin-top: 3px;
+}
+body.theme-nertz .nz-sub-line .nz-partners { margin-top: 0; min-width: 0; flex: 1; }
+body.theme-nertz .nz-sub-line .nz-round-tag,
+body.theme-nertz .nz-sub-line .nz-called-badge { margin-left: 0; flex-shrink: 0; }
+
+</style>
 </head>
 <body>
-<!-- Build: v10-carcassonne-polish-2026-11-26 -->
+<!-- Build: v11-nertz-midnight-parlor-2026-11-26 -->
 
 <!-- Login: starts hidden until getSession() resolves -->
 <section id="login-view" class="auth-hidden" hidden aria-label="Sign in to Score Tracker">
@@ -1400,6 +2339,166 @@ body.theme-carcassonne .bottom-nav #nav-signout { --cc-ic: url("data:image/svg+x
       </div>
       <button type="button" class="cc-finish" id="cc-finish" onclick="endGame()"><span>Finish and Save Game</span></button>
     </div>
+
+    <!-- Nertz Midnight Parlor & Gold Foil table: only visible with body.theme-nertz (Solo + unlimited Partners/Teams) -->
+<div id="nz-shell">
+  <!-- Shared ornate SVG defs (fanned cards + deck-back filigree) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="nz-gold-grad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#fbf0c4"/>
+        <stop offset="50%" stop-color="#e4be67"/>
+        <stop offset="100%" stop-color="#b0822b"/>
+      </linearGradient>
+      <symbol id="nz-deck-filigree" viewBox="0 0 48 48">
+        <rect x="3" y="3" width="42" height="42" rx="4" fill="none" stroke="url(#nz-gold-grad)" stroke-width="1.2" opacity=".9"/>
+        <rect x="6" y="6" width="36" height="36" rx="2.5" fill="none" stroke="#e6c677" stroke-width=".6" stroke-dasharray="2 2" opacity=".55"/>
+        <path d="M24 9c2.5 5 5 8 10 10-5 2-7.5 5-10 10-2.5-5-5-8-10-10 5-2 7.5-5 10-10z" fill="none" stroke="#e6c677" stroke-width="1" opacity=".65"/>
+        <circle cx="9.5" cy="9.5" r="1.4" fill="#e6c677" opacity=".8"/>
+        <circle cx="38.5" cy="9.5" r="1.4" fill="#e6c677" opacity=".8"/>
+        <circle cx="9.5" cy="38.5" r="1.4" fill="#e6c677" opacity=".8"/>
+        <circle cx="38.5" cy="38.5" r="1.4" fill="#e6c677" opacity=".8"/>
+      </symbol>
+    </defs>
+  </svg>
+
+  <div class="nz-frame">
+    <!-- HEADER -->
+    <header class="nz-head">
+      <div class="nz-fan-wrap" aria-hidden="true">
+        <svg class="nz-fan-svg" viewBox="0 0 220 52">
+          <g stroke="url(#nz-gold-grad)" stroke-width="1.4" fill="#0d2242">
+            <rect x="38" y="14" width="38" height="48" rx="4" transform="rotate(-24 57 38)"/>
+            <rect x="64" y="8" width="38" height="48" rx="4" transform="rotate(-12 83 32)"/>
+            <rect x="91" y="5" width="38" height="48" rx="4"/>
+            <rect x="118" y="8" width="38" height="48" rx="4" transform="rotate(12 137 32)"/>
+            <rect x="144" y="14" width="38" height="48" rx="4" transform="rotate(24 163 38)"/>
+          </g>
+          <g fill="none" stroke="#e6c677" stroke-opacity=".45" stroke-width=".8">
+            <rect x="95" y="9" width="30" height="40" rx="2"/>
+            <rect x="122" y="12" width="30" height="40" rx="2" transform="rotate(12 137 32)"/>
+            <rect x="68" y="12" width="30" height="40" rx="2" transform="rotate(-12 83 32)"/>
+          </g>
+          <!-- Center gold spade crest -->
+          <path d="M110 20c-2 6-10 11-10 17 0 4 3 6.5 6.5 6.5 1.8 0 3-.8 3.5-1.8-.3 2.5-1.5 4.3-3.5 5.3h7c-2-1-3.2-2.8-3.5-5.3.5 1 1.7 1.8 3.5 1.8 3.5 0 6.5-2.5 6.5-6.5 0-6-8-11-10-17z" fill="url(#nz-gold-grad)" stroke="#071222" stroke-width="1"/>
+        </svg>
+      </div>
+
+      <div class="nz-title-row">
+        <span class="nz-spade" aria-hidden="true">♠</span>
+        <h1 class="nz-title" id="nz-title">NERTZ</h1>
+        <span class="nz-spade" aria-hidden="true">♠</span>
+      </div>
+
+      <div class="nz-rule" aria-hidden="true"><i></i></div>
+
+      <div class="nz-sub-row">
+        <button type="button" class="nz-target-pill" id="nz-target-btn" onclick="nzOpenSheet && nzOpenSheet('target')" aria-label="Change target score">
+          FIRST TO <span id="nz-target-val">100</span>
+        </button>
+        <span class="nz-dot-sep" aria-hidden="true">•</span>
+        <span class="nz-round-label" id="nz-round-label">ROUND 1</span>
+      </div>
+
+      <!-- Solo vs. Partners / Teams Mode Toggle (unlimited teams) -->
+      <div class="nz-mode-bar">
+        <div class="nz-mode-pill" role="tablist" aria-label="Nertz play mode">
+          <button type="button" class="nz-mode-btn active" id="nz-mode-solo" role="tab" aria-selected="true" onclick="nzSetMode && nzSetMode('solo')">Solo</button>
+          <button type="button" class="nz-mode-btn" id="nz-mode-teams" role="tab" aria-selected="false" onclick="nzSetMode && nzSetMode('teams')">Teams</button>
+        </div>
+      </div>
+
+      <!-- Teams bar: visible in Teams mode for adding/editing unlimited teams -->
+      <div class="nz-teams-bar hidden" id="nz-teams-bar" hidden>
+        <span id="nz-teams-summary">Partners / Teams mode</span>
+        <button type="button" class="nz-mini-gold" id="nz-manage-teams" onclick="nzOpenSheet && nzOpenSheet('teams')">+ Manage Teams</button>
+      </div>
+    </header>
+
+    <!-- PLAYER / TEAM ROSTER (Ivory Playing-Card Rows) -->
+    <div id="nz-roster" class="nz-roster" role="listbox" aria-label="Players or teams"></div>
+
+    <!-- ROUND SCORING PANEL -->
+    <section id="nz-scorer" class="nz-scorer" aria-label="Round scoring">
+      <div class="nz-scorer-head">
+        <span class="nz-scorer-who" id="nz-scorer-who">ROUND SCORING • —</span>
+      </div>
+
+      <!-- Split (Lake +1 / Nertz Left -2) vs Quick Net toggle -->
+      <div class="nz-entry-tabs" role="tablist" aria-label="Round entry style">
+        <button type="button" class="nz-entry-tab active" id="nz-entry-split" role="tab" aria-selected="true" onclick="nzSetEntryMode && nzSetEntryMode('split')">Lake &amp; Nertz</button>
+        <button type="button" class="nz-entry-tab" id="nz-entry-net" role="tab" aria-selected="false" onclick="nzSetEntryMode && nzSetEntryMode('net')">Quick Net</button>
+      </div>
+
+      <!-- Lake (+1) & Nertz Left (-2) Steppers -->
+      <div id="nz-split-wrap" class="nz-entry-grid">
+        <div class="nz-box">
+          <div class="nz-box-label"><span aria-hidden="true">♠</span> LAKE</div>
+          <div class="nz-stepper">
+            <button type="button" class="nz-circ" id="nz-lake-minus" aria-label="Decrease Lake cards" onclick="nzStepLake && nzStepLake(-1)">−</button>
+            <input type="number" inputmode="numeric" min="0" max="52" class="nz-box-num" id="nz-lake-val" value="0" aria-label="Lake cards played" oninput="nzSyncPreview && nzSyncPreview()">
+            <button type="button" class="nz-circ" id="nz-lake-plus" aria-label="Increase Lake cards" onclick="nzStepLake && nzStepLake(1)">+</button>
+          </div>
+          <div class="nz-box-sub">+1 per card</div>
+        </div>
+
+        <div class="nz-box">
+          <div class="nz-box-label"><span aria-hidden="true">♠</span> NERTZ LEFT</div>
+          <div class="nz-stepper">
+            <button type="button" class="nz-circ" id="nz-nertz-minus" aria-label="Decrease Nertz pile left" onclick="nzStepNertz && nzStepNertz(-1)">−</button>
+            <input type="number" inputmode="numeric" min="0" max="13" class="nz-box-num is-neg" id="nz-nertz-val" value="0" aria-label="Nertz cards remaining" oninput="nzSyncPreview && nzSyncPreview()">
+            <button type="button" class="nz-circ" id="nz-nertz-plus" aria-label="Increase Nertz pile left" onclick="nzStepNertz && nzStepNertz(1)">+</button>
+          </div>
+          <div class="nz-box-sub">−2 per card</div>
+        </div>
+      </div>
+
+      <!-- Quick Net Entry (hidden until Quick Net tab active) -->
+      <div id="nz-net-wrap" class="nz-net-wrap hidden" hidden>
+        <div class="nz-net-row">
+          <button type="button" class="nz-net-step" onclick="nzStepNet && nzStepNet(-5)">−5</button>
+          <button type="button" class="nz-net-step" onclick="nzStepNet && nzStepNet(-1)">−1</button>
+          <input type="number" inputmode="numeric" class="nz-net-input" id="nz-net-input" value="0" aria-label="Net round score" oninput="nzSyncPreview && nzSyncPreview()">
+          <button type="button" class="nz-net-step" onclick="nzStepNet && nzStepNet(1)">+1</button>
+          <button type="button" class="nz-net-step" onclick="nzStepNet && nzStepNet(5)">+5</button>
+        </div>
+      </div>
+
+      <!-- Optional Nertz-Out Caller Bonus -->
+      <div class="nz-bonus-row hidden" id="nz-bonus-row" hidden>
+        <button type="button" class="nz-bonus-chip" id="nz-bonus-toggle" aria-pressed="false" onclick="nzToggleBonus && nzToggleBonus()">
+          ★ Called Nertz (+10 bonus)
+        </button>
+      </div>
+
+      <!-- Live Preview + Confirm -->
+      <div class="nz-preview-wrap">
+        <div class="nz-preview-label">ROUND TOTAL (LIVE PREVIEW)</div>
+        <div class="nz-preview-val" id="nz-preview" aria-live="polite">+0</div>
+        <button type="button" class="nz-confirm" id="nz-confirm" onclick="nzConfirmRound && nzConfirmRound()">
+          <span aria-hidden="true">♠</span>
+          <span>CONFIRM</span>
+          <span aria-hidden="true">♠</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- FOOTER ACTIONS -->
+    <div class="nz-actions">
+      <button type="button" class="nz-act-btn" id="nz-undo" onclick="nzUndo && nzUndo()">↺ Undo</button>
+      <button type="button" class="nz-act-btn" id="nz-rounds-toggle" onclick="nzToggleHistory && nzToggleHistory()">Rounds</button>
+      <button type="button" class="nz-act-btn" id="nz-add-btn" onclick="nzOpenSheet && nzOpenSheet('add')">+ Add</button>
+    </div>
+    <button type="button" class="nz-finish" id="nz-finish" onclick="endGame()">Finish &amp; Save Game</button>
+
+    <!-- EXPANDABLE ROUND HISTORY DRAWER -->
+    <div id="nz-history-drawer" class="nz-history-drawer hidden" hidden aria-label="Round history"></div>
+  </div>
+
+  <!-- MODAL SHEET (Team Builder / Target Score / Add Player) -->
+  <div id="nz-sheet" class="nz-sheet hidden" hidden role="dialog" aria-modal="true" onclick="if(event.target===this && window.nzCloseSheet)nzCloseSheet()"></div>
+</div>
+
 
     <!-- Catan board: only visible with body.theme-catan (layout from the approved rendering) -->
     <div id="catan-board">
@@ -2065,6 +3164,12 @@ body.theme-carcassonne .bottom-nav #nav-signout { --cc-ic: url("data:image/svg+x
       if (gameType === 'catan' && pMeta.breakdown) out.breakdown = { ...emptyCatanBreakdown(), ...pMeta.breakdown };
       if (gameType === 'flip7' && pMeta.flip7Count !== undefined) out.flip7Count = Number(pMeta.flip7Count) || 0;
       if (gameType === 'carcassonne' && pMeta.color) out.color = pMeta.color;
+      // Team rows (e.g. Nertz partners) keep their members for display + per-partner leaderboard credit
+      if (p && Array.isArray(p.members) && p.members.length) {
+        out.members = p.members.map((m) => ({ name: extractProfileName(m) || 'Player', userId: extractUserId(m, false), isSelf: Boolean(currentUserId && extractUserId(m, false) === currentUserId) }));
+        out.isTeam = true;
+        if (out.members.some((m) => m.isSelf)) out.isSelf = true;
+      }
       return out;
     });
 
@@ -2074,7 +3179,7 @@ body.theme-carcassonne .bottom-nav #nav-signout { --cc-ic: url("data:image/svg+x
 
     const endTime = raw.played_at || summary.end_time || raw.endTime || raw.created_at || null;
     const myEntry = currentUserId
-      ? players.find((p) => p.userId === currentUserId) || null
+      ? players.find((p) => p.userId === currentUserId) || players.find((p) => p.isTeam && p.isSelf) || null
       : null;
 
     return {
@@ -2215,7 +3320,7 @@ body.theme-carcassonne .bottom-nav #nav-signout { --cc-ic: url("data:image/svg+x
       const rec = normalizeSharedGameRecord(raw, uid);
       if (!rec) continue;
       if (uid && !options.includeAllShared) {
-        const participated = rec.players.some((p) => p.userId === uid);
+        const participated = rec.players.some((p) => p.userId === uid || (Array.isArray(p.members) && p.members.some((m) => String(m.userId || m.user_id || '') === uid)));
         const created = rec.createdBy && String(rec.createdBy) === uid;
         if (!participated && !created) continue;
       }
@@ -2334,27 +3439,36 @@ body.theme-carcassonne .bottom-nav #nav-signout { --cc-ic: url("data:image/svg+x
       const hasExplicitWinners = players.some((p) => p.isWinner === true);
       const fallbackWinners = hasExplicitWinners ? null : computeWinnersForGame(game).winnerIndices;
 
+      // Team rows (e.g. Nertz partners) credit every member; dedupe so a person counts once per game.
+      const credited = new Set();
       players.forEach((p, idx) => {
-        const bucket = ensureBucket(p.name, p.userId);
         const score = Number(p.score) || 0;
         const won = hasExplicitWinners ? Boolean(p.isWinner) : fallbackWinners.has(idx);
+        const targets = Array.isArray(p.members) && p.members.length ? p.members : [p];
+        targets.forEach((m) => {
+          const mp = normalizeParticipant(m, {}) || { name: cleanName(m && m.name) || 'Player', userId: null };
+          const key = mp.userId ? 'id:' + mp.userId : 'name:' + cleanName(mp.name).toLowerCase();
+          if (credited.has(key)) return;
+          credited.add(key);
+          const bucket = ensureBucket(mp.name, mp.userId);
 
-        bucket.gamesPlayed += 1;
-        if (won) bucket.wins += 1;
-        bucket.totalScore += score;
+          bucket.gamesPlayed += 1;
+          if (won) bucket.wins += 1;
+          bucket.totalScore += score;
 
-        if (bucket.bestScore === null) {
-          bucket.bestScore = score;
-        } else if (isLowFilter || (gameTypeFilter && meta.low)) {
-          bucket.bestScore = Math.min(bucket.bestScore, score);
-        } else {
-          bucket.bestScore = Math.max(bucket.bestScore, score);
-        }
+          if (bucket.bestScore === null) {
+            bucket.bestScore = score;
+          } else if (isLowFilter || (gameTypeFilter && meta.low)) {
+            bucket.bestScore = Math.min(bucket.bestScore, score);
+          } else {
+            bucket.bestScore = Math.max(bucket.bestScore, score);
+          }
 
-        bucket.recentForm.push(won ? 'W' : 'L');
-        if (bucket.recentForm.length > recentFormLength) {
-          bucket.recentForm.shift();
-        }
+          bucket.recentForm.push(won ? 'W' : 'L');
+          if (bucket.recentForm.length > recentFormLength) {
+            bucket.recentForm.shift();
+          }
+        });
       });
     }
 
@@ -3095,16 +4209,25 @@ body.theme-carcassonne .bottom-nav #nav-signout { --cc-ic: url("data:image/svg+x
       ? [...row.game_participants].sort((a, b) => (a.seat_order || 0) - (b.seat_order || 0))
       : [];
 
-    const players = participants.length
-      ? participants.map((p) => ({
-          name: p.display_name,
-          score: Number(p.score) || 0,
-          user_id: p.user_id || null,
-          is_winner: !!p.is_winner
-        }))
-      : Array.isArray(payload.players)
-        ? payload.players
-        : [];
+    // Teams mode (e.g. Nertz partners): game_participants holds one row per partner (for RLS + leaderboard
+    // credit) while payload.players keeps the display team rows (name, score, members).
+    const isTeamMode = Boolean(
+      (payload.meta && payload.meta.mode === 'teams') ||
+      (Array.isArray(payload.players) && payload.players.some((pl) => pl && Array.isArray(pl.members) && pl.members.length))
+    );
+    const expandedParticipants = participants.map((p) => ({
+      name: p.display_name,
+      score: Number(p.score) || 0,
+      user_id: p.user_id || null,
+      is_winner: !!p.is_winner
+    }));
+    const players = isTeamMode && Array.isArray(payload.players) && payload.players.length
+      ? payload.players
+      : expandedParticipants.length
+        ? expandedParticipants
+        : Array.isArray(payload.players)
+          ? payload.players
+          : [];
 
     const creator = profileMap && row.created_by ? profileMap.get(row.created_by) : null;
     const grp = groupMap && row.group_id ? groupMap.get(row.group_id) : null;
@@ -3120,6 +4243,8 @@ body.theme-carcassonne .bottom-nav #nav-signout { --cc-ic: url("data:image/svg+x
       startTime: row.started_at || payload.startTime || null,
       endTime: row.ended_at || payload.endTime || row.created_at,
       players,
+      ...(isTeamMode ? { participants: expandedParticipants } : {}),
+      meta: payload.meta || null,
       rounds: Array.isArray(payload.rounds) ? payload.rounds : [],
       group_id: row.group_id || null,
       group_name: grp ? grp.name : null,
@@ -3180,6 +4305,7 @@ body.theme-carcassonne .bottom-nav #nav-signout { --cc-ic: url("data:image/svg+x
         payload: {
           rounds: Array.isArray(game.rounds) ? game.rounds : [],
           players: Array.isArray(game.players) ? game.players : [],
+          meta: game.meta || null,
           version: game.version || null,
           target: game.target || null
         }
@@ -3204,19 +4330,38 @@ body.theme-carcassonne .bottom-nav #nav-signout { --cc-ic: url("data:image/svg+x
       // Replace participants cleanly for idempotency
       await client.from('game_participants').delete().eq('game_id', inserted.id);
 
-      const participantRows = (game.players || []).map((p, idx) => {
+      // One row per player; team rows (p.members) expand into one row per partner so every linked
+      // partner passes RLS (is_game_participant) and gets personal history + leaderboard credit.
+      const linkedId = (v) => (v && !isLocalId(v) ? v : null);
+      const participantRows = [];
+      let seat = 0;
+      (game.players || []).forEach((p) => {
         const name = String(p.name || p.display_name || 'Player').trim();
+        const score = Number(p.score) || 0;
         const isWin = typeof p.is_winner === 'boolean'
           ? p.is_winner
-          : winnerNames.has(name.toLowerCase());
-        return {
-          game_id: inserted.id,
-          user_id: (p.user_id || p.userId) && !isLocalId(p.user_id || p.userId) ? (p.user_id || p.userId) : null,
-          display_name: name,
-          score: Number(p.score) || 0,
-          is_winner: isWin,
-          seat_order: idx
-        };
+          : typeof p.isWinner === 'boolean' ? p.isWinner : winnerNames.has(name.toLowerCase());
+        if (Array.isArray(p.members) && p.members.length) {
+          p.members.forEach((m) => {
+            participantRows.push({
+              game_id: inserted.id,
+              user_id: linkedId(m && (m.user_id || m.userId)),
+              display_name: String((m && (m.name || m.display_name)) || 'Player').trim(),
+              score,
+              is_winner: isWin,
+              seat_order: seat++
+            });
+          });
+        } else {
+          participantRows.push({
+            game_id: inserted.id,
+            user_id: linkedId(p.user_id || p.userId),
+            display_name: name,
+            score,
+            is_winner: isWin,
+            seat_order: seat++
+          });
+        }
       });
 
       if (participantRows.length) {
@@ -3647,9 +4792,820 @@ window.SocialUI = (function () {
 
 </script>
 
+<!-- Nertz scoring logic (window.NertzLogic): Lake +1 / Nertz Left −2, Solo + Teams, undo, target, finish payloads -->
+<script id="nertz-logic">
+/* ==========================================================================
+   Score Tracker — Nertz Scoring Module (Midnight Parlor & Gold Foil)
+   ==========================================================================
+   Drop-in logic module for v3/engine.js. Exposes `window.NertzLogic` in
+   browsers and `module.exports` in Node.
+
+   Supports:
+   - Solo mode (unlimited players; auto-seeds signed-in user as Player 1)
+   - Partners / Teams mode (unlimited teams, each with 2+ editable partners;
+     auto-pairs Social Group members when started from a group)
+   - Round scoring via Lake (+1) & Nertz Pile Left (-2, 0 = "Nertz!" badge)
+     with live signed net delta (can go negative)
+   - Direct net entry mode (e.g. +14 or -6)
+   - Running totals (can go negative), Undo Last Round, expandable round log
+   - 8 parlor deck-back colors per player/team, editable Target Score (100)
+   - Leader & target-reached winner banner state
+   - History + Supabase `games` / `game_participants` + Group Leaderboard
+     compatibility (including partner expansion in Teams mode)
+   ========================================================================== */
+
+(function (global) {
+  'use strict';
+
+  const DEFAULT_TARGET = 100;
+
+  const NZ_COLORS = [
+    { key: 'crimson',  label: 'Velvet Crimson',    hex: '#8e1d20', foil: '#e6c26b' },
+    { key: 'emerald',  label: 'Parlor Emerald',    hex: '#155c47', foil: '#e6c26b' },
+    { key: 'sapphire', label: 'Midnight Sapphire', hex: '#1b3b6f', foil: '#e6c26b' },
+    { key: 'plum',     label: 'Royal Plum',        hex: '#4b2354', foil: '#e6c26b' },
+    { key: 'gold',     label: 'Antique Gold',      hex: '#9a7022', foil: '#1a1209' },
+    { key: 'obsidian', label: 'Obsidian Noir',     hex: '#334155', foil: '#e6c26b' },
+    { key: 'teal',     label: 'Peacock Teal',      hex: '#146b74', foil: '#e6c26b' },
+    { key: 'burgundy', label: 'Bordeaux Wine',     hex: '#6e1d36', foil: '#e6c26b' }
+  ];
+
+  // ---------------- Helpers ----------------
+  function uid(prefix) {
+    return (prefix || 'nz') + '_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 6);
+  }
+
+  function cleanStr(v) {
+    return String(v ?? '').trim();
+  }
+
+  function clampNonNegInt(v) {
+    const n = parseInt(String(v ?? '').trim(), 10);
+    if (!Number.isFinite(n) || n < 0) return 0;
+    return Math.min(999, n);
+  }
+
+  function parseSignedInt(v) {
+    const raw = String(v ?? '').trim();
+    if (!raw || raw === '-' || raw === '+') return 0;
+    const n = parseInt(raw, 10);
+    if (!Number.isFinite(n)) return 0;
+    return Math.max(-9999, Math.min(9999, n));
+  }
+
+  function clampTarget(v) {
+    const n = parseInt(String(v ?? '').trim(), 10);
+    if (!Number.isFinite(n) || n < 1) return DEFAULT_TARGET;
+    return Math.min(9999, n);
+  }
+
+  function nzColor(key) {
+    return NZ_COLORS.find((c) => c.key === key) || NZ_COLORS[0];
+  }
+
+  function nzFreeColor(game, skipIdx, afterKey) {
+    const used = new Set(
+      ((game && game.players) || [])
+        .filter((_, i) => i !== skipIdx)
+        .map((p) => p && p.color)
+        .filter(Boolean)
+    );
+    const start = afterKey ? NZ_COLORS.findIndex((c) => c.key === afterKey) : -1;
+    for (let step = 1; step <= NZ_COLORS.length; step++) {
+      const c = NZ_COLORS[(start + step + NZ_COLORS.length) % NZ_COLORS.length];
+      if (!used.has(c.key)) return c.key;
+    }
+    return NZ_COLORS[(start + 1 + NZ_COLORS.length) % NZ_COLORS.length].key;
+  }
+
+  function normalizePartner(raw) {
+    if (typeof raw === 'string') {
+      const name = cleanStr(raw);
+      return name ? { name, userId: null, isSelf: false } : null;
+    }
+    if (!raw || typeof raw !== 'object') return null;
+    const name = cleanStr(raw.name || raw.display_name || raw.displayName || (raw.profile && raw.profile.display_name));
+    if (!name) return null;
+    const userId = raw.userId ?? raw.user_id ?? (raw.profile && raw.profile.id) ?? null;
+    return {
+      name,
+      userId: userId ? String(userId) : null,
+      isSelf: Boolean(raw.isSelf || raw.is_self)
+    };
+  }
+
+  function dedupePartners(list) {
+    const seenUid = new Set();
+    const seenName = new Set();
+    const out = [];
+    for (const raw of (Array.isArray(list) ? list : [])) {
+      const p = normalizePartner(raw);
+      if (!p) continue;
+      const lower = p.name.toLowerCase();
+      if (p.userId && seenUid.has(p.userId)) continue;
+      if (seenName.has(lower)) continue;
+      out.push(p);
+      if (p.userId) seenUid.add(p.userId);
+      seenName.add(lower);
+    }
+    return out;
+  }
+
+  function emptyDraftEntry() {
+    return { lake: 0, nertzLeft: 0, direct: 0, touched: false };
+  }
+
+  function ensureDraft(game) {
+    if (!game.nertzDraft || typeof game.nertzDraft !== 'object') {
+      game.nertzDraft = {};
+    }
+    const next = {};
+    (game.players || []).forEach((_, idx) => {
+      const cur = game.nertzDraft[idx];
+      next[idx] = cur && typeof cur === 'object'
+        ? {
+            lake: clampNonNegInt(cur.lake),
+            nertzLeft: clampNonNegInt(cur.nertzLeft),
+            direct: parseSignedInt(cur.direct),
+            touched: Boolean(cur.touched)
+          }
+        : emptyDraftEntry();
+    });
+    game.nertzDraft = next;
+    return game.nertzDraft;
+  }
+
+  // ---------------- Core Math ----------------
+  function nzCalcCardNet(lake, nertzLeft) {
+    return clampNonNegInt(lake) - 2 * clampNonNegInt(nertzLeft);
+  }
+
+  function nzIsNertzCall(entry) {
+    if (!entry) return false;
+    return Boolean(entry.touched) && clampNonNegInt(entry.nertzLeft) === 0;
+  }
+
+  // ---------------- Initialization & Normalization ----------------
+  /**
+   * Normalizes a Nertz game object in-place (works for fresh games and
+   * legacy gst_active objects). Auto-seeds `opts.selfPlayer` as Player 1
+   * when starting fresh with no players.
+   */
+  function nzNormalize(game, opts) {
+    if (!game || typeof game !== 'object') return null;
+    const options = opts || {};
+
+    game.type = 'nertz';
+    game.target = clampTarget(game.target ?? DEFAULT_TARGET);
+    game.nertzMode = game.nertzMode === 'teams' ? 'teams' : 'solo';
+    game.nertzEntryMode = game.nertzEntryMode === 'direct' ? 'direct' : 'cards';
+    game.nertzLogOpen = Boolean(game.nertzLogOpen);
+    game.rounds = Array.isArray(game.rounds) ? game.rounds : [];
+    game.players = Array.isArray(game.players) ? game.players : [];
+
+    // Auto-seed signed-in user as Player 1 when starting fresh with empty players
+    if (!game.players.length && options.selfPlayer) {
+      const self = normalizePartner(options.selfPlayer);
+      if (self) {
+        self.isSelf = true;
+        if (game.nertzMode === 'teams') {
+          game.players.push({
+            id: uid('team'),
+            name: 'Team 1',
+            score: 0,
+            color: NZ_COLORS[0].key,
+            nertzCalls: 0,
+            isTeam: true,
+            partners: [self]
+          });
+        } else {
+          game.players.push({
+            id: uid('pl'),
+            ...self,
+            score: 0,
+            color: NZ_COLORS[0].key,
+            nertzCalls: 0
+          });
+        }
+      }
+    }
+
+    // Normalize every competitor (solo player or team)
+    game.players.forEach((p, idx) => {
+      if (!p.id) p.id = uid(game.nertzMode === 'teams' ? 'team' : 'pl');
+      p.name = cleanStr(p.name) || (game.nertzMode === 'teams' ? `Team ${idx + 1}` : `Player ${idx + 1}`);
+      p.score = Number.isFinite(Number(p.score)) ? Number(p.score) : 0; // CAN be negative!
+      p.nertzCalls = Math.max(0, Number(p.nertzCalls) || 0);
+      if (!NZ_COLORS.some((c) => c.key === p.color)) {
+        p.color = nzFreeColor({ players: game.players.slice(0, idx) }, -1, null);
+      }
+      if (game.nertzMode === 'teams') {
+        p.isTeam = true;
+        p.partners = dedupePartners(Array.isArray(p.partners) ? p.partners : []);
+      } else {
+        p.isTeam = false;
+        if (p.userId === undefined) p.userId = p.user_id ?? null;
+      }
+    });
+
+    if (!Array.isArray(game.soloRoster) && game.nertzMode === 'solo') {
+      game.soloRoster = game.players.map((p) => ({
+        name: p.name,
+        userId: p.userId ?? null,
+        isSelf: Boolean(p.isSelf)
+      }));
+    }
+
+    ensureDraft(game);
+    return game;
+  }
+
+  // ---------------- Mode Toggle: Solo <-> Teams ----------------
+  /**
+   * Pairs a flat list of participants into teams of 2 (unlimited teams).
+   * If fewer than 2 teams result, ensures at least 2 starter teams for easy setup.
+   */
+  function pairIntoTeams(roster, existingColors) {
+    const clean = dedupePartners(roster);
+    const teams = [];
+    const colors = Array.isArray(existingColors) ? existingColors : [];
+
+    for (let i = 0; i < clean.length; i += 2) {
+      const pair = clean.slice(i, i + 2);
+      const tIdx = teams.length;
+      teams.push({
+        id: uid('team'),
+        name: `Team ${tIdx + 1}`,
+        score: 0,
+        color: colors[tIdx] && NZ_COLORS.some((c) => c.key === colors[tIdx])
+          ? colors[tIdx]
+          : NZ_COLORS[tIdx % NZ_COLORS.length].key,
+        nertzCalls: 0,
+        isTeam: true,
+        partners: pair
+      });
+    }
+
+    while (teams.length < 2) {
+      const tIdx = teams.length;
+      teams.push({
+        id: uid('team'),
+        name: `Team ${tIdx + 1}`,
+        score: 0,
+        color: NZ_COLORS[tIdx % NZ_COLORS.length].key,
+        nertzCalls: 0,
+        isTeam: true,
+        partners: []
+      });
+    }
+
+    return teams;
+  }
+
+  /**
+   * Switches between `solo` and `teams` mode.
+   * Blocks switching if rounds exist unless `opts.force === true`.
+   */
+  function nzSetMode(game, nextMode, opts) {
+    if (!game || (nextMode !== 'solo' && nextMode !== 'teams')) {
+      return { ok: false, reason: 'invalid_mode' };
+    }
+    const options = opts || {};
+    if (game.nertzMode === nextMode) return { ok: true, changed: false };
+
+    if (Array.isArray(game.rounds) && game.rounds.length > 0 && !options.force) {
+      return { ok: false, reason: 'rounds_exist' };
+    }
+
+    const existingColors = (game.players || []).map((p) => p.color);
+
+    if (nextMode === 'teams') {
+      // Snapshot solo players before converting
+      const soloList = (game.players || []).map((p) => ({
+        name: p.name,
+        userId: p.userId ?? null,
+        isSelf: Boolean(p.isSelf)
+      }));
+      game.soloRoster = dedupePartners(soloList);
+      const sourceMembers = Array.isArray(options.groupMembers) && options.groupMembers.length
+        ? dedupePartners([...soloList, ...options.groupMembers])
+        : game.soloRoster;
+
+      game.nertzMode = 'teams';
+      game.players = pairIntoTeams(sourceMembers, existingColors);
+    } else {
+      // Flatten team partners back to solo players (fallback to soloRoster)
+      const fromTeams = (game.players || []).flatMap((t) => Array.isArray(t.partners) ? t.partners : []);
+      const restored = dedupePartners(fromTeams.length ? fromTeams : (game.soloRoster || []));
+
+      game.nertzMode = 'solo';
+      game.players = restored.map((p, idx) => ({
+        id: uid('pl'),
+        name: p.name,
+        userId: p.userId ?? null,
+        isSelf: Boolean(p.isSelf),
+        score: 0,
+        color: NZ_COLORS[idx % NZ_COLORS.length].key,
+        nertzCalls: 0,
+        isTeam: false
+      }));
+    }
+
+    game.rounds = [];
+    game.winner = null;
+    game.nertzDraft = {};
+    nzNormalize(game, options);
+    return { ok: true, changed: true, mode: nextMode };
+  }
+
+  // ---------------- Solo & Unlimited Team Management ----------------
+  function nzAddSoloPlayer(game, rawPlayer) {
+    if (!game || game.nertzMode !== 'solo') return null;
+    const p = normalizePartner(rawPlayer);
+    if (!p) return null;
+    if (game.players.some((ex) => ex.name.toLowerCase() === p.name.toLowerCase())) return null;
+
+    const entry = {
+      id: uid('pl'),
+      name: p.name,
+      userId: p.userId,
+      isSelf: p.isSelf,
+      score: 0,
+      color: nzFreeColor(game, -1, null),
+      nertzCalls: 0,
+      isTeam: false
+    };
+    game.players.push(entry);
+    game.soloRoster = dedupePartners([...(game.soloRoster || []), p]);
+    ensureDraft(game);
+    return entry;
+  }
+
+  function nzRemoveSoloPlayer(game, idx) {
+    if (!game || game.nertzMode !== 'solo' || !game.players[idx]) return false;
+    if (game.players.length <= 1) return false;
+    game.players.splice(idx, 1);
+    game.nertzDraft = {};
+    ensureDraft(game);
+    return true;
+  }
+
+  function nzAddTeam(game, teamName, initialPartners) {
+    if (!game || game.nertzMode !== 'teams') return null;
+    const idx = game.players.length;
+    const name = cleanStr(teamName) || `Team ${idx + 1}`;
+    const entry = {
+      id: uid('team'),
+      name,
+      score: 0,
+      color: nzFreeColor(game, -1, null),
+      nertzCalls: 0,
+      isTeam: true,
+      partners: dedupePartners(initialPartners || [])
+    };
+    game.players.push(entry);
+    ensureDraft(game);
+    return entry;
+  }
+
+  function nzRemoveTeam(game, teamIdx) {
+    if (!game || game.nertzMode !== 'teams' || !game.players[teamIdx]) return false;
+    if (game.players.length <= 1) return false;
+    game.players.splice(teamIdx, 1);
+    game.nertzDraft = {};
+    ensureDraft(game);
+    return true;
+  }
+
+  function nzRenameTeam(game, teamIdx, newName) {
+    if (!game || game.nertzMode !== 'teams' || !game.players[teamIdx]) return false;
+    const clean = cleanStr(newName);
+    if (!clean) return false;
+    game.players[teamIdx].name = clean;
+    return true;
+  }
+
+  function nzAddPartner(game, teamIdx, rawPartner) {
+    if (!game || game.nertzMode !== 'teams' || !game.players[teamIdx]) return null;
+    const partner = normalizePartner(rawPartner);
+    if (!partner) return null;
+
+    const team = game.players[teamIdx];
+    team.partners = Array.isArray(team.partners) ? team.partners : [];
+    const exists = team.partners.some((p) =>
+      (partner.userId && p.userId && p.userId === partner.userId) ||
+      p.name.toLowerCase() === partner.name.toLowerCase()
+    );
+    if (exists) return null;
+
+    team.partners.push(partner);
+    return partner;
+  }
+
+  function nzRemovePartner(game, teamIdx, partnerIdx) {
+    if (!game || game.nertzMode !== 'teams' || !game.players[teamIdx]) return false;
+    const team = game.players[teamIdx];
+    if (!Array.isArray(team.partners) || !team.partners[partnerIdx]) return false;
+    team.partners.splice(partnerIdx, 1);
+    return true;
+  }
+
+  function nzMovePartner(game, fromTeamIdx, partnerIdx, toTeamIdx) {
+    if (!game || game.nertzMode !== 'teams') return false;
+    if (fromTeamIdx === toTeamIdx) return false;
+    const fromTeam = game.players[fromTeamIdx];
+    const toTeam = game.players[toTeamIdx];
+    if (!fromTeam || !toTeam || !Array.isArray(fromTeam.partners) || !fromTeam.partners[partnerIdx]) return false;
+
+    const [partner] = fromTeam.partners.splice(partnerIdx, 1);
+    toTeam.partners = Array.isArray(toTeam.partners) ? toTeam.partners : [];
+    toTeam.partners.push(partner);
+    return true;
+  }
+
+  /**
+   * Lists Social Group members not yet assigned to any team, for quick 1-tap assignment.
+   */
+  function nzUnassignedGroupMembers(game, groupMembers) {
+    const clean = dedupePartners(groupMembers || []);
+    if (!game || game.nertzMode !== 'teams') return [];
+    const assigned = (game.players || []).flatMap((t) => Array.isArray(t.partners) ? t.partners : []);
+    return clean.filter((m) => !assigned.some((a) =>
+      (m.userId && a.userId && m.userId === a.userId) ||
+      a.name.toLowerCase() === m.name.toLowerCase()
+    ));
+  }
+
+  // ---------------- Deck-Back Color & Target ----------------
+  function nzCycleColor(game, idx) {
+    if (!game || !game.players[idx]) return null;
+    const p = game.players[idx];
+    p.color = nzFreeColor(game, idx, p.color);
+    return p.color;
+  }
+
+  function nzPickColor(game, idx, colorKey) {
+    if (!game || !game.players[idx]) return false;
+    if (!NZ_COLORS.some((c) => c.key === colorKey)) return false;
+    game.players[idx].color = colorKey;
+    return true;
+  }
+
+  function nzSetTarget(game, targetVal) {
+    if (!game) return DEFAULT_TARGET;
+    game.target = clampTarget(targetVal);
+    const lead = nzLeaders(game);
+    game.winner = lead.reachedTarget ? lead.winners.map((w) => w.name).join(', ') : null;
+    return game.target;
+  }
+
+  // ---------------- Round Scoring Draft & Apply ----------------
+  function nzSetEntryMode(game, entryMode) {
+    if (!game || (entryMode !== 'cards' && entryMode !== 'direct')) return false;
+    game.nertzEntryMode = entryMode;
+    ensureDraft(game);
+    return true;
+  }
+
+  function nzSetDraftField(game, idx, field, value) {
+    if (!game || !game.players[idx]) return null;
+    ensureDraft(game);
+    const d = game.nertzDraft[idx];
+    if (field === 'lake') {
+      d.lake = clampNonNegInt(value);
+      d.touched = true;
+    } else if (field === 'nertzLeft') {
+      d.nertzLeft = clampNonNegInt(value);
+      d.touched = true;
+    } else if (field === 'direct') {
+      d.direct = parseSignedInt(value);
+      d.touched = true;
+    }
+    const net = game.nertzEntryMode === 'direct' ? d.direct : nzCalcCardNet(d.lake, d.nertzLeft);
+    return {
+      ...d,
+      net,
+      calledNertz: game.nertzEntryMode === 'cards' && nzIsNertzCall(d)
+    };
+  }
+
+  function nzStepDraftField(game, idx, field, delta) {
+    if (!game || !game.players[idx]) return null;
+    ensureDraft(game);
+    const d = game.nertzDraft[idx];
+    const step = Number(delta) || 0;
+    if (field === 'lake') return nzSetDraftField(game, idx, 'lake', d.lake + step);
+    if (field === 'nertzLeft') return nzSetDraftField(game, idx, 'nertzLeft', d.nertzLeft + step);
+    if (field === 'direct') return nzSetDraftField(game, idx, 'direct', d.direct + step);
+    return null;
+  }
+
+  function nzClearDraft(game) {
+    if (!game) return;
+    game.nertzDraft = {};
+    ensureDraft(game);
+  }
+
+  function nzGetDraftSummary(game) {
+    if (!game || !Array.isArray(game.players)) return { rows: [], hasAnyInput: false };
+    ensureDraft(game);
+    const isDirect = game.nertzEntryMode === 'direct';
+    let hasAnyInput = false;
+
+    const rows = game.players.map((p, idx) => {
+      const d = game.nertzDraft[idx] || emptyDraftEntry();
+      if (d.touched) hasAnyInput = true;
+      const net = isDirect ? d.direct : (d.touched ? nzCalcCardNet(d.lake, d.nertzLeft) : 0);
+      const calledNertz = !isDirect && nzIsNertzCall(d);
+      return {
+        idx,
+        name: p.name,
+        lake: d.lake,
+        nertzLeft: d.nertzLeft,
+        direct: d.direct,
+        touched: d.touched,
+        net,
+        calledNertz,
+        projectedTotal: (Number(p.score) || 0) + net
+      };
+    });
+
+    return { rows, hasAnyInput };
+  }
+
+  function nzApplyRound(game) {
+    if (!game || !Array.isArray(game.players) || !game.players.length) return null;
+    const summary = nzGetDraftSummary(game);
+    if (!summary.hasAnyInput) return null;
+
+    const prev = game.players.map((p) => Number(p.score) || 0);
+    const prevNertzCalls = game.players.map((p) => Number(p.nertzCalls) || 0);
+    const deltas = summary.rows.map((r) => r.net);
+
+    game.players.forEach((p, idx) => {
+      p.score = prev[idx] + deltas[idx]; // Running totals CAN be negative!
+      if (summary.rows[idx].calledNertz) {
+        p.nertzCalls = prevNertzCalls[idx] + 1;
+      }
+    });
+
+    const round = {
+      ts: new Date().toISOString(),
+      mode: game.nertzEntryMode,
+      prev,
+      deltas,
+      prevNertzCalls,
+      detail: {
+        nertzMode: game.nertzMode,
+        entries: summary.rows.map((r) => ({
+          idx: r.idx,
+          name: r.name,
+          ...(game.nertzEntryMode === 'direct'
+            ? { direct: r.direct, net: r.net, calledNertz: false }
+            : { lake: r.lake, nertzLeft: r.nertzLeft, net: r.net, calledNertz: r.calledNertz })
+        }))
+      }
+    };
+
+    game.rounds = Array.isArray(game.rounds) ? game.rounds : [];
+    game.rounds.push(round);
+
+    const lead = nzLeaders(game);
+    game.winner = lead.reachedTarget ? lead.winners.map((w) => w.name).join(', ') : null;
+
+    nzClearDraft(game);
+    return round;
+  }
+
+  function nzUndoLastRound(game) {
+    if (!game || !Array.isArray(game.rounds) || !game.rounds.length) return null;
+    const last = game.rounds.pop();
+
+    game.players.forEach((p, idx) => {
+      if (Array.isArray(last.prev) && last.prev[idx] !== undefined) {
+        p.score = Number(last.prev[idx]) || 0;
+      } else {
+        p.score = (Number(p.score) || 0) - ((last.deltas && last.deltas[idx]) || 0);
+      }
+      if (Array.isArray(last.prevNertzCalls) && last.prevNertzCalls[idx] !== undefined) {
+        p.nertzCalls = Math.max(0, Number(last.prevNertzCalls[idx]) || 0);
+      }
+    });
+
+    const lead = nzLeaders(game);
+    game.winner = lead.reachedTarget ? lead.winners.map((w) => w.name).join(', ') : null;
+    return last;
+  }
+
+  function nzResetScores(game) {
+    if (!game || !Array.isArray(game.players)) return;
+    game.players.forEach((p) => {
+      p.score = 0;
+      p.nertzCalls = 0;
+    });
+    game.rounds = [];
+    game.winner = null;
+    nzClearDraft(game);
+  }
+
+  function nzToggleLog(game) {
+    if (!game) return false;
+    game.nertzLogOpen = !game.nertzLogOpen;
+    return game.nertzLogOpen;
+  }
+
+  // ---------------- Leaders & Winner Banner ----------------
+  function nzLeaders(game) {
+    if (!game || !Array.isArray(game.players) || !game.players.length) {
+      return { bestScore: null, leaderIndices: [], winners: [], reachedTarget: false };
+    }
+    const target = clampTarget(game.target ?? DEFAULT_TARGET);
+    const scores = game.players.map((p) => Number(p.score) || 0);
+    const bestScore = Math.max(...scores);
+    const hasActivity = (Array.isArray(game.rounds) && game.rounds.length > 0) || scores.some((s) => s !== 0);
+    const leaderIndices = hasActivity
+      ? scores.map((s, i) => (s === bestScore ? i : -1)).filter((i) => i >= 0)
+      : [];
+    const reachedTarget = hasActivity && bestScore >= target;
+    const winners = reachedTarget ? leaderIndices.map((i) => game.players[i]) : [];
+    return { bestScore, leaderIndices, winners, reachedTarget };
+  }
+
+  // ---------------- Finish, History & Shared Supabase Export ----------------
+  function formatTeamDisplayName(team) {
+    const names = (Array.isArray(team.partners) ? team.partners : []).map((p) => p.name).filter(Boolean);
+    return names.length ? `${team.name} (${names.join(' & ')})` : team.name;
+  }
+
+  /**
+   * Prepares a finished Nertz game object for local history (`score_history`).
+   */
+  function nzPrepareFinish(game) {
+    if (!game) return null;
+    const finished = JSON.parse(JSON.stringify(game));
+    delete finished.nertzDraft;
+    finished.endTime = new Date().toISOString();
+
+    const scores = (finished.players || []).map((p) => Number(p.score) || 0);
+    const best = scores.length ? Math.max(...scores) : 0;
+    const winningEntries = (finished.players || []).filter((p) => (Number(p.score) || 0) === best);
+
+    finished.winner = winningEntries
+      .map((p) => (finished.nertzMode === 'teams' ? formatTeamDisplayName(p) : p.name))
+      .join(', ');
+
+    // Contract shared with social-auth.js (saveSharedGame) + social_scoring.js (computeGroupLeaderboard):
+    // team rows mirror `partners` as `members` so every linked partner is credited; meta.mode marks Solo vs Teams.
+    finished.meta = { ...(finished.meta || {}), mode: finished.nertzMode === 'teams' ? 'teams' : 'solo' };
+    (finished.players || []).forEach((p) => {
+      p.isWinner = (Number(p.score) || 0) === best;
+      if (finished.nertzMode === 'teams') {
+        p.userId = null;
+        p.members = (Array.isArray(p.partners) ? p.partners : []).map((m) => ({ name: m.name, userId: m.userId || null, isSelf: !!m.isSelf }));
+      }
+    });
+
+    if (finished.nertzMode === 'teams') {
+      finished.teams = finished.players.map((t) => ({
+        id: t.id,
+        name: t.name,
+        color: t.color,
+        score: Number(t.score) || 0,
+        nertzCalls: Number(t.nertzCalls) || 0,
+        partners: Array.isArray(t.partners) ? t.partners : []
+      }));
+    }
+
+    return finished;
+  }
+
+  /**
+   * Expands a finished Nertz game into `game_participants` compatible rows for
+   * `SocialAPI.saveSharedGame` & `SocialScoring.computeGroupLeaderboard`.
+   *
+   * - In `solo` mode: 1 participant per player.
+   * - In `teams` mode: 1 participant per partner so EVERY linked partner gets
+   *   Personal History and Group Leaderboard credit with their team's score & win!
+   *   (Falls back to 1 row for the team name if a team has 0 named partners.)
+   */
+  function nzBuildSharedParticipants(finishedGame) {
+    if (!finishedGame || !Array.isArray(finishedGame.players)) return [];
+    const scores = finishedGame.players.map((p) => Number(p.score) || 0);
+    const best = scores.length ? Math.max(...scores) : 0;
+
+    if (finishedGame.nertzMode !== 'teams') {
+      return finishedGame.players.map((p) => {
+        const score = Number(p.score) || 0;
+        const userId = p.userId ?? p.user_id ?? null;
+        return {
+          name: p.name,
+          display_name: p.name,
+          userId,
+          user_id: userId,
+          score,
+          is_winner: score === best,
+          meta: {
+            nertz_mode: 'solo',
+            color: p.color || null,
+            nertz_calls: Number(p.nertzCalls) || 0
+          }
+        };
+      });
+    }
+
+    const rows = [];
+    for (const team of finishedGame.players) {
+      const score = Number(team.score) || 0;
+      const isWinner = score === best;
+      const partners = Array.isArray(team.partners) && team.partners.length
+        ? team.partners
+        : [{ name: team.name, userId: null, isSelf: false }];
+      const partnerNames = partners.map((pt) => pt.name);
+
+      for (const pt of partners) {
+        const userId = pt.userId ?? pt.user_id ?? null;
+        rows.push({
+          name: pt.name,
+          display_name: pt.name,
+          userId,
+          user_id: userId,
+          score,
+          is_winner: isWinner,
+          meta: {
+            nertz_mode: 'teams',
+            team_id: team.id || null,
+            team_name: team.name,
+            team_color: team.color || null,
+            partners: partnerNames,
+            nertz_calls: Number(team.nertzCalls) || 0
+          }
+        });
+      }
+    }
+    return rows;
+  }
+
+  /**
+   * Builds the game object ready to pass directly into `SocialAPI.saveSharedGame(game, { groupId })`.
+   */
+  function nzBuildSharedGameRecord(finishedGame) {
+    const fin = finishedGame.endTime ? finishedGame : nzPrepareFinish(finishedGame);
+    return {
+      ...fin,
+      client_game_id: fin.id,
+      group_id: fin.groupId || fin.group_id || null,
+      players: nzBuildSharedParticipants(fin)
+    };
+  }
+
+  const api = {
+    DEFAULT_TARGET,
+    NZ_COLORS,
+    nzColor,
+    nzFreeColor,
+    nzCalcCardNet,
+    nzIsNertzCall,
+    nzNormalize,
+    nzSetMode,
+    nzAddSoloPlayer,
+    nzRemoveSoloPlayer,
+    nzAddTeam,
+    nzRemoveTeam,
+    nzRenameTeam,
+    nzAddPartner,
+    nzRemovePartner,
+    nzMovePartner,
+    nzUnassignedGroupMembers,
+    nzCycleColor,
+    nzPickColor,
+    nzSetTarget,
+    nzSetEntryMode,
+    nzSetDraftField,
+    nzStepDraftField,
+    nzClearDraft,
+    nzGetDraftSummary,
+    nzApplyRound,
+    nzUndoLastRound,
+    nzResetScores,
+    nzToggleLog,
+    nzLeaders,
+    nzPrepareFinish,
+    nzBuildSharedParticipants,
+    nzBuildSharedGameRecord
+  };
+
+  global.NertzLogic = api;
+
+  if (typeof module !== 'undefined' && module.exports) {
+    module.exports = api;
+  }
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+
 <!-- App engine: defines window.onAuthReady / window.onAuthSignedOut before auth init -->
 <script id="score-engine">
-/* Score Tracker engine — social layer (you, friends, groups, shared history), game-agnostic shell, per-game scoring, Catan wood/parchment theme, Flip 7 coastal card theme, Carcassonne sunlit meadow tally. */
+/* Score Tracker engine — social layer (you, friends, groups, shared history), game-agnostic shell, per-game scoring, Catan wood/parchment theme, Flip 7 coastal card theme, Carcassonne sunlit meadow tally, Nertz Midnight Parlor & Gold Foil (Solo + unlimited Partners/Teams). */
 (function (global) {
   'use strict';
 
@@ -3670,15 +5626,15 @@ window.SocialUI = (function () {
     { id: 'catan', name: 'Catan', img: 'assets/games/catan.svg', icon: '⬢',
       versions: ['Base (to 10 VP)', 'Cities & Knights (to 13 VP)', 'Seafarers (to 12 VP)', '5-6 Player (to 10 VP)'],
       target: (v) => { const m = /to (\d+)/i.exec(v || ''); return m ? Number(m[1]) : 10; } },
-    { id: 'ohhell', name: 'Oh Hell', img: 'ohhell.jpg', icon: '♠️',
+    { id: 'ohhell', name: 'Oh Hell', img: 'assets/games/ohhell.svg', icon: '♠️',
       versions: ['Exact: 10+bid (miss=0)', '1 per trick +10 if exact', 'Other variant'],
       target: () => null, detailedLabel: 'Bid & Tricks' },
     { id: 'hearts', name: 'Hearts', img: 'assets/games/hearts.svg', icon: '♥️', low: true,
       versions: ['Standard (to 100)', 'Short (to 50)', 'With Jack of Diamonds'],
       target: (v) => (/50/.test(v || '') ? 50 : 100), detailedLabel: 'Hand' },
-    { id: 'nertz', name: 'Nertz', img: 'nertz.png', fit: 'contain', icon: '🂠',
-      versions: ['Standard (+1/-2, optional bonus)', 'To 100', 'To 150', 'No bonus for calling'],
-      target: (v) => (/150/.test(v || '') ? 150 : 100), detailedLabel: 'Round' },
+    { id: 'nertz', name: 'Nertz', img: 'assets/games/nertz.svg', icon: '🂠',
+      versions: ['Standard (to 100)', 'Long game (to 150)', 'Short game (to 50)'],
+      target: (v) => (/150/.test(v || '') ? 150 : /50\b/.test(v || '') ? 50 : 100), detailedLabel: 'Round' },
     { id: 'other', name: 'Custom', img: 'assets/games/custom.svg', icon: '✏️',
       versions: ['Custom rules'], target: () => null, detailedLabel: null }
   ];
@@ -3814,7 +5770,7 @@ window.SocialUI = (function () {
   function onAuthSignedOut() {
     currentUser = null; initializedUserId = null; players = []; history = []; currentGame = null; pendingSync = false;
     scoringPlayer = null; currentView = 'home';
-    document.body.classList.remove('theme-catan', 'theme-flip7', 'theme-carcassonne'); f7 = null;
+    document.body.classList.remove('theme-catan', 'theme-flip7', 'theme-carcassonne', 'theme-nertz'); f7 = null; nzSheetKind = null; nzPopIdx = -1;
     resetSocialState();
     document.querySelectorAll('#app-shell .view').forEach((el) => el.classList.remove('active'));
     ['gen-leaderboard', 'gen-pad', 'leaderboard', 'score-form', 'history-list', 'recent-list', 'player-chips', 'f7-board', 'f7-drawer', 'cc-list',
@@ -3829,10 +5785,13 @@ window.SocialUI = (function () {
     document.body.classList.toggle('theme-catan', on);
     document.body.classList.toggle('theme-flip7', f7on);
     document.body.classList.toggle('theme-carcassonne', ccon);
+    const nzon = currentView === 'active' && isNertz();
+    document.body.classList.toggle('theme-nertz', nzon);
+    if (!nzon && (nzSheetKind || nzPopIdx >= 0)) { nzCloseSheet(); nzPopIdx = -1; }
     if (!ccon) ccHideAdd();
     if (!f7on) { const s = byId('f7-sheet'); if (s && !s.hidden) { setHidden(s, true); s.innerHTML = ''; } }
     const meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.setAttribute('content', on ? '#180f08' : f7on ? '#4bbdb8' : ccon ? '#6fa6d8' : '#0b1220');
+    if (meta) meta.setAttribute('content', on ? '#180f08' : f7on ? '#4bbdb8' : ccon ? '#6fa6d8' : nzon ? '#071222' : '#0b1220');
   }
   function showView(v) {
     if (!byId('view-' + v)) v = 'home';
@@ -3912,6 +5871,7 @@ window.SocialUI = (function () {
     }
     if (g.id === 'catan') currentGame.targetVp = currentGame.target;
     if (g.id === 'carcassonne') ccNormalize(currentGame);
+    if (g.id === 'nertz') nzStartGame(chosen);
     scoringPlayer = null; padMode = 'simple'; f7 = null;
     persistActive();
     showView('active');
@@ -3939,6 +5899,7 @@ window.SocialUI = (function () {
     renderActive();
   }
   function undoLastRound() {
+    if (isNertz()) return nzUndo();
     if (!currentGame || !currentGame.rounds.length) return null;
     const r = currentGame.rounds.pop();
     currentGame.players.forEach((p, i) => { p.score = Array.isArray(r.prev) && r.prev[i] !== undefined ? r.prev[i] : p.score - ((r.deltas || [])[i] || 0); });
@@ -3967,8 +5928,15 @@ window.SocialUI = (function () {
   function endGame() {
     if (!currentGame) return null;
     if (isCarc()) { const a = document.activeElement; if (a && a.classList && a.classList.contains('cc-score')) ccInput(Number(a.dataset.idx), a); ccHideAdd(); }
-    const finished = { ...currentGame, endTime: new Date().toISOString() };
-    finished.winner = computeWinner(finished);
+    let finished;
+    if (isNertz()) {
+      nzCloseSheet(); nzPopIdx = -1;
+      finished = NZL().nzPrepareFinish(currentGame);
+      ['nzSel', 'nzDone', 'nzRoster', 'nertzLogOpen', 'soloRoster'].forEach((k) => delete finished[k]);
+    } else {
+      finished = { ...currentGame, endTime: new Date().toISOString() };
+      finished.winner = computeWinner(finished);
+    }
     history.unshift(finished);
     currentGame = null; scoringPlayer = null; f7 = null;
     persistActive();
@@ -3989,7 +5957,7 @@ window.SocialUI = (function () {
       setHidden(byId('gen-pad'), true); setHidden(byId('gen-undo'), true);
       return;
     }
-    if (isCatan()) renderCatan(); else if (isFlip7()) renderFlip7(); else if (isCarc()) renderCarc(); else renderGeneric();
+    if (isCatan()) renderCatan(); else if (isFlip7()) renderFlip7(); else if (isCarc()) renderCarc(); else if (isNertz()) renderNertz(); else renderGeneric();
   }
 
   // ----- Generic (neutral) games -----
@@ -4010,6 +5978,7 @@ window.SocialUI = (function () {
   }
   function openPad(idx) {
     if (!currentGame || !currentGame.players[idx]) return;
+    if (isNertz()) { nzUiSelect(idx); return; }
     scoringPlayer = idx;
     if (isCatan()) { selectCatanPlayer(idx); return; }
     if (isFlip7()) { f7Select(idx); return; }
@@ -4664,6 +6633,291 @@ window.SocialUI = (function () {
   }
 
   // ---------------- History ----------------
+  // ----- Nertz (Midnight Parlor & Gold Foil · Solo + unlimited Partners/Teams; math lives in NertzLogic) -----
+  const NZL = () => global.NertzLogic || null;
+  const isNertz = () => !!(currentGame && currentGame.type === 'nertz' && NZL());
+  let nzPopIdx = -1, nzSheetKind = null;
+  const nzDeckSvg = '<svg class="nz-deck-svg" viewBox="0 0 48 48" aria-hidden="true"><use href="#nz-deck-filigree"/></svg>';
+  function nzRoster() { return currentGame && Array.isArray(currentGame.nzRoster) ? currentGame.nzRoster : []; }
+  function nzEnsure() {
+    const g = currentGame, N = NZL();
+    N.nzNormalize(g);
+    if (!Array.isArray(g.nzDone)) g.nzDone = [];
+    g.nzDone = g.nzDone.filter((i) => i >= 0 && i < g.players.length);
+    if (!(g.nzSel >= 0 && g.nzSel < g.players.length)) g.nzSel = 0;
+    if (!Array.isArray(g.nzRoster)) g.nzRoster = g.nertzMode === 'teams'
+      ? g.players.flatMap((t) => t.partners || []) : g.players.map((p) => ({ name: p.name, userId: p.userId || null, isSelf: !!p.isSelf }));
+    return g;
+  }
+  function nzStartGame(chosen) {
+    const g = currentGame, N = NZL();
+    if (!N) return;
+    g.nzRoster = chosen.map((pt) => ({ name: pt.name, userId: pt.userId || null, isSelf: !!pt.isSelf }));
+    N.nzNormalize(g);
+    // Started from a Social Group with 4+ people → auto-pair partners into teams (Solo is one tap away).
+    if (setupGroup && chosen.length >= 4) N.nzSetMode(g, 'teams', { groupMembers: g.nzRoster });
+    g.nzSel = 0; g.nzDone = [];
+  }
+  let nzSkipSheet = false;
+  function nzCommit(full) { persistActive(); if (full) renderNertz(); else { nzRenderRoster(); nzRenderScorer(true); } }
+  function nzResetProgress() { currentGame.nzDone = []; currentGame.nzSel = 0; }
+  function nzSpliceRounds(idx) {
+    (currentGame.rounds || []).forEach((r) => ['prev', 'deltas', 'prevNertzCalls'].forEach((k) => { if (Array.isArray(r[k])) r[k].splice(idx, 1); }));
+  }
+
+  function renderNertz() {
+    const g = nzEnsure(), N = NZL();
+    const lead = N.nzLeaders(g), teams = g.nertzMode === 'teams';
+    byId('nz-target-val').textContent = g.target;
+    byId('nz-round-label').textContent = 'ROUND ' + (g.rounds.length + 1);
+    [['solo', !teams], ['teams', teams]].forEach(([k, on]) => { const b = byId('nz-mode-' + k); b.classList.toggle('active', on); b.setAttribute('aria-selected', String(on)); });
+    setHidden(byId('nz-teams-bar'), !teams);
+    if (teams) {
+      const partners = g.players.reduce((a, t) => a + (t.partners || []).length, 0);
+      byId('nz-teams-summary').textContent = `${g.players.length} teams · ${partners} partners`;
+    }
+    nzRenderRoster(lead);
+    nzRenderScorer(false);
+    byId('nz-undo').disabled = !g.rounds.length;
+    byId('nz-add-btn').textContent = teams ? '+ Team' : '+ Add';
+    byId('nz-finish').classList.toggle('ready', lead.reachedTarget);
+    const rt = byId('nz-rounds-toggle');
+    rt.textContent = g.nertzLogOpen ? 'Hide Rounds' : `Rounds${g.rounds.length ? ' (' + g.rounds.length + ')' : ''}`;
+    rt.setAttribute('aria-expanded', String(!!g.nertzLogOpen));
+    nzRenderDrawer();
+    if (nzSheetKind && !nzSkipSheet) nzRenderSheet();
+  }
+  function nzRenderRoster(leadIn) {
+    const g = currentGame, N = NZL(), lead = leadIn || N.nzLeaders(g), teams = g.nertzMode === 'teams';
+    const sum = N.nzGetDraftSummary(g);
+    const banner = lead.reachedTarget
+      ? `<div class="nz-winner-banner" id="nz-winner-banner" role="status">♠ ${esc(lead.winners.map((w) => w.name).join(' & '))} ${lead.winners.length > 1 ? 'tie' : 'wins'} at ${lead.bestScore}! ♠</div>` : '';
+    const rows = g.players.map((p, i) => {
+      const c = N.nzColor(p.color), r = sum.rows[i] || {}, sel = i === g.nzSel, isLead = lead.leaderIndices.includes(i);
+      const pending = r.touched || g.nzDone.includes(i);
+      const pop = nzPopIdx === i ? `<div class="nz-color-pop" id="nz-color-pop" role="menu" aria-label="Choose deck back for ${esc(p.name)}" onclick="event.stopPropagation()">
+          <div class="nz-color-pop-title">Deck Back</div><div class="nz-swatch-grid">${N.NZ_COLORS.map((k) => {
+            const cur = p.color === k.key;
+            return `<button type="button" class="nz-swatch${cur ? ' active' : ''}" role="menuitemradio" aria-checked="${cur}" data-deck="${k.key}" aria-label="${esc(k.label)}" onclick="nzUiPickDeck(${i}, '${k.key}', event)">${nzDeckSvg}${cur ? '<span class="nz-swatch-check" aria-hidden="true">✓</span>' : ''}</button>`;
+          }).join('')}</div></div>` : '';
+      const tags = `${pending ? `<span class="nz-round-tag${r.net < 0 ? ' neg' : ''}">${signed(r.net || 0)}</span>` : ''}${r.calledNertz ? '<span class="nz-called-badge">Nertz!</span>' : ''}`;
+      const partnerTxt = teams ? `<span class="nz-partners">${(p.partners || []).length ? esc(p.partners.map((pt) => pt.name).join(' & ')) : 'No partners yet — tap + Manage Teams'}</span>` : '';
+      const partners = tags || partnerTxt ? `<div class="nz-sub-line">${tags}${partnerTxt}</div>` : '';
+      return `<div class="nz-row${sel ? ' selected' : ''}${isLead ? ' leader' : ''}${g.nzDone.includes(i) ? ' done' : ''}${nzPopIdx === i ? ' picker-open' : ''}" data-idx="${i}" data-name="${esc(p.name)}" role="option" aria-selected="${sel}" tabindex="0"
+          onclick="nzUiSelect(${i})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();nzUiSelect(${i})}">
+        <button type="button" class="nz-deck-btn" data-deck="${c.key}" aria-haspopup="menu" aria-expanded="${nzPopIdx === i}" aria-label="${esc(p.name)} deck back: ${esc(c.label)}. Tap to pick" onclick="nzUiToggleDeckPop(${i}, event)">${nzDeckSvg}<span class="nz-deck-caret" aria-hidden="true">▾</span></button>
+        ${pop}
+        <div class="nz-info">
+          <div class="nz-name-row"><span class="nz-name">${esc(p.name)}</span>${isLead ? '<span class="nz-crown" aria-label="Leader">♛</span>' : ''}</div>
+          ${partners}
+        </div>
+        <div class="nz-score${p.score < 0 ? ' neg' : ''}">${p.score}</div>
+      </div>`;
+    }).join('');
+    const done = g.nzDone.length;
+    const progress = g.players.length > 1 ? `<div class="nz-progress" id="nz-progress">${done ? `${done} of ${g.players.length} entered this round` : 'Tap a ' + (teams ? 'team' : 'player') + ' card, enter their round, then Confirm'}</div>` : '';
+    byId('nz-roster').innerHTML = banner + rows + progress;
+  }
+  function nzRenderScorer(keepInputs) {
+    const g = currentGame, direct = g.nertzEntryMode === 'direct';
+    const p = g.players[g.nzSel], d = (g.nertzDraft || {})[g.nzSel] || { lake: 0, nertzLeft: 0, direct: 0 };
+    byId('nz-scorer-who').textContent = 'ROUND SCORING • ' + (p ? p.name.toUpperCase() : '—');
+    [['split', !direct], ['net', direct]].forEach(([k, on]) => { const b = byId('nz-entry-' + k); b.classList.toggle('active', on); b.setAttribute('aria-selected', String(on)); });
+    setHidden(byId('nz-split-wrap'), direct); setHidden(byId('nz-net-wrap'), !direct);
+    if (!keepInputs) { byId('nz-lake-val').value = d.lake; byId('nz-nertz-val').value = d.nertzLeft; byId('nz-net-input').value = d.direct; }
+    const net = direct ? d.direct : NZL().nzCalcCardNet(d.lake, d.nertzLeft);
+    const pv = byId('nz-preview'); pv.textContent = signed(net); pv.classList.toggle('is-neg', net < 0);
+    const remaining = g.players.filter((_, i) => i !== g.nzSel && !g.nzDone.includes(i)).length;
+    const lbl = byId('nz-confirm').querySelector('span:nth-child(2)');
+    if (lbl) lbl.textContent = remaining ? 'CONFIRM · NEXT' : 'CONFIRM ROUND';
+  }
+  function nzRenderDrawer() {
+    const g = currentGame, el = byId('nz-history-drawer');
+    setHidden(el, !g.nertzLogOpen);
+    if (!g.nertzLogOpen) return;
+    el.innerHTML = g.rounds.length ? g.rounds.map((r, k) => ({ r, k })).reverse().map(({ r, k }) => {
+      const entries = (r.detail && r.detail.entries) || g.players.map((p, i) => ({ name: p.name, net: (r.deltas || [])[i] || 0 }));
+      return `<div class="nz-hist-round">Round ${k + 1} · ${r.mode === 'direct' ? 'Quick Net' : r.mode === 'cards' ? 'Lake &amp; Nertz' : 'Score'}</div>` + entries.map((e) =>
+        `<div class="nz-hist-row"><span>${esc(e.name)}${e.calledNertz ? ' ★ Nertz!' : ''}${e.lake !== undefined ? ` <small>(${e.lake} lake · ${e.nertzLeft} left)</small>` : ''}</span><span class="${e.net < 0 ? 'neg' : ''}">${signed(Number(e.net) || 0)}</span></div>`).join('');
+    }).join('') : '<div class="nz-hist-empty">No rounds yet.</div>';
+  }
+
+  // UI actions (markup onclick hooks)
+  function nzUiSelect(idx) {
+    if (!isNertz() || !currentGame.players[idx]) return false;
+    nzPopIdx = -1; currentGame.nzSel = idx; nzCommit(true); return true;
+  }
+  function nzUiSetMode(mode) {
+    if (!isNertz()) return false;
+    const N = NZL(), g = currentGame;
+    if (g.nertzMode === mode) return true;
+    let r = N.nzSetMode(g, mode, { groupMembers: nzRoster() });
+    if (!r.ok && r.reason === 'rounds_exist') {
+      if (!confirm('Switching between Solo and Teams starts the scores over. Continue?')) return false;
+      r = N.nzSetMode(g, mode, { force: true, groupMembers: nzRoster() });
+    }
+    nzPopIdx = -1; nzResetProgress(); nzCommit(true); return !!r.ok;
+  }
+  function nzUiSetEntryMode(m) {
+    if (!isNertz()) return false;
+    NZL().nzSetEntryMode(currentGame, m === 'net' || m === 'direct' ? 'direct' : 'cards');
+    nzCommit(true); return currentGame.nertzEntryMode;
+  }
+  function nzStep(field, delta) {
+    if (!isNertz()) return null;
+    const r = NZL().nzStepDraftField(currentGame, currentGame.nzSel, field, delta);
+    nzCommit(false); nzRenderScorer(false); return r;
+  }
+  const nzStepLake = (d) => nzStep('lake', d), nzStepNertz = (d) => nzStep('nertzLeft', d), nzStepNet = (d) => nzStep('direct', d);
+  function nzSyncPreview() {
+    if (!isNertz()) return null;
+    const g = currentGame, N = NZL(), i = g.nzSel;
+    let r;
+    if (g.nertzEntryMode === 'direct') r = N.nzSetDraftField(g, i, 'direct', byId('nz-net-input').value);
+    else { N.nzSetDraftField(g, i, 'lake', byId('nz-lake-val').value); r = N.nzSetDraftField(g, i, 'nertzLeft', byId('nz-nertz-val').value); }
+    nzCommit(false); return r;
+  }
+  function nzToggleBonus() { return false; }
+  function nzConfirmRound() {
+    if (!isNertz()) return null;
+    const g = currentGame, N = NZL(), n = g.players.length, sel = g.nzSel;
+    if (!g.nzDone.includes(sel)) g.nzDone.push(sel);
+    let next = -1;
+    for (let s = 1; s <= n; s++) { const k = (sel + s) % n; if (!g.nzDone.includes(k)) { next = k; break; } }
+    if (next >= 0) { g.nzSel = next; nzCommit(true); return { next }; }
+    if (!N.nzGetDraftSummary(g).hasAnyInput) {
+      const d = g.nertzDraft[sel];
+      N.nzSetDraftField(g, sel, g.nertzEntryMode === 'direct' ? 'direct' : 'lake', g.nertzEntryMode === 'direct' ? d.direct : d.lake);
+    }
+    const round = N.nzApplyRound(g);
+    nzResetProgress(); nzCommit(true);
+    return round;
+  }
+  function nzUndo() {
+    if (!isNertz()) return null;
+    const r = NZL().nzUndoLastRound(currentGame);
+    NZL().nzClearDraft(currentGame); nzResetProgress(); nzCommit(true); return r;
+  }
+  function nzToggleHistory() { if (!isNertz()) return false; NZL().nzToggleLog(currentGame); nzCommit(true); return currentGame.nertzLogOpen; }
+  function nzUiToggleDeckPop(idx, e) {
+    if (e && e.stopPropagation) e.stopPropagation();
+    if (!isNertz() || !currentGame.players[idx]) return false;
+    nzPopIdx = nzPopIdx === idx ? -1 : idx; nzRenderRoster(); return nzPopIdx === idx;
+  }
+  function nzUiPickDeck(idx, key, e) {
+    if (e && e.stopPropagation) e.stopPropagation();
+    if (!isNertz() || !NZL().nzPickColor(currentGame, idx, key)) return null;
+    nzPopIdx = -1; nzCommit(true); return currentGame.players[idx].color;
+  }
+  function nzClosePop() { if (nzPopIdx >= 0) { nzPopIdx = -1; if (isNertz()) nzRenderRoster(); } }
+  document.addEventListener('click', (e) => {
+    if (nzPopIdx < 0) return;
+    if (e.target && e.target.closest && (e.target.closest('#nz-color-pop') || e.target.closest('.nz-deck-btn'))) return;
+    nzClosePop();
+  });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { nzClosePop(); if (nzSheetKind) nzCloseSheet(); } });
+
+  // Sheets: target score, add player (solo), team builder (teams)
+  function nzOpenSheet(kind) {
+    if (!isNertz()) return false;
+    nzSheetKind = kind === 'add' ? (currentGame.nertzMode === 'teams' ? 'teams' : 'add') : kind;
+    nzPopIdx = -1; nzRenderSheet(); return nzSheetKind;
+  }
+  function nzCloseSheet() { nzSheetKind = null; const s = byId('nz-sheet'); if (s) { s.innerHTML = ''; setHidden(s, true); } }
+  function nzRenderSheet() {
+    const s = byId('nz-sheet'), g = currentGame, N = NZL();
+    if (!s || !nzSheetKind || !isNertz()) return;
+    const head = (t) => `<div class="nz-sheet-head"><h3>${t}</h3><button type="button" class="nz-sheet-close" aria-label="Close" onclick="nzCloseSheet()">✕</button></div>`;
+    let body = '';
+    if (nzSheetKind === 'target') {
+      body = head('Target Score') + `<p class="nz-sheet-note">First to reach this score wins.</p>
+        <div class="nz-field-row"><input type="number" inputmode="numeric" class="nz-field" id="nz-target-input" value="${g.target}" aria-label="Target score">
+        <button type="button" class="nz-sheet-btn primary" id="nz-target-save" onclick="nzUiSaveTarget()">Save</button></div>
+        <div class="nz-quick-row">${[50, 75, 100, 150, 200].map((v) => `<button type="button" class="nz-quick${v === g.target ? ' active' : ''}" onclick="nzUiSaveTarget(${v})">${v}</button>`).join('')}</div>`;
+    } else if (nzSheetKind === 'add') {
+      const inGame = new Set(g.players.map((p) => lc(p.name)));
+      const quick = nzRoster().filter((m) => !inGame.has(lc(m.name)));
+      body = head('Players') + g.players.map((p, i) => `<div class="nz-team-card" data-player="${esc(p.name)}"><div class="nz-team-head"><span class="nz-team-swatch" style="background:${N.nzColor(p.color).hex}"></span>
+          <span style="flex:1">${esc(p.name)}</span>${g.players.length > 1 ? `<button type="button" class="nz-chip-x" aria-label="Remove ${esc(p.name)}" onclick="nzUiRemovePlayer(${i})">×</button>` : ''}</div></div>`).join('')
+        + `<div class="nz-field-row"><input class="nz-field" id="nz-add-name" placeholder="Player name" maxlength="40" onkeydown="if(event.key==='Enter'){event.preventDefault();nzUiAddPlayer()}">
+          <button type="button" class="nz-sheet-btn primary" id="nz-add-player" onclick="nzUiAddPlayer()">Add</button></div>`
+        + (quick.length ? `<div class="nz-quick-row">${quick.map((m, k) => `<button type="button" class="nz-quick" onclick="nzUiAddPlayer(${k})">+ ${esc(m.name)}</button>`).join('')}</div>` : '')
+        + '<button type="button" class="nz-sheet-btn wide" onclick="nzCloseSheet()">Done</button>';
+    } else {
+      const un = N.nzUnassignedGroupMembers(g, nzRoster());
+      body = head('Partners &amp; Teams') + '<p class="nz-sheet-note">As many teams as you like — 2 or more partners each.</p>' + g.players.map((t, i) => `
+        <div class="nz-team-card" data-team="${i}">
+          <div class="nz-team-head"><span class="nz-team-swatch" style="background:${N.nzColor(t.color).hex}"></span>
+            <input class="nz-field nz-team-name" value="${esc(t.name)}" maxlength="40" aria-label="Team name" onchange="nzUiRenameTeam(${i}, this.value)">
+            ${g.players.length > 1 ? `<button type="button" class="nz-chip-x nz-team-remove" aria-label="Remove ${esc(t.name)}" onclick="nzUiRemoveTeam(${i})">×</button>` : ''}</div>
+          <div class="nz-partner-chips">${(t.partners || []).map((pt, j) => `<span class="nz-partner-chip" data-partner="${esc(pt.name)}">${esc(pt.name)}${pt.isSelf ? ' (You)' : ''}
+            ${g.players.length > 1 ? `<select class="nz-move-sel" aria-label="Move ${esc(pt.name)} to another team" onchange="nzUiMovePartner(${i}, ${j}, this.value)"><option value="">Move…</option>${g.players.map((o, k) => (k === i ? '' : `<option value="${k}">${esc(o.name)}</option>`)).join('')}</select>` : ''}
+            <button type="button" class="nz-chip-x" aria-label="Remove ${esc(pt.name)}" onclick="nzUiRemovePartner(${i}, ${j})">×</button></span>`).join('') || '<span class="nz-sheet-note">No partners yet</span>'}</div>
+          <div class="nz-field-row"><input class="nz-field nz-partner-input" id="nz-partner-input-${i}" placeholder="Add partner" maxlength="40" onkeydown="if(event.key==='Enter'){event.preventDefault();nzUiAddPartner(${i})}">
+            <button type="button" class="nz-sheet-btn" onclick="nzUiAddPartner(${i})">Add</button></div>
+          ${un.length ? `<div class="nz-quick-row">${un.map((m, k) => `<button type="button" class="nz-quick" onclick="nzUiAddPartner(${i}, ${k})">+ ${esc(m.name)}</button>`).join('')}</div>` : ''}
+        </div>`).join('')
+        + '<button type="button" class="nz-sheet-btn wide" id="nz-add-team" onclick="nzUiAddTeam()">+ Add Team</button><button type="button" class="nz-sheet-btn wide primary" onclick="nzCloseSheet()">Done</button>';
+    }
+    s.innerHTML = `<div class="nz-sheet-card">${body}</div>`;
+    setHidden(s, false);
+  }
+  function nzUiSaveTarget(v) {
+    if (!isNertz()) return null;
+    const t = NZL().nzSetTarget(currentGame, v !== undefined ? v : (byId('nz-target-input') || {}).value);
+    nzCloseSheet(); nzCommit(true); return t;
+  }
+  function nzUiAddPlayer(quickIdx) {
+    if (!isNertz()) return null;
+    const g = currentGame, inGame = new Set(g.players.map((p) => lc(p.name)));
+    let raw;
+    if (quickIdx !== undefined) raw = nzRoster().filter((m) => !inGame.has(lc(m.name)))[quickIdx];
+    else { const el = byId('nz-add-name'); raw = el ? el.value : ''; if (el) el.value = ''; }
+    const p = raw ? NZL().nzAddSoloPlayer(g, raw) : null;
+    if (p && !nzRoster().some((m) => lc(m.name) === lc(p.name))) g.nzRoster.push({ name: p.name, userId: p.userId || null, isSelf: !!p.isSelf });
+    nzCommit(true); return p;
+  }
+  function nzUiRemovePlayer(i) {
+    if (!isNertz()) return false;
+    if (currentGame.rounds.length && !confirm('Remove ' + currentGame.players[i].name + ' and their score?')) return false;
+    const ok = NZL().nzRemoveSoloPlayer(currentGame, i);
+    if (ok) { nzSpliceRounds(i); nzResetProgress(); }
+    nzCommit(true); return ok;
+  }
+  function nzUiAddTeam() {
+    if (!isNertz()) return null;
+    const t = NZL().nzAddTeam(currentGame);
+    nzResetProgress(); nzCommit(true); return t;
+  }
+  function nzUiRemoveTeam(i) {
+    if (!isNertz()) return false;
+    if (currentGame.rounds.length && !confirm('Remove ' + currentGame.players[i].name + ' and its score?')) return false;
+    const ok = NZL().nzRemoveTeam(currentGame, i);
+    if (ok) { nzSpliceRounds(i); nzResetProgress(); }
+    nzCommit(true); return ok;
+  }
+  function nzUiRenameTeam(i, name) {
+    if (!isNertz()) return false;
+    const ok = NZL().nzRenameTeam(currentGame, i, name);
+    // Fired from the input's change/blur: refresh the table but leave the sheet's DOM in place mid-blur.
+    nzSkipSheet = true; try { nzCommit(true); } finally { nzSkipSheet = false; }
+    return ok;
+  }
+  function nzUiAddPartner(i, quickIdx) {
+    if (!isNertz()) return null;
+    let raw;
+    if (quickIdx !== undefined) raw = NZL().nzUnassignedGroupMembers(currentGame, nzRoster())[quickIdx];
+    else { const el = byId('nz-partner-input-' + i); raw = el ? el.value : ''; }
+    const p = raw ? NZL().nzAddPartner(currentGame, i, raw) : null;
+    if (p && !nzRoster().some((m) => lc(m.name) === lc(p.name))) currentGame.nzRoster.push({ ...p });
+    nzCommit(true); return p;
+  }
+  function nzUiRemovePartner(i, j) { if (!isNertz()) return false; const ok = NZL().nzRemovePartner(currentGame, i, j); nzCommit(true); return ok; }
+  function nzUiMovePartner(i, j, to) {
+    if (!isNertz() || to === '' || to === undefined) return false;
+    const ok = NZL().nzMovePartner(currentGame, i, j, Number(to)); nzCommit(true); return ok;
+  }
+
   function renderHistory() {
     const el = byId('history-list');
     renderHistoryFilter();
@@ -4681,7 +6935,7 @@ window.SocialUI = (function () {
             <div class="small">${esc(new Date(g.endTime || g.startTime || Date.now()).toLocaleDateString())}</div></div>
           ${i >= 0 ? `<button class="btn danger sm" type="button" aria-label="Delete game" onclick="deleteGame(${i})">×</button>` : ''}
         </div>${badges}
-        <div style="margin-top:.3rem">${[...(g.players || [])].sort((a, b) => (gameById(g.type).low ? a.score - b.score : b.score - a.score)).map((p) => `${esc(p.name)}: <strong>${p.score}</strong>`).join(' · ')}</div>
+        <div style="margin-top:.3rem">${[...(g.players || [])].sort((a, b) => (gameById(g.type).low ? a.score - b.score : b.score - a.score)).map((p) => `${esc(p.name)}${Array.isArray(p.members) && p.members.length ? ` <span class="small">(${esc(p.members.map((m) => m.name).join(' & '))})</span>` : ''}: <strong>${p.score}</strong>`).join(' · ')}</div>
         <div class="winner">Winner: ${esc(g.winner || '—')}</div>
       </div>`;
     }).join('');
@@ -4992,7 +7246,9 @@ window.SocialUI = (function () {
       id: g.id, game_type: g.type, variant: g.version || null, group_id: g.group_id || null, group_name: g.group_name || null,
       created_by: g.created_by || null, played_at: g.endTime || null,
       summary: { local_game_id: g.client_game_id || null, target: g.target ?? null, rounds: g.rounds || [], start_time: g.startTime || null },
-      participants: (g.players || []).map((p) => ({ user_id: p.user_id || p.userId || null, display_name: p.name, score: p.score, is_winner: !!p.is_winner, meta: {} }))
+      ...((g.meta && g.meta.mode === 'teams') && g.winner ? { winner_names: [g.winner] } : {}),
+      participants: (g.players || []).map((p) => ({ user_id: p.user_id || p.userId || null, display_name: p.name, score: p.score, is_winner: !!(p.is_winner ?? p.isWinner), meta: {},
+        ...(Array.isArray(p.members) && p.members.length ? { members: p.members } : {}) }))
     };
   }
   function historyEntries() {
@@ -5023,7 +7279,8 @@ window.SocialUI = (function () {
       const payload = sc.buildSharedGamePayload(fin, user);
       const game = {
         ...fin, client_game_id: fin.id, group_id: payload.group_id || null,
-        winner: (payload.winner_names || []).join(', ') || fin.winner,
+        winner: fin.type === 'nertz' ? fin.winner : ((payload.winner_names || []).join(', ') || fin.winner),
+        meta: fin.meta || null,
         players: fin.players.map((p, i) => ({ ...p, user_id: (payload.participants[i] || {}).user_id || null, is_winner: !!(payload.participants[i] || {}).is_winner, meta: (payload.participants[i] || {}).meta || {} })),
         summary: payload.summary
       };
@@ -5046,6 +7303,9 @@ window.SocialUI = (function () {
     selectCatanPlayer, catanStep, catanAction, resetCatanScores,
     f7Select, f7Toggle, f7SetMode, f7Num, f7Close, f7Confirm, f7Undo, f7ToggleSort, f7OpenSheet, f7CloseSheet, f7SetTarget, f7AddPlayer, f7ResetScores,
     ccInput, ccKey, ccCycleColor, ccToggleColorPicker, ccPickColor, ccCloseColorPicker, ccShowAdd, ccHideAdd, ccAddPlayer, ccReset,
+    nzSetMode: nzUiSetMode, nzSetEntryMode: nzUiSetEntryMode, nzStepLake, nzStepNertz, nzStepNet, nzSyncPreview, nzToggleBonus, nzConfirmRound, nzUndo,
+    nzToggleHistory, nzOpenSheet, nzCloseSheet, nzUiSelect, nzUiToggleDeckPop, nzUiPickDeck, nzUiSaveTarget, nzUiAddPlayer, nzUiRemovePlayer, nzUiAddTeam,
+    nzUiRemoveTeam, nzUiRenameTeam, nzUiAddPartner, nzUiRemovePartner, nzUiMovePartner,
     undoLastRound, undoLastAction: undoLastRound, endGame, deleteGame,
     onAuthSignedIn: onAuthReady, removeSelf, addSelf, removeSetupFriend, toggleSetupFriend, includeFriendInNextGame, applyGroupPreset, clearSetupGroup,
     startGameWithGroup, saveDisplayName, sendFriendRequest, respondFriendRequest, removeFriend, openCreateGroup, toggleGroupModalFriend,
@@ -5146,7 +7406,7 @@ window.SocialUI = (function () {
   }
 
   function showSignedOutUI() {
-    document.body.classList.remove('theme-catan', 'theme-flip7', 'theme-carcassonne');
+    document.body.classList.remove('theme-catan', 'theme-flip7', 'theme-carcassonne', 'theme-nertz');
     const { loginView, appShell } = getEls();
     if (appShell) {
       appShell.hidden = true;

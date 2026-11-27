@@ -1,6 +1,6 @@
 // Score Tracker service worker
-// v10: Carcassonne aged-parchment texture + tap-to-pick meeple color popover, Finish below + Player/Reset; v9: Friends & Groups social layer (you as default player, friends, group presets + leaderboards, shared history); v8: Carcassonne sunlit meadow final-score tally (body.theme-carcassonne); v7: Flip 7 coastal card theme (body.theme-flip7); v6: no tap-zoom + box art for every game; v5: neutral shell + Catan screen matched to the approved rendering (real cropped art in assets/catan). Network-first for HTML so new builds show up immediately; cache is only an offline fallback.
-const CACHE_NAME = 'score-tracker-v10-2026-11-26';
+// v11: Nertz Midnight Parlor & Gold Foil (Solo + unlimited Partners/Teams, body.theme-nertz) + illustrated playing-card tiles for Hearts, Oh Hell, Nertz; v10: Carcassonne aged-parchment texture + tap-to-pick meeple color popover, Finish below + Player/Reset; v9: Friends & Groups social layer (you as default player, friends, group presets + leaderboards, shared history); v8: Carcassonne sunlit meadow final-score tally (body.theme-carcassonne); v7: Flip 7 coastal card theme (body.theme-flip7); v6: no tap-zoom + box art for every game; v5: neutral shell + Catan screen matched to the approved rendering (real cropped art in assets/catan). Network-first for HTML so new builds show up immediately; cache is only an offline fallback.
+const CACHE_NAME = 'score-tracker-v11-2026-11-26';
 const ASSETS = [
   './game_tracker.html',
   './manifest.json',
@@ -19,6 +19,8 @@ const ASSETS = [
   './assets/games/catan.svg',
   './assets/games/carcassonne.svg',
   './assets/games/hearts.svg',
+  './assets/games/ohhell.svg',
+  './assets/games/nertz.svg',
   './assets/games/custom.svg'
 ];
 
