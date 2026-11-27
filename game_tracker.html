@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0c0d10">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="score-tracker-build" content="v14-home-redesign-sync-fix-2026-11-26">
+<meta name="score-tracker-build" content="v15-3d-dice-roller-2026-11-27">
 <title>Score Tracker</title>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon-512.jpg" type="image/jpeg">
@@ -1696,6 +1696,766 @@ body.theme-carcassonne .bottom-nav #nav-signout { --cc-ic: url("data:image/svg+x
 </style>
 
 <!-- ===================== NERTZ THEME (scoped to body.theme-nertz) ===================== -->
+<style id="dice-theme">
+
+
+
+.dice-open-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.42rem;
+  padding: 0.48rem 0.8rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #1c1f26;
+  color: #f4f4f6;
+  font: 600 0.84rem -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', system-ui, sans-serif;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
+  transition: transform .08s ease, background .15s ease, border-color .15s ease;
+}
+
+.dice-open-btn:active { transform: scale(0.97); }
+.dice-open-btn:hover { background: #232730; border-color: rgba(255, 255, 255, 0.2); }
+
+.dice-open-btn svg {
+  width: 17px;
+  height: 17px;
+  flex: 0 0 auto;
+  color: #d4a853;
+}
+
+.dice-open-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 19px;
+  height: 19px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: rgba(212, 168, 83, 0.18);
+  border: 1px solid rgba(212, 168, 83, 0.45);
+  color: #f3d285;
+  font-size: 0.7rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+
+body.theme-catan .dice-open-btn {
+  background: linear-gradient(180deg, #5d3b1e 0%, #3b2310 100%);
+  border: 1px solid #1b0e05;
+  box-shadow: inset 0 1px 0 rgba(255, 224, 160, 0.28), 0 2px 5px rgba(0, 0, 0, 0.42);
+  color: #f7e8c4;
+  font-family: var(--cg-caps, 'Cinzel', Georgia, serif);
+  font-size: 0.8rem;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  padding: 0.5rem 0.85rem;
+  border-radius: 8px;
+}
+
+body.theme-catan .dice-open-btn svg { color: #f0c66c; }
+
+body.theme-catan .dice-open-badge {
+  background: rgba(240, 198, 108, 0.22);
+  border-color: rgba(240, 198, 108, 0.55);
+  color: #fff2cc;
+  font-family: var(--cg-body, -apple-system, sans-serif);
+}
+
+
+#dice-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 95;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: rgba(5, 6, 9, 0.74);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 0.75rem 0.65rem calc(0.75rem + env(safe-area-inset-bottom, 0px));
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+#dice-modal.hidden,
+#dice-modal[hidden] {
+  display: none !important;
+}
+
+.dice-sheet {
+  --dm-bg: #121419;
+  --dm-surface: #191c23;
+  --dm-surface2: #222630;
+  --dm-border: rgba(255, 255, 255, 0.09);
+  --dm-border-strong: rgba(255, 255, 255, 0.16);
+  --dm-text: #f4f4f6;
+  --dm-muted: #8b909c;
+  --dm-accent: #f4f1ea;
+  --dm-accent-ink: #0c0d10;
+  --dm-brass: #d4a853;
+  --dm-crimson: #e05252;
+  --dm-hot: #e0b45c;
+  --die-sz: 62px;
+  --die-half: 31px;
+
+  width: 100%;
+  max-width: 460px;
+  max-height: 90dvh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--dm-bg);
+  color: var(--dm-text);
+  border: 1px solid var(--dm-border-strong);
+  border-radius: 20px;
+  padding: 0.65rem 1.05rem 1.05rem;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.65);
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', system-ui, sans-serif;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  animation: diceSheetUp 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes diceSheetUp {
+  from { opacity: 0; transform: translateY(22px) scale(0.985); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+
+body.theme-catan .dice-sheet {
+  --dm-bg: #23160c;
+  --dm-surface: #2e1d10;
+  --dm-surface2: #3b2615;
+  --dm-border: rgba(235, 198, 125, 0.18);
+  --dm-border-strong: rgba(235, 198, 125, 0.32);
+  --dm-text: #f7ebd0;
+  --dm-muted: #c2aa84;
+  --dm-accent: #e5b85c;
+  --dm-accent-ink: #1e1207;
+  --dm-brass: #e5b85c;
+  --dm-crimson: #d95b43;
+  --dm-hot: #f0c66c;
+}
+
+.dice-handle {
+  width: 36px;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+  margin: 0 auto 0.1rem;
+  flex: 0 0 auto;
+}
+
+.dice-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.dice-head-left {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.dice-title {
+  margin: 0;
+  font-size: 1.02rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--dm-text);
+}
+
+body.theme-catan .dice-title {
+  font-family: var(--cg-caps, 'Cinzel', Georgia, serif);
+  letter-spacing: 0.7px;
+  text-transform: uppercase;
+  font-size: 0.96rem;
+}
+
+.dice-total-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  background: var(--dm-surface2);
+  border: 1px solid var(--dm-border);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--dm-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.dice-close-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  border: 1px solid var(--dm-border);
+  background: var(--dm-surface);
+  color: var(--dm-muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: color .15s ease, background .15s ease;
+}
+
+.dice-close-btn:hover,
+.dice-close-btn:active {
+  color: var(--dm-text);
+  background: var(--dm-surface2);
+}
+
+.dice-close-btn svg { width: 16px; height: 16px; }
+
+
+.dice-stage-card {
+  background: radial-gradient(circle at 50% 35%, rgba(212, 168, 83, 0.10), transparent 68%), var(--dm-surface);
+  border: 1px solid var(--dm-border);
+  border-radius: 16px;
+  padding: 1rem 0.9rem 0.9rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.dice-stage {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2.1rem;
+  padding: 0.55rem 0 0.35rem;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.die-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.die-scene {
+  width: var(--die-sz);
+  height: var(--die-sz);
+  perspective: 520px;
+  -webkit-perspective: 520px;
+}
+
+.die-cube {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+  transition: transform 420ms cubic-bezier(0.2, 0.88, 0.32, 1.08);
+  will-change: transform;
+}
+
+
+.die-cube[data-face="1"] { transform: rotateX(-14deg) rotateY(16deg); }
+.die-cube[data-face="2"] { transform: rotateX(-14deg) rotateY(-74deg); }
+.die-cube[data-face="3"] { transform: rotateX(76deg)  rotateY(14deg); }
+.die-cube[data-face="4"] { transform: rotateX(-104deg) rotateY(14deg); }
+.die-cube[data-face="5"] { transform: rotateX(-14deg) rotateY(106deg); }
+.die-cube[data-face="6"] { transform: rotateX(-14deg) rotateY(196deg); }
+
+
+.die-cube.is-rolling {
+  transition: none;
+  animation: diceTumbleA 520ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+#die-2.is-rolling {
+  animation: diceTumbleB 560ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+@keyframes diceTumbleA {
+  0%   { transform: translateY(0)     rotateX(0deg)   rotateY(0deg)   rotateZ(0deg); }
+  25%  { transform: translateY(-18px) rotateX(190deg) rotateY(130deg) rotateZ(45deg); }
+  55%  { transform: translateY(-8px)  rotateX(410deg) rotateY(290deg) rotateZ(-20deg); }
+  80%  { transform: translateY(-3px)  rotateX(590deg) rotateY(420deg) rotateZ(12deg); }
+  100% { transform: translateY(0)     rotateX(706deg) rotateY(556deg) rotateZ(0deg); }
+}
+
+@keyframes diceTumbleB {
+  0%   { transform: translateY(0)     rotateX(0deg)    rotateY(0deg)    rotateZ(0deg); }
+  28%  { transform: translateY(-20px) rotateX(-175deg) rotateY(165deg)  rotateZ(-50deg); }
+  58%  { transform: translateY(-9px)  rotateX(-390deg) rotateY(340deg)  rotateZ(25deg); }
+  82%  { transform: translateY(-3px)  rotateX(-580deg) rotateY(485deg)  rotateZ(-10deg); }
+  100% { transform: translateY(0)     rotateX(-734deg) rotateY(556deg)  rotateZ(0deg); }
+}
+
+.die-shadow {
+  width: 52px;
+  height: 10px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.55) 0%, transparent 72%);
+  transition: transform 260ms ease, opacity 260ms ease;
+}
+
+.die-wrap.is-rolling .die-shadow {
+  transform: scale(0.72);
+  opacity: 0.45;
+}
+
+
+.die-face {
+  position: absolute;
+  inset: 0;
+  border-radius: 11px;
+  padding: 9px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  align-items: center;
+  justify-items: center;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  background: linear-gradient(145deg, #fbf8f0 0%, #e7dec9 100%);
+  border: 1.5px solid #cbbda0;
+  box-shadow: inset 0 2px 3px rgba(255, 255, 255, 0.75), inset 0 -2px 5px rgba(95, 78, 52, 0.25);
+}
+
+.die-face.f1 { transform: rotateY(0deg)   translateZ(var(--die-half)); }
+.die-face.f2 { transform: rotateY(90deg)  translateZ(var(--die-half)); }
+.die-face.f3 { transform: rotateX(-90deg) translateZ(var(--die-half)); }
+.die-face.f4 { transform: rotateX(90deg)  translateZ(var(--die-half)); }
+.die-face.f5 { transform: rotateY(-90deg) translateZ(var(--die-half)); }
+.die-face.f6 { transform: rotateY(180deg) translateZ(var(--die-half)); }
+
+
+.pip {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #1b1d24;
+  box-shadow: inset 0 1.5px 2px rgba(0, 0, 0, 0.65), 0 0.5px 0 rgba(255, 255, 255, 0.6);
+}
+
+.die-face.f1 .pip {
+  width: 13px;
+  height: 13px;
+  background: #b92b27;
+  box-shadow: inset 0 1.5px 2.5px rgba(70, 8, 8, 0.7), 0 0.5px 0 rgba(255, 255, 255, 0.5);
+}
+
+.pip.tl { grid-area: 1 / 1; }
+.pip.tc { grid-area: 1 / 2; }
+.pip.tr { grid-area: 1 / 3; }
+.pip.ml { grid-area: 2 / 1; }
+.pip.mc { grid-area: 2 / 2; }
+.pip.mr { grid-area: 2 / 3; }
+.pip.bl { grid-area: 3 / 1; }
+.pip.bc { grid-area: 3 / 2; }
+.pip.br { grid-area: 3 / 3; }
+
+
+body.theme-catan #die-1 .die-face {
+  background: linear-gradient(145deg, #c23925 0%, #8c2113 100%);
+  border-color: #6b160b;
+  box-shadow: inset 0 2px 3px rgba(255, 195, 165, 0.35), inset 0 -2px 5px rgba(40, 6, 2, 0.45);
+}
+
+body.theme-catan #die-1 .pip {
+  background: #f9ebc8;
+  box-shadow: inset 0 1px 1.5px rgba(70, 42, 8, 0.45), 0 0.5px 0 rgba(255, 255, 255, 0.2);
+}
+
+body.theme-catan #die-2 .die-face {
+  background: linear-gradient(145deg, #f2c95d 0%, #cf982b 100%);
+  border-color: #9e6e15;
+  box-shadow: inset 0 2px 3px rgba(255, 245, 200, 0.55), inset 0 -2px 5px rgba(95, 58, 5, 0.35);
+}
+
+body.theme-catan #die-2 .pip {
+  background: #6b1b0e;
+  box-shadow: inset 0 1px 2px rgba(35, 6, 2, 0.65), 0 0.5px 0 rgba(255, 240, 190, 0.4);
+}
+
+
+.dice-readout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  min-height: 2.3rem;
+}
+
+.dice-result-total {
+  font-size: 2.05rem;
+  font-weight: 750;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  color: var(--dm-text);
+}
+
+.dice-result-split {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--dm-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.dice-robber-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  background: rgba(224, 82, 82, 0.16);
+  border: 1px solid rgba(224, 82, 82, 0.45);
+  color: #f89393;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.dice-roll-btn {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.82rem 1rem;
+  border-radius: 11px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: var(--dm-accent);
+  color: var(--dm-accent-ink);
+  font: 700 0.94rem inherit;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: transform .08s ease, filter .15s ease;
+}
+
+.dice-roll-btn:active { transform: scale(0.985); }
+.dice-roll-btn:disabled { opacity: 0.65; cursor: default; }
+.dice-roll-btn svg { width: 17px; height: 17px; }
+
+
+.dice-sec-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.42rem;
+}
+
+.dice-sec-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--dm-muted);
+}
+
+.dice-sec-hint {
+  font-size: 0.7rem;
+  color: var(--dm-muted);
+  opacity: 0.8;
+}
+
+
+.dice-phys-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.36rem;
+}
+
+.dice-phys-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 0.46rem 0.2rem 0.4rem;
+  border-radius: 9px;
+  border: 1px solid var(--dm-border);
+  background: var(--dm-surface);
+  color: var(--dm-text);
+  font: 700 0.92rem inherit;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: transform .08s ease, background .12s ease, border-color .12s ease;
+}
+
+.dice-phys-btn:active {
+  transform: scale(0.94);
+  background: var(--dm-surface2);
+}
+
+.dice-phys-btn[data-sum="6"],
+.dice-phys-btn[data-sum="8"] {
+  color: var(--dm-crimson);
+  border-color: rgba(224, 82, 82, 0.28);
+}
+
+.dice-phys-btn[data-sum="7"] {
+  border-color: rgba(212, 168, 83, 0.32);
+  background: rgba(212, 168, 83, 0.07);
+}
+
+.dice-dots {
+  display: inline-flex;
+  gap: 2px;
+  height: 4px;
+  align-items: center;
+}
+
+.dice-dots i {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.55;
+}
+
+
+.dice-chart-card {
+  background: var(--dm-surface);
+  border: 1px solid var(--dm-border);
+  border-radius: 14px;
+  padding: 0.78rem 0.65rem 0.65rem;
+}
+
+.dice-chart {
+  display: grid;
+  grid-template-columns: repeat(11, 1fr);
+  gap: 4px;
+  align-items: end;
+  height: 112px;
+  padding-top: 0.25rem;
+}
+
+.dice-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  gap: 4px;
+}
+
+.dice-col-count {
+  font-size: 0.66rem;
+  font-weight: 700;
+  color: var(--dm-muted);
+  font-variant-numeric: tabular-nums;
+  min-height: 0.85rem;
+  line-height: 1;
+}
+
+.dice-col.is-hot .dice-col-count {
+  color: var(--dm-hot);
+}
+
+.dice-col-track {
+  position: relative;
+  width: 100%;
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.dice-col-bar {
+  width: 100%;
+  height: 0%;
+  min-height: 0;
+  border-radius: 4px 4px 2px 2px;
+  background: rgba(244, 241, 234, 0.32);
+  transition: height 280ms cubic-bezier(0.22, 1, 0.36, 1), background .2s ease;
+}
+
+.dice-col[data-sum="6"] .dice-col-bar,
+.dice-col[data-sum="8"] .dice-col-bar {
+  background: rgba(224, 82, 82, 0.52);
+}
+
+.dice-col.is-hot .dice-col-bar {
+  background: linear-gradient(180deg, var(--dm-hot) 0%, rgba(212, 168, 83, 0.62) 100%);
+}
+
+.dice-col.is-latest .dice-col-track {
+  box-shadow: inset 0 0 0 1px rgba(244, 241, 234, 0.38);
+}
+
+
+.dice-col-expected {
+  position: absolute;
+  left: 2px;
+  right: 2px;
+  height: 2px;
+  border-radius: 1px;
+  background: rgba(255, 255, 255, 0.38);
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0;
+  transition: bottom 260ms ease, opacity 200ms ease;
+}
+
+.dice-chart.has-rolls .dice-col-expected {
+  opacity: 0.72;
+}
+
+.dice-col-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--dm-muted);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.dice-col[data-sum="6"] .dice-col-label,
+.dice-col[data-sum="8"] .dice-col-label {
+  color: var(--dm-crimson);
+}
+
+.dice-col.is-hot .dice-col-label {
+  color: var(--dm-hot);
+}
+
+.dice-chart-legend {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.5rem;
+  padding-top: 0.45rem;
+  border-top: 1px solid var(--dm-border);
+  font-size: 0.68rem;
+  color: var(--dm-muted);
+}
+
+.dice-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.dice-legend-tick {
+  width: 10px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.55);
+  border-radius: 1px;
+}
+
+.dice-legend-hot {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background: var(--dm-hot);
+}
+
+
+.dice-recent-strip {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  min-height: 30px;
+  padding: 0.1rem 0;
+}
+
+.dice-recent-strip::-webkit-scrollbar { display: none; }
+
+.dice-recent-empty {
+  font-size: 0.78rem;
+  color: var(--dm-muted);
+  opacity: 0.75;
+}
+
+.dice-pill {
+  flex: 0 0 auto;
+  min-width: 30px;
+  height: 28px;
+  padding: 0 0.5rem;
+  border-radius: 8px;
+  border: 1px solid var(--dm-border);
+  background: var(--dm-surface);
+  color: var(--dm-text);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.dice-pill.is-latest {
+  border-color: var(--dm-brass);
+  background: rgba(212, 168, 83, 0.14);
+}
+
+.dice-pill.is-seven {
+  border-color: rgba(224, 82, 82, 0.45);
+  background: rgba(224, 82, 82, 0.14);
+  color: #f89b9b;
+}
+
+.dice-footer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.55rem;
+  padding-top: 0.15rem;
+}
+
+.dice-foot-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.62rem 0.75rem;
+  border-radius: 10px;
+  border: 1px solid var(--dm-border);
+  background: var(--dm-surface);
+  color: var(--dm-text);
+  font: 600 0.82rem inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: background .15s ease, opacity .15s ease, transform .08s ease;
+}
+
+.dice-foot-btn:active:not(:disabled) { transform: scale(0.98); }
+.dice-foot-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.dice-foot-btn svg { width: 15px; height: 15px; color: var(--dm-muted); }
+
+.dice-foot-btn.danger {
+  color: #f28b8b;
+  border-color: rgba(224, 82, 82, 0.25);
+}
+
+.dice-foot-btn.danger svg { color: #f28b8b; }
+
+/* v15 mount points for the shared Dice trigger */
+.dice-slot { display: none; }
+.dice-slot.has-dice { display: flex; }
+#gen-dice-slot { align-items: center; gap: .45rem; }
+.active-head-actions { display: flex; align-items: center; gap: .45rem; flex: 0 0 auto; }
+body.theme-catan #catan-dice-slot.has-dice { justify-content: center; margin: .1rem auto .55rem; }
+body.dice-open { overflow: hidden; }
+</style>
+
 <style id="nertz-theme">
 
 body.theme-nertz {
@@ -2634,7 +3394,7 @@ body.theme-nertz #nz-shell .nz-net-input { font-size: 28px !important; letter-sp
 </style>
 </head>
 <body>
-<!-- Build: v14-home-redesign-sync-fix-2026-11-26 -->
+<!-- Build: v15-3d-dice-roller-2026-11-27 -->
 
 <!-- Login: starts hidden until getSession() resolves -->
 <section id="login-view" class="auth-hidden" hidden aria-label="Sign in to Score Tracker">
@@ -2802,7 +3562,10 @@ body.theme-nertz #nz-shell .nz-net-input { font-size: 28px !important; letter-sp
     <div id="generic-board" class="card">
       <div class="active-head">
         <div><h2 id="gen-title"></h2><div id="gen-sub" class="small"></div></div>
-        <button class="btn sm" type="button" title="Discard game" onclick="discardGame()">✕</button>
+        <div class="active-head-actions">
+          <div id="gen-dice-slot" class="dice-slot"></div>
+          <button class="btn sm" type="button" title="Discard game" onclick="discardGame()">✕</button>
+        </div>
       </div>
       <div id="gen-leaderboard" style="margin-top:.7rem"></div>
       <p class="small" style="margin:.3rem 0 0;text-align:center">Tap a player to score</p>
@@ -3036,6 +3799,8 @@ body.theme-nertz #nz-shell .nz-net-input { font-size: 28px !important; letter-sp
         </div>
       </header>
 
+      <div id="catan-dice-slot" class="dice-slot"></div>
+
       <section class="cg-frame cg-board" aria-label="Victory points leaderboard">
         <div class="cg-ribbon"><span>Victory Points</span></div>
         <div class="cg-parch cg-leader-card">
@@ -3257,6 +4022,169 @@ body.theme-nertz #nz-shell .nz-net-input { font-size: 28px !important; letter-sp
       <span>Exit</span>
     </button>
   </nav>
+</div>
+
+<!-- v15 Dice trigger (moved by the engine into #catan-dice-slot / #gen-dice-slot) + slide-up sheet -->
+<div id="dice-mount" hidden>
+<button type="button" id="dice-open-btn" class="dice-open-btn" onclick="openDiceModal()" aria-label="Open Dice Roller and Roll Tracker">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <rect x="3.5" y="3.5" width="17" height="17" rx="3.5"/>
+    <circle cx="8.5" cy="8.5" r="1.2" fill="currentColor" stroke="none"/>
+    <circle cx="15.5" cy="8.5" r="1.2" fill="currentColor" stroke="none"/>
+    <circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/>
+    <circle cx="8.5" cy="15.5" r="1.2" fill="currentColor" stroke="none"/>
+    <circle cx="15.5" cy="15.5" r="1.2" fill="currentColor" stroke="none"/>
+  </svg>
+  <span>Dice</span>
+  <span id="dice-open-badge" class="dice-open-badge hidden" hidden>0</span>
+</button>
+</div>
+<div id="dice-modal" class="hidden" hidden role="dialog" aria-modal="true" aria-labelledby="dice-modal-title" onclick="if(event.target===this && window.closeDiceModal) closeDiceModal()">
+  <div class="dice-sheet">
+    <div class="dice-handle" aria-hidden="true"></div>
+
+    <!-- Header -->
+    <div class="dice-head">
+      <div class="dice-head-left">
+        <h3 id="dice-modal-title" class="dice-title">Dice &amp; Rolls</h3>
+        <span id="dice-total-rolls" class="dice-total-pill">0 rolls</span>
+      </div>
+      <button type="button" id="dice-close-btn" class="dice-close-btn" aria-label="Close Dice Roller" onclick="window.closeDiceModal && closeDiceModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- 3D Dice Stage + Readout + Roll CTA -->
+    <div class="dice-stage-card">
+      <div id="dice-stage" class="dice-stage" role="button" tabindex="0" aria-label="Tap to roll dice" onclick="window.rollVirtualDice && rollVirtualDice()">
+        <!-- Die 1 -->
+        <div class="die-wrap" id="die-wrap-1">
+          <div class="die-scene">
+            <div class="die-cube" id="die-1" data-face="1">
+              <div class="die-face f1"><span class="pip mc"></span></div>
+              <div class="die-face f2"><span class="pip tl"></span><span class="pip br"></span></div>
+              <div class="die-face f3"><span class="pip tl"></span><span class="pip mc"></span><span class="pip br"></span></div>
+              <div class="die-face f4"><span class="pip tl"></span><span class="pip tr"></span><span class="pip bl"></span><span class="pip br"></span></div>
+              <div class="die-face f5"><span class="pip tl"></span><span class="pip tr"></span><span class="pip mc"></span><span class="pip bl"></span><span class="pip br"></span></div>
+              <div class="die-face f6"><span class="pip tl"></span><span class="pip tr"></span><span class="pip ml"></span><span class="pip mr"></span><span class="pip bl"></span><span class="pip br"></span></div>
+            </div>
+          </div>
+          <div class="die-shadow" aria-hidden="true"></div>
+        </div>
+
+        <!-- Die 2 -->
+        <div class="die-wrap" id="die-wrap-2">
+          <div class="die-scene">
+            <div class="die-cube" id="die-2" data-face="6">
+              <div class="die-face f1"><span class="pip mc"></span></div>
+              <div class="die-face f2"><span class="pip tl"></span><span class="pip br"></span></div>
+              <div class="die-face f3"><span class="pip tl"></span><span class="pip mc"></span><span class="pip br"></span></div>
+              <div class="die-face f4"><span class="pip tl"></span><span class="pip tr"></span><span class="pip bl"></span><span class="pip br"></span></div>
+              <div class="die-face f5"><span class="pip tl"></span><span class="pip tr"></span><span class="pip mc"></span><span class="pip bl"></span><span class="pip br"></span></div>
+              <div class="die-face f6"><span class="pip tl"></span><span class="pip tr"></span><span class="pip ml"></span><span class="pip mr"></span><span class="pip bl"></span><span class="pip br"></span></div>
+            </div>
+          </div>
+          <div class="die-shadow" aria-hidden="true"></div>
+        </div>
+      </div>
+
+      <div class="dice-readout" aria-live="polite">
+        <span id="dice-result-total" class="dice-result-total">—</span>
+        <span id="dice-result-split" class="dice-result-split">Tap dice to roll</span>
+        <span id="dice-robber-tag" class="dice-robber-tag hidden" hidden>Robber</span>
+      </div>
+
+      <button type="button" id="dice-roll-btn" class="dice-roll-btn" onclick="window.rollVirtualDice && rollVirtualDice()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3.5" y="3.5" width="17" height="17" rx="3.5"/>
+          <circle cx="8.5" cy="8.5" r="1.2" fill="currentColor" stroke="none"/>
+          <circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/>
+          <circle cx="15.5" cy="15.5" r="1.2" fill="currentColor" stroke="none"/>
+        </svg>
+        <span>Roll Dice</span>
+      </button>
+    </div>
+
+    <!-- Physical Dice Quick-Log (2..12) -->
+    <div>
+      <div class="dice-sec-head">
+        <span class="dice-sec-label">Physical Dice</span>
+        <span class="dice-sec-hint">Tap to log</span>
+      </div>
+      <div id="dice-phys-grid" class="dice-phys-grid" role="group" aria-label="Log physical dice roll">
+        <button type="button" class="dice-phys-btn" data-sum="2" onclick="window.logPhysicalRoll && logPhysicalRoll(2)"><span>2</span><span class="dice-dots" aria-hidden="true"><i></i></span></button>
+        <button type="button" class="dice-phys-btn" data-sum="3" onclick="window.logPhysicalRoll && logPhysicalRoll(3)"><span>3</span><span class="dice-dots" aria-hidden="true"><i></i><i></i></span></button>
+        <button type="button" class="dice-phys-btn" data-sum="4" onclick="window.logPhysicalRoll && logPhysicalRoll(4)"><span>4</span><span class="dice-dots" aria-hidden="true"><i></i><i></i><i></i></span></button>
+        <button type="button" class="dice-phys-btn" data-sum="5" onclick="window.logPhysicalRoll && logPhysicalRoll(5)"><span>5</span><span class="dice-dots" aria-hidden="true"><i></i><i></i><i></i><i></i></span></button>
+        <button type="button" class="dice-phys-btn" data-sum="6" onclick="window.logPhysicalRoll && logPhysicalRoll(6)"><span>6</span><span class="dice-dots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span></button>
+        <button type="button" class="dice-phys-btn" data-sum="7" onclick="window.logPhysicalRoll && logPhysicalRoll(7)"><span>7</span><span class="dice-dots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span></button>
+        <button type="button" class="dice-phys-btn" data-sum="8" onclick="window.logPhysicalRoll && logPhysicalRoll(8)"><span>8</span><span class="dice-dots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span></button>
+        <button type="button" class="dice-phys-btn" data-sum="9" onclick="window.logPhysicalRoll && logPhysicalRoll(9)"><span>9</span><span class="dice-dots" aria-hidden="true"><i></i><i></i><i></i><i></i></span></button>
+        <button type="button" class="dice-phys-btn" data-sum="10" onclick="window.logPhysicalRoll && logPhysicalRoll(10)"><span>10</span><span class="dice-dots" aria-hidden="true"><i></i><i></i><i></i></span></button>
+        <button type="button" class="dice-phys-btn" data-sum="11" onclick="window.logPhysicalRoll && logPhysicalRoll(11)"><span>11</span><span class="dice-dots" aria-hidden="true"><i></i><i></i></span></button>
+        <button type="button" class="dice-phys-btn" data-sum="12" onclick="window.logPhysicalRoll && logPhysicalRoll(12)"><span>12</span><span class="dice-dots" aria-hidden="true"><i></i></span></button>
+      </div>
+    </div>
+
+    <!-- Roll Distribution Bar Chart (2..12) -->
+    <div>
+      <div class="dice-sec-head">
+        <span class="dice-sec-label">Roll Distribution</span>
+        <span id="dice-hot-summary" class="dice-sec-hint">Expected vs. actual</span>
+      </div>
+      <div class="dice-chart-card">
+        <div id="dice-chart-bars" class="dice-chart" aria-label="Roll distribution chart for totals 2 through 12">
+          <div class="dice-col" data-sum="2"><span class="dice-col-count"></span><div class="dice-col-track"><div class="dice-col-bar"></div><div class="dice-col-expected"></div></div><span class="dice-col-label">2</span></div>
+          <div class="dice-col" data-sum="3"><span class="dice-col-count"></span><div class="dice-col-track"><div class="dice-col-bar"></div><div class="dice-col-expected"></div></div><span class="dice-col-label">3</span></div>
+          <div class="dice-col" data-sum="4"><span class="dice-col-count"></span><div class="dice-col-track"><div class="dice-col-bar"></div><div class="dice-col-expected"></div></div><span class="dice-col-label">4</span></div>
+          <div class="dice-col" data-sum="5"><span class="dice-col-count"></span><div class="dice-col-track"><div class="dice-col-bar"></div><div class="dice-col-expected"></div></div><span class="dice-col-label">5</span></div>
+          <div class="dice-col" data-sum="6"><span class="dice-col-count"></span><div class="dice-col-track"><div class="dice-col-bar"></div><div class="dice-col-expected"></div></div><span class="dice-col-label">6</span></div>
+          <div class="dice-col" data-sum="7"><span class="dice-col-count"></span><div class="dice-col-track"><div class="dice-col-bar"></div><div class="dice-col-expected"></div></div><span class="dice-col-label">7</span></div>
+          <div class="dice-col" data-sum="8"><span class="dice-col-count"></span><div class="dice-col-track"><div class="dice-col-bar"></div><div class="dice-col-expected"></div></div><span class="dice-col-label">8</span></div>
+          <div class="dice-col" data-sum="9"><span class="dice-col-count"></span><div class="dice-col-track"><div class="dice-col-bar"></div><div class="dice-col-expected"></div></div><span class="dice-col-label">9</span></div>
+          <div class="dice-col" data-sum="10"><span class="dice-col-count"></span><div class="dice-col-track"><div class="dice-col-bar"></div><div class="dice-col-expected"></div></div><span class="dice-col-label">10</span></div>
+          <div class="dice-col" data-sum="11"><span class="dice-col-count"></span><div class="dice-col-track"><div class="dice-col-bar"></div><div class="dice-col-expected"></div></div><span class="dice-col-label">11</span></div>
+          <div class="dice-col" data-sum="12"><span class="dice-col-count"></span><div class="dice-col-track"><div class="dice-col-bar"></div><div class="dice-col-expected"></div></div><span class="dice-col-label">12</span></div>
+        </div>
+        <div class="dice-chart-legend">
+          <span class="dice-legend-item"><span class="dice-legend-tick"></span>Expected</span>
+          <span class="dice-legend-item"><span class="dice-legend-hot"></span>Hottest</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Rolls Strip -->
+    <div>
+      <div class="dice-sec-head">
+        <span class="dice-sec-label">Recent Rolls</span>
+        <span class="dice-sec-hint">Newest first</span>
+      </div>
+      <div id="dice-recent" class="dice-recent-strip" aria-live="polite">
+        <span class="dice-recent-empty">No rolls logged yet</span>
+      </div>
+    </div>
+
+    <!-- Undo & Reset Controls -->
+    <div class="dice-footer">
+      <button type="button" id="dice-undo-btn" class="dice-foot-btn" disabled onclick="window.undoDiceRoll && undoDiceRoll()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="9 14 4 9 9 4"/>
+          <path d="M20 20v-7a4 4 0 0 0-4-4H4"/>
+        </svg>
+        <span>Undo Roll</span>
+      </button>
+      <button type="button" id="dice-reset-btn" class="dice-foot-btn danger" disabled onclick="window.resetDiceRolls && resetDiceRolls()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M3 12a9 9 0 1 0 3-6.7L3 8"/>
+          <polyline points="3 3 3 8 8 8"/>
+        </svg>
+        <span>Reset Rolls</span>
+      </button>
+    </div>
+  </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -3777,6 +4705,7 @@ body.theme-nertz #nz-shell .nz-net-input { font-size: 28px !important; letter-sp
       winner: winnerNames.join(', '),
       winnerNames,
       players,
+      meta: raw.meta || summary.meta || null,
       rounds: Array.isArray(summary.rounds) ? summary.rounds : [],
       roundsCount: summary.rounds_count ?? (Array.isArray(summary.rounds) ? summary.rounds.length : 0),
       myScore: myEntry ? myEntry.score : null,
@@ -6191,6 +7120,379 @@ window.SocialUI = (function () {
 
 </script>
 
+<!-- Reusable dice roller + roll tracker logic (window.DiceLogic) -->
+<script id="dice-logic">
+/* ==========================================================================
+   Score Tracker — Reusable 3D Dice Roller & Roll Tracker Logic
+   ==========================================================================
+   Drop-in logic module for v3/engine.js. Exposes `window.DiceLogic` in
+   browsers and `module.exports` in Node.
+
+   Supports:
+   - Per-game NdS dice configuration (`getDiceConfig` + `registerDiceConfig`,
+     default 2d6 with robberSum: 7 for Catan, extensible via `GAMES[type].dice`)
+   - Persisted `game.diceRolls` array (`{ sum, dice, source, ts }`)
+   - Unbiased random rolls via `crypto.getRandomValues` (with `Math.random` fallback)
+   - Manual roll logging (sum keypad OR explicit dice array), Undo, Clear
+   - Exact combinatorial probability distribution for any NdS + live analytics
+   - Compact `buildDiceSummary(game)` for `finished.meta.diceStats`
+   ========================================================================== */
+
+(function (global) {
+  'use strict';
+
+  const DEFAULT_DICE_CONFIG = Object.freeze({
+    count: 2,
+    sides: 6,
+    robberSum: 7
+  });
+
+  // Built-in per-game dice configs (extensible via registerDiceConfig or GAMES[type].dice)
+  const DICE_CONFIGS = {
+    catan: { count: 2, sides: 6, robberSum: 7 }
+  };
+
+  // Memoized combinatorial way-counts keyed by `${count}d${sides}`
+  const WAYS_CACHE = new Map();
+
+  // ---------------- Config Helpers ----------------
+  function normalizeConfig(raw) {
+    if (!raw || typeof raw !== 'object') return null;
+    const count = Math.max(1, Math.min(20, parseInt(raw.count, 10) || DEFAULT_DICE_CONFIG.count));
+    const sides = Math.max(2, Math.min(100, parseInt(raw.sides, 10) || DEFAULT_DICE_CONFIG.sides));
+    const minSum = count;
+    const maxSum = count * sides;
+    const robberRaw = raw.robberSum !== undefined ? parseInt(raw.robberSum, 10) : null;
+    const robberSum = Number.isInteger(robberRaw) && robberRaw >= minSum && robberRaw <= maxSum
+      ? robberRaw
+      : null;
+    return {
+      count,
+      sides,
+      minSum,
+      maxSum,
+      robberSum,
+      label: raw.label || `${count}d${sides}`
+    };
+  }
+
+  function lookupInCatalog(gameType, catalog) {
+    if (!gameType || !catalog) return null;
+    if (Array.isArray(catalog)) {
+      const hit = catalog.find((g) => g && g.id === gameType);
+      return hit && hit.dice ? hit.dice : null;
+    }
+    if (typeof catalog === 'object') {
+      const hit = catalog[gameType];
+      return hit && hit.dice ? hit.dice : null;
+    }
+    return null;
+  }
+
+  function registerDiceConfig(gameType, config) {
+    if (!gameType || typeof gameType !== 'string') return null;
+    const norm = normalizeConfig(config);
+    if (!norm) return null;
+    DICE_CONFIGS[gameType] = { count: norm.count, sides: norm.sides, robberSum: norm.robberSum, label: norm.label };
+    return norm;
+  }
+
+  /**
+   * Returns normalized NdS config for a gameType string or game object,
+   * or `null` if that game does not use dice.
+   * Lookup order: game.diceConfig -> gamesCatalog[type].dice -> global.GAMES -> built-in DICE_CONFIGS.
+   */
+  function getDiceConfig(gameTypeOrGame, gamesCatalog) {
+    if (!gameTypeOrGame) return null;
+    if (typeof gameTypeOrGame === 'object') {
+      if (gameTypeOrGame.diceConfig) return normalizeConfig(gameTypeOrGame.diceConfig);
+      return getDiceConfig(gameTypeOrGame.type, gamesCatalog);
+    }
+    const type = String(gameTypeOrGame);
+    const fromCatalog = lookupInCatalog(type, gamesCatalog) || lookupInCatalog(type, global.GAMES);
+    if (fromCatalog) return normalizeConfig(fromCatalog);
+    if (DICE_CONFIGS[type]) return normalizeConfig(DICE_CONFIGS[type]);
+    return null;
+  }
+
+  function resolveConfig(game, opts) {
+    const options = opts || {};
+    if (options.config) return normalizeConfig(options.config);
+    return getDiceConfig(game, options.gamesCatalog) || normalizeConfig(DEFAULT_DICE_CONFIG);
+  }
+
+  // ---------------- Fair RNG ----------------
+  function getCryptoObj() {
+    if (global.crypto && typeof global.crypto.getRandomValues === 'function') {
+      return global.crypto;
+    }
+    return null;
+  }
+
+  /**
+   * Unbiased integer in [1, sides] using rejection sampling on crypto.getRandomValues
+   * when available, falling back to Math.random().
+   */
+  function rollDie(sides, rng) {
+    if (typeof rng === 'function') {
+      const v = Math.floor(rng() * sides) + 1;
+      return Math.max(1, Math.min(sides, v));
+    }
+    const cryptoObj = getCryptoObj();
+    if (cryptoObj) {
+      const buf = new Uint32Array(1);
+      const maxUnbiased = Math.floor(0x100000000 / sides) * sides;
+      let val;
+      do {
+        cryptoObj.getRandomValues(buf);
+        val = buf[0];
+      } while (val >= maxUnbiased);
+      return (val % sides) + 1;
+    }
+    return Math.floor(Math.random() * sides) + 1;
+  }
+
+  // ---------------- State Helpers ----------------
+  function ensureDiceRolls(game) {
+    if (!game || typeof game !== 'object') return [];
+    if (!Array.isArray(game.diceRolls)) game.diceRolls = [];
+    return game.diceRolls;
+  }
+
+  // ---------------- Actions ----------------
+  /**
+   * Performs a fair digital roll for `config.count` dice of `config.sides`,
+   * appends `{ sum, dice, source: 'digital', ts }` to `game.diceRolls`, and returns it.
+   */
+  function rollDice(game, opts) {
+    if (!game || typeof game !== 'object') return null;
+    const cfg = resolveConfig(game, opts);
+    const rng = opts && typeof opts.rng === 'function' ? opts.rng : null;
+    const dice = [];
+    let sum = 0;
+    for (let i = 0; i < cfg.count; i++) {
+      const d = rollDie(cfg.sides, rng);
+      dice.push(d);
+      sum += d;
+    }
+    const entry = {
+      sum,
+      dice,
+      source: 'digital',
+      ts: new Date().toISOString()
+    };
+    ensureDiceRolls(game).push(entry);
+    return entry;
+  }
+
+  /**
+   * Logs a physical/manual roll. Accepts either:
+   * - a numeric sum in `[minSum, maxSum]` (sets `dice: null`)
+   * - an array of `count` integers each in `[1, sides]`
+   * Returns the appended entry, or `null` if invalid.
+   */
+  function logManualRoll(game, sumOrDice, opts) {
+    if (!game || typeof game !== 'object') return null;
+    const cfg = resolveConfig(game, opts);
+    let sum = null;
+    let dice = null;
+
+    if (Array.isArray(sumOrDice)) {
+      if (sumOrDice.length !== cfg.count) return null;
+      const parsed = [];
+      let total = 0;
+      for (const raw of sumOrDice) {
+        const n = typeof raw === 'number' ? raw : parseInt(String(raw).trim(), 10);
+        if (!Number.isInteger(n) || n < 1 || n > cfg.sides) return null;
+        parsed.push(n);
+        total += n;
+      }
+      dice = parsed;
+      sum = total;
+    } else {
+      const n = typeof sumOrDice === 'number' ? sumOrDice : parseInt(String(sumOrDice ?? '').trim(), 10);
+      if (!Number.isInteger(n) || n < cfg.minSum || n > cfg.maxSum) return null;
+      sum = n;
+      dice = null;
+    }
+
+    const entry = {
+      sum,
+      dice,
+      source: 'manual',
+      ts: new Date().toISOString()
+    };
+    ensureDiceRolls(game).push(entry);
+    return entry;
+  }
+
+  /**
+   * Pops and returns the most recent roll entry, or `null` if none exist.
+   */
+  function undoLastRoll(game) {
+    if (!game || !Array.isArray(game.diceRolls) || !game.diceRolls.length) return null;
+    return game.diceRolls.pop();
+  }
+
+  /**
+   * Clears all tracked rolls on `game` and returns the number cleared.
+   */
+  function clearRolls(game) {
+    if (!game || typeof game !== 'object') return 0;
+    const prevCount = Array.isArray(game.diceRolls) ? game.diceRolls.length : 0;
+    game.diceRolls = [];
+    return prevCount;
+  }
+
+  // ---------------- Combinatorial Analytics ----------------
+  /**
+   * Computes exact number of ways to achieve each sum for `count` dice of `sides`
+   * via DP convolution. Returns `{ minSum, maxSum, totalOutcomes, waysBySum }`.
+   */
+  function computeExactWays(count, sides) {
+    const key = `${count}d${sides}`;
+    if (WAYS_CACHE.has(key)) return WAYS_CACHE.get(key);
+
+    let dp = [1]; // 0 dice -> sum 0 has 1 way
+    for (let d = 0; d < count; d++) {
+      const next = new Array(dp.length + sides).fill(0);
+      for (let s = 0; s < dp.length; s++) {
+        if (!dp[s]) continue;
+        for (let face = 1; face <= sides; face++) {
+          next[s + face] += dp[s];
+        }
+      }
+      dp = next;
+    }
+
+    const minSum = count;
+    const maxSum = count * sides;
+    const totalOutcomes = Math.pow(sides, count);
+    const waysBySum = {};
+    for (let sum = minSum; sum <= maxSum; sum++) {
+      waysBySum[sum] = dp[sum] || 0;
+    }
+
+    const result = { minSum, maxSum, totalOutcomes, waysBySum };
+    WAYS_CACHE.set(key, result);
+    return result;
+  }
+
+  /**
+   * Computes full roll distribution & analytics for `game`.
+   */
+  function getDistribution(game, opts) {
+    const cfg = resolveConfig(game, opts);
+    const rolls = Array.isArray(game && game.diceRolls) ? game.diceRolls : [];
+    const exact = computeExactWays(cfg.count, cfg.sides);
+
+    const counts = {};
+    for (let s = cfg.minSum; s <= cfg.maxSum; s++) counts[s] = 0;
+
+    let totalRolls = 0;
+    let digitalCount = 0;
+    let manualCount = 0;
+
+    for (const r of rolls) {
+      if (!r || !Number.isInteger(r.sum)) continue;
+      if (r.sum < cfg.minSum || r.sum > cfg.maxSum) continue;
+      counts[r.sum] = (counts[r.sum] || 0) + 1;
+      totalRolls++;
+      if (r.source === 'manual') manualCount++;
+      else digitalCount++;
+    }
+
+    let maxCount = 0;
+    for (let s = cfg.minSum; s <= cfg.maxSum; s++) {
+      if (counts[s] > maxCount) maxCount = counts[s];
+    }
+
+    const hotSums = totalRolls >= 3 && maxCount > 0
+      ? Object.keys(counts)
+          .map(Number)
+          .filter((s) => counts[s] === maxCount)
+      : [];
+    const hotSet = new Set(hotSums);
+
+    const rows = [];
+    for (let s = cfg.minSum; s <= cfg.maxSum; s++) {
+      const ways = exact.waysBySum[s] || 0;
+      const prob = ways / exact.totalOutcomes;
+      const count = counts[s] || 0;
+      rows.push({
+        sum: s,
+        ways,
+        prob,
+        theoreticalPct: prob * 100,
+        count,
+        actualPct: totalRolls > 0 ? (count / totalRolls) * 100 : 0,
+        expectedCount: totalRolls * prob,
+        isRobber: cfg.robberSum !== null && s === cfg.robberSum,
+        isHot: hotSet.has(s)
+      });
+    }
+
+    const recent = rolls.slice(-12).reverse();
+
+    return {
+      config: cfg,
+      totalRolls,
+      digitalCount,
+      manualCount,
+      maxCount,
+      hotSums,
+      counts,
+      rows,
+      recent
+    };
+  }
+
+  // ---------------- History Summary ----------------
+  /**
+   * Builds a compact summary for `finished.meta.diceStats` when a game ends.
+   * Returns `null` if no rolls were tracked.
+   */
+  function buildDiceSummary(game, opts) {
+    const dist = getDistribution(game, opts);
+    if (!dist.totalRolls) return null;
+    return {
+      config: {
+        count: dist.config.count,
+        sides: dist.config.sides,
+        robberSum: dist.config.robberSum,
+        label: dist.config.label
+      },
+      totalRolls: dist.totalRolls,
+      digitalCount: dist.digitalCount,
+      manualCount: dist.manualCount,
+      counts: dist.counts
+    };
+  }
+
+  const api = {
+    DEFAULT_DICE_CONFIG,
+    getDiceConfig,
+    registerDiceConfig,
+    ensureDiceRolls,
+    rollDie,
+    rollDice,
+    logManualRoll,
+    undoLastRoll,
+    clearRolls,
+    computeExactWays,
+    getDistribution,
+    buildDiceSummary
+  };
+
+  global.DiceLogic = api;
+
+  if (typeof module !== 'undefined' && module.exports) {
+    module.exports = api;
+  }
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+
 <!-- App engine: defines window.onAuthReady / window.onAuthSignedOut before auth init -->
 <script id="score-engine">
 /* Score Tracker engine — social layer (you, friends, groups, shared history), game-agnostic shell, per-game scoring, Catan wood/parchment theme, Flip 7 coastal card theme, Carcassonne sunlit meadow tally, Nertz Midnight Parlor & Gold Foil (Solo + unlimited Partners/Teams). */
@@ -6213,7 +7515,8 @@ window.SocialUI = (function () {
       target: () => null, detailedLabel: 'Features' },
     { id: 'catan', name: 'Catan', img: 'assets/games/catan.svg', icon: '⬢',
       versions: ['Base (to 10 VP)', 'Cities & Knights (to 13 VP)', 'Seafarers (to 12 VP)', '5-6 Player (to 10 VP)'],
-      target: (v) => { const m = /to (\d+)/i.exec(v || ''); return m ? Number(m[1]) : 10; } },
+      target: (v) => { const m = /to (\d+)/i.exec(v || ''); return m ? Number(m[1]) : 10; },
+      dice: { count: 2, sides: 6, robberSum: 7 } },
     { id: 'ohhell', name: 'Oh Hell', img: 'assets/games/ohhell.svg', icon: '♠️',
       versions: ['Exact: 10+bid (miss=0)', '1 per trick +10 if exact', 'Other variant'],
       target: () => null, detailedLabel: 'Bid & Tricks' },
@@ -6376,7 +7679,7 @@ window.SocialUI = (function () {
   }
   function onAuthSignedOut() {
     currentUser = null; initializedUserId = null; players = []; history = []; currentGame = null; pendingSync = false;
-    scoringPlayer = null; currentView = 'home';
+    scoringPlayer = null; currentView = 'home'; closeDiceModal();
     document.body.classList.remove('theme-catan', 'theme-flip7', 'theme-carcassonne', 'theme-nertz'); f7 = null; nzSheetKind = null; nzPopIdx = -1;
     resetSocialState();
     document.querySelectorAll('#app-shell .view').forEach((el) => el.classList.remove('active'));
@@ -6397,6 +7700,7 @@ window.SocialUI = (function () {
     if (!nzon && (nzSheetKind || nzPopIdx >= 0)) { nzCloseSheet(); nzPopIdx = -1; }
     if (!ccon) ccHideAdd();
     if (!f7on) { const s = byId('f7-sheet'); if (s && !s.hidden) { setHidden(s, true); s.innerHTML = ''; } }
+    syncDiceTrigger();
     const meta = document.querySelector('meta[name="theme-color"]');
     if (meta) meta.setAttribute('content', on ? '#180f08' : f7on ? '#4bbdb8' : ccon ? '#6fa6d8' : nzon ? '#071222' : '#0c0d10');
   }
@@ -6502,7 +7806,7 @@ window.SocialUI = (function () {
   }
   function discardGame() {
     if (!currentGame || !confirm('Discard this game without saving?')) return;
-    currentGame = null; scoringPlayer = null; f7 = null; persistActive(); showView('home');
+    closeDiceModal(); currentGame = null; scoringPlayer = null; f7 = null; persistActive(); showView('home');
   }
 
   // ---------------- Rounds (shared by every game) ----------------
@@ -6560,6 +7864,10 @@ window.SocialUI = (function () {
       finished = { ...currentGame, endTime: new Date().toISOString() };
       finished.winner = computeWinner(finished);
     }
+    const DL = global.DiceLogic, diceStats = DL ? DL.buildDiceSummary(currentGame, { gamesCatalog: GAMES }) : null;
+    if (diceStats) finished.meta = { ...(finished.meta || {}), diceStats };
+    delete finished.diceRolls;
+    closeDiceModal();
     history.unshift(finished);
     currentGame = null; scoringPlayer = null; f7 = null;
     persistActive();
@@ -7555,6 +8863,144 @@ window.SocialUI = (function () {
     const ok = NZL().nzMovePartner(currentGame, i, j, Number(to)); nzCommit(true); return ok;
   }
 
+  // ---------------- v15 Reusable 3D Dice Roller + Roll Tracker ----------------
+  const DLx = () => global.DiceLogic || null;
+  let diceAnimTimer = null;
+  function diceConfigFor(game) { const d = DLx(); return d && game ? d.getDiceConfig(game, GAMES) : null; }
+  function diceEnabled() { return currentView === 'active' && !!currentGame && !!diceConfigFor(currentGame); }
+  function syncDiceTrigger() {
+    const btn = byId('dice-open-btn'); if (!btn) return;
+    const on = diceEnabled();
+    const host = on ? byId(isCatan() ? 'catan-dice-slot' : 'gen-dice-slot') : byId('dice-mount');
+    if (host && btn.parentElement !== host) host.appendChild(btn);
+    ['catan-dice-slot', 'gen-dice-slot'].forEach((id) => { const el = byId(id); if (el) el.classList.toggle('has-dice', on && el === host); });
+    setHidden(btn, !on);
+    const n = on && Array.isArray(currentGame.diceRolls) ? currentGame.diceRolls.length : 0;
+    const badge = byId('dice-open-badge');
+    if (badge) { badge.textContent = String(n); setHidden(badge, !n); }
+    btn.setAttribute('aria-label', n ? `Open Dice Roller and Roll Tracker (${n} rolls)` : 'Open Dice Roller and Roll Tracker');
+    if (!on) { const m = byId('dice-modal'); if (m && !m.hidden) closeDiceModal(); }
+  }
+  function openDiceModal() {
+    if (!diceEnabled()) return;
+    const m = byId('dice-modal'); if (!m) return;
+    const cfg = diceConfigFor(currentGame);
+    const title = byId('dice-modal-title'); if (title) title.textContent = cfg && cfg.label && !isCatan() ? `Dice & Rolls · ${cfg.label}` : 'Dice & Rolls';
+    setHidden(m, false);
+    document.body.classList.add('dice-open');
+    diceReadoutFromLatest();
+    renderDiceUI();
+  }
+  function closeDiceModal() {
+    const m = byId('dice-modal'); if (!m) return;
+    setHidden(m, true);
+    document.body.classList.remove('dice-open');
+  }
+  function diceShowReadout(entry, physical) {
+    const cfg = diceConfigFor(currentGame) || {};
+    const tot = byId('dice-result-total'), split = byId('dice-result-split'), robber = byId('dice-robber-tag');
+    if (!entry) {
+      if (tot) tot.textContent = '—';
+      if (split) split.textContent = 'Tap dice to roll';
+      setHidden(robber, true);
+      return;
+    }
+    if (tot) tot.textContent = String(entry.sum);
+    if (split) split.textContent = physical || entry.source === 'manual' ? 'Physical roll' : (entry.dice || []).join(' + ');
+    setHidden(robber, !(isCatan() && cfg.robberSum != null && entry.sum === cfg.robberSum));
+  }
+  function diceSetFaces(entry) {
+    if (!entry || !Array.isArray(entry.dice)) return;
+    entry.dice.slice(0, 2).forEach((v, i) => { const d = byId('die-' + (i + 1)); if (d && v >= 1 && v <= 6) d.setAttribute('data-face', String(v)); });
+  }
+  function renderDiceUI() {
+    const d = DLx(); if (!d || !currentGame) { syncDiceTrigger(); return; }
+    const dist = d.getDistribution(currentGame, { gamesCatalog: GAMES });
+    const tr = byId('dice-total-rolls'); if (tr) tr.textContent = `${dist.totalRolls} ${dist.totalRolls === 1 ? 'roll' : 'rolls'}`;
+    const latest = dist.recent && dist.recent.length ? dist.recent[0] : null;
+    const scale = Math.max(1, ...dist.rows.map((r) => Math.max(r.actualPct, r.theoreticalPct))) * 1.08;
+    const chart = byId('dice-chart-bars');
+    if (chart) {
+      chart.classList.toggle('has-rolls', dist.totalRolls > 0);
+      dist.rows.forEach((r) => {
+        const col = chart.querySelector(`.dice-col[data-sum="${r.sum}"]`); if (!col) return;
+        const bar = col.querySelector('.dice-col-bar'), exp = col.querySelector('.dice-col-expected'), cnt = col.querySelector('.dice-col-count');
+        if (bar) bar.style.height = (dist.totalRolls ? (r.actualPct / scale) * 100 : 0).toFixed(1) + '%';
+        if (exp) exp.style.bottom = ((r.theoreticalPct / scale) * 100).toFixed(1) + '%';
+        if (cnt) cnt.textContent = r.count ? String(r.count) : '';
+        col.classList.toggle('is-hot', !!r.isHot);
+        col.classList.toggle('is-latest', !!latest && latest.sum === r.sum);
+        col.setAttribute('aria-label', `${r.sum}: ${r.count} rolled, ${r.expectedCount.toFixed(1)} expected`);
+      });
+    }
+    const hot = byId('dice-hot-summary');
+    if (hot) hot.textContent = dist.hotSums.length ? `Hottest: ${dist.hotSums.join(', ')}` : 'Expected vs. actual';
+    const rec = byId('dice-recent');
+    if (rec) {
+      const robberSum = dist.config ? dist.config.robberSum : null;
+      rec.innerHTML = dist.recent.length
+        ? dist.recent.map((r, i) => `<span class="dice-pill${i === 0 ? ' is-latest' : ''}${robberSum != null && r.sum === robberSum ? ' is-seven' : ''}" title="${r.source === 'manual' ? 'Physical roll' : esc((r.dice || []).join(' + '))}">${r.sum}</span>`).join('')
+        : '<span class="dice-recent-empty">No rolls logged yet</span>';
+    }
+    const has = dist.totalRolls > 0;
+    const u = byId('dice-undo-btn'); if (u) u.disabled = !has;
+    const z = byId('dice-reset-btn'); if (z) z.disabled = !has;
+    syncDiceTrigger();
+    return dist;
+  }
+  function rollVirtualDice() {
+    const d = DLx(); if (!d || !diceEnabled()) return null;
+    const entry = d.rollDice(currentGame, { gamesCatalog: GAMES });
+    if (!entry) return null;
+    const els = ['die-1', 'die-2', 'die-wrap-1', 'die-wrap-2'].map(byId).filter(Boolean);
+    els.forEach((el) => el.classList.remove('is-rolling'));
+    void (els[0] && els[0].offsetWidth); // force reflow so back-to-back rolls restart the tumble
+    diceSetFaces(entry);
+    els.forEach((el) => el.classList.add('is-rolling'));
+    clearTimeout(diceAnimTimer);
+    diceAnimTimer = setTimeout(() => els.forEach((el) => el.classList.remove('is-rolling')), 580);
+    persistActive();
+    diceShowReadout(entry, false);
+    renderDiceUI();
+    return entry;
+  }
+  function logPhysicalRoll(n) {
+    const d = DLx(); if (!d || !diceEnabled()) return null;
+    const entry = d.logManualRoll(currentGame, Number(n), { gamesCatalog: GAMES });
+    if (!entry) return null;
+    persistActive();
+    diceShowReadout(entry, true);
+    renderDiceUI();
+    return entry;
+  }
+  function diceReadoutFromLatest() {
+    const rolls = currentGame && Array.isArray(currentGame.diceRolls) ? currentGame.diceRolls : [];
+    const last = rolls[rolls.length - 1] || null;
+    if (last && last.source !== 'manual') diceSetFaces(last);
+    diceShowReadout(last, last && last.source === 'manual');
+  }
+  function undoDiceRoll() {
+    const d = DLx(); if (!d || !currentGame) return null;
+    const r = d.undoLastRoll(currentGame);
+    persistActive(); diceReadoutFromLatest(); renderDiceUI();
+    return r;
+  }
+  function resetDiceRolls() {
+    const d = DLx(); if (!d || !currentGame) return 0;
+    if (Array.isArray(currentGame.diceRolls) && currentGame.diceRolls.length > 1 && !confirm('Clear all logged rolls for this game?')) return 0;
+    const n = d.clearRolls(currentGame);
+    persistActive(); diceShowReadout(null); renderDiceUI();
+    return n;
+  }
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { const m = byId('dice-modal'); if (m && !m.hidden) closeDiceModal(); } });
+  function diceHistoryLine(g) {
+    const st = g && g.meta && g.meta.diceStats;
+    if (!st || !st.totalRolls) return '';
+    const counts = st.counts || {}, max = Math.max(0, ...Object.values(counts).map(Number));
+    const top = max > 0 ? Object.keys(counts).filter((k) => Number(counts[k]) === max).join(', ') : '';
+    return `<div class="small history-dice" data-dice-rolls="${st.totalRolls}" style="margin-top:.2rem;opacity:.72">${st.totalRolls} ${st.totalRolls === 1 ? 'roll' : 'rolls'}${top ? ` · Most rolled: ${esc(top)}` : ''}</div>`;
+  }
+
   function renderHistory() {
     const el = byId('history-list');
     renderHistoryFilter();
@@ -7573,7 +9019,7 @@ window.SocialUI = (function () {
           ${i >= 0 ? `<button class="btn danger sm" type="button" aria-label="Delete game" onclick="deleteGame(${i})">×</button>` : ''}
         </div>${badges}
         <div style="margin-top:.3rem">${[...(g.players || [])].sort((a, b) => (gameById(g.type).low ? a.score - b.score : b.score - a.score)).map((p) => `${esc(p.name)}${Array.isArray(p.members) && p.members.length ? ` <span class="small">(${esc(p.members.map((m) => m.name).join(' & '))})</span>` : ''}: <strong>${p.score}</strong>`).join(' · ')}</div>
-        <div class="winner">Winner: ${esc(g.winner || '—')}</div>
+        <div class="winner">Winner: ${esc(g.winner || '—')}</div>${diceHistoryLine(g)}
       </div>`;
     }).join('');
   }
@@ -7882,7 +9328,7 @@ window.SocialUI = (function () {
   function adaptShared(g) {
     return {
       id: g.id, game_type: g.type, variant: g.version || null, group_id: g.group_id || null, group_name: g.group_name || null,
-      created_by: g.created_by || null, played_at: g.endTime || null,
+      created_by: g.created_by || null, played_at: g.endTime || null, meta: g.meta || null,
       summary: { local_game_id: g.client_game_id || null, target: g.target ?? null, rounds: g.rounds || [], start_time: g.startTime || null },
       ...((g.meta && g.meta.mode === 'teams') && g.winner ? { winner_names: [g.winner] } : {}),
       participants: (g.players || []).map((p) => ({ user_id: p.user_id || p.userId || null, display_name: p.name, score: p.score, is_winner: !!(p.is_winner ?? p.isWinner), meta: {},
@@ -7945,6 +9391,7 @@ window.SocialUI = (function () {
     nzToggleHistory, nzOpenSheet, nzCloseSheet, nzUiSelect, nzUiToggleDeckPop, nzUiPickDeck, nzUiSaveTarget, nzUiAddPlayer, nzUiRemovePlayer, nzUiAddTeam,
     nzUiRemoveTeam, nzUiRenameTeam, nzUiAddPartner, nzUiRemovePartner, nzUiMovePartner,
     undoLastRound, undoLastAction: undoLastRound, endGame, deleteGame,
+    openDiceModal, closeDiceModal, rollVirtualDice, logPhysicalRoll, undoDiceRoll, resetDiceRolls, renderDiceUI,
     onAuthSignedIn: onAuthReady, removeSelf, addSelf, removeSetupFriend, toggleSetupFriend, includeFriendInNextGame, applyGroupPreset, clearSetupGroup,
     startGameWithGroup, saveDisplayName, sendFriendRequest, respondFriendRequest, removeFriend, openCreateGroup, toggleGroupModalFriend,
     addGroupModalGuest, removeGroupModalGuest, createGroupFromModal, deleteGroup, setHistoryFilter, setGroupLbFilter, refreshSocial,
