@@ -1,18 +1,16 @@
 {
-  "name": "Game Score Tracker",
-  "short_name": "ScoreTracker",
+  "name": "TallyIt",
+  "short_name": "TallyIt",
   "description": "Track and log scores for board and card games",
   "start_url": "./game_tracker.html",
+  "scope": "./",
   "display": "standalone",
-  "background_color": "#0f172a",
-  "theme_color": "#38bdf8",
+  "background_color": "#1a1714",
+  "theme_color": "#1a1714",
   "orientation": "portrait",
   "icons": [
-    {
-      "src": "icon-512.jpg",
-      "sizes": "512x512",
-      "type": "image/jpeg",
-      "purpose": "any"
-    }
+    { "src": "assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ]
 }

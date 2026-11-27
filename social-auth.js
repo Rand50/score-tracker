@@ -28,7 +28,7 @@
   'use strict';
 
   const LS_PREFIX = 'gst_social_v1_';
-  const APP_URL = 'https://rand50.github.io/score-tracker/game_tracker.html';
+  const APP_URL = 'https://tallyit.fun/game_tracker.html'; // fallback only; live pages use location.origin + location.pathname
   const PENDING_FRIEND_KEY = 'gst_pending_add_friend_v1';
   const PENDING_FRIEND_TTL_MS = 24 * 60 * 60 * 1000;
   let cachedProfile = null;

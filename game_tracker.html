@@ -6,11 +6,12 @@
 <meta name="theme-color" content="#0c0d10">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="score-tracker-build" content="v18-7wonders-2026-11-27">
-<title>Score Tracker</title>
+<meta name="score-tracker-build" content="v19-tallyit-domain-2026-11-27">
+<meta name="apple-mobile-web-app-title" content="TallyIt">
+<title>TallyIt — Score Tracker</title>
+<link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png">
 <link rel="manifest" href="manifest.json">
-<link rel="icon" href="icon-512.jpg" type="image/jpeg">
-<link rel="apple-touch-icon" href="icon-512.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Cinzel:wght@600;700;800&family=Marcellus&family=EB+Garamond:wght@500;600;700;800&family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
@@ -5663,7 +5664,7 @@ body.theme-seven-wonders .bottom-nav #nav-social {
 </style>
 </head>
 <body>
-<!-- Build: v18-7wonders-2026-11-27 -->
+<!-- Build: v19-tallyit-domain-2026-11-27 -->
 
 <!-- Login: starts hidden until getSession() resolves -->
 <section id="login-view" class="auth-hidden" hidden aria-label="Sign in to Score Tracker">
@@ -7942,7 +7943,7 @@ body.theme-seven-wonders .bottom-nav #nav-social {
   'use strict';
 
   const LS_PREFIX = 'gst_social_v1_';
-  const APP_URL = 'https://rand50.github.io/score-tracker/game_tracker.html';
+  const APP_URL = 'https://tallyit.fun/game_tracker.html'; // fallback only; live pages use location.origin + location.pathname
   const PENDING_FRIEND_KEY = 'gst_pending_add_friend_v1';
   const PENDING_FRIEND_TTL_MS = 24 * 60 * 60 * 1000;
   let cachedProfile = null;
@@ -15040,7 +15041,17 @@ window.SocialUI = (function () {
 (function () {
   const SUPABASE_URL = 'https://lezfdnqqfejqyxqwlcfg.supabase.co';
   const SUPABASE_ANON_KEY = 'sb_publishable_HEGO45Fw5dl1s8sAbFnSkg_VzWU_guj';
-  const REDIRECT = 'https://rand50.github.io/score-tracker/game_tracker.html';
+  // Dynamic: works on https://tallyit.fun/game_tracker.html, rand50.github.io/score-tracker/game_tracker.html, or any host.
+  const REDIRECT = (function () {
+    try {
+      const loc = window.location;
+      if (/^https?:$/i.test(loc.protocol)) {
+        const dir = loc.pathname.replace(/[^\/]*$/, '');
+        return loc.origin + (/game_tracker\.html$/i.test(loc.pathname) ? loc.pathname : dir + 'game_tracker.html');
+      }
+    } catch (_) {}
+    return 'https://tallyit.fun/game_tracker.html';
+  })();
 
   if (!window.supabase || typeof window.supabase.createClient !== 'function') {
     const showOffline = () => {
