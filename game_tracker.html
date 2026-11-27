@@ -6,7 +6,7 @@
 <title>Score Tracker</title>
 <style>
 :root { --bg:#0b1220; --surface:#151c2c; --surface2:#1e293b; --text:#f1f5f9; --muted:#94a3b8; --accent:#22d3ee; --accent-dim:#0891b2; --border:rgba(255,255,255,0.08); }
-body { margin:0; font-family:system-ui,sans-serif; background:var(--bg); color:var(--text); padding-bottom:80px; }
+body { margin:0; font-family:system-ui,sans-serif; background:var(--bg); color:var(--text); padding-bottom:80px; transition:background .3s; }
 .view { padding:0 1rem; max-width:900px; margin:0 auto; }
 .hidden { display:none !important; }
 .card { background:var(--surface); border-radius:16px; padding:1.25rem; margin-bottom:1rem; border:1px solid var(--border); }
@@ -27,7 +27,6 @@ input, select { background:#0b1220; border:1px solid var(--border); color:var(--
 .key.active { outline:3px solid var(--accent); }
 .player-row { background:var(--surface2); border-radius:14px; padding:0.9rem 1.1rem; margin:0.45rem 0; display:flex; justify-content:space-between; align-items:center; cursor:pointer; }
 .rank { width:28px; font-weight:700; color:var(--muted); }
-.cat { padding:.5rem .8rem; border-radius:8px; font-size:.85rem; font-weight:600; cursor:pointer; border:none; color:white; }
 </style>
 </head>
 <body>
@@ -70,7 +69,7 @@ input, select { background:#0b1220; border:1px solid var(--border); color:var(--
     </div>
   </div>
   <div id="view-active" class="view hidden">
-    <div class="card">
+    <div class="card" id="active-card">
       <h2 id="active-title" style="margin-top:0"></h2>
       <div id="leaderboard"></div>
       <div id="pad" class="hidden"></div>
@@ -100,6 +99,17 @@ const CARD_COLORS = {
   10:'#c0392b',11:'#2c3e50',12:'#7f8c8d'
 };
 
+const THEMES = {
+  flip7: { bg:'#0b1220', accent:'#22d3ee', surface:'#151c2c' },
+  '7wonders': { bg:'#0a1a1a', accent:'#d4a017', surface:'#1a2a2a' },
+  carcassonne: { bg:'#1a1f14', accent:'#7cb342', surface:'#2a3320' },
+  catan: { bg:'#1a120b', accent:'#e67e22', surface:'#2a1f14' },
+  ohhell: { bg:'#0d1a0d', accent:'#4caf50', surface:'#1a2a1a' },
+  hearts: { bg:'#1a0d0d', accent:'#e74c3c', surface:'#2a1515' },
+  nertz: { bg:'#1a140d', accent:'#f4d03f', surface:'#2a2214' },
+  other: { bg:'#0b1220', accent:'#22d3ee', surface:'#151c2c' }
+};
+
 let players = [];
 let history = [];
 let currentGame = null;
@@ -115,8 +125,16 @@ const games = [
   { id:'ohhell', name:'Oh Hell', img:'ohhell.jpg', versions:['Exact = 10+bid'], theme:'ohhell' },
   { id:'hearts', name:'Hearts', img:'', versions:['Standard (to 100)'], theme:'hearts' },
   { id:'nertz', name:'Nertz', img:'nertz.png', versions:['Standard'], theme:'nertz' },
-  { id:'other', name:'Custom', img:'', versions:['Custom'], theme:'generic' }
+  { id:'other', name:'Custom', img:'', versions:['Custom'], theme:'other' }
 ];
+
+function applyTheme(themeKey) {
+  const t = THEMES[themeKey] || THEMES.other;
+  document.documentElement.style.setProperty('--bg', t.bg);
+  document.documentElement.style.setProperty('--accent', t.accent);
+  document.documentElement.style.setProperty('--surface', t.surface);
+  document.body.style.background = t.bg;
+}
 
 async function checkSession() {
   const { data: { session } } = await sb.auth.getSession();
@@ -164,10 +182,14 @@ function showView(v) {
   document.getElementById('view-'+v).classList.remove('hidden');
   document.querySelectorAll('.bottom-nav button').forEach(b => b.classList.remove('active'));
   document.getElementById('nav-'+v)?.classList.add('active');
-  if (v==='home') renderRecent();
-  if (v==='new') renderNew();
-  if (v==='history') renderHistory();
-  if (v==='active' && currentGame) renderLeaderboard();
+  if (v==='home') { applyTheme('other'); renderRecent(); }
+  if (v==='new') { applyTheme('other'); renderNew(); }
+  if (v==='history') { applyTheme('other'); renderHistory(); }
+  if (v==='active' && currentGame) {
+    const g = games.find(x=>x.id===currentGame.type);
+    applyTheme(g?.theme || 'other');
+    renderLeaderboard();
+  }
 }
 
 function renderNew() {
@@ -209,177 +231,93 @@ function openPad(idx){
   scoringPlayer = idx;
   const g = games.find(x=>x.id===currentGame.type);
   document.getElementById('pad').classList.remove('hidden');
-  if (g.theme === 'flip7') openFlip7Pad(idx);
-  else if (g.theme === '7wonders') open7WondersPad(idx);
-  else if (g.theme === 'catan') openCatanPad(idx);
-  else if (g.theme === 'carcassonne') openCarcassonnePad(idx);
-  else if (g.theme === 'ohhell') openOhHellPad(idx);
-  else if (g.theme === 'hearts') openHeartsPad(idx);
-  else if (g.theme === 'nertz') openNertzPad(idx);
-  else openGenericPad(idx, g);
-}
-
-function openFlip7Pad(idx){
-  currentRoundState = { numbers: new Set(), x2: false, mods: new Set(), bust: false };
-  const numbers = [0,1,2,3,4,5,6,7,8,9,10,11,12];
-  const mods = [2,4,6,8,10];
   document.getElementById('pad').innerHTML = `
-    <div class="small" style="margin:.6rem 0">Scoring for <strong>${currentGame.players[idx].name}</strong></div>
-    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:8px">
-      ${numbers.map(n => `<div class="key" id="n${n}" style="background:${CARD_COLORS[n]};color:white" onclick="toggleNum(${n})">${n}</div>`).join('')}
+    <div class="small" style="margin:.6rem 0">Score for <strong>${currentGame.players[idx].name}</strong></div>
+    <div class="flex" style="margin-bottom:.6rem">
+      <button class="btn" id="mode-simple" onclick="setMode('simple')">Simple Points</button>
+      <button class="btn" id="mode-detailed" onclick="setMode('detailed')">Detailed</button>
     </div>
-    <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:10px">
-      <div class="key" id="kx2" style="background:#1e293b" onclick="toggleX2()">×2</div>
-      ${mods.map(m => `<div class="key" id="m${m}" style="background:#1e293b" onclick="toggleMod(${m})">+${m}</div>`).join('')}
-    </div>
-    <div class="flex">
-      <button class="btn" onclick="toggleBust()">Bust</button>
-      <button class="btn primary" onclick="commitFlip7()">Add Score</button>
-      <button class="btn" onclick="renderLeaderboard()">Cancel</button>
-    </div>
-    <div id="preview" class="small" style="margin-top:.6rem"></div>
+    <div id="score-form"></div>
   `;
-  updateFlip7Preview();
+  setMode('simple');
 }
 
-function open7WondersPad(idx){
-  document.getElementById('pad').innerHTML = `
-    <div class="small" style="margin:.6rem 0">7 Wonders · <strong>${currentGame.players[idx].name}</strong></div>
-    <div class="flex" style="margin:.4rem 0">
-      <span style="width:90px">Military</span><input type="number" id="w-mil" value="0" style="width:80px">
-    </div>
-    <div class="flex" style="margin:.4rem 0">
-      <span style="width:90px">Science</span><input type="number" id="w-sci" value="0" style="width:80px">
-    </div>
-    <div class="flex" style="margin:.4rem 0">
-      <span style="width:90px">Civilian</span><input type="number" id="w-civ" value="0" style="width:80px">
-    </div>
-    <div class="flex" style="margin:.4rem 0">
-      <span style="width:90px">Wonder</span><input type="number" id="w-won" value="0" style="width:80px">
-    </div>
-    <div class="flex" style="margin:.4rem 0">
-      <span style="width:90px">Coins</span><input type="number" id="w-coin" value="0" style="width:80px">
-    </div>
-    <div class="flex" style="margin-top:.6rem">
-      <button class="btn primary" onclick="commit7Wonders()">Add</button>
-      <button class="btn" onclick="renderLeaderboard()">Cancel</button>
-    </div>
+function setMode(mode){
+  const g = games.find(x=>x.id===currentGame.type);
+  const form = document.getElementById('score-form');
+  if (mode === 'simple') {
+    form.innerHTML = `
+      <input type="number" id="simple-pts" value="0" placeholder="Points / VP">
+      <div class="flex" style="margin-top:.6rem">
+        <button class="btn primary" onclick="commitSimple()">Add</button>
+        <button class="btn" onclick="renderLeaderboard()">Cancel</button>
+      </div>
+    `;
+  } else {
+    if (g.theme === 'flip7') form.innerHTML = getFlip7Form();
+    else if (g.theme === '7wonders') form.innerHTML = get7WondersForm();
+    else if (g.theme === 'catan') form.innerHTML = getCatanForm();
+    else if (g.theme === 'carcassonne') form.innerHTML = getCarcassonneForm();
+    else if (g.theme === 'ohhell') form.innerHTML = getOhHellForm();
+    else if (g.theme === 'hearts') form.innerHTML = getHeartsForm();
+    else if (g.theme === 'nertz') form.innerHTML = getNertzForm();
+    else form.innerHTML = `<input type="number" id="simple-pts" value="0"><button class="btn primary" onclick="commitSimple()">Add</button>`;
+  }
+}
+
+function getFlip7Form(){ return `<div class="small">Use the card pad on the main Flip 7 flow, or switch to Simple Points.</div>`; }
+function get7WondersForm(){
+  return `
+    <div class="flex" style="margin:.3rem 0"><span style="width:90px">Military</span><input type="number" id="w-mil" value="0" style="width:80px"></div>
+    <div class="flex" style="margin:.3rem 0"><span style="width:90px">Science</span><input type="number" id="w-sci" value="0" style="width:80px"></div>
+    <div class="flex" style="margin:.3rem 0"><span style="width:90px">Civilian</span><input type="number" id="w-civ" value="0" style="width:80px"></div>
+    <div class="flex" style="margin:.3rem 0"><span style="width:90px">Wonder</span><input type="number" id="w-won" value="0" style="width:80px"></div>
+    <div class="flex" style="margin:.3rem 0"><span style="width:90px">Coins</span><input type="number" id="w-coin" value="0" style="width:80px"></div>
+    <button class="btn primary" style="margin-top:.6rem" onclick="commit7Wonders()">Add</button>
   `;
 }
-
-function openCatanPad(idx){
-  document.getElementById('pad').innerHTML = `
-    <div class="small" style="margin:.6rem 0">Catan · <strong>${currentGame.players[idx].name}</strong></div>
-    <div class="flex" style="margin:.4rem 0"><span style="width:110px">Settlements</span><input type="number" id="c-set" value="0" style="width:70px"></div>
-    <div class="flex" style="margin:.4rem 0"><span style="width:110px">Cities</span><input type="number" id="c-cit" value="0" style="width:70px"></div>
-    <div class="flex" style="margin:.4rem 0"><span style="width:110px">Longest Road</span><input type="number" id="c-lr" value="0" style="width:70px"></div>
-    <div class="flex" style="margin:.4rem 0"><span style="width:110px">Largest Army</span><input type="number" id="c-la" value="0" style="width:70px"></div>
-    <div class="flex" style="margin:.4rem 0"><span style="width:110px">Dev cards</span><input type="number" id="c-dev" value="0" style="width:70px"></div>
-    <div class="flex" style="margin-top:.6rem">
-      <button class="btn primary" onclick="commitCatan()">Add VP</button>
-      <button class="btn" onclick="renderLeaderboard()">Cancel</button>
-    </div>
+function getCatanForm(){
+  return `
+    <div class="flex" style="margin:.3rem 0"><span style="width:110px">Settlements</span><input type="number" id="c-set" value="0" style="width:70px"></div>
+    <div class="flex" style="margin:.3rem 0"><span style="width:110px">Cities</span><input type="number" id="c-cit" value="0" style="width:70px"></div>
+    <div class="flex" style="margin:.3rem 0"><span style="width:110px">Longest Road</span><input type="number" id="c-lr" value="0" style="width:70px"></div>
+    <div class="flex" style="margin:.3rem 0"><span style="width:110px">Largest Army</span><input type="number" id="c-la" value="0" style="width:70px"></div>
+    <div class="flex" style="margin:.3rem 0"><span style="width:110px">Dev cards</span><input type="number" id="c-dev" value="0" style="width:70px"></div>
+    <button class="btn primary" style="margin-top:.6rem" onclick="commitCatan()">Add VP</button>
   `;
 }
-
-function openCarcassonnePad(idx){
-  document.getElementById('pad').innerHTML = `
-    <div class="small" style="margin:.6rem 0">Carcassonne · <strong>${currentGame.players[idx].name}</strong></div>
-    <div class="flex" style="margin:.4rem 0"><span style="width:100px">Cities</span><input type="number" id="ca-cit" value="0" style="width:80px"></div>
-    <div class="flex" style="margin:.4rem 0"><span style="width:100px">Roads</span><input type="number" id="ca-road" value="0" style="width:80px"></div>
-    <div class="flex" style="margin:.4rem 0"><span style="width:100px">Monasteries</span><input type="number" id="ca-mon" value="0" style="width:80px"></div>
-    <div class="flex" style="margin:.4rem 0"><span style="width:100px">Fields</span><input type="number" id="ca-field" value="0" style="width:80px"></div>
-    <div class="flex" style="margin-top:.6rem">
-      <button class="btn primary" onclick="commitCarcassonne()">Add</button>
-      <button class="btn" onclick="renderLeaderboard()">Cancel</button>
-    </div>
+function getCarcassonneForm(){
+  return `
+    <div class="flex" style="margin:.3rem 0"><span style="width:100px">Cities</span><input type="number" id="ca-cit" value="0" style="width:80px"></div>
+    <div class="flex" style="margin:.3rem 0"><span style="width:100px">Roads</span><input type="number" id="ca-road" value="0" style="width:80px"></div>
+    <div class="flex" style="margin:.3rem 0"><span style="width:100px">Monasteries</span><input type="number" id="ca-mon" value="0" style="width:80px"></div>
+    <div class="flex" style="margin:.3rem 0"><span style="width:100px">Fields</span><input type="number" id="ca-field" value="0" style="width:80px"></div>
+    <button class="btn primary" style="margin-top:.6rem" onclick="commitCarcassonne()">Add</button>
   `;
 }
-
-function openOhHellPad(idx){
-  document.getElementById('pad').innerHTML = `
-    <div class="small" style="margin:.6rem 0">Oh Hell · <strong>${currentGame.players[idx].name}</strong></div>
-    <div class="flex">
-      <input type="number" id="oh-bid" placeholder="Bid" style="width:80px">
-      <input type="number" id="oh-tricks" placeholder="Tricks" style="width:80px">
-    </div>
-    <div class="flex" style="margin-top:.6rem">
-      <button class="btn primary" onclick="commitOhHell()">Add</button>
-      <button class="btn" onclick="renderLeaderboard()">Cancel</button>
-    </div>
+function getOhHellForm(){
+  return `
+    <div class="flex"><input type="number" id="oh-bid" placeholder="Bid" style="width:80px"><input type="number" id="oh-tricks" placeholder="Tricks" style="width:80px"></div>
+    <button class="btn primary" style="margin-top:.6rem" onclick="commitOhHell()">Add</button>
   `;
 }
-
-function openHeartsPad(idx){
-  document.getElementById('pad').innerHTML = `
-    <div class="small" style="margin:.6rem 0">Hearts · <strong>${currentGame.players[idx].name}</strong></div>
+function getHeartsForm(){
+  return `
     <div class="flex"><span style="width:100px">Hearts</span><input type="number" id="h-hearts" value="0" style="width:70px"></div>
     <div class="flex" style="margin-top:.4rem"><span style="width:100px">Queen</span><select id="h-queen"><option value="0">No</option><option value="13">Yes (+13)</option></select></div>
-    <div class="flex" style="margin-top:.6rem">
-      <button class="btn primary" onclick="commitHearts()">Add</button>
-      <button class="btn" onclick="renderLeaderboard()">Cancel</button>
-    </div>
+    <button class="btn primary" style="margin-top:.6rem" onclick="commitHearts()">Add</button>
   `;
 }
-
-function openNertzPad(idx){
-  document.getElementById('pad').innerHTML = `
-    <div class="small" style="margin:.6rem 0">Nertz · <strong>${currentGame.players[idx].name}</strong></div>
+function getNertzForm(){
+  return `
     <div class="flex"><span style="width:120px">Cards played</span><input type="number" id="n-played" value="0" style="width:70px"></div>
     <div class="flex" style="margin-top:.4rem"><span style="width:120px">Left in Nertz</span><input type="number" id="n-left" value="0" style="width:70px"></div>
-    <div class="flex" style="margin-top:.6rem">
-      <button class="btn primary" onclick="commitNertz()">Add</button>
-      <button class="btn" onclick="renderLeaderboard()">Cancel</button>
-    </div>
+    <button class="btn primary" style="margin-top:.6rem" onclick="commitNertz()">Add</button>
   `;
 }
 
-function openGenericPad(idx, g){
-  document.getElementById('pad').innerHTML = `
-    <div class="small" style="margin:.6rem 0">${g.name} · <strong>${currentGame.players[idx].name}</strong></div>
-    <input type="number" id="gen-pts" value="0" placeholder="Points">
-    <div class="flex" style="margin-top:.6rem">
-      <button class="btn primary" onclick="commitGeneric()">Add</button>
-      <button class="btn" onclick="renderLeaderboard()">Cancel</button>
-    </div>
-  `;
-}
-
-function calculateFlip7(st){
-  if (st.bust) return 0;
-  let sum = [...st.numbers].reduce((a,b)=>a+b,0);
-  if (st.x2) sum *= 2;
-  let extra = [...st.mods].reduce((a,b)=>a+b,0);
-  if (st.numbers.size === 7) extra += 15;
-  return sum + extra;
-}
-function updateFlip7Preview(){
-  const pts = calculateFlip7(currentRoundState);
-  document.getElementById('preview').textContent = `This round: +${pts}` + (currentRoundState.numbers.size===7 ? ' (Flip 7 +15)' : '');
-}
-function toggleNum(n){
-  if (currentRoundState.numbers.has(n)) currentRoundState.numbers.delete(n);
-  else currentRoundState.numbers.add(n);
-  document.getElementById('n'+n).classList.toggle('active');
-  updateFlip7Preview();
-}
-function toggleX2(){
-  currentRoundState.x2 = !currentRoundState.x2;
-  document.getElementById('kx2').classList.toggle('active');
-  updateFlip7Preview();
-}
-function toggleMod(m){
-  if (currentRoundState.mods.has(m)) currentRoundState.mods.delete(m);
-  else currentRoundState.mods.add(m);
-  document.getElementById('m'+m).classList.toggle('active');
-  updateFlip7Preview();
-}
-function toggleBust(){
-  currentRoundState.bust = !currentRoundState.bust;
-  updateFlip7Preview();
-}
-function commitFlip7(){
-  currentGame.players[scoringPlayer].score += calculateFlip7(currentRoundState);
+function commitSimple(){
+  currentGame.players[scoringPlayer].score += +document.getElementById('simple-pts').value || 0;
   persistActive();
   renderLeaderboard();
 }
@@ -404,14 +342,12 @@ function commitCarcassonne(){
 function commitOhHell(){
   const bid = +document.getElementById('oh-bid').value || 0;
   const tricks = +document.getElementById('oh-tricks').value || 0;
-  const pts = (bid === tricks) ? 10 + bid : 0;
-  currentGame.players[scoringPlayer].score += pts;
+  currentGame.players[scoringPlayer].score += (bid === tricks) ? 10 + bid : 0;
   persistActive();
   renderLeaderboard();
 }
 function commitHearts(){
-  const pts = (+document.getElementById('h-hearts').value||0) + (+document.getElementById('h-queen').value||0);
-  currentGame.players[scoringPlayer].score += pts;
+  currentGame.players[scoringPlayer].score += (+document.getElementById('h-hearts').value||0) + (+document.getElementById('h-queen').value||0);
   persistActive();
   renderLeaderboard();
 }
@@ -419,11 +355,6 @@ function commitNertz(){
   const played = +document.getElementById('n-played').value || 0;
   const left = +document.getElementById('n-left').value || 0;
   currentGame.players[scoringPlayer].score += played - (left * 2);
-  persistActive();
-  renderLeaderboard();
-}
-function commitGeneric(){
-  currentGame.players[scoringPlayer].score += +document.getElementById('gen-pts').value || 0;
   persistActive();
   renderLeaderboard();
 }
