@@ -2,11 +2,15 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="refresh" content="0; url=game_tracker.html">
 <title>Score Tracker</title>
-<script>window.location.href = 'game_tracker.html';</script>
+<script>
+  // Preserve ?query and #hash so OAuth / magic-link callback tokens are never dropped.
+  window.location.replace('game_tracker.html' + window.location.search + window.location.hash);
+</script>
+<noscript><meta http-equiv="refresh" content="0; url=game_tracker.html"></noscript>
 </head>
 <body>
-<p>Loading Score Tracker... <a href="game_tracker.html">Click here if not redirected</a></p>
+<p>Loading Score Tracker... <a href="game_tracker.html" id="go">Click here if not redirected</a></p>
+<script>document.getElementById('go').href = 'game_tracker.html' + window.location.search + window.location.hash;</script>
 </body>
 </html>
