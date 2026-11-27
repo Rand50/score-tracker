@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0c0d10">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="score-tracker-build" content="v16-rummikub-2026-11-27">
+<meta name="score-tracker-build" content="v17-friends-qr-2026-11-27">
 <title>Score Tracker</title>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon-512.jpg" type="image/jpeg">
@@ -1192,6 +1192,476 @@ body.theme-carcassonne .bottom-nav button .icon svg { visibility: hidden; }
 .soc-lb-filter-row select { width: auto; max-width: 60%; padding: .35rem .6rem; border-radius: 10px; }
 .soc-add-self { margin: 0; }
 .soc-outgoing-note { font-size: .8rem; color: var(--muted); }
+
+
+
+
+.soc-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.soc-top-title {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: #f4f4f6;
+}
+
+.soc-refresh-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.36rem 0.68rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #14161b;
+  color: #8b909c;
+  font: 550 0.76rem -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', system-ui, sans-serif;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: color .15s ease, border-color .15s ease, background .15s ease;
+}
+
+.soc-refresh-btn:hover,
+.soc-refresh-btn:active {
+  color: #f4f4f6;
+  border-color: rgba(255, 255, 255, 0.18);
+  background: #1c1f26;
+}
+
+.soc-refresh-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+.soc-refresh-btn.is-loading svg {
+  animation: socSpin 0.8s linear infinite;
+}
+
+@keyframes socSpin {
+  to { transform: rotate(360deg); }
+}
+
+
+.soc-state-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem;
+  padding: 0.65rem 0.85rem;
+  margin-bottom: 0.75rem;
+  border-radius: 12px;
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+
+.soc-state-banner.is-loading {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  color: #b4b9c4;
+}
+
+.soc-state-banner.is-error {
+  background: rgba(229, 83, 83, 0.10);
+  border: 1px solid rgba(229, 83, 83, 0.32);
+  color: #f5a0a0;
+}
+
+.soc-state-retry {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #f4f4f6;
+  border-radius: 8px;
+  padding: 0.28rem 0.6rem;
+  font: 600 0.74rem inherit;
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+
+
+.soc-qr-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.soc-qr-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.68rem 0.8rem;
+  border-radius: 11px;
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  background: #1c1f26;
+  color: #f4f4f6;
+  font: 600 0.84rem -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', system-ui, sans-serif;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: transform .08s ease, background .15s ease, border-color .15s ease;
+}
+
+.soc-qr-btn:active { transform: scale(0.98); }
+.soc-qr-btn:hover { background: #232730; border-color: rgba(255, 255, 255, 0.18); }
+
+.soc-qr-btn.primary {
+  background: #f4f1ea;
+  color: #0c0d10;
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+.soc-qr-btn.primary:hover { background: #ffffff; }
+
+.soc-qr-btn svg {
+  width: 17px;
+  height: 17px;
+  flex: 0 0 auto;
+}
+
+.soc-qr-btn:not(.primary) svg {
+  color: #d4a853;
+}
+
+
+.soc-incoming-card {
+  border-color: rgba(212, 168, 83, 0.34) !important;
+  background: linear-gradient(180deg, rgba(212, 168, 83, 0.08) 0%, #14161b 60%) !important;
+}
+
+.soc-sec-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.6rem;
+}
+
+.soc-sec-head h3 {
+  margin: 0;
+  font-size: 0.94rem;
+  font-weight: 650;
+  letter-spacing: -0.015em;
+  color: #f4f4f6;
+}
+
+.soc-count-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 20px;
+  padding: 0 0.45rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.72rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: #9ca2ae;
+}
+
+.soc-count-pill.is-brass {
+  background: rgba(212, 168, 83, 0.18);
+  border-color: rgba(212, 168, 83, 0.45);
+  color: #f0cc7a;
+}
+
+.soc-empty-note {
+  margin: 0;
+  padding: 0.75rem 0.25rem;
+  text-align: center;
+  font-size: 0.82rem;
+  color: #8b909c;
+  line-height: 1.45;
+}
+
+
+.soc-sent-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem;
+  padding: 0.62rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.soc-sent-row:last-child { border-bottom: none; }
+
+.soc-sent-tag {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.18rem 0.5rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #8b909c;
+}
+
+
+.soc-qr-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 92;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0.75rem 0.65rem calc(0.75rem + env(safe-area-inset-bottom, 0px));
+  background: rgba(5, 6, 9, 0.78);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  touch-action: manipulation;
+}
+
+.soc-qr-backdrop.hidden,
+.soc-qr-backdrop[hidden] {
+  display: none !important;
+}
+
+.soc-qr-sheet {
+  width: 100%;
+  max-width: 420px;
+  max-height: 90dvh;
+  overflow-y: auto;
+  background: #14161b;
+  color: #f4f4f6;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 20px;
+  padding: 0.65rem 1.1rem 1.15rem;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.68);
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.soc-qr-handle {
+  width: 36px;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  margin: 0 auto 0.1rem;
+}
+
+.soc-qr-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.soc-qr-head h3 {
+  margin: 0;
+  font-size: 1.02rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.soc-qr-close {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #1c1f26;
+  color: #8b909c;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.soc-qr-close:hover { color: #f4f4f6; }
+.soc-qr-close svg { width: 16px; height: 16px; }
+
+
+.soc-qr-card-frame {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 1rem;
+  width: min(244px, 72vw);
+  aspect-ratio: 1 / 1;
+  margin: 0.15rem auto 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.38);
+}
+
+#soc-my-qr-svg {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#soc-my-qr-svg svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.soc-qr-identity {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.22rem;
+}
+
+.soc-qr-handle-text {
+  font-size: 1.02rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: #f4f4f6;
+}
+
+.soc-qr-code-sub {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: #d4a853;
+  font-variant-numeric: tabular-nums;
+}
+
+.soc-qr-hint {
+  margin: 0;
+  text-align: center;
+  font-size: 0.78rem;
+  color: #8b909c;
+}
+
+.soc-qr-btn-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.55rem;
+}
+
+.soc-qr-msg {
+  margin: 0;
+  min-height: 1.1rem;
+  text-align: center;
+  font-size: 0.78rem;
+  color: #d4a853;
+}
+
+
+.soc-scan-viewport {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #0c0d10;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#soc-scan-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.soc-scan-reticle {
+  position: absolute;
+  width: 172px;
+  height: 172px;
+  pointer-events: none;
+  border-radius: 14px;
+  box-shadow: 0 0 0 999px rgba(12, 13, 16, 0.48);
+  border: 2px solid rgba(212, 168, 83, 0.85);
+}
+
+.soc-scan-line {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  top: 12px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #d4a853, transparent);
+  animation: socScanSweep 2.1s ease-in-out infinite;
+}
+
+@keyframes socScanSweep {
+  0%, 100% { transform: translateY(0); opacity: 0.55; }
+  50% { transform: translateY(144px); opacity: 1; }
+}
+
+.soc-scan-fallback {
+  padding: 0.7rem 0.85rem;
+  border-radius: 11px;
+  background: rgba(212, 168, 83, 0.08);
+  border: 1px solid rgba(212, 168, 83, 0.25);
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: #e6c982;
+}
+
+.soc-scan-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #6b707d;
+}
+
+.soc-scan-divider::before,
+.soc-scan-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.soc-scan-paste-row {
+  display: flex;
+  gap: 0.45rem;
+}
+
+.soc-scan-paste-row input {
+  flex: 1;
+  background: #0c0d10;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  padding: 0.62rem 0.75rem;
+  color: #f4f4f6;
+  font-size: 16px !important;
+}
+
+.soc-scan-upload-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  width: 100%;
+  padding: 0.62rem 0.85rem;
+  border-radius: 10px;
+  border: 1px dashed rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.03);
+  color: #c7ccd6;
+  font: 600 0.82rem -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', system-ui, sans-serif;
+  cursor: pointer;
+}
+
+.soc-scan-upload-label:hover {
+  border-color: rgba(212, 168, 83, 0.45);
+  color: #f4f4f6;
+}
+
+.soc-scan-upload-label svg { width: 16px; height: 16px; color: #d4a853; }
 
 </style>
 
@@ -4198,7 +4668,7 @@ body.theme-rummikub .bottom-nav #nav-social {
 </style>
 </head>
 <body>
-<!-- Build: v16-rummikub-2026-11-27 -->
+<!-- Build: v17-friends-qr-2026-11-27 -->
 
 <!-- Login: starts hidden until getSession() resolves -->
 <section id="login-view" class="auth-hidden" hidden aria-label="Sign in to Score Tracker">
@@ -4803,81 +5273,144 @@ body.theme-rummikub .bottom-nav #nav-social {
     </div>
   </section>
 
-  <!-- FRIENDS & GROUPS (neutral navy/cyan) -->
-  <section id="view-social" class="view" aria-label="Friends and Groups">
-    <div id="soc-demo-banner" class="soc-demo-banner hidden" hidden role="status">
-      <strong>Local demo mode</strong> — friends, groups and shared history are saved on this device until the Supabase social migration is applied.
-    </div>
-    <!-- Your Profile Strip -->
-    <div class="card soc-profile-card">
-      <div class="soc-profile-top">
-        <div class="soc-avatar" id="soc-my-avatar" aria-hidden="true">?</div>
-        <div class="soc-profile-name-row">
-          <input type="text" id="soc-display-name" placeholder="Your display name" autocomplete="name" maxlength="32" aria-label="Display name">
-          <button type="button" class="btn sm primary" id="btn-save-display-name" onclick="saveDisplayName && saveDisplayName()">Save</button>
-        </div>
+  <!-- FRIENDS & GROUPS (v17: clarity states + Friend QR) -->
+<section id="view-social" class="view" aria-label="Friends and Groups">
+  <div class="soc-top-bar">
+    <h2 class="soc-top-title">Friends</h2>
+    <button type="button" id="btn-refresh-social" class="soc-refresh-btn" onclick="window.refreshSocial && refreshSocial(true)" aria-label="Refresh friends and requests">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M21 12a9 9 0 1 1-2.64-6.36"/>
+        <polyline points="21 3 21 9 15 9"/>
+      </svg>
+      <span>Refresh</span>
+    </button>
+  </div>
+
+  <!-- Loading / Error / Demo States -->
+  <div id="soc-loading-banner" class="soc-state-banner is-loading hidden" hidden role="status" aria-live="polite">
+    <span>Syncing friends and requests...</span>
+  </div>
+
+  <div id="soc-error-banner" class="soc-state-banner is-error hidden" hidden role="alert">
+    <span id="soc-error-text">Could not refresh friends. Check your connection.</span>
+    <button type="button" class="soc-state-retry" onclick="window.refreshSocial && refreshSocial(true)">Retry</button>
+  </div>
+
+  <div id="soc-demo-banner" class="soc-demo-banner hidden" hidden role="status">
+    <strong>Local demo mode</strong> — friends, groups and shared history are saved on this device until the Supabase social migration is applied.
+  </div>
+
+  <!-- Your Profile + QR Actions Card -->
+  <div class="card soc-profile-card">
+    <div class="soc-profile-top">
+      <div class="soc-avatar" id="soc-my-avatar" aria-hidden="true">?</div>
+      <div class="soc-profile-name-row">
+        <input type="text" id="soc-display-name" placeholder="Your display name" autocomplete="name" maxlength="32" aria-label="Display name">
+        <button type="button" class="btn sm primary" id="btn-save-display-name" onclick="window.saveDisplayName && saveDisplayName()">Save</button>
       </div>
-      <div class="soc-code-strip">
-        <div>
-          <span class="soc-code-label">Your Friend Code</span>
-          <span class="soc-code-val" id="soc-friend-code">—</span>
-        </div>
-        <button type="button" class="soc-copy-btn" id="btn-copy-code" onclick="SocialUI.copyFriendCode()">Copy code</button>
-      </div>
-      <p id="soc-profile-msg" class="soc-status-msg" role="status" aria-live="polite"></p>
     </div>
 
-    <!-- Sub-tabs: Friends | Groups -->
-    <div class="soc-tabs" role="tablist" aria-label="Social sections">
-      <button type="button" class="soc-tab active" id="soc-tab-friends" role="tab" aria-selected="true" onclick="SocialUI.switchSocialTab('friends')">
-        <span>Friends</span>
-        <span id="soc-pending-badge" class="soc-badge-count hidden" hidden>0</span>
+    <div class="soc-code-strip">
+      <div>
+        <span class="soc-code-label">Your Friend Code</span>
+        <span class="soc-code-val" id="soc-friend-code">—</span>
+      </div>
+      <button type="button" class="soc-copy-btn" id="btn-copy-code" onclick="window.SocialUI && SocialUI.copyFriendCode()">Copy code</button>
+    </div>
+
+    <div class="soc-qr-actions">
+      <button type="button" id="btn-open-my-qr" class="soc-qr-btn primary" onclick="window.openMyQrModal && openMyQrModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3" y="3" width="7" height="7" rx="1"/>
+          <rect x="14" y="3" width="7" height="7" rx="1"/>
+          <rect x="3" y="14" width="7" height="7" rx="1"/>
+          <path d="M14 14h3v3h-3zM19 14h2v2M14 19h2v2M19 19h2v2"/>
+        </svg>
+        <span>My QR Code</span>
       </button>
-      <button type="button" class="soc-tab" id="soc-tab-groups" role="tab" aria-selected="false" onclick="SocialUI.switchSocialTab('groups')">
-        <span>Groups</span>
+      <button type="button" id="btn-open-scan-qr" class="soc-qr-btn" onclick="window.openScanQrModal && openScanQrModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M4 8V5a1 1 0 0 1 1-1h3"/>
+          <path d="M16 4h3a1 1 0 0 1 1 1v3"/>
+          <path d="M20 16v3a1 1 0 0 1-1 1h-3"/>
+          <path d="M8 20H5a1 1 0 0 1-1-1v-3"/>
+          <line x1="6" y1="12" x2="18" y2="12"/>
+        </svg>
+        <span>Scan QR</span>
       </button>
     </div>
 
-    <!-- FRIENDS PANEL -->
-    <div id="soc-panel-friends" role="tabpanel" aria-labelledby="soc-tab-friends">
-      <!-- Add Friend -->
-      <div class="card">
+    <p id="soc-profile-msg" class="soc-status-msg" role="status" aria-live="polite"></p>
+  </div>
+
+  <!-- Sub-tabs: Friends | Groups -->
+  <div class="soc-tabs" role="tablist" aria-label="Social sections">
+    <button type="button" class="soc-tab active" id="soc-tab-friends" role="tab" aria-selected="true" onclick="window.SocialUI && SocialUI.switchSocialTab('friends')">
+      <span>Friends</span>
+      <span id="soc-pending-badge" class="soc-badge-count hidden" hidden>0</span>
+    </button>
+    <button type="button" class="soc-tab" id="soc-tab-groups" role="tab" aria-selected="false" onclick="window.SocialUI && SocialUI.switchSocialTab('groups')">
+      <span>Groups</span>
+    </button>
+  </div>
+
+  <!-- FRIENDS PANEL -->
+  <div id="soc-panel-friends" role="tabpanel" aria-labelledby="soc-tab-friends">
+    <!-- Prominent Incoming Requests -->
+    <div class="card soc-incoming-card hidden" id="soc-pending-card" hidden>
+      <div class="soc-sec-head">
+        <h3>Incoming Requests</h3>
+        <span id="soc-incoming-count" class="soc-count-pill is-brass">0</span>
+      </div>
+      <div id="soc-pending-list"></div>
+    </div>
+
+    <!-- Add Friend by Code / Handle / Email -->
+    <div class="card">
+      <div class="soc-sec-head">
         <h3>Add a Friend</h3>
-        <div class="flex" style="flex-wrap:nowrap">
-          <input type="text" id="soc-add-friend-input" placeholder="Email or friend code" autocomplete="off" style="flex:1" onkeydown="if(event.key==='Enter'){sendFriendRequest && sendFriendRequest();}">
-          <button type="button" class="btn primary sm" id="btn-send-friend-req" onclick="sendFriendRequest && sendFriendRequest()">Add</button>
-        </div>
-        <p id="soc-friend-msg" class="soc-status-msg" role="status" aria-live="polite"></p>
       </div>
-
-      <!-- Pending Requests -->
-      <div class="card hidden" id="soc-pending-card" hidden>
-        <h3>Pending Requests</h3>
-        <div id="soc-pending-list"></div>
+      <div class="flex" style="flex-wrap:nowrap">
+        <input type="text" id="soc-add-friend-input" placeholder="Email, @handle, or friend code" autocomplete="off" style="flex:1" onkeydown="if(event.key==='Enter'){window.sendFriendRequest && sendFriendRequest();}">
+        <button type="button" class="btn primary sm" id="btn-send-friend-req" onclick="window.sendFriendRequest && sendFriendRequest()">Add</button>
       </div>
+      <p id="soc-friend-msg" class="soc-status-msg" role="status" aria-live="polite"></p>
+    </div>
 
-      <!-- Accepted Friends -->
+    <!-- Sent Requests (Outgoing Pending) -->
+    <div class="card hidden" id="soc-sent-card" hidden>
+      <div class="soc-sec-head">
+        <h3>Sent Requests</h3>
+        <span id="soc-sent-count" class="soc-count-pill">0</span>
+      </div>
+      <div id="soc-sent-list"></div>
+    </div>
+
+    <!-- My Friends List -->
+    <div class="card">
+      <div class="soc-sec-head">
+        <h3>My Friends</h3>
+        <span id="soc-friends-count" class="soc-count-pill">0</span>
+      </div>
+      <div id="soc-friends-list">
+        <p class="soc-empty-note">No friends yet. Show your QR code, scan a friend, or add them by code above.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- GROUPS PANEL -->
+  <div id="soc-panel-groups" class="hidden" hidden role="tabpanel" aria-labelledby="soc-tab-groups">
+    <div class="flex space-between" style="margin-bottom:0.85rem">
+      <h2 style="margin:0;font-size:1.08rem">Game Groups</h2>
+      <button type="button" class="btn primary sm" id="btn-open-create-group" onclick="window.openCreateGroup && openCreateGroup()">+ Create Group</button>
+    </div>
+    <div id="soc-groups-list">
       <div class="card">
-        <h3>Your Friends</h3>
-        <div id="soc-friends-list">
-          <p class="small" style="margin:0.2rem 0 0">No friends yet. Share your code or add someone above.</p>
-        </div>
+        <p class="soc-empty-note">Create a group (like "Friday Catan Crew") to load your regulars in one tap and track a group leaderboard.</p>
       </div>
     </div>
-
-    <!-- GROUPS PANEL -->
-    <div id="soc-panel-groups" class="hidden" hidden role="tabpanel" aria-labelledby="soc-tab-groups">
-      <div class="flex space-between" style="margin-bottom:0.85rem">
-        <h2 style="margin:0;font-size:1.15rem">Game Groups</h2>
-        <button type="button" class="btn primary sm" id="btn-open-create-group" onclick="openCreateGroup()">+ Create Group</button>
-      </div>
-      <div id="soc-groups-list">
-        <div class="card">
-          <p class="small" style="margin:0">Create a group (like "Friday Catan Crew") to load your regulars in one tap and track a group leaderboard.</p>
-        </div>
-      </div>
-    </div>
-  </section>
+  </div>
+</section>
 
   <!-- Create Group Modal Sheet -->
   <div id="soc-create-group-modal" class="soc-modal-backdrop hidden" hidden role="dialog" aria-modal="true" aria-labelledby="soc-modal-title" onclick="if(event.target===this)SocialUI.closeCreateGroupModal()">
@@ -4908,6 +5441,97 @@ body.theme-rummikub .bottom-nav #nav-social {
       </div>
     </div>
   </div>
+
+  <!-- v17 Friend QR modals: My QR Code + Scan Friend QR -->
+<div id="soc-qr-modal" class="soc-qr-backdrop hidden" hidden role="dialog" aria-modal="true" aria-labelledby="soc-qr-title" onclick="if(event.target===this && window.closeMyQrModal) closeMyQrModal()">
+  <div class="soc-qr-sheet">
+    <div class="soc-qr-handle" aria-hidden="true"></div>
+    <div class="soc-qr-head">
+      <h3 id="soc-qr-title">My Friend QR Code</h3>
+      <button type="button" class="soc-qr-close" aria-label="Close QR Code" onclick="window.closeMyQrModal && closeMyQrModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="soc-qr-card-frame">
+      <div id="soc-my-qr-svg" aria-label="Your scannable friend QR code"></div>
+    </div>
+
+    <div class="soc-qr-identity">
+      <span id="soc-qr-handle" class="soc-qr-handle-text">@player</span>
+      <span id="soc-qr-code-text" class="soc-qr-code-sub">—</span>
+    </div>
+    <p class="soc-qr-hint">Have a friend scan this with their camera or inside Score Tracker.</p>
+
+    <div class="soc-qr-btn-row">
+      <button type="button" id="btn-qr-copy-link" class="soc-qr-btn primary" onclick="window.copyFriendInviteLink && copyFriendInviteLink()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="9" y="9" width="11" height="11" rx="2"/>
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+        </svg>
+        <span>Copy Link</span>
+      </button>
+      <button type="button" id="btn-qr-share" class="soc-qr-btn" onclick="window.shareFriendInviteLink && shareFriendInviteLink()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7"/>
+          <polyline points="16 6 12 2 8 6"/>
+          <line x1="12" y1="2" x2="12" y2="15"/>
+        </svg>
+        <span>Share</span>
+      </button>
+    </div>
+
+    <p id="soc-qr-msg" class="soc-qr-msg" role="status" aria-live="polite"></p>
+  </div>
+</div>
+
+<div id="soc-scan-modal" class="soc-qr-backdrop hidden" hidden role="dialog" aria-modal="true" aria-labelledby="soc-scan-title" onclick="if(event.target===this && window.closeScanQrModal) closeScanQrModal()">
+  <div class="soc-qr-sheet">
+    <div class="soc-qr-handle" aria-hidden="true"></div>
+    <div class="soc-qr-head">
+      <h3 id="soc-scan-title">Scan Friend QR</h3>
+      <button type="button" class="soc-qr-close" aria-label="Close QR Scanner" onclick="window.closeScanQrModal && closeScanQrModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+
+    <div id="soc-scan-viewport" class="soc-scan-viewport">
+      <video id="soc-scan-video" playsinline muted autoplay></video>
+      <div class="soc-scan-reticle" aria-hidden="true">
+        <div class="soc-scan-line"></div>
+      </div>
+    </div>
+
+    <div id="soc-scan-fallback-note" class="soc-scan-fallback hidden" hidden role="status">
+      Camera scanning isn't available here. Upload a QR screenshot or paste a friend link/code below.
+    </div>
+
+    <label class="soc-scan-upload-label" for="soc-scan-file">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+        <polyline points="17 8 12 3 7 8"/>
+        <line x1="12" y1="3" x2="12" y2="15"/>
+      </svg>
+      <span>Upload QR Image</span>
+      <input type="file" id="soc-scan-file" accept="image/*" hidden onchange="window.handleScanQrFile && handleScanQrFile(this)">
+    </label>
+
+    <div class="soc-scan-divider"><span>or paste link / code</span></div>
+
+    <div class="soc-scan-paste-row">
+      <input type="text" id="soc-scan-paste-input" placeholder="Paste a friend link or code" autocomplete="off" onkeydown="if(event.key==='Enter'){window.submitScannedFriend && submitScannedFriend();}">
+      <button type="button" id="btn-scan-paste-add" class="btn primary sm" onclick="window.submitScannedFriend && submitScannedFriend()">Add</button>
+    </div>
+
+    <p id="soc-scan-msg" class="soc-qr-msg" role="status" aria-live="polite"></p>
+  </div>
+</div>
 
   <nav class="bottom-nav" aria-label="Main navigation">
     <button type="button" id="nav-home" onclick="showView('home')">
@@ -6032,8 +6656,159 @@ body.theme-rummikub .bottom-nav #nav-social {
   'use strict';
 
   const LS_PREFIX = 'gst_social_v1_';
+  const APP_URL = 'https://rand50.github.io/score-tracker/game_tracker.html';
+  const PENDING_FRIEND_KEY = 'gst_pending_add_friend_v1';
+  const PENDING_FRIEND_TTL_MS = 24 * 60 * 60 * 1000;
   let cachedProfile = null;
   let migrationReady = null; // null = unknown, true = ready, false = not migrated yet
+  let migrationCheckedAt = 0;
+
+  function markMigrationMissing() {
+    migrationReady = false;
+    migrationCheckedAt = Date.now();
+  }
+
+  function shouldSkipSupabase(client) {
+    if (!client) return true;
+    if (migrationReady !== false) return false;
+    // Allow automatic recovery after 30s (e.g., once SQL migration is applied or transient error clears)
+    if (Date.now() - migrationCheckedAt > 30000) {
+      migrationReady = null;
+      return false;
+    }
+    return true;
+  }
+
+  function extractAddFriendParam(input) {
+    const raw = String(input || '').trim();
+    if (!raw) return null;
+    const keys = ['addFriend', 'addfriend', 'friend', 'friendCode', 'friendcode'];
+    const readParams = (sp) => {
+      for (const k of keys) {
+        const v = sp.get(k);
+        if (v && v.trim()) return v.trim();
+      }
+      // Case-insensitive fallback
+      for (const [k, v] of sp.entries()) {
+        if (keys.some((x) => x.toLowerCase() === k.toLowerCase()) && v && v.trim()) return v.trim();
+      }
+      return null;
+    };
+    try {
+      if (/^https?:\/\//i.test(raw)) {
+        const u = new URL(raw);
+        const fromSearch = readParams(u.searchParams);
+        if (fromSearch) return fromSearch;
+        if (u.hash) {
+          const fromHash = readParams(new URLSearchParams(u.hash.replace(/^#\??/, '')));
+          if (fromHash) return fromHash;
+        }
+        return null;
+      }
+      if (raw.includes('addFriend=') || raw.includes('addfriend=') || raw.startsWith('?')) {
+        const q = raw.includes('?') ? raw.slice(raw.indexOf('?') + 1) : raw;
+        const fromQ = readParams(new URLSearchParams(q.split('#')[0]));
+        if (fromQ) return fromQ;
+      }
+    } catch (_) {}
+    return null;
+  }
+
+  function normalizeFriendIdentifier(rawInput) {
+    let val = String(rawInput || '').trim();
+    if (!val) return '';
+    const fromUrl = extractAddFriendParam(val);
+    if (fromUrl) val = fromUrl;
+    val = val.trim().replace(/^@+/, '').trim();
+    if (!val) return '';
+    // Email address
+    if (val.includes('@')) return val.toLowerCase();
+    // Normalize unicode dashes and whitespace in friend codes (e.g., "rand 4821", "RAND–4821", "RAND4821")
+    let code = val.replace(/[\u2010-\u2015\u2212]/g, '-').replace(/\s*-\s*/g, '-').replace(/\s+/g, '-').toUpperCase();
+    if (/^[A-Z]{2,4}\d{4}$/.test(code)) {
+      code = code.slice(0, -4) + '-' + code.slice(-4);
+    }
+    return code;
+  }
+
+  function parseFriendQrInput(rawInput) {
+    const raw = String(rawInput || '').trim();
+    const fromUrl = extractAddFriendParam(raw);
+    const identifier = normalizeFriendIdentifier(fromUrl || raw);
+    if (!identifier || identifier.length < 3) {
+      return { ok: false, identifier: '', raw, isUrl: !!fromUrl, error: 'Invalid friend code, email, or QR link.' };
+    }
+    return { ok: true, identifier, raw, isUrl: !!fromUrl };
+  }
+
+  function buildFriendShareUrl(profileOrCode) {
+    let code = '';
+    if (typeof profileOrCode === 'string') {
+      code = normalizeFriendIdentifier(profileOrCode);
+    } else if (profileOrCode && typeof profileOrCode === 'object') {
+      code = normalizeFriendIdentifier(profileOrCode.friend_code || profileOrCode.friendCode || '');
+    } else if (cachedProfile && cachedProfile.friend_code) {
+      code = normalizeFriendIdentifier(cachedProfile.friend_code);
+    }
+    if (!code) return null;
+    const base = (global.location && /^https?:\/\//i.test(global.location.origin) && /game_tracker\.html$/i.test(global.location.pathname))
+      ? (global.location.origin + global.location.pathname)
+      : APP_URL;
+    return base + '?addFriend=' + encodeURIComponent(code);
+  }
+
+  function capturePendingFriendFromUrl(urlStr) {
+    try {
+      const href = urlStr || (global.location && global.location.href) || '';
+      const extracted = extractAddFriendParam(href);
+      if (!extracted) return null;
+      const ident = normalizeFriendIdentifier(extracted);
+      if (!ident || ident.length < 3) return null;
+      const payload = JSON.stringify({ identifier: ident, capturedAt: Date.now() });
+      try { if (global.sessionStorage) global.sessionStorage.setItem(PENDING_FRIEND_KEY, payload); } catch (_) {}
+      try { if (global.localStorage) global.localStorage.setItem(PENDING_FRIEND_KEY, payload); } catch (_) {}
+      return ident;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function getPendingFriendInvite() {
+    const fromUrl = capturePendingFriendFromUrl();
+    if (fromUrl) return fromUrl;
+    try {
+      const raw = (global.sessionStorage && global.sessionStorage.getItem(PENDING_FRIEND_KEY))
+        || (global.localStorage && global.localStorage.getItem(PENDING_FRIEND_KEY));
+      if (!raw) return null;
+      const parsed = JSON.parse(raw);
+      if (!parsed || !parsed.identifier) return null;
+      if (parsed.capturedAt && Date.now() - parsed.capturedAt > PENDING_FRIEND_TTL_MS) {
+        global.localStorage.removeItem(PENDING_FRIEND_KEY);
+        return null;
+      }
+      return normalizeFriendIdentifier(parsed.identifier) || null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function clearPendingFriendInvite(cleanUrl) {
+    try { if (global.sessionStorage) global.sessionStorage.removeItem(PENDING_FRIEND_KEY); } catch (_) {}
+    try { if (global.localStorage) global.localStorage.removeItem(PENDING_FRIEND_KEY); } catch (_) {}
+    if (cleanUrl !== false && global.location && global.history && global.history.replaceState) {
+      try {
+        const u = new URL(global.location.href);
+        let dirty = false;
+        ['addFriend', 'addfriend', 'friend', 'friendCode', 'friendcode'].forEach((k) => {
+          if (u.searchParams.has(k)) { u.searchParams.delete(k); dirty = true; }
+        });
+        if (dirty) {
+          const qs = u.searchParams.toString();
+          global.history.replaceState({}, document.title, u.origin + u.pathname + (qs ? '?' + qs : '') + u.hash);
+        }
+      } catch (_) {}
+    }
+  }
 
   function getClient() {
     return global.sb || null;
@@ -6065,8 +6840,7 @@ body.theme-rummikub .bottom-nav #nav-social {
     return (
       msg.includes('does not exist') ||
       msg.includes('could not find the table') ||
-      msg.includes('could not find the function') ||
-      msg.includes('schema cache')
+      msg.includes('could not find the function')
     );
   }
 
@@ -6291,21 +7065,21 @@ body.theme-rummikub .bottom-nav #nav-social {
   }
 
   // ---------------------------------------------------------------------------
-  // 2. Friends (Lookup via SECURITY DEFINER RPC, Requests, Accept/Decline/Remove)
+  // 2. Friends (Lookup via SECURITY DEFINER RPC, Requests, Accept/Decline/Remove, QR)
   // ---------------------------------------------------------------------------
   async function lookupUser(identifier) {
-    const ident = String(identifier || '').trim();
+    const ident = normalizeFriendIdentifier(identifier);
     if (ident.length < 3) return { ok: false, user: null, error: 'Enter an email or friend code.' };
 
     const client = getClient();
-    if (!client || migrationReady === false) {
+    if (shouldSkipSupabase(client)) {
       return { ok: false, user: null, isFallback: true, error: 'Social sync is not enabled yet.' };
     }
 
     try {
       const { data, error } = await client.rpc('lookup_profile', { identifier: ident });
       if (error) {
-        if (isMissingMigrationError(error)) migrationReady = false;
+        if (isMissingMigrationError(error)) markMigrationMissing();
         return { ok: false, user: null, isFallback: isMissingMigrationError(error), error: error.message };
       }
       migrationReady = true;
@@ -6316,6 +7090,50 @@ body.theme-rummikub .bottom-nav #nav-social {
     }
   }
 
+  function mergeAcceptedWithLocal(remoteAccepted, localAccepted) {
+    const seenIds = new Set(remoteAccepted.map((f) => String(f.userId || '').toLowerCase()).filter(Boolean));
+    const seenCodes = new Set(remoteAccepted.map((f) => String(f.friendCode || '').toUpperCase()).filter(Boolean));
+    const extras = (localAccepted || []).filter((lf) => {
+      if (lf.userId && seenIds.has(String(lf.userId).toLowerCase())) return false;
+      if (lf.friendCode && seenCodes.has(String(lf.friendCode).toUpperCase())) return false;
+      return true;
+    });
+    return [...remoteAccepted, ...extras];
+  }
+
+  function bucketFriendRows(rows, myUserId, profileMap) {
+    const accepted = [];
+    const incoming = [];
+    const outgoing = [];
+    const myId = String(myUserId || '').toLowerCase();
+
+    (rows || []).forEach((r) => {
+      const status = String(r.status || '').toLowerCase();
+      if (status === 'declined') return;
+      const reqId = String(r.requester_id || '').toLowerCase();
+      const isRequester = reqId === myId;
+      const otherId = r.other_user_id || (isRequester ? r.addressee_id : r.requester_id);
+      const p = (profileMap && profileMap.get(otherId)) || null;
+      const entry = {
+        friendshipId: r.friendship_id || r.id,
+        userId: (p && p.id) || otherId,
+        displayName: (p && p.display_name) || r.display_name || 'Player',
+        friendCode: (p && p.friend_code) || r.friend_code || '',
+        status,
+        direction: status === 'pending' ? (isRequester ? 'outgoing' : 'incoming') : 'accepted',
+        since: r.updated_at || r.created_at
+      };
+
+      if (status === 'accepted') accepted.push(entry);
+      else if (status === 'pending') {
+        if (isRequester) outgoing.push(entry);
+        else incoming.push(entry);
+      }
+    });
+
+    return { accepted, incoming, outgoing };
+  }
+
   async function listFriends() {
     const user = await getAuthUser();
     const empty = { accepted: [], incoming: [], outgoing: [], isFallback: true };
@@ -6323,11 +7141,27 @@ body.theme-rummikub .bottom-nav #nav-social {
 
     const client = getClient();
     const local = splitLocalFriends(readLocalFriends(user.id));
-    if (!client || migrationReady === false) {
-      return { ...local, isFallback: true };
+    if (shouldSkipSupabase(client)) {
+      return { ...local, isFallback: true, source: 'local' };
     }
 
     try {
+      // Primary path: SECURITY DEFINER RPC (immune to table-grant / profiles-RLS gaps)
+      const { data: rpcRows, error: rpcErr } = await client.rpc('list_my_friends');
+      if (!rpcErr && Array.isArray(rpcRows)) {
+        migrationReady = true;
+        const buckets = bucketFriendRows(rpcRows, user.id, null);
+        return {
+          accepted: buckets.accepted,
+          incoming: buckets.incoming,
+          outgoing: buckets.outgoing,
+          isFallback: false,
+          source: 'rpc'
+        };
+      }
+
+      // If list_my_friends RPC isn't installed yet, fall back to direct table queries
+      // without poisoning migrationReady.
       const { data: rows, error } = await client
         .from('friendships')
         .select('id, requester_id, addressee_id, status, created_at, updated_at')
@@ -6336,62 +7170,63 @@ body.theme-rummikub .bottom-nav #nav-social {
         .order('updated_at', { ascending: false });
 
       if (error) {
-        if (isMissingMigrationError(error)) migrationReady = false;
-        return { ...local, isFallback: isMissingMigrationError(error), error: error.message };
+        if (isMissingMigrationError(error)) markMigrationMissing();
+        return {
+          ...local,
+          isFallback: isMissingMigrationError(error),
+          error: error.message,
+          errorCode: error.code || null,
+          source: 'error'
+        };
       }
 
       migrationReady = true;
       const list = rows || [];
-      const otherIds = [...new Set(list.map((r) => (r.requester_id === user.id ? r.addressee_id : r.requester_id)))];
+      const myId = String(user.id).toLowerCase();
+      const otherIds = [...new Set(list.map((r) => (String(r.requester_id || '').toLowerCase() === myId ? r.addressee_id : r.requester_id)).filter(Boolean))];
       const profileMap = new Map();
 
       if (otherIds.length) {
-        const { data: profs } = await client
+        const { data: profs, error: profErr } = await client
           .from('profiles')
           .select('id, display_name, friend_code')
           .in('id', otherIds);
-        (profs || []).forEach((p) => profileMap.set(p.id, p));
+        if (profErr) {
+          console.warn('[SocialAPI] profiles lookup warning:', profErr.message);
+        } else {
+          (profs || []).forEach((p) => profileMap.set(p.id, p));
+        }
       }
 
-      const accepted = [];
-      const incoming = [];
-      const outgoing = [];
-
-      list.forEach((r) => {
-        const isRequester = r.requester_id === user.id;
-        const otherId = isRequester ? r.addressee_id : r.requester_id;
-        const p = profileMap.get(otherId) || { id: otherId, display_name: 'Player', friend_code: '' };
-        const entry = {
-          friendshipId: r.id,
-          userId: p.id,
-          displayName: p.display_name,
-          friendCode: p.friend_code,
-          status: r.status,
-          since: r.updated_at || r.created_at
-        };
-
-        if (r.status === 'accepted') accepted.push(entry);
-        else if (r.status === 'pending') {
-          if (isRequester) outgoing.push(entry);
-          else incoming.push(entry);
-        }
-      });
-
-      return { accepted: [...accepted, ...local.accepted], incoming, outgoing, isFallback: false };
+      const buckets = bucketFriendRows(list, user.id, profileMap);
+      return {
+        accepted: buckets.accepted, // live list only (local demo friends are never merged into a live Supabase list)
+        incoming: buckets.incoming,
+        outgoing: buckets.outgoing,
+        isFallback: false,
+        source: 'table'
+      };
     } catch (err) {
-      return { ...local, isFallback: true, error: err && err.message };
+      return { ...local, isFallback: true, error: err && err.message, source: 'error' };
     }
   }
 
   async function sendFriendRequest(identifier) {
-    const ident = String(identifier || '').trim();
-    if (ident.length < 3) return { ok: false, error: 'Enter a friend email or friend code.' };
+    const parsed = parseFriendQrInput(identifier);
+    if (!parsed.ok) return { ok: false, error: 'Enter a friend email or friend code.' };
+    const ident = parsed.identifier;
 
     const user = await getAuthUser();
     if (!user) return { ok: false, error: 'Sign in to add friends.' };
 
+    const myEmail = String(user.email || (cachedProfile && cachedProfile.email) || '').toLowerCase();
+    const myCode = String((cachedProfile && cachedProfile.friend_code) || '').toUpperCase();
+    if ((myEmail && ident.toLowerCase() === myEmail) || (myCode && ident.toUpperCase() === myCode)) {
+      return { ok: false, error: 'You cannot add yourself as a friend.', identifier: ident };
+    }
+
     const client = getClient();
-    if (!client || migrationReady === false) {
+    if (shouldSkipSupabase(client)) {
       return addLocalFriend(user, ident);
     }
 
@@ -6399,16 +7234,23 @@ body.theme-rummikub .bottom-nav #nav-social {
       const { data, error } = await client.rpc('send_friend_request', { identifier: ident });
       if (error) {
         if (isMissingMigrationError(error)) {
-          migrationReady = false;
+          markMigrationMissing();
           return addLocalFriend(user, ident);
         }
-        return { ok: false, error: error.message };
+        return { ok: false, error: error.message, identifier: ident };
       }
       migrationReady = true;
-      return data || { ok: false, error: 'Unexpected response.' };
+      return data ? { ...data, identifier: ident } : { ok: false, error: 'Unexpected response.', identifier: ident };
     } catch (err) {
-      return { ok: false, error: (err && err.message) || 'Could not send friend request.' };
+      return { ok: false, error: (err && err.message) || 'Could not send friend request.', identifier: ident };
     }
+  }
+
+  async function handleFriendQrOrCode(rawInput) {
+    const parsed = parseFriendQrInput(rawInput);
+    if (!parsed.ok) return { ok: false, error: parsed.error };
+    const res = await sendFriendRequest(parsed.identifier);
+    return { ...res, identifier: parsed.identifier, isUrl: parsed.isUrl };
   }
 
   async function respondFriendRequest(friendshipId, action) {
@@ -6423,7 +7265,7 @@ body.theme-rummikub .bottom-nav #nav-social {
     if (!nextStatus) return { ok: false, error: 'Action must be "accept" or "decline".' };
 
     const client = getClient();
-    if (!client || migrationReady === false || isLocalId(friendshipId)) {
+    if (shouldSkipSupabase(client) || isLocalId(friendshipId)) {
       const user = await getAuthUser();
       if (!user) return { ok: false, error: 'Not signed in.' };
       const list = readLocalFriends(user.id);
@@ -6435,18 +7277,33 @@ body.theme-rummikub .bottom-nav #nav-social {
     }
 
     try {
+      // Primary path: SECURITY DEFINER RPC
+      const { data: rpcData, error: rpcErr } = await client.rpc('respond_friend_request', {
+        p_friendship_id: friendshipId,
+        p_action: nextStatus
+      });
+      if (!rpcErr && rpcData) {
+        migrationReady = true;
+        return rpcData;
+      }
+      if (rpcErr && !isMissingMigrationError(rpcErr)) {
+        return { ok: false, error: rpcErr.message };
+      }
+
+      // Fallback: direct table update (use maybeSingle to avoid PGRST116 on 0-row / already-updated)
       const { data, error } = await client
         .from('friendships')
         .update({ status: nextStatus, updated_at: new Date().toISOString() })
         .eq('id', friendshipId)
         .select('*')
-        .single();
+        .maybeSingle();
 
       if (error) {
-        if (isMissingMigrationError(error)) migrationReady = false;
+        if (isMissingMigrationError(error)) markMigrationMissing();
         return { ok: false, error: error.message };
       }
       migrationReady = true;
+      if (!data) return { ok: false, error: 'Friend request not found or already updated.' };
       return { ok: true, status: nextStatus, friendship: data };
     } catch (err) {
       return { ok: false, error: (err && err.message) || 'Could not update friend request.' };
@@ -6456,7 +7313,7 @@ body.theme-rummikub .bottom-nav #nav-social {
   async function removeFriend(friendshipId) {
     if (!friendshipId) return { ok: false, error: 'Missing friendship ID.' };
     const client = getClient();
-    if (!client || migrationReady === false || isLocalId(friendshipId)) {
+    if (shouldSkipSupabase(client) || isLocalId(friendshipId)) {
       const user = await getAuthUser();
       if (!user) return { ok: false, error: 'Not signed in.' };
       const list = readLocalFriends(user.id);
@@ -6465,15 +7322,48 @@ body.theme-rummikub .bottom-nav #nav-social {
     }
 
     try {
+      // Primary path: SECURITY DEFINER RPC
+      const { data: rpcData, error: rpcErr } = await client.rpc('remove_friend', {
+        p_friendship_id: friendshipId
+      });
+      if (!rpcErr && rpcData) {
+        migrationReady = true;
+        return rpcData;
+      }
+      if (rpcErr && !isMissingMigrationError(rpcErr)) {
+        return { ok: false, error: rpcErr.message };
+      }
+
+      // Fallback: direct table delete
       const { error } = await client.from('friendships').delete().eq('id', friendshipId);
       if (error) {
-        if (isMissingMigrationError(error)) migrationReady = false;
+        if (isMissingMigrationError(error)) markMigrationMissing();
         return { ok: false, error: error.message };
       }
       migrationReady = true;
       return { ok: true };
     } catch (err) {
       return { ok: false, error: (err && err.message) || 'Could not remove friend.' };
+    }
+  }
+
+  function subscribeToFriendships(onChange) {
+    const client = getClient();
+    if (!client || typeof client.channel !== 'function' || typeof onChange !== 'function') {
+      return () => {};
+    }
+    try {
+      const ch = client
+        .channel('friendships-live-' + Math.random().toString(36).slice(2, 8))
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'friendships' }, () => {
+          try { onChange(); } catch (_) {}
+        })
+        .subscribe();
+      return () => {
+        try { client.removeChannel(ch); } catch (_) {}
+      };
+    } catch (_) {
+      return () => {};
     }
   }
 
@@ -6970,6 +7860,9 @@ body.theme-rummikub .bottom-nav #nav-social {
     migrationReady = null;
   }
 
+  // Capture any ?addFriend= deep link immediately on load so it survives OAuth / magic-link redirects
+  capturePendingFriendFromUrl();
+
   global.SocialAPI = {
     ensureProfile,
     updateDisplayName,
@@ -6984,6 +7877,14 @@ body.theme-rummikub .bottom-nav #nav-social {
     saveSharedGame,
     loadMyGames,
     loadGroupGames,
+    normalizeFriendIdentifier,
+    parseFriendQrInput,
+    buildFriendShareUrl,
+    capturePendingFriendFromUrl,
+    getPendingFriendInvite,
+    clearPendingFriendInvite,
+    handleFriendQrOrCode,
+    subscribeToFriendships,
     getCachedProfile: () => cachedProfile,
     getDefaultPlayer: () => defaultPlayerFromProfile(cachedProfile),
     isMigrationReady: () => migrationReady,
@@ -7048,10 +7949,11 @@ window.SocialUI = (function () {
     `;
   }
 
-  /** Pending friend request row for #soc-pending-list */
+  /** Incoming pending friend request row for #soc-pending-list */
   function renderPendingRequestRow(req) {
     const name = req.displayName || req.name || req.email || 'Player';
     const sub = req.friendCode ? `Code: ${req.friendCode}` : (req.email || 'Wants to connect');
+    const rid = esc(req.friendshipId || req.id);
     return `
       <div class="soc-row">
         <div class="soc-row-main">
@@ -7062,8 +7964,30 @@ window.SocialUI = (function () {
           </div>
         </div>
         <div class="soc-row-actions">
-          <button type="button" class="btn success sm" onclick="respondFriendRequest && respondFriendRequest('${esc(req.id)}', true)">Accept</button>
-          <button type="button" class="btn sm" onclick="respondFriendRequest && respondFriendRequest('${esc(req.id)}', false)">Decline</button>
+          <button type="button" class="btn success sm" onclick="respondFriendRequest && respondFriendRequest('${rid}', true)">Accept</button>
+          <button type="button" class="btn sm" onclick="respondFriendRequest && respondFriendRequest('${rid}', false)">Decline</button>
+        </div>
+      </div>
+    `;
+  }
+
+  /** Outgoing sent friend request row for #soc-sent-list (with Cancel -> removeFriend) */
+  function renderSentRequestRow(req) {
+    const name = req.displayName || req.name || req.email || 'Player';
+    const sub = req.friendCode ? `Code: ${req.friendCode}` : (req.email || 'Pending response');
+    const fid = esc(req.friendshipId || req.id);
+    return `
+      <div class="soc-sent-row">
+        <div class="soc-row-main">
+          <div class="soc-avatar sm" aria-hidden="true">${initial(name)}</div>
+          <div class="soc-row-info">
+            <div class="soc-row-name">${esc(name)}</div>
+            <div class="soc-row-sub">${esc(sub)}</div>
+          </div>
+        </div>
+        <div class="soc-row-actions">
+          <span class="soc-sent-tag">Pending</span>
+          <button type="button" class="btn sm" onclick="removeFriend && removeFriend('${fid}')">Cancel</button>
         </div>
       </div>
     `;
@@ -7073,7 +7997,8 @@ window.SocialUI = (function () {
   function renderFriendRow(friend, isIncluded) {
     const name = friend.displayName || friend.name || friend.email || 'Friend';
     const sub = friend.friendCode ? `Code: ${friend.friendCode}` : (friend.email || 'Friend');
-    const fid = esc(friend.userId || friend.id);
+    const uid = esc(friend.userId || friend.id);
+    const removeId = esc(friend.friendshipId || friend.userId || friend.id);
     return `
       <div class="soc-row">
         <div class="soc-row-main">
@@ -7084,10 +8009,10 @@ window.SocialUI = (function () {
           </div>
         </div>
         <div class="soc-row-actions">
-          <button type="button" class="btn sm ${isIncluded ? 'success' : ''}" onclick="includeFriendInNextGame && includeFriendInNextGame('${fid}')">
-            ${isIncluded ? '✓ Added' : '+ Include'}
+          <button type="button" class="btn sm ${isIncluded ? 'success' : ''}" onclick="includeFriendInNextGame && includeFriendInNextGame('${uid}')">
+            ${isIncluded ? 'Added' : '+ Include'}
           </button>
-          <button type="button" class="soc-icon-btn" title="Remove friend" aria-label="Remove ${esc(name)}" onclick="removeFriend && removeFriend('${fid}')">✕</button>
+          <button type="button" class="soc-icon-btn" title="Remove friend" aria-label="Remove ${esc(name)}" onclick="removeFriend && removeFriend('${removeId}')"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
         </div>
       </div>
     `;
@@ -7133,7 +8058,7 @@ window.SocialUI = (function () {
           ${recent.slice(0, 3).map(g => `
             <div class="soc-group-recent-item">
               <span>${esc(g.gameName || g.type || 'Game')} <span class="small">· ${esc(g.dateLabel || '')}</span></span>
-              <span class="winner">🏆 ${esc(g.winnerName || '—')}</span>
+              <span class="winner">${esc(g.winnerName || '—')}</span>
             </div>
           `).join('')}
         </div>
@@ -7182,7 +8107,7 @@ window.SocialUI = (function () {
   function renderHistoryBadges(game) {
     const tags = [];
     if (game && game.groupName) {
-      tags.push(`<span class="soc-tag-group">👥 ${esc(game.groupName)}</span>`);
+      tags.push(`<span class="soc-tag-group">${esc(game.groupName)}</span>`);
     }
     if (game && game.sharedByName) {
       tags.push(`<span class="soc-tag-shared">Shared by ${esc(game.sharedByName)}</span>`);
@@ -7237,13 +8162,31 @@ window.SocialUI = (function () {
     }
   }
 
+  /** Extract a friend code, @handle, or email from raw input or a full ?addFriend=... URL */
+  function parseFriendIdentifier(raw) {
+    const text = String(raw || '').trim();
+    if (!text) return '';
+    try {
+      if (/^https?:\/\//i.test(text) || text.includes('?')) {
+        const u = new URL(text.startsWith('http') ? text : 'https://example.com/' + text.replace(/^\/+/, ''));
+        const param = u.searchParams.get('addFriend') || u.searchParams.get('add_friend') || u.searchParams.get('friend') || u.searchParams.get('code');
+        if (param && param.trim()) return param.trim();
+      }
+    } catch (_) {}
+    const m = text.match(/[?&](?:addFriend|add_friend|friend|code)=([^&#]+)/i);
+    if (m && m[1]) return decodeURIComponent(m[1]).trim();
+    return text;
+  }
+
   return {
     esc,
     initial,
+    parseFriendIdentifier,
     renderPlayerChip,
     renderGroupPresetPill,
     renderFriendPickPill,
     renderPendingRequestRow,
+    renderSentRequestRow,
     renderFriendRow,
     renderGroupCard,
     renderHistoryFilterBar,
@@ -9035,6 +9978,410 @@ window.SocialUI = (function () {
 
 </script>
 
+<!-- v17 offline QR SVG encoder (window.ScoreQR) -->
+<script id="score-qr">
+/* ==========================================================================
+   ScoreQR — Self-contained pure-JS ISO/IEC 18004 QR Code SVG Generator
+   Zero external dependencies, offline/PWA-ready.
+   Supports UTF-8 Byte mode, Error Correction Level M, Versions 1–10 (up to 213 bytes).
+   Exposes: window.ScoreQR = { encode(text), renderSvg(text, opts) }
+   ========================================================================== */
+(function (global) {
+  'use strict';
+
+  // Version 1..10 tables for ECC Level M: [totalCodewords, ecCodewordsPerBlock, numBlocksGroup1, dataCwGroup1, numBlocksGroup2, dataCwGroup2]
+  const VER_M = [
+    null,
+    [26,  10, 1, 16, 0, 0],   // V1  (21x21, max 14B)
+    [44,  16, 1, 28, 0, 0],   // V2  (25x25, max 26B)
+    [70,  26, 1, 44, 0, 0],   // V3  (29x29, max 42B)
+    [100, 18, 2, 32, 0, 0],   // V4  (33x33, max 62B)
+    [134, 24, 2, 43, 0, 0],   // V5  (37x37, max 84B)
+    [172, 16, 4, 27, 0, 0],   // V6  (41x41, max 106B)
+    [196, 18, 4, 31, 0, 0],   // V7  (45x45, max 122B)
+    [242, 22, 2, 38, 2, 39],  // V8  (49x49, max 152B)
+    [292, 22, 3, 36, 2, 37],  // V9  (53x53, max 180B)
+    [346, 26, 4, 43, 1, 44],  // V10 (57x57, max 213B)
+  ];
+
+  // Alignment pattern centers for Versions 1..10
+  const ALIGN = [
+    null,
+    [],
+    [6, 18],
+    [6, 22],
+    [6, 26],
+    [6, 30],
+    [6, 34],
+    [6, 22, 38],
+    [6, 24, 42],
+    [6, 26, 46],
+    [6, 28, 50],
+  ];
+
+  // Precomputed 15-bit format info for ECC Level M (00) and masks 0..7 (with BCH + XOR 0x5412)
+  const FORMAT_M = [
+    0x5412, 0x5125, 0x5e7c, 0x5b4b, 0x45f9, 0x40ce, 0x4f97, 0x4aa0
+  ];
+
+  // Version info 18-bit BCH for Versions 7..10
+  const VER_INFO = {
+    7:  0x07c94,
+    8:  0x085bc,
+    9:  0x09a99,
+    10: 0x0a4d3,
+  };
+
+  // GF(256) exp/log tables with primitive polynomial 0x11d
+  const EXP = new Uint8Array(512);
+  const LOG = new Uint8Array(256);
+  (function initGF() {
+    let x = 1;
+    for (let i = 0; i < 255; i++) {
+      EXP[i] = x;
+      LOG[x] = i;
+      x <<= 1;
+      if (x & 0x100) x ^= 0x11d;
+    }
+    for (let i = 255; i < 512; i++) EXP[i] = EXP[i - 255];
+  })();
+
+  function gfMul(a, b) {
+    if (a === 0 || b === 0) return 0;
+    return EXP[LOG[a] + LOG[b]];
+  }
+
+  function rsGenerator(ecLen) {
+    let poly = [1];
+    for (let i = 0; i < ecLen; i++) {
+      const next = new Array(poly.length + 1).fill(0);
+      const factor = EXP[i];
+      for (let j = 0; j < poly.length; j++) {
+        next[j] ^= poly[j];
+        next[j + 1] ^= gfMul(poly[j], factor);
+      }
+      poly = next;
+    }
+    return poly;
+  }
+
+  function rsEncode(data, ecLen) {
+    const gen = rsGenerator(ecLen);
+    const out = new Uint8Array(ecLen);
+    for (let i = 0; i < data.length; i++) {
+      const factor = data[i] ^ out[0];
+      for (let j = 0; j < ecLen - 1; j++) {
+        out[j] = out[j + 1] ^ gfMul(gen[j + 1], factor);
+      }
+      out[ecLen - 1] = gfMul(gen[ecLen], factor);
+    }
+    return out;
+  }
+
+  function utf8Bytes(str) {
+    if (typeof TextEncoder !== 'undefined') return Array.from(new TextEncoder().encode(str));
+    const out = [];
+    for (let i = 0; i < str.length; i++) {
+      let c = str.charCodeAt(i);
+      if (c < 0x80) out.push(c);
+      else if (c < 0x800) out.push(0xc0 | (c >> 6), 0x80 | (c & 0x3f));
+      else out.push(0xe0 | (c >> 12), 0x80 | ((c >> 6) & 0x3f), 0x80 | (c & 0x3f));
+    }
+    return out;
+  }
+
+  function pickVersion(byteLen) {
+    for (let v = 1; v <= 10; v++) {
+      const spec = VER_M[v];
+      const totalDataCw = spec[2] * spec[3] + spec[4] * spec[5];
+      const lenBits = v <= 9 ? 8 : 16;
+      const capBytes = Math.floor((totalDataCw * 8 - 4 - lenBits) / 8);
+      if (byteLen <= capBytes) return v;
+    }
+    throw new Error('QR payload too long (max 213 UTF-8 bytes)');
+  }
+
+  function buildCodewords(bytes, version) {
+    const spec = VER_M[version];
+    const ecPerBlock = spec[1];
+    const totalDataCw = spec[2] * spec[3] + spec[4] * spec[5];
+    const bits = [];
+    const pushBits = (val, n) => {
+      for (let i = n - 1; i >= 0; i--) bits.push((val >>> i) & 1);
+    };
+
+    // Byte mode indicator (0100) + length + payload
+    pushBits(0b0100, 4);
+    pushBits(bytes.length, version <= 9 ? 8 : 16);
+    for (let i = 0; i < bytes.length; i++) pushBits(bytes[i], 8);
+
+    // Terminator (up to 4 zero bits)
+    const maxBits = totalDataCw * 8;
+    const term = Math.min(4, maxBits - bits.length);
+    for (let i = 0; i < term; i++) bits.push(0);
+    while (bits.length % 8 !== 0) bits.push(0);
+
+    // Pack to bytes + pad alternating 0xEC, 0x11
+    const data = [];
+    for (let i = 0; i < bits.length; i += 8) {
+      let b = 0;
+      for (let j = 0; j < 8; j++) b = (b << 1) | bits[i + j];
+      data.push(b);
+    }
+    let padToggle = 0;
+    while (data.length < totalDataCw) {
+      data.push(padToggle ? 0x11 : 0xec);
+      padToggle ^= 1;
+    }
+
+    // Split into blocks and compute RS ECC
+    const blocks = [];
+    const ecBlocks = [];
+    let offset = 0;
+    for (let g = 0; g < 2; g++) {
+      const count = g === 0 ? spec[2] : spec[4];
+      const len = g === 0 ? spec[3] : spec[5];
+      for (let i = 0; i < count; i++) {
+        const blk = data.slice(offset, offset + len);
+        offset += len;
+        blocks.push(blk);
+        ecBlocks.push(rsEncode(blk, ecPerBlock));
+      }
+    }
+
+    // Interleave data then ECC codewords
+    const finalCw = [];
+    const maxDataLen = Math.max(spec[3], spec[5]);
+    for (let i = 0; i < maxDataLen; i++) {
+      for (let b = 0; b < blocks.length; b++) {
+        if (i < blocks[b].length) finalCw.push(blocks[b][i]);
+      }
+    }
+    for (let i = 0; i < ecPerBlock; i++) {
+      for (let b = 0; b < ecBlocks.length; b++) {
+        finalCw.push(ecBlocks[b][i]);
+      }
+    }
+    return finalCw;
+  }
+
+  function createMatrix(version) {
+    const size = version * 4 + 17;
+    const mod = Array.from({ length: size }, () => new Uint8Array(size));
+    const isFunc = Array.from({ length: size }, () => new Uint8Array(size));
+
+    const setFunc = (r, c, dark) => {
+      if (r < 0 || c < 0 || r >= size || c >= size) return;
+      mod[r][c] = dark ? 1 : 0;
+      isFunc[r][c] = 1;
+    };
+
+    // Finder patterns + separators
+    const drawFinder = (r0, c0) => {
+      for (let dr = -1; dr <= 7; dr++) {
+        for (let dc = -1; dc <= 7; dc++) {
+          const r = r0 + dr, c = c0 + dc;
+          if (r < 0 || c < 0 || r >= size || c >= size) continue;
+          const on = (dr >= 0 && dr <= 6 && dc >= 0 && dc <= 6) &&
+            (dr === 0 || dr === 6 || dc === 0 || dc === 6 || (dr >= 2 && dr <= 4 && dc >= 2 && dc <= 4));
+          setFunc(r, c, on);
+        }
+      }
+    };
+    drawFinder(0, 0);
+    drawFinder(0, size - 7);
+    drawFinder(size - 7, 0);
+
+    // Alignment patterns
+    const centers = ALIGN[version];
+    for (let i = 0; i < centers.length; i++) {
+      for (let j = 0; j < centers.length; j++) {
+        const cr = centers[i], cc = centers[j];
+        if ((cr <= 8 && cc <= 8) || (cr <= 8 && cc >= size - 9) || (cr >= size - 9 && cc <= 8)) continue;
+        for (let dr = -2; dr <= 2; dr++) {
+          for (let dc = -2; dc <= 2; dc++) {
+            const on = Math.max(Math.abs(dr), Math.abs(dc)) !== 1;
+            setFunc(cr + dr, cc + dc, on);
+          }
+        }
+      }
+    }
+
+    // Timing patterns
+    for (let i = 8; i < size - 8; i++) {
+      if (!isFunc[6][i]) setFunc(6, i, i % 2 === 0);
+      if (!isFunc[i][6]) setFunc(i, 6, i % 2 === 0);
+    }
+
+    // Reserve format info areas + dark module
+    for (let i = 0; i <= 8; i++) {
+      if (!isFunc[8][i]) setFunc(8, i, false);
+      if (!isFunc[i][8]) setFunc(i, 8, false);
+    }
+    for (let i = size - 8; i < size; i++) {
+      if (!isFunc[8][i]) setFunc(8, i, false);
+      if (!isFunc[i][8]) setFunc(i, 8, false);
+    }
+    setFunc(size - 8, 8, true);
+
+    // Version info for V7..10
+    if (version >= 7) {
+      const vi = VER_INFO[version];
+      for (let i = 0; i < 18; i++) {
+        const bit = ((vi >>> i) & 1) === 1;
+        const a = Math.floor(i / 3), b = size - 11 + (i % 3);
+        setFunc(a, b, bit);
+        setFunc(b, a, bit);
+      }
+    }
+
+    return { size, mod, isFunc };
+  }
+
+  function placeData(matrix, codewords) {
+    const { size, mod, isFunc } = matrix;
+    let bitIdx = 0;
+    const totalBits = codewords.length * 8;
+    let upward = true;
+    for (let right = size - 1; right >= 1; right -= 2) {
+      if (right === 6) right = 5;
+      for (let vert = 0; vert < size; vert++) {
+        const r = upward ? size - 1 - vert : vert;
+        for (let dx = 0; dx < 2; dx++) {
+          const c = right - dx;
+          if (isFunc[r][c]) continue;
+          let dark = 0;
+          if (bitIdx < totalBits) {
+            dark = (codewords[bitIdx >>> 3] >>> (7 - (bitIdx & 7))) & 1;
+            bitIdx++;
+          }
+          mod[r][c] = dark;
+        }
+      }
+      upward = !upward;
+    }
+  }
+
+  function maskBit(mask, r, c) {
+    switch (mask) {
+      case 0: return (r + c) % 2 === 0;
+      case 1: return r % 2 === 0;
+      case 2: return c % 3 === 0;
+      case 3: return (r + c) % 3 === 0;
+      case 4: return (Math.floor(r / 2) + Math.floor(c / 3)) % 2 === 0;
+      case 5: return ((r * c) % 2) + ((r * c) % 3) === 0;
+      case 6: return (((r * c) % 2) + ((r * c) % 3)) % 2 === 0;
+      case 7: return (((r + c) % 2) + ((r * c) % 3)) % 2 === 0;
+      default: return false;
+    }
+  }
+
+  function writeFormat(mod, size, mask) {
+    const bits = FORMAT_M[mask];
+    const getB = (i) => (bits >>> i) & 1;
+    // Around top-left finder
+    for (let i = 0; i <= 5; i++) mod[i][8] = getB(i);
+    mod[7][8] = getB(6);
+    mod[8][8] = getB(7);
+    mod[8][7] = getB(8);
+    for (let i = 9; i < 15; i++) mod[8][14 - i] = getB(i);
+    // Split bottom-left & top-right
+    for (let i = 0; i < 8; i++) mod[8][size - 1 - i] = getB(i);
+    for (let i = 8; i < 15; i++) mod[size - 15 + i][8] = getB(i);
+    mod[size - 8][8] = 1;
+  }
+
+  function penaltyScore(mod, size) {
+    let score = 0;
+    // Rule 1: 5+ same-color runs
+    for (let r = 0; r < size; r++) {
+      let run = 1;
+      for (let c = 1; c < size; c++) {
+        if (mod[r][c] === mod[r][c - 1]) {
+          run++;
+          if (run === 5) score += 3;
+          else if (run > 5) score += 1;
+        } else run = 1;
+      }
+    }
+    for (let c = 0; c < size; c++) {
+      let run = 1;
+      for (let r = 1; r < size; r++) {
+        if (mod[r][c] === mod[r - 1][c]) {
+          run++;
+          if (run === 5) score += 3;
+          else if (run > 5) score += 1;
+        } else run = 1;
+      }
+    }
+    // Rule 2: 2x2 blocks
+    for (let r = 0; r < size - 1; r++) {
+      for (let c = 0; c < size - 1; c++) {
+        const v = mod[r][c];
+        if (v === mod[r][c + 1] && v === mod[r + 1][c] && v === mod[r + 1][c + 1]) score += 3;
+      }
+    }
+    // Rule 4: dark ratio balance
+    let dark = 0;
+    for (let r = 0; r < size; r++) for (let c = 0; c < size; c++) if (mod[r][c]) dark++;
+    const pct = (dark * 100) / (size * size);
+    score += Math.floor(Math.abs(pct - 50) / 5) * 10;
+    return score;
+  }
+
+  function encode(text) {
+    const bytes = utf8Bytes(String(text || ''));
+    const version = pickVersion(bytes.length);
+    const codewords = buildCodewords(bytes, version);
+    const base = createMatrix(version);
+    placeData(base, codewords);
+
+    let bestMask = 0;
+    let bestScore = Infinity;
+    let bestMod = null;
+
+    for (let m = 0; m < 8; m++) {
+      const copy = base.mod.map((row) => Uint8Array.from(row));
+      for (let r = 0; r < base.size; r++) {
+        for (let c = 0; c < base.size; c++) {
+          if (!base.isFunc[r][c] && maskBit(m, r, c)) copy[r][c] ^= 1;
+        }
+      }
+      writeFormat(copy, base.size, m);
+      const s = penaltyScore(copy, base.size);
+      if (s < bestScore) {
+        bestScore = s;
+        bestMask = m;
+        bestMod = copy;
+      }
+    }
+
+    return { version, size: base.size, mask: bestMask, modules: bestMod };
+  }
+
+  function renderSvg(text, opts) {
+    const o = opts || {};
+    const quiet = typeof o.quiet === 'number' ? o.quiet : 4;
+    const fg = o.fg || '#0c0d10';
+    const bg = o.bg || '#ffffff';
+    const label = o.ariaLabel || 'Friend QR code';
+    const qr = encode(text);
+    const dim = qr.size + quiet * 2;
+    let d = '';
+    for (let r = 0; r < qr.size; r++) {
+      const row = qr.modules[r];
+      for (let c = 0; c < qr.size; c++) {
+        if (row[c]) d += `M${c + quiet},${r + quiet}h1v1h-1z`;
+      }
+    }
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${dim} ${dim}" shape-rendering="crispEdges" role="img" aria-label="${String(label).replace(/"/g, '&quot;')}"><rect width="${dim}" height="${dim}" fill="${bg}"/><path d="${d}" fill="${fg}"/></svg>`;
+  }
+
+  global.ScoreQR = { encode, renderSvg };
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+
 <!-- App engine: defines window.onAuthReady / window.onAuthSignedOut before auth init -->
 <script id="score-engine">
 /* Score Tracker engine — Rummikub Classic Blue & Ivory Rack (2–6p, Points Up / Classic +/−, tile calculator), social layer (you, friends, groups, shared history), game-agnostic shell, per-game scoring, Catan wood/parchment theme, Flip 7 coastal card theme, Carcassonne sunlit meadow tally, Nertz Midnight Parlor & Gold Foil (Solo + unlimited Partners/Teams). */
@@ -9226,6 +10573,8 @@ window.SocialUI = (function () {
     currentUser = null; initializedUserId = null; players = []; history = []; currentGame = null; pendingSync = false;
     scoringPlayer = null; currentView = 'home'; closeDiceModal();
     document.body.classList.remove('theme-catan', 'theme-flip7', 'theme-carcassonne', 'theme-nertz', 'theme-rummikub'); f7 = null; rkCalcOpen = false; rkCalcExpr = ''; nzSheetKind = null; nzPopIdx = -1;
+    if (typeof unsubFriendships === 'function') { unsubFriendships(); unsubFriendships = null; }
+    lastFriendsError = null;
     resetSocialState();
     document.querySelectorAll('#app-shell .view').forEach((el) => el.classList.remove('active'));
     ['gen-leaderboard', 'gen-pad', 'leaderboard', 'score-form', 'history-list', 'recent-list', 'player-chips', 'f7-board', 'f7-drawer', 'cc-list',
@@ -10833,6 +12182,7 @@ window.SocialUI = (function () {
     social = { profile: null, friends: { accepted: [], incoming: [], outgoing: [] }, groups: [], shared: [], groupShared: {}, ready: false };
     const ui = SUI(); if (ui) ui.closeCreateGroupModal();
     setHidden(byId('nav-social-dot'), true); setHidden(byId('soc-demo-banner'), true);
+    lastFriendsError = null; showFriendsError(null); setSocialLoading(false); closeMyQrModal(); closeScanQrModal();
   }
   async function socialInit(user) {
     const api = SAPI(); if (!api || !user) return;
@@ -10844,18 +12194,72 @@ window.SocialUI = (function () {
         const dp = r.defaultPlayer;
         if (dp) selfPlayer = { name: dp.name, userId: dp.user_id || user.id, friendCode: dp.friend_code || '', isSelf: true };
       }
+      if (typeof unsubFriendships === 'function') { unsubFriendships(); unsubFriendships = null; }
+      if (typeof api.subscribeToFriendships === 'function') {
+        unsubFriendships = api.subscribeToFriendships(() => {
+          if (currentUser && currentUser.id === user.id) refreshSocial();
+        });
+      }
       await refreshSocial();
+      await consumePendingFriendInvite();
     } catch (e) { console.warn('[social] init failed', e); }
   }
   let refreshSeq = 0;
-  async function refreshSocial() {
+  let lastSocialRefreshAt = 0;
+  let unsubFriendships = null;
+  let lastFriendsError = null;
+  const sameId = (a, b) => !!a && !!b && String(a).toLowerCase() === String(b).toLowerCase();
+  function setSocialLoading(on) {
+    const btn = byId('btn-refresh-social');
+    if (btn) { btn.classList.toggle('is-loading', !!on); btn.setAttribute('aria-busy', on ? 'true' : 'false'); }
+    setHidden(byId('soc-loading-banner'), !on);
+  }
+  function showFriendsError(msg) {
+    const banner = byId('soc-error-banner');
+    if (byId('soc-error-text') && msg) byId('soc-error-text').textContent = 'Could not refresh friends: ' + msg;
+    setHidden(banner, !msg);
+  }
+  // Keep quick-added friends in sync with the accepted list, but never strip members of an active Group preset
+  function pruneSetupFriends() {
+    const acc = social.friends.accepted || [];
+    if (!setupGroup) { setupFriends = setupFriends.filter((f) => acc.some((a) => sameId(a.userId, f.userId))); return; }
+    const g = (social.groups || []).find((x) => String(x.id) === String(setupGroup.id));
+    const memberIds = [...(setupGroup.memberIds || []), ...((g && g.members) || []).map((m) => m && m.userId).filter(Boolean)];
+    setupFriends = setupFriends.filter((f) => acc.some((a) => sameId(a.userId, f.userId)) || memberIds.some((id) => sameId(id, f.userId)));
+  }
+  function applyFriendsResult(fr) {
+    if (!fr) return;
+    if (fr.error) {
+      lastFriendsError = fr.error;
+      console.warn('[social] listFriends error:', fr.error, fr.errorCode || '');
+      // keep what we already show; only seed from the (local) result before the first successful load
+      if (!social.ready) social.friends = { accepted: fr.accepted || [], incoming: fr.incoming || [], outgoing: fr.outgoing || [] };
+    } else {
+      lastFriendsError = null;
+      social.friends = { accepted: fr.accepted || [], incoming: fr.incoming || [], outgoing: fr.outgoing || [] };
+    }
+    showFriendsError(lastFriendsError);
+  }
+  async function refreshSocial(force) {
     const api = SAPI(), user = currentUser; if (!api || !user) return;
     const seq = ++refreshSeq;
+    lastSocialRefreshAt = Date.now();
+    const stale = () => !currentUser || currentUser.id !== user.id || seq !== refreshSeq;
+    setSocialLoading(true);
     try {
-      const [fr, gr, mg] = await Promise.all([
-        api.listFriends().catch(() => null), api.listGroups().catch(() => null), api.loadMyGames({ includeLegacy: false }).catch(() => null)]);
-      if (!currentUser || currentUser.id !== user.id || seq !== refreshSeq) return;
-      if (fr) social.friends = { accepted: fr.accepted || [], incoming: fr.incoming || [], outgoing: fr.outgoing || [] };
+      const frP = api.listFriends().catch((e) => ({ error: (e && e.message) || 'Failed to load friends.' }));
+      const grP = api.listGroups().catch(() => null);
+      const mgP = api.loadMyGames({ includeLegacy: false }).catch(() => null);
+      // Friends first: render incoming/sent/accepted as soon as listFriends() resolves (never wait on game queries)
+      const fr = await frP;
+      if (stale()) return;
+      applyFriendsResult(fr);
+      pruneSetupFriends();
+      updateNavDot();
+      if (currentView === 'social') renderSocial();
+      else if (currentView === 'new') renderSetupPlayers();
+      const [gr, mg] = await Promise.all([grP, mgP]);
+      if (stale()) return;
       if (gr) social.groups = gr.groups || [];
       if (mg) social.shared = (mg.games || []).filter((g) => g && g.shared === true);
       // Group games played without you (visible to members once the migration is live)
@@ -10866,16 +12270,16 @@ window.SocialUI = (function () {
           if (r && !r.isFallback) groupShared[g.id] = (r.games || []).filter((x) => x && x.shared === true);
         }));
       }
-      if (!currentUser || currentUser.id !== user.id || seq !== refreshSeq) return;
+      if (stale()) return;
       social.groupShared = groupShared;
       if (api.isMigrationReady() === true) syncStatus('Synced', false);
-      const me = social.friends && social.profile;
-      if (me && selfPlayer && social.profile.display_name) selfPlayer.name = social.profile.display_name;
-      // keep quick-added friends in sync with the accepted list
-      setupFriends = setupFriends.filter((f) => social.friends.accepted.some((a) => a.userId === f.userId));
-      if (setupGroup && !social.groups.some((g) => g.id === setupGroup.id)) setupGroup = null;
+      if (selfPlayer && social.profile && social.profile.display_name) selfPlayer.name = social.profile.display_name;
+      if (gr && setupGroup && !social.groups.some((g) => String(g.id) === String(setupGroup.id))) setupGroup = null;
+      pruneSetupFriends();
       social.ready = true;
     } catch (e) { console.warn('[social] refresh failed', e); }
+    finally { if (seq === refreshSeq) setSocialLoading(false); }
+    if (stale()) return;
     rerenderSocialViews();
   }
   function rerenderSocialViews() {
@@ -10962,7 +12366,7 @@ window.SocialUI = (function () {
     guests.forEach((n) => { if (!players.some((p) => lc(p) === lc(n))) { players.push(n); changed = true; } });
     const keep = new Set(guests.map(lc));
     players.forEach((p) => { if (keep.has(lc(p))) deselected.delete(p); else deselected.add(p); });
-    setupGroup = { id: String(res.groupId), name: res.groupName || g.name };
+    setupGroup = { id: String(res.groupId), name: res.groupName || g.name, memberIds: (g.members || []).map((m) => m && m.userId).filter(Boolean).map(String) };
     if (currentView === 'new') renderSetupPlayers();
     if (changed) saveData();
     return setupGroup;
@@ -11010,15 +12414,23 @@ window.SocialUI = (function () {
     if (byId('soc-my-avatar')) byId('soc-my-avatar').textContent = (name.trim().charAt(0) || '?').toUpperCase();
     const fr = social.friends, incoming = fr.incoming || [], outgoing = fr.outgoing || [], accepted = fr.accepted || [];
     const badge = byId('soc-pending-badge'); if (badge) { badge.textContent = String(incoming.length); setHidden(badge, !incoming.length); }
+    const setTxt = (id, v) => { const el = byId(id); if (el) el.textContent = String(v); };
+    setTxt('soc-incoming-count', incoming.length); setTxt('soc-sent-count', outgoing.length); setTxt('soc-friends-count', accepted.length);
     updateNavDot();
-    setHidden(byId('soc-pending-card'), !incoming.length && !outgoing.length);
+    showFriendsError(lastFriendsError);
+    setHidden(byId('soc-pending-card'), !incoming.length);
+    setHidden(byId('soc-sent-card'), !outgoing.length);
     if (ui) {
-      byId('soc-pending-list').innerHTML = incoming.map((r) => ui.renderPendingRequestRow({ id: r.friendshipId, displayName: r.displayName, friendCode: r.friendCode })).join('')
-        + outgoing.map((r) => `<div class="soc-row soc-outgoing"><div class="soc-row-main"><div class="soc-avatar sm" aria-hidden="true">${ui.initial(r.displayName)}</div>
-            <div class="soc-row-info"><div class="soc-row-name">${esc(r.displayName || 'Player')}</div><div class="soc-row-sub soc-outgoing-note">Request sent · waiting for them to accept</div></div></div></div>`).join('');
+      byId('soc-pending-list').innerHTML = incoming.map((r) => ui.renderPendingRequestRow({ friendshipId: r.friendshipId, id: r.friendshipId, displayName: r.displayName, friendCode: r.friendCode })).join('');
+      const sent = byId('soc-sent-list');
+      if (sent) sent.innerHTML = outgoing.map((r) => (typeof ui.renderSentRequestRow === 'function'
+        ? ui.renderSentRequestRow({ friendshipId: r.friendshipId, id: r.friendshipId, displayName: r.displayName, friendCode: r.friendCode })
+        : `<div class="soc-sent-row"><div class="soc-row-main"><div class="soc-row-info"><div class="soc-row-name">${esc(r.displayName || 'Player')}</div></div></div></div>`)).join('');
       byId('soc-friends-list').innerHTML = accepted.length
-        ? accepted.map((f) => ui.renderFriendRow(f, setupFriends.some((s) => s.userId === f.userId))).join('')
-        : '<p class="small" style="margin:0.2rem 0 0">No friends yet. Share your code or add someone above.</p>';
+        ? accepted.map((f) => ui.renderFriendRow(f, setupFriends.some((s) => sameId(s.userId, f.userId)))).join('')
+        : (lastFriendsError
+            ? '<p class="soc-empty-note">Your friends list could not be synced right now. Tap Retry above.</p>'
+            : '<p class="soc-empty-note">No friends yet. Show your QR code, scan a friend, or add them by code above.</p>');
       const groups = social.groups || [];
       byId('soc-groups-list').innerHTML = groups.length
         ? groups.map((g) => ui.renderGroupCard(groupForUi(g))).join('')
@@ -11035,17 +12447,54 @@ window.SocialUI = (function () {
     socMsg('soc-profile-msg', 'Saved — you’ll show up as ' + (r.profile ? r.profile.display_name : inp.value) + '.', 'success');
     renderSocial();
   }
-  async function sendFriendRequest() {
-    const api = SAPI(), inp = byId('soc-add-friend-input'); if (!api || !inp) return;
-    const ident = inp.value.trim();
-    if (!ident) { socMsg('soc-friend-msg', 'Enter an email or friend code.', 'error'); return; }
+  function formatFriendActionMsg(r, fallbackIdent) {
+    const who = (r && r.target && (r.target.display_name || r.target.displayName)) || fallbackIdent || 'player';
+    const msgs = {
+      pending: `Friend request sent to ${who}.`,
+      accepted: `You’re now friends with ${who}.`,
+      already_friends: `You’re already friends with ${who}.`,
+      already_pending: `Request to ${who} is still pending.`
+    };
+    return msgs[r && r.status] || `Added ${who}.`;
+  }
+  async function sendFriendRequest(explicitIdent) {
+    const api = SAPI(), inp = byId('soc-add-friend-input'); if (!api) return null;
+    const ident = String(typeof explicitIdent === 'string' ? explicitIdent : (inp ? inp.value : '')).trim();
+    if (!ident) { socMsg('soc-friend-msg', 'Enter an email or friend code.', 'error'); return { ok: false, error: 'Enter an email or friend code.' }; }
     const r = await api.sendFriendRequest(ident);
-    if (!r || !r.ok) { socMsg('soc-friend-msg', (r && r.error) || 'Could not send that request.', 'error'); return; }
-    const who = (r.target && (r.target.display_name || r.target.displayName)) || ident;
-    const msgs = { pending: `Friend request sent to ${who}.`, accepted: `You’re now friends with ${who}.`, already_friends: `You’re already friends with ${who}.`, already_pending: `Request to ${who} is still pending.` };
-    socMsg('soc-friend-msg', msgs[r.status] || `Added ${who}.`, 'success');
-    inp.value = '';
+    if (!r || !r.ok) { socMsg('soc-friend-msg', (r && r.error) || 'Could not send that request.', 'error'); return r || { ok: false }; }
+    socMsg('soc-friend-msg', formatFriendActionMsg(r, ident), 'success');
+    if (inp && typeof explicitIdent !== 'string') inp.value = '';
     await refreshSocial();
+    return r;
+  }
+  function getMyFriendShareUrl() {
+    const api = SAPI();
+    if (!api || typeof api.buildFriendShareUrl !== 'function') return null;
+    return api.buildFriendShareUrl(social.profile || api.getCachedProfile());
+  }
+  async function handleScannedFriendQr(rawInput) {
+    const api = SAPI(); if (!api) return { ok: false, error: 'Social not ready.' };
+    const r = typeof api.handleFriendQrOrCode === 'function'
+      ? await api.handleFriendQrOrCode(rawInput)
+      : await api.sendFriendRequest(rawInput);
+    if (!r || !r.ok) {
+      socMsg('soc-friend-msg', (r && r.error) || 'Could not add friend from QR code.', 'error');
+      return r || { ok: false };
+    }
+    socMsg('soc-friend-msg', formatFriendActionMsg(r, r.identifier || rawInput), 'success');
+    await refreshSocial();
+    return r;
+  }
+  async function consumePendingFriendInvite() {
+    const api = SAPI();
+    if (!api || !currentUser || typeof api.getPendingFriendInvite !== 'function') return null;
+    const pending = api.getPendingFriendInvite();
+    if (!pending) return null;
+    api.clearPendingFriendInvite(true);
+    showView('social');
+    if (SUI() && typeof SUI().switchSocialTab === 'function') SUI().switchSocialTab('friends');
+    return handleScannedFriendQr(pending);
   }
   async function respondFriendRequest(friendshipId, accept) {
     const api = SAPI(); if (!api) return;
@@ -11054,14 +12503,181 @@ window.SocialUI = (function () {
     socMsg('soc-friend-msg', accept ? 'Friend request accepted.' : 'Request declined.', 'success');
     await refreshSocial();
   }
-  async function removeFriend(uid) {
-    const api = SAPI(); if (!api) return;
-    const f = (social.friends.accepted || []).find((a) => a.userId === uid);
-    if (!f || !confirm('Remove ' + memberName(f) + ' from your friends?')) return;
-    const r = await api.removeFriend(f.friendshipId);
-    if (!r || !r.ok) { socMsg('soc-friend-msg', (r && r.error) || 'Could not remove that friend.', 'error'); return; }
-    setupFriends = setupFriends.filter((s) => s.userId !== uid);
+  async function removeFriend(id) {
+    const api = SAPI(); if (!api || !id) return;
+    const key = String(id);
+    const acc = social.friends.accepted || [], out = social.friends.outgoing || [];
+    const byKey = (list) => list.find((a) => sameId(a.friendshipId, key)) || list.find((a) => sameId(a.userId, key));
+    const f = byKey(acc), req = f ? null : byKey(out);
+    const target = f || req; if (!target) return;
+    const who = memberName(target);
+    if (!confirm(f ? 'Remove ' + who + ' from your friends?' : 'Cancel your friend request to ' + who + '?')) return;
+    const r = await api.removeFriend(target.friendshipId);
+    if (!r || !r.ok) { socMsg('soc-friend-msg', (r && r.error) || (f ? 'Could not remove that friend.' : 'Could not cancel that request.'), 'error'); return; }
+    if (f) setupFriends = setupFriends.filter((s) => !sameId(s.userId, f.userId));
+    socMsg('soc-friend-msg', f ? who + ' removed from your friends.' : 'Request to ' + who + ' canceled.', 'success');
     await refreshSocial();
+  }
+
+  // ----- v17 Friend QR codes: My QR + Scan QR -----
+  function setModalOpen(id, open) {
+    const m = byId(id); if (!m) return;
+    setHidden(m, !open);
+    m.classList.toggle('open', !!open);
+  }
+  function qrMsg(id, text, tone) { socMsg(id, text, tone); }
+  function openMyQrModal() {
+    const url = currentUser ? getMyFriendShareUrl() : null;
+    const prof = social.profile || (SAPI() && SAPI().getCachedProfile ? SAPI().getCachedProfile() : null) || {};
+    const name = prof.display_name || (selfPlayer && selfPlayer.name) || 'Player';
+    const svgHost = byId('soc-my-qr-svg');
+    if (byId('soc-qr-handle')) byId('soc-qr-handle').textContent = name;
+    if (byId('soc-qr-code-text')) byId('soc-qr-code-text').textContent = prof.friend_code || '—';
+    if (!url) {
+      if (svgHost) svgHost.innerHTML = '';
+      qrMsg('soc-qr-msg', currentUser ? 'Your friend code is still loading. Try again in a moment.' : 'Sign in to get your friend QR code.', 'error');
+    } else {
+      try { if (svgHost) svgHost.innerHTML = global.ScoreQR ? global.ScoreQR.renderSvg(url) : ''; } catch (e) { console.warn('[qr] render failed', e); if (svgHost) svgHost.innerHTML = ''; }
+      qrMsg('soc-qr-msg', svgHost && svgHost.querySelector('svg') ? '' : 'Could not draw the QR code. Use Copy Link instead.', svgHost && svgHost.querySelector('svg') ? '' : 'error');
+    }
+    setModalOpen('soc-qr-modal', true);
+    return url;
+  }
+  function closeMyQrModal() { setModalOpen('soc-qr-modal', false); }
+  function legacyCopy(text) {
+    try {
+      const ta = document.createElement('textarea');
+      ta.value = text; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.top = '-1000px'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      const ok = document.execCommand && document.execCommand('copy');
+      ta.remove(); return !!ok;
+    } catch (_) { return false; }
+  }
+  async function copyFriendInviteLink() {
+    const url = getMyFriendShareUrl();
+    if (!url) { qrMsg('soc-qr-msg', 'Sign in to get your friend link.', 'error'); return false; }
+    let ok = false;
+    try { if (navigator.clipboard && navigator.clipboard.writeText) { await navigator.clipboard.writeText(url); ok = true; } } catch (_) { ok = false; }
+    if (!ok) ok = legacyCopy(url);
+    qrMsg('soc-qr-msg', ok ? 'Friend link copied. Send it to a friend to connect.' : 'Copy this link: ' + url, ok ? 'success' : '');
+    return ok;
+  }
+  async function shareFriendInviteLink() {
+    const url = getMyFriendShareUrl();
+    if (!url) { qrMsg('soc-qr-msg', 'Sign in to get your friend link.', 'error'); return false; }
+    if (navigator.share) {
+      const prof = social.profile || {};
+      try {
+        await navigator.share({ title: 'Add me on Score Tracker', text: 'Add me as a friend on Score Tracker' + (prof.friend_code ? ' (code ' + prof.friend_code + ')' : '') + '.', url });
+        qrMsg('soc-qr-msg', 'Shared.', 'success');
+        return true;
+      } catch (e) {
+        if (e && e.name === 'AbortError') return false;
+      }
+    }
+    return copyFriendInviteLink();
+  }
+  let scanStream = null, scanRaf = 0, scanBusy = false, scanSession = 0;
+  function stopScanCamera() {
+    if (scanRaf) { cancelAnimationFrame(scanRaf); scanRaf = 0; }
+    if (scanStream) { try { scanStream.getTracks().forEach((t) => t.stop()); } catch (_) {} scanStream = null; }
+    const v = byId('soc-scan-video'); if (v) { try { v.pause(); } catch (_) {} v.srcObject = null; }
+  }
+  function showScanFallback(on) {
+    setHidden(byId('soc-scan-viewport'), !!on);
+    setHidden(byId('soc-scan-fallback-note'), !on);
+  }
+  async function onScannedValue(raw) {
+    if (scanBusy) return; scanBusy = true;
+    stopScanCamera();
+    qrMsg('soc-scan-msg', 'Adding friend...', '');
+    const r = await handleScannedFriendQr(raw);
+    scanBusy = false;
+    if (r && r.ok) {
+      qrMsg('soc-scan-msg', formatFriendActionMsg(r, r.identifier || raw), 'success');
+      setTimeout(() => { if (!scanBusy) closeScanQrModal(); }, 1200);
+    } else {
+      qrMsg('soc-scan-msg', (r && r.error) || 'That QR code is not a Score Tracker friend link.', 'error');
+      showScanFallback(true);
+    }
+    return r;
+  }
+  async function openScanQrModal() {
+    const session = ++scanSession;
+    stopScanCamera(); scanBusy = false;
+    qrMsg('soc-scan-msg', '');
+    const inp = byId('soc-scan-paste-input'); if (inp) inp.value = '';
+    const f = byId('soc-scan-file'); if (f) f.value = '';
+    setModalOpen('soc-scan-modal', true);
+    const canCamera = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && global.BarcodeDetector);
+    if (!canCamera) { showScanFallback(true); return false; }
+    showScanFallback(false);
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false });
+      if (session !== scanSession || byId('soc-scan-modal').hidden) { stream.getTracks().forEach((t) => t.stop()); return false; }
+      scanStream = stream;
+      const video = byId('soc-scan-video');
+      video.srcObject = stream; video.setAttribute('playsinline', ''); video.muted = true;
+      await video.play().catch(() => {});
+      const detector = new global.BarcodeDetector({ formats: ['qr_code'] });
+      const tick = async () => {
+        if (session !== scanSession || !scanStream) return;
+        try {
+          if (video.readyState >= 2) {
+            const codes = await detector.detect(video);
+            if (session !== scanSession || !scanStream) return;
+            if (codes && codes.length && codes[0].rawValue) { onScannedValue(codes[0].rawValue); return; }
+          }
+        } catch (_) {}
+        scanRaf = requestAnimationFrame(tick);
+      };
+      scanRaf = requestAnimationFrame(tick);
+      return true;
+    } catch (e) {
+      stopScanCamera();
+      if (session === scanSession) {
+        showScanFallback(true);
+        qrMsg('soc-scan-msg', e && e.name === 'NotAllowedError' ? 'Camera permission was denied. Paste the link or code below instead.' : '', e && e.name === 'NotAllowedError' ? 'error' : '');
+      }
+      return false;
+    }
+  }
+  function closeScanQrModal() {
+    scanSession++;
+    stopScanCamera();
+    setModalOpen('soc-scan-modal', false);
+  }
+  async function handleScanQrFile(input) {
+    const file = input && input.files && input.files[0];
+    if (!file) return null;
+    if (!global.BarcodeDetector || typeof global.createImageBitmap !== 'function') {
+      qrMsg('soc-scan-msg', 'This browser cannot read QR images. Paste the friend link or code below instead.', 'error');
+      input.value = ''; return null;
+    }
+    try {
+      const bmp = await createImageBitmap(file);
+      const codes = await new global.BarcodeDetector({ formats: ['qr_code'] }).detect(bmp);
+      if (bmp.close) bmp.close();
+      input.value = '';
+      if (!codes || !codes.length || !codes[0].rawValue) { qrMsg('soc-scan-msg', 'No QR code found in that image. Paste the friend link or code below instead.', 'error'); return null; }
+      return onScannedValue(codes[0].rawValue);
+    } catch (e) {
+      input.value = '';
+      qrMsg('soc-scan-msg', 'Could not read that image. Paste the friend link or code below instead.', 'error');
+      return null;
+    }
+  }
+  async function submitScannedFriend() {
+    const inp = byId('soc-scan-paste-input');
+    const val = String((inp && inp.value) || '').trim();
+    if (!val) { qrMsg('soc-scan-msg', 'Paste a friend link, friend code, or email.', 'error'); return { ok: false }; }
+    qrMsg('soc-scan-msg', 'Adding friend...', '');
+    const r = await handleScannedFriendQr(val);
+    if (r && r.ok) {
+      qrMsg('soc-scan-msg', formatFriendActionMsg(r, r.identifier || val), 'success');
+      if (inp) inp.value = '';
+    } else qrMsg('soc-scan-msg', (r && r.error) || 'Could not add that friend.', 'error');
+    return r;
   }
   function renderGroupModal() {
     const picks = byId('soc-group-friend-picks'), acc = social.friends.accepted || [];
@@ -11167,11 +12783,18 @@ window.SocialUI = (function () {
     } catch (e) { console.warn('[social] share failed', e); return null; }
   }
 
-  // Enter key on the add-player input
+  // Enter key on the add-player input + auto-refresh friends/groups when returning to the app
   document.addEventListener('DOMContentLoaded', () => {
     const input = byId('new-player-name');
     if (input) input.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); addPlayer(); } });
   });
+  const maybeRefreshOnResume = () => {
+    if (!currentUser || document.hidden) return;
+    if (Date.now() - lastSocialRefreshAt < 15000) return;
+    refreshSocial();
+  };
+  document.addEventListener('visibilitychange', maybeRefreshOnResume);
+  global.addEventListener('focus', maybeRefreshOnResume);
 
   Object.assign(global, {
     onAuthReady, onAuthSignedOut, showView, selectGame, quickStart, togglePlayer, addPlayer, removePlayer, startGame, discardGame,
@@ -11189,6 +12812,8 @@ window.SocialUI = (function () {
     onAuthSignedIn: onAuthReady, removeSelf, addSelf, removeSetupFriend, toggleSetupFriend, includeFriendInNextGame, applyGroupPreset, clearSetupGroup,
     startGameWithGroup, saveDisplayName, sendFriendRequest, respondFriendRequest, removeFriend, openCreateGroup, toggleGroupModalFriend,
     addGroupModalGuest, removeGroupModalGuest, createGroupFromModal, deleteGroup, setHistoryFilter, setGroupLbFilter, refreshSocial,
+    getMyFriendShareUrl, handleScannedFriendQr, consumePendingFriendInvite,
+    openMyQrModal, closeMyQrModal, copyFriendInviteLink, shareFriendInviteLink, openScanQrModal, closeScanQrModal, handleScanQrFile, submitScannedFriend,
     ScoreTracker: { GAMES, getState: () => ({ players: [...players], history: [...history], currentGame, currentView, scoringPlayer, padMode, pendingSync,
       selfPlayer, selfIncluded, setupFriends: [...setupFriends], setupGroup, historyFilter, social }) }
   });
@@ -11473,7 +13098,24 @@ window.SocialUI = (function () {
   window.signInWithEmail = signInWithEmail;
   window.signOut = signOut;
 
+  function persistPendingFriendInviteFromUrl() {
+    try {
+      if (window.SocialAPI && typeof window.SocialAPI.capturePendingFriendFromUrl === 'function') {
+        window.SocialAPI.capturePendingFriendFromUrl(window.location.href);
+        return;
+      }
+      const u = new URL(window.location.href);
+      const raw = u.searchParams.get('addFriend') || u.searchParams.get('addfriend') || u.searchParams.get('friend');
+      if (raw && raw.trim().length >= 3) {
+        const p = JSON.stringify({ identifier: raw.trim(), capturedAt: Date.now() });
+        try { if (window.sessionStorage) window.sessionStorage.setItem('gst_pending_add_friend_v1', p); } catch (_) {}
+        try { if (window.localStorage) window.localStorage.setItem('gst_pending_add_friend_v1', p); } catch (_) {}
+      }
+    } catch (_) {}
+  }
+
   async function initAuth() {
+    persistPendingFriendInviteFromUrl();
     hideBothInitially();
     bindEvents();
 

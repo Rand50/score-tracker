@@ -338,8 +338,8 @@ create policy "friendships_insert_own" on public.friendships
 drop policy if exists "friendships_update_own" on public.friendships;
 create policy "friendships_update_own" on public.friendships
   for update to authenticated
-  using (auth.uid() = addressee_id or auth.uid() = requester_id)
-  with check (auth.uid() = addressee_id or auth.uid() = requester_id);
+  using (auth.uid() = addressee_id)
+  with check (auth.uid() = addressee_id);
 
 drop policy if exists "friendships_delete_own" on public.friendships;
 create policy "friendships_delete_own" on public.friendships
@@ -466,19 +466,24 @@ begin
     raise exception 'Not authenticated';
   end if;
 
+  select * into v_user from auth.users where id = v_uid;
   select * into v_profile from public.profiles where id = v_uid;
   if found then
-    if p_display_name is not null and length(trim(p_display_name)) > 0 and trim(p_display_name) <> v_profile.display_name then
+    if (p_display_name is not null and length(trim(p_display_name)) > 0 and trim(p_display_name) <> v_profile.display_name)
+       or (v_user.email is not null and v_profile.email is distinct from lower(v_user.email)) then
       update public.profiles
-      set display_name = left(trim(p_display_name), 40),
+      set display_name = case
+            when p_display_name is not null and length(trim(p_display_name)) > 0
+            then left(trim(p_display_name), 40)
+            else public.profiles.display_name
+          end,
+          email = coalesce(lower(v_user.email), public.profiles.email),
           updated_at = now()
       where id = v_uid
       returning * into v_profile;
     end if;
     return v_profile;
   end if;
-
-  select * into v_user from auth.users where id = v_uid;
   v_name := coalesce(
     nullif(left(trim(coalesce(p_display_name, '')), 40), ''),
     public.derive_display_name(v_user.raw_user_meta_data, v_user.email)
@@ -507,7 +512,8 @@ security definer
 set search_path = public
 as $$
 declare
-  v_ident text := trim(coalesce(identifier, ''));
+  v_ident text := ltrim(trim(coalesce(identifier, '')), '@');
+  v_code_norm text;
 begin
   if auth.uid() is null then
     raise exception 'Not authenticated';
@@ -517,11 +523,15 @@ begin
     return;
   end if;
 
+  v_code_norm := regexp_replace(upper(v_ident), '[^A-Z0-9]', '', 'g');
+
   return query
   select p.id, p.display_name, p.friend_code
   from public.profiles p
   where lower(p.email) = lower(v_ident)
      or upper(p.friend_code) = upper(v_ident)
+     or (position('@' in v_ident) = 0 and length(v_code_norm) >= 5
+         and regexp_replace(upper(p.friend_code), '[^A-Z0-9]', '', 'g') = v_code_norm)
   limit 1;
 end;
 $$;
@@ -537,7 +547,8 @@ declare
   v_uid uuid := auth.uid();
   v_target public.profiles%rowtype;
   v_existing public.friendships%rowtype;
-  v_ident text := trim(coalesce(identifier, ''));
+  v_ident text := ltrim(trim(coalesce(identifier, '')), '@');
+  v_code_norm text;
   v_row public.friendships%rowtype;
 begin
   if v_uid is null then
@@ -547,10 +558,14 @@ begin
   -- Ensure caller has a profile
   perform public.ensure_my_profile(null);
 
+  v_code_norm := regexp_replace(upper(v_ident), '[^A-Z0-9]', '', 'g');
+
   select * into v_target
   from public.profiles
   where lower(email) = lower(v_ident)
      or upper(friend_code) = upper(v_ident)
+     or (position('@' in v_ident) = 0 and length(v_code_norm) >= 5
+         and regexp_replace(upper(friend_code), '[^A-Z0-9]', '', 'g') = v_code_norm)
   limit 1;
 
   if not found then
@@ -626,6 +641,130 @@ begin
 end;
 $$;
 
+-- List all accepted + pending (incoming & outgoing) friendships with profile info
+-- SECURITY DEFINER avoids table-grant/RLS gaps while strictly scoping to auth.uid().
+create or replace function public.list_my_friends()
+returns table (
+  friendship_id uuid,
+  requester_id uuid,
+  addressee_id uuid,
+  status text,
+  created_at timestamptz,
+  updated_at timestamptz,
+  other_user_id uuid,
+  display_name text,
+  friend_code text
+)
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_uid uuid := auth.uid();
+begin
+  if v_uid is null then
+    raise exception 'Not authenticated';
+  end if;
+
+  return query
+  select
+    f.id as friendship_id,
+    f.requester_id,
+    f.addressee_id,
+    f.status,
+    f.created_at,
+    f.updated_at,
+    case when f.requester_id = v_uid then f.addressee_id else f.requester_id end as other_user_id,
+    coalesce(p.display_name, 'Player') as display_name,
+    coalesce(p.friend_code, '') as friend_code
+  from public.friendships f
+  left join public.profiles p
+    on p.id = case when f.requester_id = v_uid then f.addressee_id else f.requester_id end
+  where (f.requester_id = v_uid or f.addressee_id = v_uid)
+    and f.status in ('pending', 'accepted')
+  order by f.updated_at desc nulls last, f.created_at desc;
+end;
+$$;
+
+-- Accept or decline a friend request (SECURITY DEFINER, strictly checks auth.uid())
+create or replace function public.respond_friend_request(p_friendship_id uuid, p_action text)
+returns jsonb
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_uid uuid := auth.uid();
+  v_act text := lower(trim(coalesce(p_action, '')));
+  v_next text;
+  v_row public.friendships%rowtype;
+begin
+  if v_uid is null then
+    raise exception 'Not authenticated';
+  end if;
+
+  if v_act in ('accept', 'accepted') then
+    v_next := 'accepted';
+  elsif v_act in ('decline', 'declined') then
+    v_next := 'declined';
+  else
+    return jsonb_build_object('ok', false, 'error', 'Action must be accept or decline.');
+  end if;
+
+  select * into v_row
+  from public.friendships
+  where id = p_friendship_id
+    and (requester_id = v_uid or addressee_id = v_uid);
+
+  if not found then
+    return jsonb_build_object('ok', false, 'error', 'Friend request not found.');
+  end if;
+
+  if v_row.addressee_id <> v_uid then
+    return jsonb_build_object('ok', false, 'error', 'Only the recipient can respond to a friend request.');
+  end if;
+
+  if v_row.status = v_next then
+    return jsonb_build_object('ok', true, 'status', v_row.status, 'friendship_id', v_row.id);
+  end if;
+
+  update public.friendships
+  set status = v_next, updated_at = now()
+  where id = v_row.id
+  returning * into v_row;
+
+  return jsonb_build_object('ok', true, 'status', v_row.status, 'friendship_id', v_row.id);
+end;
+$$;
+
+-- Remove an existing friend or cancel a pending request
+create or replace function public.remove_friend(p_friendship_id uuid)
+returns jsonb
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_uid uuid := auth.uid();
+  v_deleted int;
+begin
+  if v_uid is null then
+    raise exception 'Not authenticated';
+  end if;
+
+  delete from public.friendships
+  where id = p_friendship_id
+    and (requester_id = v_uid or addressee_id = v_uid);
+
+  get diagnostics v_deleted = row_count;
+  if v_deleted = 0 then
+    return jsonb_build_object('ok', false, 'error', 'Friendship not found.');
+  end if;
+
+  return jsonb_build_object('ok', true);
+end;
+$$;
+
 -- Backfill profiles for any existing auth.users who signed up before this migration
 insert into public.profiles (id, display_name, email, friend_code)
 select
@@ -646,6 +785,15 @@ grant execute on function public.lookup_profile(text) to authenticated;
 
 revoke all on function public.send_friend_request(text) from public;
 grant execute on function public.send_friend_request(text) to authenticated;
+
+revoke all on function public.list_my_friends() from public;
+grant execute on function public.list_my_friends() to authenticated;
+
+revoke all on function public.respond_friend_request(uuid, text) from public;
+grant execute on function public.respond_friend_request(uuid, text) to authenticated;
+
+revoke all on function public.remove_friend(uuid) from public;
+grant execute on function public.remove_friend(uuid) to authenticated;
 
 -- -----------------------------------------------------------------------------
 -- 9. Explicit table grants & RLS for legacy score_history (prevents 42501)

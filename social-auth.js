@@ -28,8 +28,159 @@
   'use strict';
 
   const LS_PREFIX = 'gst_social_v1_';
+  const APP_URL = 'https://rand50.github.io/score-tracker/game_tracker.html';
+  const PENDING_FRIEND_KEY = 'gst_pending_add_friend_v1';
+  const PENDING_FRIEND_TTL_MS = 24 * 60 * 60 * 1000;
   let cachedProfile = null;
   let migrationReady = null; // null = unknown, true = ready, false = not migrated yet
+  let migrationCheckedAt = 0;
+
+  function markMigrationMissing() {
+    migrationReady = false;
+    migrationCheckedAt = Date.now();
+  }
+
+  function shouldSkipSupabase(client) {
+    if (!client) return true;
+    if (migrationReady !== false) return false;
+    // Allow automatic recovery after 30s (e.g., once SQL migration is applied or transient error clears)
+    if (Date.now() - migrationCheckedAt > 30000) {
+      migrationReady = null;
+      return false;
+    }
+    return true;
+  }
+
+  function extractAddFriendParam(input) {
+    const raw = String(input || '').trim();
+    if (!raw) return null;
+    const keys = ['addFriend', 'addfriend', 'friend', 'friendCode', 'friendcode'];
+    const readParams = (sp) => {
+      for (const k of keys) {
+        const v = sp.get(k);
+        if (v && v.trim()) return v.trim();
+      }
+      // Case-insensitive fallback
+      for (const [k, v] of sp.entries()) {
+        if (keys.some((x) => x.toLowerCase() === k.toLowerCase()) && v && v.trim()) return v.trim();
+      }
+      return null;
+    };
+    try {
+      if (/^https?:\/\//i.test(raw)) {
+        const u = new URL(raw);
+        const fromSearch = readParams(u.searchParams);
+        if (fromSearch) return fromSearch;
+        if (u.hash) {
+          const fromHash = readParams(new URLSearchParams(u.hash.replace(/^#\??/, '')));
+          if (fromHash) return fromHash;
+        }
+        return null;
+      }
+      if (raw.includes('addFriend=') || raw.includes('addfriend=') || raw.startsWith('?')) {
+        const q = raw.includes('?') ? raw.slice(raw.indexOf('?') + 1) : raw;
+        const fromQ = readParams(new URLSearchParams(q.split('#')[0]));
+        if (fromQ) return fromQ;
+      }
+    } catch (_) {}
+    return null;
+  }
+
+  function normalizeFriendIdentifier(rawInput) {
+    let val = String(rawInput || '').trim();
+    if (!val) return '';
+    const fromUrl = extractAddFriendParam(val);
+    if (fromUrl) val = fromUrl;
+    val = val.trim().replace(/^@+/, '').trim();
+    if (!val) return '';
+    // Email address
+    if (val.includes('@')) return val.toLowerCase();
+    // Normalize unicode dashes and whitespace in friend codes (e.g., "rand 4821", "RAND–4821", "RAND4821")
+    let code = val.replace(/[\u2010-\u2015\u2212]/g, '-').replace(/\s*-\s*/g, '-').replace(/\s+/g, '-').toUpperCase();
+    if (/^[A-Z]{2,4}\d{4}$/.test(code)) {
+      code = code.slice(0, -4) + '-' + code.slice(-4);
+    }
+    return code;
+  }
+
+  function parseFriendQrInput(rawInput) {
+    const raw = String(rawInput || '').trim();
+    const fromUrl = extractAddFriendParam(raw);
+    const identifier = normalizeFriendIdentifier(fromUrl || raw);
+    if (!identifier || identifier.length < 3) {
+      return { ok: false, identifier: '', raw, isUrl: !!fromUrl, error: 'Invalid friend code, email, or QR link.' };
+    }
+    return { ok: true, identifier, raw, isUrl: !!fromUrl };
+  }
+
+  function buildFriendShareUrl(profileOrCode) {
+    let code = '';
+    if (typeof profileOrCode === 'string') {
+      code = normalizeFriendIdentifier(profileOrCode);
+    } else if (profileOrCode && typeof profileOrCode === 'object') {
+      code = normalizeFriendIdentifier(profileOrCode.friend_code || profileOrCode.friendCode || '');
+    } else if (cachedProfile && cachedProfile.friend_code) {
+      code = normalizeFriendIdentifier(cachedProfile.friend_code);
+    }
+    if (!code) return null;
+    const base = (global.location && /^https?:\/\//i.test(global.location.origin) && /game_tracker\.html$/i.test(global.location.pathname))
+      ? (global.location.origin + global.location.pathname)
+      : APP_URL;
+    return base + '?addFriend=' + encodeURIComponent(code);
+  }
+
+  function capturePendingFriendFromUrl(urlStr) {
+    try {
+      const href = urlStr || (global.location && global.location.href) || '';
+      const extracted = extractAddFriendParam(href);
+      if (!extracted) return null;
+      const ident = normalizeFriendIdentifier(extracted);
+      if (!ident || ident.length < 3) return null;
+      const payload = JSON.stringify({ identifier: ident, capturedAt: Date.now() });
+      try { if (global.sessionStorage) global.sessionStorage.setItem(PENDING_FRIEND_KEY, payload); } catch (_) {}
+      try { if (global.localStorage) global.localStorage.setItem(PENDING_FRIEND_KEY, payload); } catch (_) {}
+      return ident;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function getPendingFriendInvite() {
+    const fromUrl = capturePendingFriendFromUrl();
+    if (fromUrl) return fromUrl;
+    try {
+      const raw = (global.sessionStorage && global.sessionStorage.getItem(PENDING_FRIEND_KEY))
+        || (global.localStorage && global.localStorage.getItem(PENDING_FRIEND_KEY));
+      if (!raw) return null;
+      const parsed = JSON.parse(raw);
+      if (!parsed || !parsed.identifier) return null;
+      if (parsed.capturedAt && Date.now() - parsed.capturedAt > PENDING_FRIEND_TTL_MS) {
+        global.localStorage.removeItem(PENDING_FRIEND_KEY);
+        return null;
+      }
+      return normalizeFriendIdentifier(parsed.identifier) || null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function clearPendingFriendInvite(cleanUrl) {
+    try { if (global.sessionStorage) global.sessionStorage.removeItem(PENDING_FRIEND_KEY); } catch (_) {}
+    try { if (global.localStorage) global.localStorage.removeItem(PENDING_FRIEND_KEY); } catch (_) {}
+    if (cleanUrl !== false && global.location && global.history && global.history.replaceState) {
+      try {
+        const u = new URL(global.location.href);
+        let dirty = false;
+        ['addFriend', 'addfriend', 'friend', 'friendCode', 'friendcode'].forEach((k) => {
+          if (u.searchParams.has(k)) { u.searchParams.delete(k); dirty = true; }
+        });
+        if (dirty) {
+          const qs = u.searchParams.toString();
+          global.history.replaceState({}, document.title, u.origin + u.pathname + (qs ? '?' + qs : '') + u.hash);
+        }
+      } catch (_) {}
+    }
+  }
 
   function getClient() {
     return global.sb || null;
@@ -61,8 +212,7 @@
     return (
       msg.includes('does not exist') ||
       msg.includes('could not find the table') ||
-      msg.includes('could not find the function') ||
-      msg.includes('schema cache')
+      msg.includes('could not find the function')
     );
   }
 
@@ -287,21 +437,21 @@
   }
 
   // ---------------------------------------------------------------------------
-  // 2. Friends (Lookup via SECURITY DEFINER RPC, Requests, Accept/Decline/Remove)
+  // 2. Friends (Lookup via SECURITY DEFINER RPC, Requests, Accept/Decline/Remove, QR)
   // ---------------------------------------------------------------------------
   async function lookupUser(identifier) {
-    const ident = String(identifier || '').trim();
+    const ident = normalizeFriendIdentifier(identifier);
     if (ident.length < 3) return { ok: false, user: null, error: 'Enter an email or friend code.' };
 
     const client = getClient();
-    if (!client || migrationReady === false) {
+    if (shouldSkipSupabase(client)) {
       return { ok: false, user: null, isFallback: true, error: 'Social sync is not enabled yet.' };
     }
 
     try {
       const { data, error } = await client.rpc('lookup_profile', { identifier: ident });
       if (error) {
-        if (isMissingMigrationError(error)) migrationReady = false;
+        if (isMissingMigrationError(error)) markMigrationMissing();
         return { ok: false, user: null, isFallback: isMissingMigrationError(error), error: error.message };
       }
       migrationReady = true;
@@ -312,6 +462,50 @@
     }
   }
 
+  function mergeAcceptedWithLocal(remoteAccepted, localAccepted) {
+    const seenIds = new Set(remoteAccepted.map((f) => String(f.userId || '').toLowerCase()).filter(Boolean));
+    const seenCodes = new Set(remoteAccepted.map((f) => String(f.friendCode || '').toUpperCase()).filter(Boolean));
+    const extras = (localAccepted || []).filter((lf) => {
+      if (lf.userId && seenIds.has(String(lf.userId).toLowerCase())) return false;
+      if (lf.friendCode && seenCodes.has(String(lf.friendCode).toUpperCase())) return false;
+      return true;
+    });
+    return [...remoteAccepted, ...extras];
+  }
+
+  function bucketFriendRows(rows, myUserId, profileMap) {
+    const accepted = [];
+    const incoming = [];
+    const outgoing = [];
+    const myId = String(myUserId || '').toLowerCase();
+
+    (rows || []).forEach((r) => {
+      const status = String(r.status || '').toLowerCase();
+      if (status === 'declined') return;
+      const reqId = String(r.requester_id || '').toLowerCase();
+      const isRequester = reqId === myId;
+      const otherId = r.other_user_id || (isRequester ? r.addressee_id : r.requester_id);
+      const p = (profileMap && profileMap.get(otherId)) || null;
+      const entry = {
+        friendshipId: r.friendship_id || r.id,
+        userId: (p && p.id) || otherId,
+        displayName: (p && p.display_name) || r.display_name || 'Player',
+        friendCode: (p && p.friend_code) || r.friend_code || '',
+        status,
+        direction: status === 'pending' ? (isRequester ? 'outgoing' : 'incoming') : 'accepted',
+        since: r.updated_at || r.created_at
+      };
+
+      if (status === 'accepted') accepted.push(entry);
+      else if (status === 'pending') {
+        if (isRequester) outgoing.push(entry);
+        else incoming.push(entry);
+      }
+    });
+
+    return { accepted, incoming, outgoing };
+  }
+
   async function listFriends() {
     const user = await getAuthUser();
     const empty = { accepted: [], incoming: [], outgoing: [], isFallback: true };
@@ -319,11 +513,27 @@
 
     const client = getClient();
     const local = splitLocalFriends(readLocalFriends(user.id));
-    if (!client || migrationReady === false) {
-      return { ...local, isFallback: true };
+    if (shouldSkipSupabase(client)) {
+      return { ...local, isFallback: true, source: 'local' };
     }
 
     try {
+      // Primary path: SECURITY DEFINER RPC (immune to table-grant / profiles-RLS gaps)
+      const { data: rpcRows, error: rpcErr } = await client.rpc('list_my_friends');
+      if (!rpcErr && Array.isArray(rpcRows)) {
+        migrationReady = true;
+        const buckets = bucketFriendRows(rpcRows, user.id, null);
+        return {
+          accepted: buckets.accepted,
+          incoming: buckets.incoming,
+          outgoing: buckets.outgoing,
+          isFallback: false,
+          source: 'rpc'
+        };
+      }
+
+      // If list_my_friends RPC isn't installed yet, fall back to direct table queries
+      // without poisoning migrationReady.
       const { data: rows, error } = await client
         .from('friendships')
         .select('id, requester_id, addressee_id, status, created_at, updated_at')
@@ -332,62 +542,63 @@
         .order('updated_at', { ascending: false });
 
       if (error) {
-        if (isMissingMigrationError(error)) migrationReady = false;
-        return { ...local, isFallback: isMissingMigrationError(error), error: error.message };
+        if (isMissingMigrationError(error)) markMigrationMissing();
+        return {
+          ...local,
+          isFallback: isMissingMigrationError(error),
+          error: error.message,
+          errorCode: error.code || null,
+          source: 'error'
+        };
       }
 
       migrationReady = true;
       const list = rows || [];
-      const otherIds = [...new Set(list.map((r) => (r.requester_id === user.id ? r.addressee_id : r.requester_id)))];
+      const myId = String(user.id).toLowerCase();
+      const otherIds = [...new Set(list.map((r) => (String(r.requester_id || '').toLowerCase() === myId ? r.addressee_id : r.requester_id)).filter(Boolean))];
       const profileMap = new Map();
 
       if (otherIds.length) {
-        const { data: profs } = await client
+        const { data: profs, error: profErr } = await client
           .from('profiles')
           .select('id, display_name, friend_code')
           .in('id', otherIds);
-        (profs || []).forEach((p) => profileMap.set(p.id, p));
+        if (profErr) {
+          console.warn('[SocialAPI] profiles lookup warning:', profErr.message);
+        } else {
+          (profs || []).forEach((p) => profileMap.set(p.id, p));
+        }
       }
 
-      const accepted = [];
-      const incoming = [];
-      const outgoing = [];
-
-      list.forEach((r) => {
-        const isRequester = r.requester_id === user.id;
-        const otherId = isRequester ? r.addressee_id : r.requester_id;
-        const p = profileMap.get(otherId) || { id: otherId, display_name: 'Player', friend_code: '' };
-        const entry = {
-          friendshipId: r.id,
-          userId: p.id,
-          displayName: p.display_name,
-          friendCode: p.friend_code,
-          status: r.status,
-          since: r.updated_at || r.created_at
-        };
-
-        if (r.status === 'accepted') accepted.push(entry);
-        else if (r.status === 'pending') {
-          if (isRequester) outgoing.push(entry);
-          else incoming.push(entry);
-        }
-      });
-
-      return { accepted: [...accepted, ...local.accepted], incoming, outgoing, isFallback: false };
+      const buckets = bucketFriendRows(list, user.id, profileMap);
+      return {
+        accepted: buckets.accepted, // live list only (local demo friends are never merged into a live Supabase list)
+        incoming: buckets.incoming,
+        outgoing: buckets.outgoing,
+        isFallback: false,
+        source: 'table'
+      };
     } catch (err) {
-      return { ...local, isFallback: true, error: err && err.message };
+      return { ...local, isFallback: true, error: err && err.message, source: 'error' };
     }
   }
 
   async function sendFriendRequest(identifier) {
-    const ident = String(identifier || '').trim();
-    if (ident.length < 3) return { ok: false, error: 'Enter a friend email or friend code.' };
+    const parsed = parseFriendQrInput(identifier);
+    if (!parsed.ok) return { ok: false, error: 'Enter a friend email or friend code.' };
+    const ident = parsed.identifier;
 
     const user = await getAuthUser();
     if (!user) return { ok: false, error: 'Sign in to add friends.' };
 
+    const myEmail = String(user.email || (cachedProfile && cachedProfile.email) || '').toLowerCase();
+    const myCode = String((cachedProfile && cachedProfile.friend_code) || '').toUpperCase();
+    if ((myEmail && ident.toLowerCase() === myEmail) || (myCode && ident.toUpperCase() === myCode)) {
+      return { ok: false, error: 'You cannot add yourself as a friend.', identifier: ident };
+    }
+
     const client = getClient();
-    if (!client || migrationReady === false) {
+    if (shouldSkipSupabase(client)) {
       return addLocalFriend(user, ident);
     }
 
@@ -395,16 +606,23 @@
       const { data, error } = await client.rpc('send_friend_request', { identifier: ident });
       if (error) {
         if (isMissingMigrationError(error)) {
-          migrationReady = false;
+          markMigrationMissing();
           return addLocalFriend(user, ident);
         }
-        return { ok: false, error: error.message };
+        return { ok: false, error: error.message, identifier: ident };
       }
       migrationReady = true;
-      return data || { ok: false, error: 'Unexpected response.' };
+      return data ? { ...data, identifier: ident } : { ok: false, error: 'Unexpected response.', identifier: ident };
     } catch (err) {
-      return { ok: false, error: (err && err.message) || 'Could not send friend request.' };
+      return { ok: false, error: (err && err.message) || 'Could not send friend request.', identifier: ident };
     }
+  }
+
+  async function handleFriendQrOrCode(rawInput) {
+    const parsed = parseFriendQrInput(rawInput);
+    if (!parsed.ok) return { ok: false, error: parsed.error };
+    const res = await sendFriendRequest(parsed.identifier);
+    return { ...res, identifier: parsed.identifier, isUrl: parsed.isUrl };
   }
 
   async function respondFriendRequest(friendshipId, action) {
@@ -419,7 +637,7 @@
     if (!nextStatus) return { ok: false, error: 'Action must be "accept" or "decline".' };
 
     const client = getClient();
-    if (!client || migrationReady === false || isLocalId(friendshipId)) {
+    if (shouldSkipSupabase(client) || isLocalId(friendshipId)) {
       const user = await getAuthUser();
       if (!user) return { ok: false, error: 'Not signed in.' };
       const list = readLocalFriends(user.id);
@@ -431,18 +649,33 @@
     }
 
     try {
+      // Primary path: SECURITY DEFINER RPC
+      const { data: rpcData, error: rpcErr } = await client.rpc('respond_friend_request', {
+        p_friendship_id: friendshipId,
+        p_action: nextStatus
+      });
+      if (!rpcErr && rpcData) {
+        migrationReady = true;
+        return rpcData;
+      }
+      if (rpcErr && !isMissingMigrationError(rpcErr)) {
+        return { ok: false, error: rpcErr.message };
+      }
+
+      // Fallback: direct table update (use maybeSingle to avoid PGRST116 on 0-row / already-updated)
       const { data, error } = await client
         .from('friendships')
         .update({ status: nextStatus, updated_at: new Date().toISOString() })
         .eq('id', friendshipId)
         .select('*')
-        .single();
+        .maybeSingle();
 
       if (error) {
-        if (isMissingMigrationError(error)) migrationReady = false;
+        if (isMissingMigrationError(error)) markMigrationMissing();
         return { ok: false, error: error.message };
       }
       migrationReady = true;
+      if (!data) return { ok: false, error: 'Friend request not found or already updated.' };
       return { ok: true, status: nextStatus, friendship: data };
     } catch (err) {
       return { ok: false, error: (err && err.message) || 'Could not update friend request.' };
@@ -452,7 +685,7 @@
   async function removeFriend(friendshipId) {
     if (!friendshipId) return { ok: false, error: 'Missing friendship ID.' };
     const client = getClient();
-    if (!client || migrationReady === false || isLocalId(friendshipId)) {
+    if (shouldSkipSupabase(client) || isLocalId(friendshipId)) {
       const user = await getAuthUser();
       if (!user) return { ok: false, error: 'Not signed in.' };
       const list = readLocalFriends(user.id);
@@ -461,15 +694,48 @@
     }
 
     try {
+      // Primary path: SECURITY DEFINER RPC
+      const { data: rpcData, error: rpcErr } = await client.rpc('remove_friend', {
+        p_friendship_id: friendshipId
+      });
+      if (!rpcErr && rpcData) {
+        migrationReady = true;
+        return rpcData;
+      }
+      if (rpcErr && !isMissingMigrationError(rpcErr)) {
+        return { ok: false, error: rpcErr.message };
+      }
+
+      // Fallback: direct table delete
       const { error } = await client.from('friendships').delete().eq('id', friendshipId);
       if (error) {
-        if (isMissingMigrationError(error)) migrationReady = false;
+        if (isMissingMigrationError(error)) markMigrationMissing();
         return { ok: false, error: error.message };
       }
       migrationReady = true;
       return { ok: true };
     } catch (err) {
       return { ok: false, error: (err && err.message) || 'Could not remove friend.' };
+    }
+  }
+
+  function subscribeToFriendships(onChange) {
+    const client = getClient();
+    if (!client || typeof client.channel !== 'function' || typeof onChange !== 'function') {
+      return () => {};
+    }
+    try {
+      const ch = client
+        .channel('friendships-live-' + Math.random().toString(36).slice(2, 8))
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'friendships' }, () => {
+          try { onChange(); } catch (_) {}
+        })
+        .subscribe();
+      return () => {
+        try { client.removeChannel(ch); } catch (_) {}
+      };
+    } catch (_) {
+      return () => {};
     }
   }
 
@@ -966,6 +1232,9 @@
     migrationReady = null;
   }
 
+  // Capture any ?addFriend= deep link immediately on load so it survives OAuth / magic-link redirects
+  capturePendingFriendFromUrl();
+
   global.SocialAPI = {
     ensureProfile,
     updateDisplayName,
@@ -980,6 +1249,14 @@
     saveSharedGame,
     loadMyGames,
     loadGroupGames,
+    normalizeFriendIdentifier,
+    parseFriendQrInput,
+    buildFriendShareUrl,
+    capturePendingFriendFromUrl,
+    getPendingFriendInvite,
+    clearPendingFriendInvite,
+    handleFriendQrOrCode,
+    subscribeToFriendships,
     getCachedProfile: () => cachedProfile,
     getDefaultPlayer: () => defaultPlayerFromProfile(cachedProfile),
     isMigrationReady: () => migrationReady,
