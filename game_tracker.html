@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0c0d10">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="score-tracker-build" content="v15-3d-dice-roller-2026-11-27">
+<meta name="score-tracker-build" content="v16-rummikub-2026-11-27">
 <title>Score Tracker</title>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon-512.jpg" type="image/jpeg">
@@ -157,6 +157,8 @@ body.theme-catan .app-header { display: none; }
 #carc-board { display: none; }
 /* Nertz parlor table is only shown when theme-nertz is on */
 #nz-shell { display: none; }
+/* Rummikub rack table is only shown when theme-rummikub is on */
+#rk-shell { display: none; }
 /* Friends tab lives only in the neutral nav: themed game navs stay clean 4-tab bars */
 body.theme-catan .bottom-nav #nav-social, body.theme-flip7 .bottom-nav #nav-social, body.theme-carcassonne .bottom-nav #nav-social { display: none !important; }
 #soc-create-group-modal { z-index: 80; }
@@ -185,7 +187,7 @@ body.theme-catan .bottom-nav #nav-social, body.theme-flip7 .bottom-nav #nav-soci
   --shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 8px 24px rgba(0, 0, 0, 0.28);
   --font: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', 'Segoe UI', Roboto, system-ui, sans-serif;
 }
-body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz) {
+body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub) {
   background: var(--bg);
   color: var(--text);
   font-family: var(--font);
@@ -289,11 +291,11 @@ body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nert
 #sync-status[data-state="error"]::before {
   background: var(--accent-brass);
 }
-:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz)) .view {
+:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub)) .view {
   max-width: 760px;
   padding: 1rem 1.15rem 1.25rem;
 }
-:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz)) .card {
+:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub)) .card {
   background: var(--surface);
   border-radius: var(--radius);
   padding: 1.15rem;
@@ -301,7 +303,7 @@ body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nert
   border: 1px solid var(--border);
   box-shadow: none;
 }
-:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz)) .btn {
+:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub)) .btn {
   background: var(--surface2);
   color: var(--text);
   border: 1px solid var(--border);
@@ -312,13 +314,13 @@ body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nert
   cursor: pointer;
   transition: transform .08s ease, background .15s ease, border-color .15s ease, opacity .15s ease;
 }
-:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz)) .btn:active:not(:disabled) { transform: scale(0.985); }
-:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz)) .btn.primary {
+:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub)) .btn:active:not(:disabled) { transform: scale(0.985); }
+:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub)) .btn.primary {
   background: var(--accent);
   color: var(--accent-ink);
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
-:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz)) .btn.primary:hover:not(:disabled) {
+:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub)) .btn.primary:hover:not(:disabled) {
   background: #ffffff;
 }
 #view-home {
@@ -551,7 +553,7 @@ body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nert
   color: var(--muted);
   line-height: 1.45;
 }
-:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz)) .bottom-nav {
+:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub)) .bottom-nav {
   position: fixed;
   bottom: 0;
   left: 0;
@@ -567,7 +569,7 @@ body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nert
   padding: 0.42rem 0.25rem calc(0.45rem + env(safe-area-inset-bottom, 0px));
   font-family: var(--font);
 }
-:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz)) .bottom-nav button {
+:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub)) .bottom-nav button {
   position: relative;
   background: none;
   border: none;
@@ -584,7 +586,7 @@ body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nert
   padding: 0.24rem 0.35rem;
   transition: color .15s ease;
 }
-:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz)) .bottom-nav button .icon {
+:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub)) .bottom-nav button .icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -592,16 +594,16 @@ body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nert
   height: 22px;
   line-height: 1;
 }
-:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz)) .bottom-nav button .icon svg {
+:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub)) .bottom-nav button .icon svg {
   width: 20px;
   height: 20px;
   display: block;
 }
-:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz)) .bottom-nav button.active {
+:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub)) .bottom-nav button.active {
   color: var(--text);
   font-weight: 600;
 }
-:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz)) .bottom-nav button.active::before {
+:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub)) .bottom-nav button.active::before {
   content: "";
   position: absolute;
   top: -0.42rem;
@@ -3392,9 +3394,811 @@ body.theme-nertz .nz-hist-row .nz-nertz-badge { margin-left: 6px; vertical-align
 body.theme-nertz #nz-shell .nz-net-input { font-size: 28px !important; letter-spacing: 0.5px; }
 
 </style>
+
+<!-- ===================== RUMMIKUB THEME (Classic Blue & Ivory Rack; strictly scoped to body.theme-rummikub) ===================== -->
+<style id="rummikub-theme">
+
+
+body.theme-rummikub {
+  --rk-blue-hi: #0f3f88;
+  --rk-blue: #0b2f69;
+  --rk-blue-lo: #061c42;
+  --rk-ivory: #faf6ec;
+  --rk-ivory2: #efe7d5;
+  --rk-ivory-line: #dfd5be;
+  --rk-ink: #0f1f3d;
+  --rk-muted: #55637c;
+  --rk-red: #c62828;
+  --rk-red-hi: #dc3535;
+  --rk-cobalt: #13469e;
+  --rk-cobalt-hi: #1b5ac4;
+  --rk-orange: #df6d10;
+  --rk-black: #1b1e24;
+  --rk-teal: #0f766e;
+  --rk-purple: #6d28d9;
+  --rk-gold: #eab308;
+  --rk-font: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', 'Segoe UI', Roboto, system-ui, sans-serif;
+
+  background-color: var(--rk-blue);
+  background-image:
+    radial-gradient(ellipse at 50% 0%, rgba(44, 114, 214, 0.36), transparent 58%),
+    radial-gradient(ellipse at 50% 100%, rgba(4, 16, 40, 0.55), transparent 62%),
+    linear-gradient(180deg, var(--rk-blue-hi) 0%, var(--rk-blue) 45%, var(--rk-blue-lo) 100%);
+  background-attachment: fixed;
+  color: #ffffff;
+  font-family: var(--rk-font);
+  padding-bottom: calc(90px + env(safe-area-inset-bottom, 0px));
+}
+
+body.theme-rummikub .app-header,
+body.theme-rummikub #generic-board,
+body.theme-rummikub #catan-board,
+body.theme-rummikub #flip7-board,
+body.theme-rummikub #carc-board,
+body.theme-rummikub #nz-shell {
+  display: none;
+}
+
+body.theme-rummikub #rk-shell {
+  display: block;
+}
+
+body.theme-rummikub #view-active {
+  max-width: 470px;
+  margin: 0 auto;
+  padding: calc(10px + env(safe-area-inset-top, 0px)) 12px 1rem;
+}
+
+body.theme-rummikub #rk-shell button,
+body.theme-rummikub #rk-shell [role="button"],
+body.theme-rummikub #rk-shell [role="option"],
+body.theme-rummikub #rk-shell [role="tab"],
+body.theme-rummikub .bottom-nav button {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  cursor: pointer;
+}
+
+body.theme-rummikub #rk-shell input {
+  font-size: 16px !important;
+  touch-action: manipulation;
+}
+
+body.theme-rummikub .rk-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.78rem;
+}
+
+
+body.theme-rummikub .rk-head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.52rem;
+}
+
+body.theme-rummikub .rk-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+body.theme-rummikub .rk-wordmark {
+  margin: 0;
+  font-size: 1.68rem;
+  font-weight: 850;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  color: #ffffff;
+  text-shadow: 0 2px 6px rgba(3, 12, 32, 0.45);
+}
+
+
+body.theme-rummikub .rk-mode-pill {
+  display: inline-grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 3px;
+  border-radius: 999px;
+  background: rgba(4, 18, 46, 0.72);
+  border: 1px solid rgba(162, 198, 255, 0.28);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.35);
+}
+
+body.theme-rummikub .rk-mode-btn {
+  border: none;
+  background: transparent;
+  color: rgba(226, 238, 255, 0.72);
+  padding: 0.3rem 0.62rem;
+  border-radius: 999px;
+  font: 700 0.72rem var(--rk-font);
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  transition: background .15s ease, color .15s ease, box-shadow .15s ease;
+}
+
+body.theme-rummikub .rk-mode-btn.active {
+  background: var(--rk-ivory);
+  color: var(--rk-ink);
+  box-shadow: 0 1px 4px rgba(3, 12, 32, 0.35);
+}
+
+body.theme-rummikub .rk-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem;
+}
+
+body.theme-rummikub .rk-tiles-strip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.32rem;
+}
+
+body.theme-rummikub .rk-tile {
+  width: 36px;
+  height: 40px;
+  border-radius: 8px;
+  background: linear-gradient(180deg, #fffdf8 0%, var(--rk-ivory2) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow: 0 2.5px 0 #c7bc9f, 0 4px 8px rgba(3, 12, 32, 0.36);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.24rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+body.theme-rummikub .rk-tile.t-red { color: var(--rk-red); }
+body.theme-rummikub .rk-tile.t-blue { color: var(--rk-cobalt); }
+body.theme-rummikub .rk-tile.t-orange { color: var(--rk-orange); }
+body.theme-rummikub .rk-tile.t-black { color: var(--rk-black); }
+
+body.theme-rummikub .rk-round-pill {
+  padding: 0.42rem 0.85rem;
+  border-radius: 999px;
+  background: rgba(5, 23, 56, 0.72);
+  border: 1px solid rgba(162, 198, 255, 0.32);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 3px 8px rgba(3, 12, 32, 0.32);
+  color: #f4f8ff;
+  font-size: 0.84rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+
+body.theme-rummikub .rk-roster {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(104px, 1fr));
+  gap: 0.52rem;
+  padding-top: 0.3rem;
+}
+
+body.theme-rummikub .rk-roster[data-count="2"],
+body.theme-rummikub .rk-roster[data-count="4"] {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+body.theme-rummikub .rk-roster[data-count="3"],
+body.theme-rummikub .rk-roster[data-count="5"],
+body.theme-rummikub .rk-roster[data-count="6"] {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+body.theme-rummikub .rk-card {
+  position: relative;
+  background: linear-gradient(180deg, #fffdf8 0%, var(--rk-ivory) 65%, var(--rk-ivory2) 100%);
+  color: var(--rk-ink);
+  border: 2px solid rgba(255, 255, 255, 0.65);
+  border-radius: 14px;
+  padding: 0.65rem 0.6rem 0.6rem;
+  box-shadow: 0 3.5px 0 #c6baa0, 0 7px 16px rgba(3, 12, 32, 0.36);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 108px;
+  text-align: left;
+  transition: transform .12s ease, border-color .15s ease, box-shadow .15s ease;
+}
+
+
+body.theme-rummikub .rk-roster.is-compact .rk-card,
+body.theme-rummikub .rk-roster[data-count="4"] .rk-card,
+body.theme-rummikub .rk-roster[data-count="5"] .rk-card,
+body.theme-rummikub .rk-roster[data-count="6"] .rk-card {
+  min-height: 84px;
+  padding: 0.48rem 0.5rem 0.45rem;
+  border-radius: 12px;
+}
+
+body.theme-rummikub .rk-card:active {
+  transform: translateY(1px);
+}
+
+body.theme-rummikub .rk-card.selected {
+  border-color: #fbbf24;
+  box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.32), 0 3.5px 0 #b8984c, 0 9px 20px rgba(3, 12, 32, 0.46);
+  transform: translateY(-2px);
+}
+
+
+body.theme-rummikub .rk-crown {
+  flex: none;
+  width: 20px;
+  height: 17px;
+  filter: drop-shadow(0 1px 1.5px rgba(0, 0, 0, 0.28));
+  pointer-events: none;
+}
+
+body.theme-rummikub .rk-roster[data-count="5"] .rk-crown,
+body.theme-rummikub .rk-roster[data-count="6"] .rk-crown {
+  width: 17px;
+  height: 14px;
+}
+
+body.theme-rummikub .rk-card.leader {
+  border-color: rgba(245, 197, 66, 0.85);
+}
+
+body.theme-rummikub .rk-card.leader.selected {
+  border-color: #fbbf24;
+}
+
+body.theme-rummikub .rk-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.25rem;
+}
+
+body.theme-rummikub .rk-name {
+  font-size: 0.88rem;
+  font-weight: 750;
+  color: var(--rk-ink);
+  letter-spacing: -0.015em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+body.theme-rummikub .rk-roster[data-count="5"] .rk-name,
+body.theme-rummikub .rk-roster[data-count="6"] .rk-name {
+  font-size: 0.8rem;
+}
+
+body.theme-rummikub .rk-score {
+  margin: 0.18rem 0 0.25rem;
+  font-size: 1.88rem;
+  font-weight: 850;
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  color: var(--rk-ink);
+}
+
+body.theme-rummikub .rk-roster.is-compact .rk-score,
+body.theme-rummikub .rk-roster[data-count="4"] .rk-score,
+body.theme-rummikub .rk-roster[data-count="5"] .rk-score,
+body.theme-rummikub .rk-roster[data-count="6"] .rk-score {
+  font-size: 1.52rem;
+  margin: 0.12rem 0 0.18rem;
+}
+
+body.theme-rummikub .rk-score.is-pos { color: var(--rk-cobalt); }
+body.theme-rummikub .rk-score.is-neg { color: var(--rk-red); }
+body.theme-rummikub .rk-score.is-zero { color: #475569; }
+
+body.theme-rummikub .rk-card-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.28rem;
+  margin-top: auto;
+}
+
+body.theme-rummikub .rk-draft-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.12rem 0.36rem;
+  border-radius: 6px;
+  font-size: 0.68rem;
+  font-weight: 750;
+  font-variant-numeric: tabular-nums;
+  background: rgba(19, 70, 158, 0.12);
+  color: var(--rk-cobalt);
+}
+
+body.theme-rummikub .rk-draft-pill.is-neg {
+  background: rgba(198, 40, 40, 0.12);
+  color: var(--rk-red);
+}
+
+body.theme-rummikub .rk-badge {
+  margin-left: auto;
+  width: 22px;
+  height: 23px;
+  border-radius: 5px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.74rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: #ffffff;
+  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.22);
+}
+
+body.theme-rummikub .rk-badge.rk-c-red { background: var(--rk-red); }
+body.theme-rummikub .rk-badge.rk-c-blue { background: var(--rk-cobalt); }
+body.theme-rummikub .rk-badge.rk-c-orange { background: var(--rk-orange); }
+body.theme-rummikub .rk-badge.rk-c-black { background: var(--rk-black); }
+body.theme-rummikub .rk-badge.rk-c-teal { background: var(--rk-teal); }
+body.theme-rummikub .rk-badge.rk-c-purple,
+body.theme-rummikub .rk-badge.rk-c-plum { background: var(--rk-purple); }
+
+
+body.theme-rummikub .rk-scorer {
+  background: linear-gradient(180deg, #fffdf8 0%, var(--rk-ivory) 100%);
+  color: var(--rk-ink);
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 17px;
+  padding: 0.92rem 0.95rem 0.98rem;
+  box-shadow: 0 5px 0 #c6baa0, 0 12px 26px rgba(3, 12, 32, 0.44);
+  display: flex;
+  flex-direction: column;
+  gap: 0.72rem;
+}
+
+body.theme-rummikub .rk-scorer-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--rk-ivory-line);
+}
+
+body.theme-rummikub .rk-scorer-who {
+  font-size: 0.94rem;
+  font-weight: 750;
+  letter-spacing: -0.015em;
+  color: var(--rk-ink);
+}
+
+body.theme-rummikub .rk-preview {
+  font-size: 0.82rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--rk-muted);
+}
+
+body.theme-rummikub .rk-preview.is-neg { color: var(--rk-red); }
+body.theme-rummikub .rk-preview.is-pos { color: var(--rk-cobalt); }
+
+
+body.theme-rummikub .rk-input-row {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.52rem;
+  align-items: stretch;
+}
+
+
+body.theme-rummikub #rk-shell[data-mode="up"] .rk-sign-toggle {
+  display: none;
+}
+
+body.theme-rummikub #rk-shell[data-mode="up"] .rk-input-row {
+  grid-template-columns: 1fr;
+}
+
+body.theme-rummikub .rk-sign-toggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: var(--rk-ivory2);
+  border: 1px solid var(--rk-ivory-line);
+  border-radius: 12px;
+  padding: 3px;
+  gap: 3px;
+}
+
+body.theme-rummikub .rk-sign-btn {
+  width: 44px;
+  min-height: 48px;
+  border: none;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--rk-muted);
+  font-size: 1.4rem;
+  font-weight: 800;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .14s ease, color .14s ease, box-shadow .14s ease;
+}
+
+body.theme-rummikub #rk-sign-minus.active {
+  background: var(--rk-red);
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(198, 40, 40, 0.35);
+}
+
+body.theme-rummikub #rk-sign-plus.active {
+  background: var(--rk-cobalt);
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(19, 70, 158, 0.35);
+}
+
+body.theme-rummikub #rk-delta-input {
+  width: 100%;
+  min-height: 54px;
+  padding: 0.4rem 0.85rem;
+  border-radius: 12px;
+  border: 1.5px solid #cfc4ab;
+  background: #ffffff;
+  color: var(--rk-ink);
+  font-family: var(--rk-font);
+  font-size: 28px !important;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  outline: none;
+  box-shadow: inset 0 1px 3px rgba(15, 31, 61, 0.08);
+}
+
+body.theme-rummikub #rk-delta-input:focus {
+  border-color: var(--rk-cobalt);
+  box-shadow: 0 0 0 3px rgba(19, 70, 158, 0.16);
+}
+
+body.theme-rummikub #rk-delta-input.is-neg { color: var(--rk-red); }
+body.theme-rummikub #rk-delta-input.is-pos { color: var(--rk-cobalt); }
+
+
+body.theme-rummikub .rk-steppers {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.34rem;
+}
+
+body.theme-rummikub .rk-step-btn {
+  padding: 0.52rem 0.2rem;
+  border-radius: 10px;
+  border: 1px solid #d5cab2;
+  background: #ffffff;
+  color: var(--rk-ink);
+  font: 750 0.84rem var(--rk-font);
+  font-variant-numeric: tabular-nums;
+  box-shadow: 0 2px 0 #d5cab2;
+  transition: transform .08s ease, background .12s ease;
+}
+
+body.theme-rummikub .rk-step-btn:active {
+  transform: translateY(1px);
+  box-shadow: none;
+}
+
+body.theme-rummikub .rk-step-btn.neg { color: var(--rk-red); }
+body.theme-rummikub .rk-step-btn.pos { color: var(--rk-cobalt); }
+
+
+body.theme-rummikub .rk-chips-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+body.theme-rummikub .rk-joker-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.42rem;
+  padding: 0.52rem 0.88rem;
+  border-radius: 10px;
+  border: 1px solid #961b1b;
+  background: linear-gradient(180deg, var(--rk-red-hi) 0%, var(--rk-red) 100%);
+  color: #ffffff;
+  font: 750 0.86rem var(--rk-font);
+  font-variant-numeric: tabular-nums;
+  box-shadow: 0 2.5px 0 #8a1818, 0 4px 10px rgba(198, 40, 40, 0.25);
+  transition: transform .08s ease, filter .12s ease;
+}
+
+body.theme-rummikub .rk-joker-btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 0 #8a1818;
+}
+
+body.theme-rummikub .rk-joker-btn svg {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+}
+
+body.theme-rummikub .rk-calc-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.38rem;
+  padding: 0.52rem 0.82rem;
+  border-radius: 10px;
+  border: 1px solid #cfc4ab;
+  background: #ffffff;
+  color: var(--rk-ink);
+  font: 700 0.84rem var(--rk-font);
+  box-shadow: 0 2px 0 #d5cab2;
+  transition: background .14s ease, color .14s ease, border-color .14s ease, transform .08s ease;
+}
+
+body.theme-rummikub .rk-calc-toggle:active { transform: translateY(1px); box-shadow: none; }
+
+body.theme-rummikub .rk-calc-toggle.active {
+  background: var(--rk-cobalt);
+  border-color: #0b2d69;
+  color: #ffffff;
+  box-shadow: 0 2px 0 #092252;
+}
+
+body.theme-rummikub .rk-calc-toggle svg {
+  width: 15px;
+  height: 15px;
+  flex: 0 0 auto;
+}
+
+
+body.theme-rummikub .rk-calc-panel {
+  background: var(--rk-ivory2);
+  border: 1px solid var(--rk-ivory-line);
+  border-radius: 13px;
+  padding: 0.62rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+body.theme-rummikub .rk-calc-panel.hidden,
+body.theme-rummikub .rk-calc-panel[hidden] {
+  display: none !important;
+}
+
+body.theme-rummikub .rk-calc-display {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  min-height: 38px;
+  padding: 0.42rem 0.68rem;
+  border-radius: 9px;
+  background: #ffffff;
+  border: 1px solid #d5cab2;
+  font-variant-numeric: tabular-nums;
+}
+
+body.theme-rummikub #rk-calc-expr {
+  font-size: 0.92rem;
+  font-weight: 650;
+  color: var(--rk-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+body.theme-rummikub #rk-calc-res {
+  font-size: 1.08rem;
+  font-weight: 800;
+  color: var(--rk-ink);
+  white-space: nowrap;
+}
+
+body.theme-rummikub .rk-calc-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.34rem;
+}
+
+body.theme-rummikub .rk-calc-key {
+  min-height: 40px;
+  border-radius: 9px;
+  border: 1px solid #d5cab2;
+  background: #ffffff;
+  color: var(--rk-ink);
+  font: 750 1rem var(--rk-font);
+  font-variant-numeric: tabular-nums;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 0 #d5cab2;
+  transition: transform .06s ease, background .1s ease;
+}
+
+body.theme-rummikub .rk-calc-key:active {
+  transform: translateY(1px);
+  box-shadow: none;
+}
+
+body.theme-rummikub .rk-calc-key.op {
+  background: #eef3fc;
+  border-color: #c2d4f0;
+  color: var(--rk-cobalt);
+  box-shadow: 0 2px 0 #c2d4f0;
+}
+
+body.theme-rummikub .rk-calc-key.clear {
+  background: #fdf0f0;
+  border-color: #ecc5c5;
+  color: var(--rk-red);
+  box-shadow: 0 2px 0 #ecc5c5;
+}
+
+body.theme-rummikub .rk-calc-key.use {
+  background: var(--rk-cobalt);
+  border-color: #0b2d69;
+  color: #ffffff;
+  font-size: 0.86rem;
+  box-shadow: 0 2px 0 #092252;
+}
+
+body.theme-rummikub .rk-calc-key svg {
+  width: 17px;
+  height: 17px;
+}
+
+
+body.theme-rummikub .rk-confirm-btn {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  border: 1px solid #0b2d69;
+  background: linear-gradient(180deg, var(--rk-cobalt-hi) 0%, var(--rk-cobalt) 100%);
+  color: #ffffff;
+  font: 750 0.98rem var(--rk-font);
+  letter-spacing: -0.01em;
+  box-shadow: 0 3px 0 #092252, 0 6px 14px rgba(11, 47, 105, 0.34);
+  transition: transform .08s ease, filter .14s ease;
+}
+
+body.theme-rummikub .rk-confirm-btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 0 #092252;
+}
+
+
+body.theme-rummikub .rk-footer-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.48rem;
+}
+
+body.theme-rummikub .rk-sec-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.36rem;
+  padding: 0.6rem 0.45rem;
+  border-radius: 11px;
+  border: 1px solid rgba(173, 206, 255, 0.24);
+  background: rgba(6, 25, 62, 0.65);
+  color: #eaf2ff;
+  font: 650 0.82rem var(--rk-font);
+  transition: background .14s ease, transform .08s ease;
+}
+
+body.theme-rummikub .rk-sec-btn:active:not(:disabled) { transform: scale(0.98); }
+body.theme-rummikub .rk-sec-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+body.theme-rummikub .rk-sec-btn svg { width: 15px; height: 15px; opacity: 0.9; }
+
+body.theme-rummikub .rk-finish-btn {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  background: linear-gradient(180deg, #fffdf8 0%, var(--rk-ivory2) 100%);
+  color: var(--rk-ink);
+  font: 750 0.94rem var(--rk-font);
+  box-shadow: 0 3px 0 #b8ac90, 0 6px 14px rgba(3, 12, 32, 0.34);
+  transition: transform .08s ease;
+}
+
+body.theme-rummikub .rk-finish-btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 0 #b8ac90;
+}
+
+body.theme-rummikub .rk-history-drawer {
+  background: var(--rk-ivory);
+  color: var(--rk-ink);
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  border-radius: 14px;
+  padding: 0.85rem 0.95rem;
+  box-shadow: 0 8px 20px rgba(3, 12, 32, 0.38);
+}
+
+body.theme-rummikub .rk-history-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.55rem;
+  padding-bottom: 0.45rem;
+  border-bottom: 1px solid var(--rk-ivory-line);
+}
+
+body.theme-rummikub .rk-history-head h3 {
+  margin: 0;
+  font-size: 0.86rem;
+  font-weight: 750;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--rk-ink);
+}
+
+body.theme-rummikub .rk-history-close {
+  background: none;
+  border: none;
+  color: var(--rk-muted);
+  font: 600 0.8rem var(--rk-font);
+  padding: 0.15rem 0.35rem;
+}
+
+body.theme-rummikub .rk-history-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.48rem 0;
+  border-bottom: 1px solid var(--rk-ivory-line);
+  font-size: 0.84rem;
+  font-variant-numeric: tabular-nums;
+}
+
+body.theme-rummikub .rk-history-row:last-child { border-bottom: none; }
+
+body.theme-rummikub .rk-history-empty {
+  margin: 0;
+  padding: 0.55rem 0;
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--rk-muted);
+}
+
+
+body.theme-rummikub .bottom-nav {
+  background: rgba(250, 246, 236, 0.96);
+  border-top: 1px solid #d5cab2;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+body.theme-rummikub .bottom-nav button {
+  color: #5e6d85;
+}
+
+body.theme-rummikub .bottom-nav button.active {
+  color: var(--rk-cobalt);
+  font-weight: 700;
+}
+
+body.theme-rummikub .bottom-nav button.active::before {
+  background: var(--rk-cobalt);
+}
+
+body.theme-rummikub .bottom-nav #nav-social {
+  display: none !important;
+}
+
+</style>
 </head>
 <body>
-<!-- Build: v15-3d-dice-roller-2026-11-27 -->
+<!-- Build: v16-rummikub-2026-11-27 -->
 
 <!-- Login: starts hidden until getSession() resolves -->
 <section id="login-view" class="auth-hidden" hidden aria-label="Sign in to Score Tracker">
@@ -3777,6 +4581,157 @@ body.theme-nertz #nz-shell .nz-net-input { font-size: 28px !important; letter-sp
 
   <!-- MODAL SHEET (Team Builder / Target Score / Add Player) -->
   <div id="nz-sheet" class="nz-sheet hidden" hidden role="dialog" aria-modal="true" onclick="if(event.target===this && window.nzCloseSheet)nzCloseSheet()"></div>
+</div>
+
+
+    <!-- Rummikub Classic Blue & Ivory Rack: only visible with body.theme-rummikub (2–6 players, Points Up / Classic +/−, tile calculator) -->
+<div id="rk-shell" data-mode="classic">
+  <div class="rk-stack">
+    <header class="rk-head">
+      <div class="rk-top-bar">
+        <h1 class="rk-wordmark">RUMMIKUB</h1>
+        <div class="rk-mode-pill" role="tablist" aria-label="Rummikub scoring mode">
+          <button type="button" id="rk-mode-up" class="rk-mode-btn" role="tab" aria-selected="false" onclick="window.rkSetMode && rkSetMode('up')">Points Up</button>
+          <button type="button" id="rk-mode-classic" class="rk-mode-btn active" role="tab" aria-selected="true" onclick="window.rkSetMode && rkSetMode('classic')">Classic +/−</button>
+        </div>
+      </div>
+
+      <div class="rk-header-row">
+        <div class="rk-tiles-strip" aria-hidden="true">
+          <span class="rk-tile t-red">7</span>
+          <span class="rk-tile t-blue">8</span>
+          <span class="rk-tile t-orange">9</span>
+          <span class="rk-tile t-black">10</span>
+        </div>
+        <span id="rk-round-pill" class="rk-round-pill">Round 1</span>
+      </div>
+    </header>
+
+    <div id="rk-roster" class="rk-roster" data-count="3" role="listbox" aria-label="Rummikub players"></div>
+
+    <section id="rk-scorer" class="rk-scorer" aria-label="Round scoring">
+      <div class="rk-scorer-head">
+        <span id="rk-scorer-who" class="rk-scorer-who">Round 1</span>
+        <span id="rk-preview" class="rk-preview" aria-live="polite">0</span>
+      </div>
+
+      <div class="rk-input-row">
+        <div class="rk-sign-toggle" role="group" aria-label="Score sign">
+          <button type="button" id="rk-sign-minus" class="rk-sign-btn active" onclick="window.rkSetSign && rkSetSign(-1)" aria-label="Subtract points">−</button>
+          <button type="button" id="rk-sign-plus" class="rk-sign-btn" onclick="window.rkSetSign && rkSetSign(1)" aria-label="Add points">+</button>
+        </div>
+        <input id="rk-delta-input" type="text" inputmode="numeric" pattern="[0-9]*" value="0" class="is-neg" aria-label="Round points" oninput="window.rkOnDeltaInput && rkOnDeltaInput(this.value)">
+      </div>
+
+      <div class="rk-steppers" role="group" aria-label="Quick score steppers">
+        <button type="button" class="rk-step-btn neg" onclick="window.rkStep && rkStep(-10)">−10</button>
+        <button type="button" class="rk-step-btn neg" onclick="window.rkStep && rkStep(-5)">−5</button>
+        <button type="button" class="rk-step-btn neg" onclick="window.rkStep && rkStep(-1)">−1</button>
+        <button type="button" class="rk-step-btn pos" onclick="window.rkStep && rkStep(1)">+1</button>
+        <button type="button" class="rk-step-btn pos" onclick="window.rkStep && rkStep(5)">+5</button>
+        <button type="button" class="rk-step-btn pos" onclick="window.rkStep && rkStep(10)">+10</button>
+      </div>
+
+      <div class="rk-chips-row">
+        <button type="button" id="rk-joker-btn" class="rk-joker-btn" onclick="window.rkApplyJoker && rkApplyJoker()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M4 17h16"/>
+            <path d="M5 17l-1.5-8 5 4 3.5-7 3.5 7 5-4L19 17"/>
+            <circle cx="3.5" cy="7.5" r="1.2" fill="currentColor" stroke="none"/>
+            <circle cx="12" cy="4.5" r="1.2" fill="currentColor" stroke="none"/>
+            <circle cx="20.5" cy="7.5" r="1.2" fill="currentColor" stroke="none"/>
+          </svg>
+          <span id="rk-joker-label">Joker −30</span>
+        </button>
+
+        <button type="button" id="rk-calc-toggle" class="rk-calc-toggle" aria-expanded="false" aria-controls="rk-calc-panel" onclick="window.rkToggleCalc && rkToggleCalc()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="4" y="3" width="16" height="18" rx="2.5"/>
+            <line x1="8" y1="7.5" x2="16" y2="7.5"/>
+            <circle cx="8.5" cy="12" r="1" fill="currentColor" stroke="none"/>
+            <circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/>
+            <circle cx="15.5" cy="12" r="1" fill="currentColor" stroke="none"/>
+            <circle cx="8.5" cy="16" r="1" fill="currentColor" stroke="none"/>
+            <circle cx="12" cy="16" r="1" fill="currentColor" stroke="none"/>
+            <circle cx="15.5" cy="16" r="1" fill="currentColor" stroke="none"/>
+          </svg>
+          <span>Calculator</span>
+        </button>
+      </div>
+
+      <div id="rk-calc-panel" class="rk-calc-panel hidden" hidden aria-label="Tile sum calculator">
+        <div class="rk-calc-display">
+          <span id="rk-calc-expr">0</span>
+          <span id="rk-calc-res"></span>
+        </div>
+        <div class="rk-calc-grid">
+          <button type="button" class="rk-calc-key" onclick="window.rkCalcKey && rkCalcKey('7')">7</button>
+          <button type="button" class="rk-calc-key" onclick="window.rkCalcKey && rkCalcKey('8')">8</button>
+          <button type="button" class="rk-calc-key" onclick="window.rkCalcKey && rkCalcKey('9')">9</button>
+          <button type="button" class="rk-calc-key op" aria-label="Backspace" onclick="window.rkCalcKey && rkCalcKey('BS')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 6H9l-6 6 6 6h12a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1z"/>
+              <line x1="12" y1="10" x2="17" y2="15"/>
+              <line x1="17" y1="10" x2="12" y2="15"/>
+            </svg>
+          </button>
+
+          <button type="button" class="rk-calc-key" onclick="window.rkCalcKey && rkCalcKey('4')">4</button>
+          <button type="button" class="rk-calc-key" onclick="window.rkCalcKey && rkCalcKey('5')">5</button>
+          <button type="button" class="rk-calc-key" onclick="window.rkCalcKey && rkCalcKey('6')">6</button>
+          <button type="button" class="rk-calc-key op" onclick="window.rkCalcKey && rkCalcKey('+')">+</button>
+
+          <button type="button" class="rk-calc-key" onclick="window.rkCalcKey && rkCalcKey('1')">1</button>
+          <button type="button" class="rk-calc-key" onclick="window.rkCalcKey && rkCalcKey('2')">2</button>
+          <button type="button" class="rk-calc-key" onclick="window.rkCalcKey && rkCalcKey('3')">3</button>
+          <button type="button" class="rk-calc-key op" onclick="window.rkCalcKey && rkCalcKey('-')">−</button>
+
+          <button type="button" class="rk-calc-key clear" onclick="window.rkCalcKey && rkCalcKey('C')">C</button>
+          <button type="button" class="rk-calc-key" onclick="window.rkCalcKey && rkCalcKey('0')">0</button>
+          <button type="button" class="rk-calc-key op" onclick="window.rkCalcKey && rkCalcKey('=')">=</button>
+          <button type="button" id="rk-calc-use" class="rk-calc-key use" onclick="window.rkCalcApply && rkCalcApply()">Use</button>
+        </div>
+      </div>
+
+      <button type="button" id="rk-confirm" class="rk-confirm-btn" onclick="window.rkConfirmRound && rkConfirmRound()">Confirm</button>
+    </section>
+
+    <div class="rk-footer-row">
+      <button type="button" id="rk-undo" class="rk-sec-btn" onclick="window.rkUndo && rkUndo()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="9 14 4 9 9 4"/>
+          <path d="M20 20v-7a4 4 0 0 0-4-4H4"/>
+        </svg>
+        <span>Undo</span>
+      </button>
+      <button type="button" id="rk-rounds-btn" class="rk-sec-btn" onclick="window.rkToggleHistory && rkToggleHistory()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="8.5"/>
+          <polyline points="12 7.5 12 12 15 13.75"/>
+        </svg>
+        <span>Rounds</span>
+      </button>
+      <button type="button" id="rk-add-player" class="rk-sec-btn" onclick="window.rkAddPlayer && rkAddPlayer()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="12" y1="5" x2="12" y2="19"/>
+          <line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        <span>Player</span>
+      </button>
+    </div>
+
+    <div id="rk-history-drawer" class="rk-history-drawer hidden" hidden>
+      <div class="rk-history-head">
+        <h3>Round History</h3>
+        <button type="button" class="rk-history-close" onclick="window.rkToggleHistory && rkToggleHistory(false)">Close</button>
+      </div>
+      <div id="rk-history-list">
+        <p class="rk-history-empty">No rounds recorded yet.</p>
+      </div>
+    </div>
+
+    <button type="button" id="rk-finish" class="rk-finish-btn" onclick="window.rkFinishGame && rkFinishGame()">Finish &amp; Save Game</button>
+  </div>
 </div>
 
 
@@ -4225,6 +5180,7 @@ body.theme-nertz #nz-shell .nz-net-input { font-size: 28px !important; letter-sp
     ohhell:      { id: 'ohhell',      name: 'Oh Hell',      low: false },
     hearts:      { id: 'hearts',      name: 'Hearts',       low: true  },
     nertz:       { id: 'nertz',       name: 'Nertz',        low: false },
+    rummikub:    { id: 'rummikub',    name: 'Rummikub',     low: true  },
     other:       { id: 'other',       name: 'Custom',       low: false }
   };
 
@@ -4517,7 +5473,10 @@ body.theme-nertz #nz-shell .nz-net-input { font-size: 28px !important; letter-sp
 
     const meta = gameMeta(game.type || game.game_type);
     const scores = players.map((p) => Number(p.score) || 0);
-    const best = meta.low ? Math.min(...scores) : Math.max(...scores);
+    const isLow = typeof game.low === 'boolean'
+      ? game.low
+      : (game.meta && typeof game.meta.low === 'boolean' ? game.meta.low : meta.low);
+    const best = isLow ? Math.min(...scores) : Math.max(...scores);
 
     const winnerIndices = new Set();
     const winnerNames = [];
@@ -7120,6 +8079,589 @@ window.SocialUI = (function () {
 
 </script>
 
+<!-- Rummikub scoring logic (window.RummikubLogic): Points Up / Classic +/− modes, Joker ±30, safe tile calculator, finish payloads -->
+<script id="rummikub-logic">
+/* ==========================================================================
+   Score Tracker — Rummikub Scoring Module (Classic Blue & Ivory Rack)
+   ==========================================================================
+   Drop-in logic module for v3/engine.js. Exposes `window.RummikubLogic` in
+   browsers and `module.exports` in Node.
+
+   Supports:
+   - 2–6 players (MAX_PLAYERS = 6; auto-seeds signed-in user as Player 1 when
+     fresh; compatible with Social Group presets)
+   - 6 distinct Rummikub tile badge colors (red, blue, orange, black, teal, plum)
+   - Two scoring modes (`rkScoringMode`):
+     * 'points_up' (default): leftover tile points only go UP (delta >= 0),
+       Joker penalty adds +30, LOWEST score wins (`low: true`).
+     * 'classic': signed delta (+ / -), Joker penalty subtracts -30,
+       HIGHEST score wins (`low: false`).
+   - Safe arithmetic calculator helper `rkCalcEval(expr, modeOrGame)` (+ / - chains,
+     no eval()) for summing leftover tiles directly into `rkSetDraftDelta`
+   - No "who went out" state; Undo Last Round, round log, mid-game add/remove,
+     and History / Supabase / Group Leaderboard compatibility
+   ========================================================================== */
+
+(function (global) {
+  'use strict';
+
+  const MAX_PLAYERS = 6;
+  const JOKER_PENALTY = 30;
+  const DEFAULT_SCORING_MODE = 'points_up';
+
+  const RK_COLORS = [
+    { key: 'red',    label: 'Tile Red',    hex: '#c82333', bg: '#fff5f5' },
+    { key: 'blue',   label: 'Tile Blue',   hex: '#1d4ed8', bg: '#eff6ff' },
+    { key: 'orange', label: 'Tile Orange', hex: '#d97706', bg: '#fffbeb' },
+    { key: 'black',  label: 'Tile Black',  hex: '#1f2937', bg: '#f3f4f6' },
+    { key: 'teal',   label: 'Tile Teal',   hex: '#0f766e', bg: '#f0fdfa' },
+    { key: 'plum',   label: 'Tile Plum',   hex: '#7e22ce', bg: '#faf5ff' }
+  ];
+
+  // ---------------- Helpers ----------------
+  function uid(prefix) {
+    return (prefix || 'rk') + '_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 6);
+  }
+
+  function cleanStr(v) {
+    return String(v ?? '').trim();
+  }
+
+  function isPointsUpMode(gameOrMode) {
+    if (typeof gameOrMode === 'string') return gameOrMode !== 'classic';
+    if (gameOrMode && typeof gameOrMode === 'object') {
+      return gameOrMode.rkScoringMode !== 'classic';
+    }
+    return true;
+  }
+
+  function parseSignedInt(v) {
+    const raw = String(v ?? '').trim();
+    if (!raw || raw === '-' || raw === '+') return 0;
+    const n = parseInt(raw, 10);
+    if (!Number.isFinite(n)) return 0;
+    return Math.max(-9999, Math.min(9999, n));
+  }
+
+  function parseDeltaForMode(v, gameOrMode) {
+    const n = parseSignedInt(v);
+    return isPointsUpMode(gameOrMode) ? Math.max(0, n) : n;
+  }
+
+  function normalizePlayerInput(raw) {
+    if (typeof raw === 'string') {
+      const name = cleanStr(raw);
+      return name ? { name, userId: null, isSelf: false } : null;
+    }
+    if (!raw || typeof raw !== 'object') return null;
+    const name = cleanStr(raw.name || raw.display_name || raw.displayName || (raw.profile && raw.profile.display_name));
+    if (!name) return null;
+    const userId = raw.userId ?? raw.user_id ?? (raw.profile && raw.profile.id) ?? null;
+    return {
+      name,
+      userId: userId ? String(userId) : null,
+      isSelf: Boolean(raw.isSelf || raw.is_self)
+    };
+  }
+
+  function rkColor(key) {
+    return RK_COLORS.find((c) => c.key === key) || RK_COLORS[0];
+  }
+
+  function rkFreeColor(game, skipIdx, afterKey) {
+    const players = (game && Array.isArray(game.players)) ? game.players : [];
+    const counts = new Map(RK_COLORS.map((c) => [c.key, 0]));
+    players.forEach((p, i) => {
+      if (i === skipIdx || !p || !p.color) return;
+      if (counts.has(p.color)) counts.set(p.color, counts.get(p.color) + 1);
+    });
+    const minUsed = Math.min(...counts.values());
+    const start = afterKey ? RK_COLORS.findIndex((c) => c.key === afterKey) : -1;
+    for (let step = 1; step <= RK_COLORS.length; step++) {
+      const c = RK_COLORS[(start + step + RK_COLORS.length) % RK_COLORS.length];
+      if (counts.get(c.key) === minUsed) return c.key;
+    }
+    return RK_COLORS[(start + 1 + RK_COLORS.length) % RK_COLORS.length].key;
+  }
+
+  function emptyDraftEntry() {
+    return { delta: 0, jokers: 0, touched: false };
+  }
+
+  function ensureDraft(game) {
+    if (!game.rkDraft || typeof game.rkDraft !== 'object') {
+      game.rkDraft = {};
+    }
+    const next = {};
+    (game.players || []).forEach((_, idx) => {
+      const cur = game.rkDraft[idx];
+      if (cur && typeof cur === 'object') {
+        next[idx] = {
+          delta: parseDeltaForMode(cur.delta, game),
+          jokers: Math.max(0, parseInt(cur.jokers, 10) || 0),
+          touched: Boolean(cur.touched)
+        };
+      } else {
+        next[idx] = emptyDraftEntry();
+      }
+    });
+    game.rkDraft = next;
+    return game.rkDraft;
+  }
+
+  // ---------------- Safe Arithmetic Calculator (no eval()) ----------------
+  /**
+   * Pure safe evaluator for `+` and `-` (or `−`) integer chains, e.g.:
+   *   "12 + 9 + 7 + 30" -> 58
+   *   "50 - 12 + 5"     -> 43
+   * Clamps result to `>= 0` in `'points_up'` mode (default).
+   * Returns `null` if the expression is empty or contains invalid tokens.
+   */
+  function rkCalcEval(expr, modeOrGame) {
+    if (expr === null || expr === undefined) return null;
+    // Normalize unicode minus / en-dash and whitespace
+    const normalized = String(expr)
+      .replace(/[\u2212\u2013]/g, '-')
+      .replace(/\s+/g, '');
+    if (!normalized) return null;
+    // Allow only digits, +, and -
+    if (!/^[0-9+-]+$/.test(normalized)) return null;
+
+    let i = 0;
+    let total = 0;
+    let sign = 1;
+    let sawNumber = false;
+
+    while (i < normalized.length) {
+      const ch = normalized[i];
+      if (ch === '+') {
+        sign = 1;
+        i++;
+        continue;
+      }
+      if (ch === '-') {
+        sign = -sign;
+        i++;
+        continue;
+      }
+      let start = i;
+      while (i < normalized.length && normalized[i] >= '0' && normalized[i] <= '9') {
+        i++;
+      }
+      const num = parseInt(normalized.slice(start, i), 10);
+      if (!Number.isFinite(num)) return null;
+      total += sign * num;
+      sign = 1;
+      sawNumber = true;
+    }
+
+    if (!sawNumber) return null;
+    const clamped = Math.max(-9999, Math.min(9999, total));
+    return isPointsUpMode(modeOrGame) ? Math.max(0, clamped) : clamped;
+  }
+
+  // ---------------- Initialization & Normalization ----------------
+  /**
+   * Normalizes a Rummikub game object in-place (works for fresh games,
+   * Social Group presets, and restored `gst_active` state).
+   * Auto-seeds `opts.selfPlayer` as Player 1 when starting fresh with no players.
+   */
+  function rkNormalize(game, opts) {
+    if (!game || typeof game !== 'object') return null;
+    const options = opts || {};
+
+    game.type = 'rummikub';
+    game.rkScoringMode = game.rkScoringMode === 'classic' ? 'classic' : DEFAULT_SCORING_MODE;
+    game.low = game.rkScoringMode === 'points_up';
+    game.rkLogOpen = Boolean(game.rkLogOpen);
+    game.rounds = Array.isArray(game.rounds) ? game.rounds : [];
+    game.players = Array.isArray(game.players) ? game.players.slice(0, MAX_PLAYERS) : [];
+
+    // Auto-seed signed-in user as Player 1 when starting fresh with empty players
+    if (!game.players.length && options.selfPlayer) {
+      const self = normalizePlayerInput(options.selfPlayer);
+      if (self) {
+        self.isSelf = true;
+        game.players.push({
+          id: uid('rk'),
+          ...self,
+          score: 0,
+          color: RK_COLORS[0].key
+        });
+      }
+    }
+
+    game.players.forEach((p, idx) => {
+      if (!p.id) p.id = uid('rk');
+      p.name = cleanStr(p.name) || `Player ${idx + 1}`;
+      p.score = Number.isFinite(Number(p.score)) ? Number(p.score) : 0;
+      if (p.userId === undefined) p.userId = p.user_id ?? null;
+      p.isSelf = Boolean(p.isSelf || p.is_self);
+      if (!RK_COLORS.some((c) => c.key === p.color)) {
+        p.color = RK_COLORS[idx % RK_COLORS.length].key;
+      }
+    });
+
+    ensureDraft(game);
+    return game;
+  }
+
+  // ---------------- Scoring Mode Toggle ----------------
+  /**
+   * Switches between `'points_up'` (default; non-negative deltas, Joker +30, lowest wins)
+   * and `'classic'` (signed deltas, Joker -30, highest wins).
+   */
+  function rkSetScoringMode(game, mode, opts) {
+    if (!game || (mode !== 'points_up' && mode !== 'classic')) {
+      return { ok: false, reason: 'invalid_mode' };
+    }
+    const options = opts || {};
+    game.rkScoringMode = mode;
+    game.low = mode === 'points_up';
+
+    if (options.reset) {
+      rkResetScores(game);
+    } else {
+      ensureDraft(game);
+    }
+    return { ok: true, mode: game.rkScoringMode, low: game.low };
+  }
+
+  // ---------------- Player Management (2–6 players) ----------------
+  function rkAddPlayer(game, rawPlayer) {
+    if (!game || typeof game !== 'object') return null;
+    if (!Array.isArray(game.players)) game.players = [];
+    if (game.players.length >= MAX_PLAYERS) return null;
+
+    const p = normalizePlayerInput(rawPlayer);
+    if (!p) return null;
+    if (game.players.some((ex) => ex.name.toLowerCase() === p.name.toLowerCase())) return null;
+
+    const entry = {
+      id: uid('rk'),
+      name: p.name,
+      userId: p.userId,
+      isSelf: p.isSelf,
+      score: 0,
+      color: rkFreeColor(game, -1, null)
+    };
+    game.players.push(entry);
+    ensureDraft(game);
+    return entry;
+  }
+
+  function rkRemovePlayer(game, idx) {
+    if (!game || !Array.isArray(game.players) || !game.players[idx]) return false;
+    if (game.players.length <= 1) return false;
+    game.players.splice(idx, 1);
+
+    const oldDraft = game.rkDraft || {};
+    const nextDraft = {};
+    let nextIdx = 0;
+    for (let i = 0; i <= game.players.length; i++) {
+      if (i === idx) continue;
+      if (oldDraft[i]) nextDraft[nextIdx] = oldDraft[i];
+      nextIdx++;
+    }
+    game.rkDraft = nextDraft;
+    ensureDraft(game);
+    return true;
+  }
+
+  function rkCycleColor(game, idx) {
+    if (!game || !game.players || !game.players[idx]) return null;
+    const p = game.players[idx];
+    const curPos = RK_COLORS.findIndex((c) => c.key === p.color);
+    p.color = RK_COLORS[(curPos + 1) % RK_COLORS.length].key;
+    return p.color;
+  }
+
+  function rkPickColor(game, idx, colorKey) {
+    if (!game || !game.players || !game.players[idx]) return false;
+    if (!RK_COLORS.some((c) => c.key === colorKey)) return false;
+    game.players[idx].color = colorKey;
+    return true;
+  }
+
+  // ---------------- Round Scoring Draft & Apply ----------------
+  function rkSetDraftDelta(game, idx, value) {
+    if (!game || !game.players || !game.players[idx]) return null;
+    ensureDraft(game);
+    const d = game.rkDraft[idx];
+    d.delta = parseDeltaForMode(value, game);
+    d.touched = true;
+    return {
+      delta: d.delta,
+      jokers: d.jokers,
+      touched: d.touched,
+      projectedTotal: (Number(game.players[idx].score) || 0) + d.delta
+    };
+  }
+
+  function rkStepDraftDelta(game, idx, step) {
+    if (!game || !game.players || !game.players[idx]) return null;
+    ensureDraft(game);
+    const d = game.rkDraft[idx];
+    return rkSetDraftDelta(game, idx, d.delta + (Number(step) || 0));
+  }
+
+  /**
+   * Applies one Joker penalty:
+   * - `'points_up'` mode: adds +30 to leftover tile points
+   * - `'classic'` mode: subtracts -30 from round score
+   */
+  function rkApplyJokerPenalty(game, idx) {
+    if (!game || !game.players || !game.players[idx]) return null;
+    ensureDraft(game);
+    const d = game.rkDraft[idx];
+    const change = isPointsUpMode(game) ? JOKER_PENALTY : -JOKER_PENALTY;
+    d.delta = parseDeltaForMode(d.delta + change, game);
+    d.jokers = (Number(d.jokers) || 0) + 1;
+    d.touched = true;
+    return {
+      delta: d.delta,
+      jokers: d.jokers,
+      touched: d.touched,
+      projectedTotal: (Number(game.players[idx].score) || 0) + d.delta
+    };
+  }
+
+  /**
+   * Reverts one Joker penalty from the current draft if tapped by mistake.
+   */
+  function rkRemoveJokerPenalty(game, idx) {
+    if (!game || !game.players || !game.players[idx]) return null;
+    ensureDraft(game);
+    const d = game.rkDraft[idx];
+    if (!d.jokers || d.jokers <= 0) {
+      return {
+        delta: d.delta,
+        jokers: 0,
+        touched: d.touched,
+        projectedTotal: (Number(game.players[idx].score) || 0) + d.delta
+      };
+    }
+    const change = isPointsUpMode(game) ? -JOKER_PENALTY : JOKER_PENALTY;
+    d.delta = parseDeltaForMode(d.delta + change, game);
+    d.jokers = Math.max(0, d.jokers - 1);
+    d.touched = true;
+    return {
+      delta: d.delta,
+      jokers: d.jokers,
+      touched: d.touched,
+      projectedTotal: (Number(game.players[idx].score) || 0) + d.delta
+    };
+  }
+
+  function rkClearDraft(game) {
+    if (!game) return;
+    game.rkDraft = {};
+    ensureDraft(game);
+  }
+
+  function rkGetDraftSummary(game) {
+    if (!game || !Array.isArray(game.players)) {
+      return { rows: [], hasAnyInput: false };
+    }
+    ensureDraft(game);
+    let hasAnyInput = false;
+    const rows = game.players.map((p, idx) => {
+      const d = game.rkDraft[idx] || emptyDraftEntry();
+      if (d.touched) hasAnyInput = true;
+      return {
+        idx,
+        name: p.name,
+        delta: d.delta,
+        jokers: d.jokers,
+        touched: d.touched,
+        projectedTotal: (Number(p.score) || 0) + d.delta
+      };
+    });
+    return { rows, hasAnyInput };
+  }
+
+  function rkApplyRound(game) {
+    if (!game || !Array.isArray(game.players) || !game.players.length) return null;
+    const summary = rkGetDraftSummary(game);
+    if (!summary.hasAnyInput) return null;
+
+    const prev = game.players.map((p) => Number(p.score) || 0);
+    const deltas = summary.rows.map((r) => r.delta);
+
+    game.players.forEach((p, idx) => {
+      p.score = prev[idx] + deltas[idx];
+    });
+
+    const round = {
+      ts: new Date().toISOString(),
+      scoringMode: game.rkScoringMode || DEFAULT_SCORING_MODE,
+      prev,
+      deltas,
+      detail: {
+        scoringMode: game.rkScoringMode || DEFAULT_SCORING_MODE,
+        entries: summary.rows.map((r) => ({
+          idx: r.idx,
+          name: r.name,
+          delta: r.delta,
+          jokers: r.jokers
+        }))
+      }
+    };
+
+    game.rounds = Array.isArray(game.rounds) ? game.rounds : [];
+    game.rounds.push(round);
+
+    rkClearDraft(game);
+    return round;
+  }
+
+  function rkUndoLastRound(game) {
+    if (!game || !Array.isArray(game.rounds) || !game.rounds.length) return null;
+    const last = game.rounds.pop();
+
+    game.players.forEach((p, idx) => {
+      if (Array.isArray(last.prev) && last.prev[idx] !== undefined) {
+        p.score = Number(last.prev[idx]) || 0;
+      } else {
+        p.score = (Number(p.score) || 0) - ((last.deltas && last.deltas[idx]) || 0);
+      }
+    });
+
+    return last;
+  }
+
+  function rkResetScores(game) {
+    if (!game || !Array.isArray(game.players)) return;
+    game.players.forEach((p) => {
+      p.score = 0;
+    });
+    game.rounds = [];
+    game.winner = null;
+    rkClearDraft(game);
+  }
+
+  function rkToggleLog(game) {
+    if (!game) return false;
+    game.rkLogOpen = !game.rkLogOpen;
+    return game.rkLogOpen;
+  }
+
+  // ---------------- Leaders & Finish ----------------
+  /**
+   * Returns current leader(s):
+   * - `'points_up'` mode: LOWEST score wins (`low: true`)
+   * - `'classic'` mode: HIGHEST score wins (`low: false`)
+   */
+  function rkLeaders(game) {
+    const low = isPointsUpMode(game);
+    if (!game || !Array.isArray(game.players) || !game.players.length) {
+      return { bestScore: null, leaderIndices: [], leaders: [], low };
+    }
+    const scores = game.players.map((p) => Number(p.score) || 0);
+    const bestScore = low ? Math.min(...scores) : Math.max(...scores);
+    const hasActivity = (Array.isArray(game.rounds) && game.rounds.length > 0) || scores.some((s) => s !== 0);
+    const leaderIndices = hasActivity
+      ? scores.map((s, i) => (s === bestScore ? i : -1)).filter((i) => i >= 0)
+      : [];
+    const leaders = leaderIndices.map((i) => game.players[i]);
+    return { bestScore, leaderIndices, leaders, low };
+  }
+
+  /**
+   * Prepares a finished Rummikub game record compatible with `saveGameToHistory`,
+   * Supabase `games` / `game_participants`, and Group Leaderboards.
+   */
+  function rkPrepareFinish(game) {
+    if (!game) return null;
+    const finished = JSON.parse(JSON.stringify(game));
+    delete finished.rkDraft;
+    finished.type = 'rummikub';
+    finished.rkScoringMode = finished.rkScoringMode === 'classic' ? 'classic' : DEFAULT_SCORING_MODE;
+    const low = finished.rkScoringMode === 'points_up';
+    finished.low = low;
+    finished.endTime = new Date().toISOString();
+    finished.meta = {
+      ...(finished.meta || {}),
+      scoringMode: finished.rkScoringMode,
+      low
+    };
+
+    const scores = (finished.players || []).map((p) => Number(p.score) || 0);
+    const best = scores.length ? (low ? Math.min(...scores) : Math.max(...scores)) : 0;
+    const winners = (finished.players || []).filter((p) => (Number(p.score) || 0) === best);
+
+    finished.winner = winners.map((p) => p.name).join(', ');
+    (finished.players || []).forEach((p) => {
+      p.score = Number(p.score) || 0;
+      p.isWinner = p.score === best;
+      if (p.userId === undefined) p.userId = p.user_id ?? null;
+    });
+
+    return finished;
+  }
+
+  function rkBuildSharedGameRecord(finishedGame) {
+    const fin = finishedGame.endTime ? finishedGame : rkPrepareFinish(finishedGame);
+    return {
+      ...fin,
+      client_game_id: fin.id,
+      group_id: fin.groupId || fin.group_id || null,
+      players: (fin.players || []).map((p) => {
+        const userId = p.userId ?? p.user_id ?? null;
+        return {
+          name: p.name,
+          display_name: p.name,
+          userId,
+          user_id: userId,
+          score: Number(p.score) || 0,
+          is_winner: Boolean(p.isWinner),
+          meta: {
+            color: p.color || null,
+            scoringMode: fin.rkScoringMode
+          }
+        };
+      })
+    };
+  }
+
+  const api = {
+    MAX_PLAYERS,
+    JOKER_PENALTY,
+    DEFAULT_SCORING_MODE,
+    RK_COLORS,
+    rkColor,
+    rkFreeColor,
+    rkCalcEval,
+    rkNormalize,
+    rkSetScoringMode,
+    rkAddPlayer,
+    rkRemovePlayer,
+    rkCycleColor,
+    rkPickColor,
+    rkSetDraftDelta,
+    rkStepDraftDelta,
+    rkApplyJokerPenalty,
+    rkRemoveJokerPenalty,
+    rkClearDraft,
+    rkGetDraftSummary,
+    rkApplyRound,
+    rkUndoLastRound,
+    rkResetScores,
+    rkToggleLog,
+    rkLeaders,
+    rkPrepareFinish,
+    rkBuildSharedGameRecord
+  };
+
+  global.RummikubLogic = api;
+
+  if (typeof module !== 'undefined' && module.exports) {
+    module.exports = api;
+  }
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+
 <!-- Reusable dice roller + roll tracker logic (window.DiceLogic) -->
 <script id="dice-logic">
 /* ==========================================================================
@@ -7495,7 +9037,7 @@ window.SocialUI = (function () {
 
 <!-- App engine: defines window.onAuthReady / window.onAuthSignedOut before auth init -->
 <script id="score-engine">
-/* Score Tracker engine — social layer (you, friends, groups, shared history), game-agnostic shell, per-game scoring, Catan wood/parchment theme, Flip 7 coastal card theme, Carcassonne sunlit meadow tally, Nertz Midnight Parlor & Gold Foil (Solo + unlimited Partners/Teams). */
+/* Score Tracker engine — Rummikub Classic Blue & Ivory Rack (2–6p, Points Up / Classic +/−, tile calculator), social layer (you, friends, groups, shared history), game-agnostic shell, per-game scoring, Catan wood/parchment theme, Flip 7 coastal card theme, Carcassonne sunlit meadow tally, Nertz Midnight Parlor & Gold Foil (Solo + unlimited Partners/Teams). */
 (function (global) {
   'use strict';
 
@@ -7526,6 +9068,8 @@ window.SocialUI = (function () {
     { id: 'nertz', name: 'Nertz', img: 'assets/games/nertz.svg', icon: '🂠',
       versions: ['Standard (to 100)', 'Long game (to 150)', 'Short game (to 50)'],
       target: (v) => (/150/.test(v || '') ? 150 : /50\b/.test(v || '') ? 50 : 100), detailedLabel: 'Round' },
+    { id: 'rummikub', name: 'Rummikub', img: 'assets/games/rummikub.svg', art: 'assets/games/rummikub.svg', icon: '▦', low: true, minPlayers: 2, maxPlayers: 6,
+      versions: ['Points Up (Lowest Wins)', 'Classic (+/−)'], target: () => null, detailedLabel: 'Round' },
     { id: 'other', name: 'Custom', img: 'assets/games/custom.svg', icon: '✏️',
       versions: ['Custom rules'], target: () => null, detailedLabel: null }
   ];
@@ -7584,6 +9128,7 @@ window.SocialUI = (function () {
       g.rounds = Array.isArray(g.rounds) ? g.rounds : [];
       g.players.forEach((p) => { p.score = Number(p.score) || 0; if (g.type === 'catan') p.breakdown = { ...emptyBreakdown(), ...(p.breakdown || {}) }; if (g.type === 'flip7') p.flip7Count = Number(p.flip7Count) || 0; });
       if (g.type === 'carcassonne') ccNormalize(g);
+      if (g.type === 'rummikub' && global.RummikubLogic) global.RummikubLogic.rkNormalize(g);
       if (g.type === 'catan' && !g.targetVp) g.targetVp = gameById('catan').target(g.version);
       return g;
     } catch (_) { return null; }
@@ -7680,7 +9225,7 @@ window.SocialUI = (function () {
   function onAuthSignedOut() {
     currentUser = null; initializedUserId = null; players = []; history = []; currentGame = null; pendingSync = false;
     scoringPlayer = null; currentView = 'home'; closeDiceModal();
-    document.body.classList.remove('theme-catan', 'theme-flip7', 'theme-carcassonne', 'theme-nertz'); f7 = null; nzSheetKind = null; nzPopIdx = -1;
+    document.body.classList.remove('theme-catan', 'theme-flip7', 'theme-carcassonne', 'theme-nertz', 'theme-rummikub'); f7 = null; rkCalcOpen = false; rkCalcExpr = ''; nzSheetKind = null; nzPopIdx = -1;
     resetSocialState();
     document.querySelectorAll('#app-shell .view').forEach((el) => el.classList.remove('active'));
     ['gen-leaderboard', 'gen-pad', 'leaderboard', 'score-form', 'history-list', 'recent-list', 'player-chips', 'f7-board', 'f7-drawer', 'cc-list',
@@ -7697,12 +9242,15 @@ window.SocialUI = (function () {
     document.body.classList.toggle('theme-carcassonne', ccon);
     const nzon = currentView === 'active' && isNertz();
     document.body.classList.toggle('theme-nertz', nzon);
+    const rkon = currentView === 'active' && isRk();
+    document.body.classList.toggle('theme-rummikub', rkon);
+    if (!rkon) rkCalcOpen = false;
     if (!nzon && (nzSheetKind || nzPopIdx >= 0)) { nzCloseSheet(); nzPopIdx = -1; }
     if (!ccon) ccHideAdd();
     if (!f7on) { const s = byId('f7-sheet'); if (s && !s.hidden) { setHidden(s, true); s.innerHTML = ''; } }
     syncDiceTrigger();
     const meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.setAttribute('content', on ? '#180f08' : f7on ? '#4bbdb8' : ccon ? '#6fa6d8' : nzon ? '#071222' : '#0c0d10');
+    if (meta) meta.setAttribute('content', on ? '#180f08' : f7on ? '#4bbdb8' : ccon ? '#6fa6d8' : nzon ? '#071222' : rkon ? '#0b2f69' : '#0c0d10');
   }
   function showView(v) {
     if (!byId('view-' + v)) v = 'home';
@@ -7777,6 +9325,8 @@ window.SocialUI = (function () {
   function startGame() {
     const chosen = setupParticipants();
     if (!chosen.length) { alert('Add and select at least one player'); return null; }
+    const gMax = gameById(selectedGame).maxPlayers;
+    if (gMax && chosen.length > gMax) { alert(`${gameById(selectedGame).name} supports up to ${gMax} players — deselect ${chosen.length - gMax} to start.`); return null; }
     if (currentGame && !confirm('Replace the current ' + gameLabel(currentGame) + ' game?')) return null;
     const g = gameById(selectedGame);
     const version = selectedVersion || g.versions[0];
@@ -7799,6 +9349,7 @@ window.SocialUI = (function () {
     if (g.id === 'catan') currentGame.targetVp = currentGame.target;
     if (g.id === 'carcassonne') ccNormalize(currentGame);
     if (g.id === 'nertz') nzStartGame(chosen);
+    if (g.id === 'rummikub') rkStartGame();
     scoringPlayer = null; padMode = 'simple'; f7 = null;
     persistActive();
     showView('active');
@@ -7827,6 +9378,7 @@ window.SocialUI = (function () {
   }
   function undoLastRound() {
     if (isNertz()) return nzUndo();
+    if (isRk()) return rkUndo();
     if (!currentGame || !currentGame.rounds.length) return null;
     const r = currentGame.rounds.pop();
     currentGame.players.forEach((p, i) => { p.score = Array.isArray(r.prev) && r.prev[i] !== undefined ? r.prev[i] : p.score - ((r.deltas || [])[i] || 0); });
@@ -7860,6 +9412,11 @@ window.SocialUI = (function () {
       nzCloseSheet(); nzPopIdx = -1;
       finished = NZL().nzPrepareFinish(currentGame);
       ['nzSel', 'nzDone', 'nzRoster', 'nertzLogOpen', 'soloRoster'].forEach((k) => delete finished[k]);
+    } else if (isRk()) {
+      rkCalcOpen = false; rkCalcExpr = '';
+      finished = RKL().rkPrepareFinish(currentGame);
+      finished.version = RK_VERSIONS[finished.rkScoringMode] || finished.version;
+      ['rkSel', 'rkDone', 'rkLogOpen'].forEach((k) => delete finished[k]);
     } else {
       finished = { ...currentGame, endTime: new Date().toISOString() };
       finished.winner = computeWinner(finished);
@@ -7888,7 +9445,7 @@ window.SocialUI = (function () {
       setHidden(byId('gen-pad'), true); setHidden(byId('gen-undo'), true);
       return;
     }
-    if (isCatan()) renderCatan(); else if (isFlip7()) renderFlip7(); else if (isCarc()) renderCarc(); else if (isNertz()) renderNertz(); else renderGeneric();
+    if (isCatan()) renderCatan(); else if (isFlip7()) renderFlip7(); else if (isCarc()) renderCarc(); else if (isNertz()) renderNertz(); else if (isRk()) renderRummikub(); else renderGeneric();
   }
 
   // ----- Generic (neutral) games -----
@@ -7910,6 +9467,7 @@ window.SocialUI = (function () {
   function openPad(idx) {
     if (!currentGame || !currentGame.players[idx]) return;
     if (isNertz()) { nzUiSelect(idx); return; }
+    if (isRk()) { rkSelect(idx); return; }
     scoringPlayer = idx;
     if (isCatan()) { selectCatanPlayer(idx); return; }
     if (isFlip7()) { f7Select(idx); return; }
@@ -8864,6 +10422,236 @@ window.SocialUI = (function () {
   }
 
   // ---------------- v15 Reusable 3D Dice Roller + Roll Tracker ----------------
+  // ----- Rummikub (Classic Blue & Ivory Rack · 2–6 players · Points Up / Classic +/− · built-in tile calculator; math lives in RummikubLogic) -----
+  const RKL = () => global.RummikubLogic || null;
+  const isRk = () => !!(currentGame && currentGame.type === 'rummikub' && RKL());
+  const RK_MAX = 6;
+  const RK_VERSIONS = { points_up: 'Points Up (Lowest Wins)', classic: 'Classic (+/−)' };
+  let rkSign = -1, rkCalcExpr = '', rkCalcOpen = false, rkCalcDone = false;
+  const rkUp = () => !!(currentGame && currentGame.rkScoringMode !== 'classic');
+  const rkMinus = (s) => String(s).replace(/-/g, '−');
+  const rkCrownSvg = '<svg class="rk-crown" viewBox="0 0 24 20" role="img" aria-label="Leader"><path d="M2 16.5h20L20.3 5.6l-5 4.2L12 2.2 8.7 9.8l-5-4.2z" fill="#f5c542" stroke="#8a5a00" stroke-width="1.2" stroke-linejoin="round"/><rect x="2" y="16.4" width="20" height="2.6" rx=".9" fill="#d39b1c" stroke="#8a5a00" stroke-width=".9"/></svg>';
+  function rkEnsure() {
+    const g = currentGame;
+    RKL().rkNormalize(g);
+    if (!Array.isArray(g.rkDone)) g.rkDone = [];
+    g.rkDone = g.rkDone.filter((i) => i >= 0 && i < g.players.length);
+    if (!(g.rkSel >= 0 && g.rkSel < g.players.length)) g.rkSel = 0;
+    g.version = RK_VERSIONS[g.rkScoringMode] || g.version;
+    return g;
+  }
+  function rkStartGame() {
+    const g = currentGame;
+    g.rkScoringMode = /classic/i.test(g.version || '') ? 'classic' : 'points_up';
+    RKL().rkNormalize(g);
+    g.rkSel = 0; g.rkDone = []; rkSign = -1; rkCalcExpr = ''; rkCalcOpen = false;
+  }
+  function rkCommit(full) { persistActive(); if (full) renderRummikub(); else { rkRenderRoster(); rkRenderScorer(true); } }
+  function rkResetProgress() { currentGame.rkDone = []; currentGame.rkSel = 0; }
+  function rkRanks(g) {
+    const up = rkUp(), scores = g.players.map((p) => Number(p.score) || 0);
+    return scores.map((s) => 1 + scores.filter((o) => (up ? o < s : o > s)).length);
+  }
+  function renderRummikub() {
+    const g = rkEnsure(), up = rkUp();
+    const shell = byId('rk-shell'); shell.dataset.mode = up ? 'up' : 'classic';
+    [['up', up], ['classic', !up]].forEach(([k, on]) => { const b = byId('rk-mode-' + k); b.classList.toggle('active', on); b.setAttribute('aria-selected', String(on)); });
+    byId('rk-round-pill').textContent = 'Round ' + (g.rounds.length + 1);
+    byId('rk-joker-label').textContent = up ? 'Joker +30' : 'Joker −30';
+    byId('rk-joker-btn').setAttribute('aria-label', up ? 'Joker penalty: add 30 points' : 'Joker penalty: subtract 30 points');
+    rkRenderRoster();
+    rkRenderScorer(false);
+    rkRenderCalc();
+    const undo = byId('rk-undo'); undo.disabled = !g.rounds.length;
+    const rb = byId('rk-rounds-btn').querySelector('span');
+    if (rb) rb.textContent = g.rkLogOpen ? 'Hide' : `Rounds${g.rounds.length ? ' (' + g.rounds.length + ')' : ''}`;
+    byId('rk-rounds-btn').setAttribute('aria-expanded', String(!!g.rkLogOpen));
+    const add = byId('rk-add-player'), full = g.players.length >= RK_MAX;
+    add.disabled = full; add.title = full ? 'Rummikub supports up to 6 players' : 'Add a player';
+    add.setAttribute('aria-label', full ? 'Player limit reached (6 max)' : 'Add player');
+    rkRenderDrawer();
+  }
+  function rkRenderRoster() {
+    const g = currentGame, N = RKL(), lead = N.rkLeaders(g), ranks = rkRanks(g), sum = N.rkGetDraftSummary(g);
+    const el = byId('rk-roster');
+    el.dataset.count = String(Math.max(2, Math.min(RK_MAX, g.players.length)));
+    el.innerHTML = g.players.map((p, i) => {
+      const sel = i === g.rkSel, isLead = lead.leaderIndices.includes(i), s = Number(p.score) || 0;
+      const d = sum.rows[i] || { delta: 0, jokers: 0, touched: false };
+      const pill = d.touched || d.jokers ? `<span class="rk-draft-pill${d.delta < 0 ? ' is-neg' : ''}">${rkMinus(signed(d.delta))}${d.jokers ? ' · J×' + d.jokers : ''}</span>` : '<span></span>';
+      return `<div class="rk-card${sel ? ' selected' : ''}${isLead ? ' leader' : ''}${g.rkDone.includes(i) ? ' done' : ''}" data-idx="${i}" data-name="${esc(p.name)}" data-color="${esc(p.color)}" role="option" aria-selected="${sel}" tabindex="0"
+        onclick="rkSelect(${i})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();rkSelect(${i})}">
+        <div class="rk-card-top"><span class="rk-name">${esc(p.name)}${p.isSelf ? ' <span class="small">(You)</span>' : ''}</span>${isLead ? rkCrownSvg : ''}</div>
+        <div class="rk-score ${s > 0 ? 'is-pos' : s < 0 ? 'is-neg' : 'is-zero'}">${rkMinus(s)}</div>
+        <div class="rk-card-foot">${pill}<span class="rk-badge rk-c-${esc(p.color)}" role="button" tabindex="0" title="Change tile color" aria-label="Rank ${ranks[i]} · change ${esc(p.name)} tile color" onclick="event.stopPropagation();rkCycleColor(${i})">${ranks[i]}</span></div>
+      </div>`;
+    }).join('');
+  }
+  function rkRenderScorer(keepInput) {
+    const g = currentGame, up = rkUp(), p = g.players[g.rkSel], d = (g.rkDraft || {})[g.rkSel] || { delta: 0, jokers: 0 };
+    byId('rk-scorer-who').textContent = `Round ${g.rounds.length + 1} · ${p ? p.name : '—'}`;
+    const input = byId('rk-delta-input');
+    if (!up && d.delta) rkSign = d.delta < 0 ? -1 : 1;
+    const sign = up ? 1 : rkSign;
+    if (!keepInput) input.value = d.delta ? String(up ? d.delta : d.delta) : '';
+    input.placeholder = up ? 'Tile points' : (sign < 0 ? '−0' : '+0');
+    input.setAttribute('inputmode', up ? 'numeric' : 'text');
+    input.classList.toggle('is-neg', !up && sign < 0); input.classList.toggle('is-pos', !up && sign > 0);
+    [['minus', sign < 0], ['plus', sign > 0]].forEach(([k, on]) => { const b = byId('rk-sign-' + k); b.classList.toggle('active', !up && on); b.setAttribute('aria-pressed', String(!up && on)); });
+    const pv = byId('rk-preview'); pv.textContent = rkMinus(signed(d.delta || 0)) + (d.jokers ? ` · J×${d.jokers}` : '');
+    pv.classList.toggle('is-neg', d.delta < 0); pv.classList.toggle('is-pos', d.delta > 0);
+    const remaining = g.players.filter((_, i) => i !== g.rkSel && !g.rkDone.includes(i)).length;
+    const c = byId('rk-confirm'); c.textContent = remaining ? 'Confirm · Next' : 'Confirm Round';
+    c.setAttribute('aria-label', remaining ? `Confirm ${p ? p.name : ''} and score the next player` : 'Confirm and apply this round');
+  }
+  function rkRenderDrawer() {
+    const g = currentGame, el = byId('rk-history-drawer'), list = byId('rk-history-list');
+    setHidden(el, !g.rkLogOpen);
+    if (!g.rkLogOpen) return;
+    list.innerHTML = g.rounds.length ? g.rounds.map((r, k) => ({ r, k })).reverse().map(({ r, k }) => {
+      const entries = (r.detail && r.detail.entries) || g.players.map((p, i) => ({ name: p.name, delta: (r.deltas || [])[i] || 0, jokers: 0 }));
+      return `<div class="rk-history-row" data-round="${k + 1}"><strong>Round ${k + 1}</strong><span>${entries.map((e) =>
+        `${esc(e.name)} <b>${rkMinus(signed(Number(e.delta) || 0))}</b>${e.jokers ? ` <span class="small">J×${e.jokers}</span>` : ''}`).join(' · ')}</span></div>`;
+    }).join('') : '<p class="rk-history-empty">No rounds recorded yet.</p>';
+  }
+  // ----- Rummikub UI actions (markup onclick hooks) -----
+  function rkSelect(idx) {
+    if (!isRk() || !currentGame.players[idx]) return false;
+    currentGame.rkSel = idx; rkCommit(true); return true;
+  }
+  function rkSetMode(mode) {
+    if (!isRk()) return false;
+    const want = mode === 'classic' ? 'classic' : 'points_up', g = currentGame;
+    if (g.rkScoringMode === want) return true;
+    const hasScores = g.rounds.length || g.players.some((p) => p.score);
+    if (hasScores && !confirm(`Switch to ${RK_VERSIONS[want]}? Scores start over at 0.`)) return false;
+    RKL().rkSetScoringMode(g, want, { reset: true });
+    g.version = RK_VERSIONS[want]; rkSign = -1; rkResetProgress(); rkCalcExpr = ''; rkCalcDone = false;
+    rkCommit(true); return true;
+  }
+  function rkSetSign(sign) {
+    if (!isRk() || rkUp()) return null;
+    const g = currentGame, i = g.rkSel, d = (g.rkDraft || {})[i] || { delta: 0 };
+    rkSign = sign < 0 ? -1 : 1;
+    const mag = Math.abs(Number(d.delta) || 0);
+    const r = mag ? RKL().rkSetDraftDelta(g, i, rkSign * mag) : null;
+    persistActive(); rkRenderRoster(); rkRenderScorer(false);
+    return r;
+  }
+  function rkOnDeltaInput(val) {
+    if (!isRk()) return null;
+    const g = currentGame, up = rkUp(), input = byId('rk-delta-input');
+    const raw = String(val ?? input.value).replace(/[\u2212\u2013]/g, '-').replace(/[^0-9+-]/g, '');
+    const digits = raw.replace(/[^0-9]/g, '').replace(/^0+(?=\d)/, '').slice(0, 4);
+    if (!up) { if (/^-/.test(raw)) rkSign = -1; else if (/^\+/.test(raw)) rkSign = 1; }
+    const n = Number(digits) || 0, delta = up ? n : rkSign * n;
+    const clean = up ? digits : (digits ? (rkSign < 0 ? '-' : '') + digits : '');
+    if (input.value !== clean) input.value = clean;
+    const r = RKL().rkSetDraftDelta(g, g.rkSel, delta);
+    persistActive(); rkRenderRoster(); rkRenderScorer(true);
+    return r;
+  }
+  function rkStep(step) {
+    if (!isRk()) return null;
+    const r = RKL().rkStepDraftDelta(currentGame, currentGame.rkSel, step);
+    persistActive(); rkRenderRoster(); rkRenderScorer(false); return r;
+  }
+  function rkApplyJoker() {
+    if (!isRk()) return null;
+    const r = RKL().rkApplyJokerPenalty(currentGame, currentGame.rkSel);
+    persistActive(); rkRenderRoster(); rkRenderScorer(false); return r;
+  }
+  function rkConfirmRound() {
+    if (!isRk()) return null;
+    const g = currentGame, N = RKL(), n = g.players.length, sel = g.rkSel;
+    if (!g.rkDone.includes(sel)) g.rkDone.push(sel);
+    rkCalcOpen = false; rkCalcExpr = ''; rkCalcDone = false;
+    let next = -1;
+    for (let s = 1; s <= n; s++) { const k = (sel + s) % n; if (!g.rkDone.includes(k)) { next = k; break; } }
+    if (next >= 0) { g.rkSel = next; rkCommit(true); return { next }; }
+    if (!N.rkGetDraftSummary(g).hasAnyInput) N.rkSetDraftDelta(g, sel, ((g.rkDraft || {})[sel] || {}).delta || 0);
+    const round = N.rkApplyRound(g);
+    rkResetProgress(); rkCommit(true);
+    return round;
+  }
+  function rkUndo() {
+    if (!isRk()) return null;
+    const r = RKL().rkUndoLastRound(currentGame);
+    RKL().rkClearDraft(currentGame); rkResetProgress(); rkCommit(true); return r;
+  }
+  function rkToggleHistory(force) {
+    if (!isRk()) return false;
+    const g = currentGame;
+    if (typeof force === 'boolean') g.rkLogOpen = force; else RKL().rkToggleLog(g);
+    rkCommit(true); return g.rkLogOpen;
+  }
+  function rkAddPlayer(name) {
+    if (!isRk()) return null;
+    const g = currentGame;
+    if (g.players.length >= RK_MAX) { alert('Rummikub supports up to 6 players.'); return null; }
+    if (name === undefined) name = prompt('New player name', 'Player ' + (g.players.length + 1));
+    name = String(name || '').trim();
+    if (!name) return null;
+    const known = (social.friends.accepted || []).find((a) => a && a.userId && lc(memberName(a)) === lc(name));
+    const p = RKL().rkAddPlayer(g, known ? { name, userId: known.userId } : name);
+    if (!p) { alert('That player is already in this game.'); return null; }
+    rkCommit(true); return p;
+  }
+  function rkCycleColor(idx) {
+    if (!isRk()) return null;
+    const c = RKL().rkCycleColor(currentGame, idx); rkCommit(false); return c;
+  }
+  function rkFinishGame() { if (!isRk()) return null; return endGame(); }
+  // ----- Built-in tile calculator -----
+  function rkCalcPretty(expr) { return String(expr || '').replace(/([+-])/g, ' $1 ').replace(/-/g, '−').replace(/\s+/g, ' ').trim(); }
+  function rkCalcValue() { const N = RKL(); return N && rkCalcExpr ? N.rkCalcEval(rkCalcExpr, currentGame) : null; }
+  function rkRenderCalc() {
+    const panel = byId('rk-calc-panel'), tog = byId('rk-calc-toggle');
+    setHidden(panel, !rkCalcOpen);
+    tog.classList.toggle('active', rkCalcOpen); tog.setAttribute('aria-expanded', String(rkCalcOpen));
+    if (!rkCalcOpen) return;
+    byId('rk-calc-expr').textContent = rkCalcExpr ? rkCalcPretty(rkCalcExpr) : '0';
+    const v = rkCalcValue();
+    byId('rk-calc-res').textContent = v === null ? '' : '= ' + rkMinus(v);
+    panel.classList.toggle('is-done', rkCalcDone);
+  }
+  function rkToggleCalc(force) {
+    if (!isRk()) return false;
+    rkCalcOpen = typeof force === 'boolean' ? force : !rkCalcOpen;
+    if (rkCalcOpen && !rkCalcExpr) rkCalcDone = false;
+    rkRenderCalc(); return rkCalcOpen;
+  }
+  function rkCalcKey(k) {
+    if (!isRk()) return null;
+    k = String(k);
+    if (k === '−') k = '-';
+    if (/^[0-9]$/.test(k)) {
+      if (rkCalcDone) { rkCalcExpr = ''; rkCalcDone = false; }
+      const last = (rkCalcExpr.match(/[0-9]+$/) || [''])[0];
+      if (last.length >= 4) return rkCalcExpr;
+      rkCalcExpr = last === '0' ? rkCalcExpr.slice(0, -1) + k : rkCalcExpr + k;
+    } else if (k === '+' || k === '-') {
+      rkCalcDone = false;
+      if (!rkCalcExpr) { if (k === '-') rkCalcExpr = '-'; }
+      else rkCalcExpr = /[+-]$/.test(rkCalcExpr) ? rkCalcExpr.slice(0, -1) + k : rkCalcExpr + k;
+    } else if (k === 'BS') { rkCalcDone = false; rkCalcExpr = rkCalcExpr.slice(0, -1); }
+    else if (k === 'C') { rkCalcExpr = ''; rkCalcDone = false; }
+    else if (k === '=') { const v = rkCalcValue(); if (v !== null) { rkCalcExpr = String(v); rkCalcDone = true; } }
+    if (rkCalcExpr.length > 40) rkCalcExpr = rkCalcExpr.slice(0, 40);
+    rkRenderCalc(); return rkCalcExpr;
+  }
+  function rkCalcApply() {
+    if (!isRk()) return null;
+    let v = rkCalcValue();
+    if (v === null) v = 0;
+    // Classic +/−: the calculator adds up tile values; the −/+ toggle decides whether they count against or for the player.
+    if (!rkUp() && v > 0 && rkSign < 0) v = -v;
+    const r = RKL().rkSetDraftDelta(currentGame, currentGame.rkSel, v);
+    rkCalcOpen = false; rkCalcExpr = ''; rkCalcDone = false;
+    persistActive(); rkRenderRoster(); rkRenderScorer(false); rkRenderCalc();
+    return r;
+  }
+
   const DLx = () => global.DiceLogic || null;
   let diceAnimTimer = null;
   function diceConfigFor(game) { const d = DLx(); return d && game ? d.getDiceConfig(game, GAMES) : null; }
@@ -9018,7 +10806,7 @@ window.SocialUI = (function () {
             <div class="small">${esc(new Date(g.endTime || g.startTime || Date.now()).toLocaleDateString())}</div></div>
           ${i >= 0 ? `<button class="btn danger sm" type="button" aria-label="Delete game" onclick="deleteGame(${i})">×</button>` : ''}
         </div>${badges}
-        <div style="margin-top:.3rem">${[...(g.players || [])].sort((a, b) => (gameById(g.type).low ? a.score - b.score : b.score - a.score)).map((p) => `${esc(p.name)}${Array.isArray(p.members) && p.members.length ? ` <span class="small">(${esc(p.members.map((m) => m.name).join(' & '))})</span>` : ''}: <strong>${p.score}</strong>`).join(' · ')}</div>
+        <div style="margin-top:.3rem">${[...(g.players || [])].sort((a, b) => ((typeof g.low === 'boolean' ? g.low : g.meta && typeof g.meta.low === 'boolean' ? g.meta.low : gameById(g.type).low) ? a.score - b.score : b.score - a.score)).map((p) => `${esc(p.name)}${Array.isArray(p.members) && p.members.length ? ` <span class="small">(${esc(p.members.map((m) => m.name).join(' & '))})</span>` : ''}: <strong>${p.score}</strong>`).join(' · ')}</div>
         <div class="winner">Winner: ${esc(g.winner || '—')}</div>${diceHistoryLine(g)}
       </div>`;
     }).join('');
@@ -9363,11 +11151,15 @@ window.SocialUI = (function () {
       const payload = sc.buildSharedGamePayload(fin, user);
       const game = {
         ...fin, client_game_id: fin.id, group_id: payload.group_id || null,
-        winner: fin.type === 'nertz' ? fin.winner : ((payload.winner_names || []).join(', ') || fin.winner),
+        winner: (fin.type === 'nertz' || fin.type === 'rummikub') ? fin.winner : ((payload.winner_names || []).join(', ') || fin.winner),
         meta: fin.meta || null,
         players: fin.players.map((p, i) => ({ ...p, user_id: (payload.participants[i] || {}).user_id || null, is_winner: !!(payload.participants[i] || {}).is_winner, meta: (payload.participants[i] || {}).meta || {} })),
         summary: payload.summary
       };
+      if (fin.type === 'rummikub' && RKL()) {
+        const rec = RKL().rkBuildSharedGameRecord(fin);
+        game.players = game.players.map((p, i) => ({ ...p, meta: { ...(p.meta || {}), ...(((rec.players || [])[i] || {}).meta || {}) } }));
+      }
       const r = await api.saveSharedGame(game, { groupId: payload.group_id || null });
       if (r && !r.ok) console.warn('[social] shared save failed', r.error);
       if (currentUser && currentUser.id === user.id) await refreshSocial();
@@ -9390,6 +11182,8 @@ window.SocialUI = (function () {
     nzSetMode: nzUiSetMode, nzStepNet, nzSetSign, nzSyncPreview, nzToggleGotNertz, nzConfirmRound, nzUndo,
     nzToggleHistory, nzOpenSheet, nzCloseSheet, nzUiSelect, nzUiToggleDeckPop, nzUiPickDeck, nzUiSaveTarget, nzUiAddPlayer, nzUiRemovePlayer, nzUiAddTeam,
     nzUiRemoveTeam, nzUiRenameTeam, nzUiAddPartner, nzUiRemovePartner, nzUiMovePartner,
+    rkSelect, rkSetMode, rkSetSign, rkOnDeltaInput, rkStep, rkApplyJoker, rkConfirmRound, rkUndo, rkToggleHistory, rkAddPlayer, rkCycleColor, rkFinishGame,
+    rkToggleCalc, rkCalcKey, rkCalcApply,
     undoLastRound, undoLastAction: undoLastRound, endGame, deleteGame,
     openDiceModal, closeDiceModal, rollVirtualDice, logPhysicalRoll, undoDiceRoll, resetDiceRolls, renderDiceUI,
     onAuthSignedIn: onAuthReady, removeSelf, addSelf, removeSetupFriend, toggleSetupFriend, includeFriendInNextGame, applyGroupPreset, clearSetupGroup,
@@ -9491,7 +11285,7 @@ window.SocialUI = (function () {
   }
 
   function showSignedOutUI() {
-    document.body.classList.remove('theme-catan', 'theme-flip7', 'theme-carcassonne', 'theme-nertz');
+    document.body.classList.remove('theme-catan', 'theme-flip7', 'theme-carcassonne', 'theme-nertz', 'theme-rummikub');
     const { loginView, appShell } = getEls();
     if (appShell) {
       appShell.hidden = true;
