@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#0b1220">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="score-tracker-build" content="v5-catan-rendering-match-2026-11-26">
+<meta name="score-tracker-build" content="v6-no-tap-zoom-2026-11-26">
 <title>Score Tracker</title>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon-512.jpg" type="image/jpeg">
@@ -93,6 +93,9 @@ label.small, .field-label { display: block; margin: 0.7rem 0 0.3rem; color: var(
 .game-card { position: relative; height: 150px; border-radius: 14px; overflow: hidden; cursor: pointer; background-color: var(--surface2); background-size: contain; background-repeat: no-repeat; background-position: center top; border: 2px solid transparent; transition: transform .15s, border-color .15s; }
 .game-card:hover { transform: translateY(-2px); }
 .game-card.selected { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(34,211,238,0.2); }
+.game-card .game-art { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; pointer-events: none; }
+.game-card .game-art.contain { object-fit: contain; inset: 0 0 30px 0; height: calc(100% - 30px); padding: 6px; filter: drop-shadow(0 4px 8px rgba(0,0,0,.5)); }
+.game-card .game-art-bg { position: absolute; inset: -12px; width: calc(100% + 24px); height: calc(100% + 24px); object-fit: cover; filter: blur(10px) brightness(.55) saturate(1.2); pointer-events: none; }
 .game-card .game-icon { position: absolute; inset: 0 0 34px 0; display: flex; align-items: center; justify-content: center; font-size: 2.6rem; color: var(--accent); }
 .game-card .overlay { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,.88)); padding: 1.1rem .5rem .55rem; color: #fff; font-weight: 600; font-size: .9rem; text-align: center; }
 .player-list { display: flex; flex-wrap: wrap; gap: .5rem; margin: .5rem 0; }
@@ -133,6 +136,14 @@ label.small, .field-label { display: block; margin: 0.7rem 0 0.3rem; color: var(
 .bottom-nav button { background: none; border: none; color: var(--muted); font: 600 .72rem var(--font); display: flex; flex-direction: column; align-items: center; gap: .2rem; cursor: pointer; min-width: 64px; }
 .bottom-nav button .icon { font-size: 1.3rem; line-height: 1; }
 .bottom-nav button.active { color: var(--accent); }
+
+/* ---------- No tap-zoom / no tap-select (all themes) ---------- */
+html, body, button, a, input, select, textarea, label, [role="button"], [role="option"], [onclick] { touch-action: manipulation; }
+button, a, [role="button"], [role="option"], [onclick], .btn, .key, .game-card, .player-row, .player-chip, .bottom-nav button,
+.cg-row, .cg-act, .cg-wood-btn, .cg-wood-bar, .cg-reset, .auth-btn, #catan-minus, #catan-plus {
+  touch-action: manipulation; -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+input, select, textarea, #login-view .auth-input { font-size: 16px !important; }
+input, textarea { -webkit-user-select: text; user-select: text; }
 
 /* Catan board is only shown when theme-catan is on */
 #catan-board { display: none; }
@@ -204,7 +215,7 @@ body.theme-catan #catan-board .cg-ribbon span::after { right: -30%; }
 
 body.theme-catan #catan-board .cg-leader-card { padding: 2px 10px; }
 body.theme-catan #catan-board .cg-row { display: grid; grid-template-columns: 44px 74px 1fr 40px; align-items: center; column-gap: 8px;
-  min-height: 50px; padding: 3px 2px; border-bottom: 1px dashed var(--cg-dash); cursor: pointer; border-radius: 4px; transition: background .15s; }
+  min-height: 52px; padding: 3px 2px; border-bottom: 1px dashed var(--cg-dash); cursor: pointer; border-radius: 4px; transition: background .15s; }
 body.theme-catan #catan-board .cg-row:last-child { border-bottom: none; }
 body.theme-catan #catan-board .cg-row.selected { background: linear-gradient(90deg, rgba(222,170,80,.38), rgba(222,170,80,.12)); box-shadow: inset 3px 0 0 #a5762c; }
 body.theme-catan #catan-board .cg-shield { width: 42px; height: 45px; object-fit: contain; display: block; filter: drop-shadow(0 1px 1px rgba(0,0,0,.35)); }
@@ -295,7 +306,7 @@ body.theme-catan #catan-board .cg-row[data-color="purple"] .cg-name { color: #4b
 </style>
 </head>
 <body>
-<!-- Build: v5-catan-rendering-match-2026-11-26 -->
+<!-- Build: v6-no-tap-zoom-2026-11-26 -->
 
 <!-- Login: starts hidden until getSession() resolves -->
 <section id="login-view" class="auth-hidden" hidden aria-label="Sign in to Score Tracker">
@@ -459,28 +470,28 @@ body.theme-catan #catan-board .cg-row[data-color="purple"] .cg-name { color: #4b
 
   // ---------------- Games ----------------
   const GAMES = [
-    { id: 'flip7', name: 'Flip 7', img: 'flip7.jpg', icon: '🃏',
+    { id: 'flip7', name: 'Flip 7', img: 'flip7.jpg', fit: 'contain', icon: '🃏',
       versions: ['Standard (to 200)', 'With a Vengeance', 'Thematic / Promo'],
       target: () => 200, detailedLabel: 'Card Pad' },
     { id: '7wonders', name: '7 Wonders', img: '7wonders.jpg', icon: '🏛️',
       versions: ['Base (1st/2nd Ed)', 'With Leaders', 'With Cities', 'With Armada', 'Other expansion'],
       target: () => null, detailedLabel: 'Categories' },
-    { id: 'carcassonne', name: 'Carcassonne', img: '', icon: '🏰',
+    { id: 'carcassonne', name: 'Carcassonne', img: 'assets/games/carcassonne.svg', icon: '🏰',
       versions: ['Classic (current scoring)', 'Older edition (small cities)', 'With Inns & Cathedrals', 'With other expansions'],
       target: () => null, detailedLabel: 'Features' },
-    { id: 'catan', name: 'Catan', img: '', icon: '⬢',
+    { id: 'catan', name: 'Catan', img: 'assets/games/catan.svg', icon: '⬢',
       versions: ['Base (to 10 VP)', 'Cities & Knights (to 13 VP)', 'Seafarers (to 12 VP)', '5-6 Player (to 10 VP)'],
       target: (v) => { const m = /to (\d+)/i.exec(v || ''); return m ? Number(m[1]) : 10; } },
     { id: 'ohhell', name: 'Oh Hell', img: 'ohhell.jpg', icon: '♠️',
       versions: ['Exact: 10+bid (miss=0)', '1 per trick +10 if exact', 'Other variant'],
       target: () => null, detailedLabel: 'Bid & Tricks' },
-    { id: 'hearts', name: 'Hearts', img: '', icon: '♥️', low: true,
+    { id: 'hearts', name: 'Hearts', img: 'assets/games/hearts.svg', icon: '♥️', low: true,
       versions: ['Standard (to 100)', 'Short (to 50)', 'With Jack of Diamonds'],
       target: (v) => (/50/.test(v || '') ? 50 : 100), detailedLabel: 'Hand' },
-    { id: 'nertz', name: 'Nertz', img: 'nertz.png', icon: '🂠',
+    { id: 'nertz', name: 'Nertz', img: 'nertz.png', fit: 'contain', icon: '🂠',
       versions: ['Standard (+1/-2, optional bonus)', 'To 100', 'To 150', 'No bonus for calling'],
       target: (v) => (/150/.test(v || '') ? 150 : 100), detailedLabel: 'Round' },
-    { id: 'other', name: 'Custom', img: '', icon: '✏️',
+    { id: 'other', name: 'Custom', img: 'assets/games/custom.svg', icon: '✏️',
       versions: ['Custom rules'], target: () => null, detailedLabel: null }
   ];
   const gameById = (id) => GAMES.find((g) => g.id === id) || GAMES[GAMES.length - 1];
@@ -645,9 +656,8 @@ body.theme-catan #catan-board .cg-row[data-color="purple"] .cg-name { color: #4b
   function renderNew() {
     const grid = byId('game-grid');
     grid.innerHTML = GAMES.map((g) => `
-      <div class="game-card ${g.id === selectedGame ? 'selected' : ''}" data-game="${g.id}" role="button" tabindex="0" onclick="selectGame('${g.id}')"
-           style="${g.img ? `background-image:url('${g.img}')` : ''}">
-        ${g.img ? '' : `<div class="game-icon" aria-hidden="true">${g.icon}</div>`}
+      <div class="game-card ${g.id === selectedGame ? 'selected' : ''}" data-game="${g.id}" role="button" tabindex="0" onclick="selectGame('${g.id}')">
+        ${g.img ? (g.fit === 'contain' ? `<img class="game-art-bg" src="${g.img}" alt="" aria-hidden="true" draggable="false">` : '') + `<img class="game-art${g.fit === 'contain' ? ' contain' : ''}" src="${g.img}" alt="" draggable="false" decoding="async">` : `<div class="game-icon" aria-hidden="true">${g.icon}</div>`}
         <div class="overlay">${esc(g.name)}</div>
       </div>`).join('');
     const g = gameById(selectedGame);
@@ -929,7 +939,6 @@ body.theme-catan #catan-board .cg-row[data-color="purple"] .cg-name { color: #4b
 
   // ----- Catan (wood + parchment theme, layout from the approved rendering) -----
   const CG_SHIELDS = ['red', 'green', 'blue', 'purple'];
-  const CG_TAGS = ['Orange', 'Forest', 'Harbor', 'Desert', 'Hills', 'Pasture'];
   const CG_ICONS = { settlements: 'icon-settlements.svg', cities: 'icon-cities.svg', longestRoad: 'icon-road.svg', largestArmy: 'icon-army.svg', vpCards: 'icon-vpcard.svg' };
   const CG_ASSET = './assets/catan/';
   const UNIQUE_CATS = ['longestRoad', 'largestArmy'];
@@ -986,7 +995,7 @@ body.theme-catan #catan-board .cg-row[data-color="purple"] .cg-name { color: #4b
       return `<div class="cg-row${sel ? ' selected' : ''}${win ? ' winner' : ''}" data-player-idx="${p.idx}" data-color="${CG_SHIELDS[p.idx % CG_SHIELDS.length]}" role="option" aria-selected="${sel}" tabindex="0"
           onclick="selectCatanPlayer(${p.idx})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectCatanPlayer(${p.idx})}">
           <img class="cg-shield" src="${CG_ASSET}shield-${CG_SHIELDS[p.idx % CG_SHIELDS.length]}.svg" alt="" width="44" height="47" draggable="false">
-          <div class="cg-name">${esc(p.name)}${win ? cgCrown : ''}<small>(${CG_TAGS[p.idx % CG_TAGS.length]})</small></div>
+          <div class="cg-name">${esc(p.name)}${win ? cgCrown : ''}</div>
           <div class="cg-stars${n > 10 ? ' xs' : n > 8 ? ' sm' : n > 6 ? ' md' : ''}" aria-label="${n} stars">${cgStar.repeat(n)}</div>
           <div class="cg-vp vp-num" data-vp="${p.idx}">${p.score}</div>
         </div>`;
