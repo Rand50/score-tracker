@@ -6,14 +6,14 @@
 <meta name="theme-color" content="#0b1220">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="score-tracker-build" content="v4-neutral-shell-catan-theme-2026-11-26">
+<meta name="score-tracker-build" content="v5-catan-rendering-match-2026-11-26">
 <title>Score Tracker</title>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon-512.jpg" type="image/jpeg">
 <link rel="apple-touch-icon" href="icon-512.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Marcellus&family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
 
 <!-- ===================== NEUTRAL (GAME-AGNOSTIC) THEME ===================== -->
 <style id="neutral-theme">
@@ -139,590 +139,163 @@ label.small, .field-label { display: block; margin: 0.7rem 0 0.3rem; color: var(
 body.theme-catan #catan-board { display: block; }
 body.theme-catan #generic-board { display: none; }
 body.theme-catan .app-header { display: none; }
+#nav-active { display: none; }
 </style>
 
 <!-- ===================== CATAN THEME (scoped to body.theme-catan) ===================== -->
 <style id="catan-theme">
 body.theme-catan {
-  
-  --wood-deep: #180f08;
-  --wood-mid: #2b1a0e;
-  --wood-warm: #3c2414;
-  --wood-grain: rgba(14, 7, 3, 0.42);
-
-  
-  --parchment-light: #fbf1d8;
-  --parchment-base: #f2dfb6;
-  --parchment-aged: #e3c891;
-  --parchment-edge: #c7a464;
-  --parchment-card: #faf2dd;
-
-  
-  --ink-dark: #2c1a0c;
-  --ink-mid: #53361b;
-  --ink-muted: #7c5930;
-  --gold-bright: #f4c84c;
-  --gold-mid: #c8921e;
-  --gold-deep: #8b5e12;
-  --bronze-border: #7a5418;
-  --crimson: #9e2a2b;
-  --forest: #2d6a4f;
-  --royal: #2b598a;
-  --plum: #6c3a7a;
-
-  
-  --font-display: 'Cinzel', Georgia, 'Times New Roman', serif;
-  --font-body: 'Crimson Text', Georgia, 'Times New Roman', serif;
-}
-body.theme-catan {
-  margin: 0;
-  padding: 0;
-  min-height: 100%;
-  color: var(--ink-dark);
-  font-family: var(--font-body);
-  -webkit-font-smoothing: antialiased;
-}
-body.theme-catan {
-  background-color: var(--wood-deep);
-  background-image:
-    radial-gradient(ellipse at 50% 0%, rgba(160, 102, 42, 0.22) 0%, transparent 62%),
-    radial-gradient(ellipse at 50% 100%, rgba(0, 0, 0, 0.65) 0%, transparent 70%),
-    repeating-linear-gradient(
-      90deg,
-      rgba(255, 210, 145, 0.03) 0px,
-      rgba(255, 210, 145, 0.03) 2px,
-      transparent 2px,
-      transparent 14px
-    ),
-    repeating-linear-gradient(
-      180deg,
-      var(--wood-mid) 0px,
-      var(--wood-warm) 36px,
-      var(--wood-deep) 38px,
-      var(--wood-mid) 74px,
-      #231409 76px
-    );
-  background-attachment: fixed;
-  padding-bottom: 84px;
+  --cg-ink: #3b2814; --cg-ink-soft: #6a4d2a; --cg-gold: #c99a3e; --cg-gold-hi: #f0cf7a; --cg-gold-deep: #6e4b17;
+  --cg-num: #6b4a16; --cg-red: #8a3418; --cg-wood-dark: #2b1a0d; --cg-wood: #4a2f18; --cg-dash: #9e8156;
+  --cg-display: 'Marcellus', 'Cinzel', Georgia, 'Times New Roman', serif;
+  --cg-name: 'Crimson Text', Georgia, 'Times New Roman', serif;
+  --cg-caps: 'Cinzel', 'Marcellus', Georgia, serif;
+  --cg-body: 'Crimson Text', Georgia, 'Times New Roman', serif;
+  --cg-parch-bg:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .24 0 0 0 0 .1 0 0 0 .22 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E"),
+    radial-gradient(ellipse at 50% 45%, #efdcb2 0%, #e4cc99 50%, #cfae74 92%, #c29e62 100%);
+  background: #24160b url('./assets/catan/wood-bg.svg') center top / cover no-repeat fixed;
+  color: var(--cg-ink);
 }
 body.theme-catan::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  background-image:
-    repeating-linear-gradient(
-      90deg,
-      transparent 0px,
-      transparent 118px,
-      rgba(0, 0, 0, 0.22) 118px,
-      rgba(0, 0, 0, 0.22) 120px
-    ),
-    radial-gradient(circle at 20% 25%, rgba(255, 200, 120, 0.05), transparent 40%),
-    radial-gradient(circle at 80% 70%, rgba(0, 0, 0, 0.35), transparent 45%);
+  content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background: radial-gradient(ellipse at 50% 45%, transparent 55%, rgba(8,4,1,.55) 100%), linear-gradient(180deg, rgba(0,0,0,.25), transparent 12%, transparent 88%, rgba(0,0,0,.35));
 }
-body.theme-catan #catan-board .parchment {
-  position: relative;
-  background:
-    radial-gradient(ellipse at 15% 10%, rgba(255, 250, 232, 0.72) 0%, transparent 55%),
-    radial-gradient(ellipse at 85% 90%, rgba(195, 152, 84, 0.34) 0%, transparent 55%),
-    linear-gradient(170deg, var(--parchment-light) 0%, var(--parchment-base) 52%, var(--parchment-aged) 100%);
-  border: 2.5px solid var(--bronze-border);
-  border-radius: 10px;
-  padding: 1.05rem 1rem;
-  margin-bottom: 0.85rem;
-  box-shadow:
-    0 8px 22px rgba(0, 0, 0, 0.52),
-    inset 0 0 0 2px rgba(244, 200, 76, 0.38),
-    inset 0 0 22px rgba(139, 94, 18, 0.22);
+body.theme-catan #view-active { padding: 0 9px 8px; }
+body.theme-catan #catan-board { position: relative; z-index: 1; max-width: 460px; margin: 0 auto; padding: 10px 0 6px; font-family: var(--cg-body); -webkit-user-select: none; user-select: none; }
+
+
+body.theme-catan #catan-board .cg-frame {
+  position: relative; margin: 0 0 7px; padding: 4px; border-radius: 11px;
+  background: linear-gradient(180deg, rgba(92,60,30,.92), rgba(46,28,13,.94)), url('./assets/catan/wood-bg.svg') center / 600px auto;
+  border: 1px solid #1a0f06;
+  box-shadow: inset 0 1px 0 rgba(255,214,150,.22), inset 0 -1px 0 rgba(0,0,0,.5), 0 6px 14px rgba(0,0,0,.55);
 }
-body.theme-catan #catan-board .parchment::after {
-  content: '';
-  position: absolute;
-  inset: 5px;
-  border: 1px solid rgba(139, 94, 18, 0.28);
-  border-radius: 6px;
-  pointer-events: none;
+body.theme-catan #catan-board .cg-parch {
+  position: relative; border-radius: 8px; background: var(--cg-parch-bg);
+  border: 1px solid #5b3e1d;
+  box-shadow: inset 0 0 0 2px rgba(241,224,185,.45), inset 0 0 0 3px rgba(110,76,34,.6), inset 0 0 22px rgba(110,70,25,.42), 0 1px 0 rgba(0,0,0,.4);
 }
-body.theme-catan #catan-board .parchment-header {
-  text-align: center;
-  padding: 0.95rem 1rem 0.85rem;
-}
-body.theme-catan #catan-board .header-crest {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  color: var(--gold-deep);
-  margin-bottom: 0.15rem;
-}
-body.theme-catan #catan-board .header-title {
-  font-family: var(--font-display);
-  font-size: 1.55rem;
-  font-weight: 800;
-  letter-spacing: 1px;
-  color: var(--ink-dark);
-  margin: 0;
-  text-align: center;
-  text-shadow: 0 1px 0 rgba(255, 248, 224, 0.85);
-}
-body.theme-catan #catan-board .header-sub {
-  font-family: var(--font-display);
-  text-align: center;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 2.4px;
-  text-transform: uppercase;
-  color: var(--gold-deep);
-  margin: 0.3rem 0 0;
-}
-body.theme-catan #catan-board .ornate-divider {
-  display: flex;
-  align-items: center;
-  gap: 0.55rem;
-  margin: 0.45rem 0 0.65rem;
-}
-body.theme-catan #catan-board .ornate-divider::before,
-body.theme-catan #catan-board .ornate-divider::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(139, 94, 18, 0.55), transparent);
-}
-body.theme-catan #catan-board .section-title {
-  font-family: var(--font-display);
-  text-align: center;
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 2.2px;
-  text-transform: uppercase;
-  color: var(--gold-deep);
-  margin: 0 0 0.55rem;
-}
-body.theme-catan #catan-board #leaderboard {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-}
-body.theme-catan #catan-board .player-row {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 0.65rem;
-  padding: 0.58rem 0.65rem;
-  background: rgba(255, 249, 234, 0.55);
-  border: 1.5px solid rgba(154, 114, 52, 0.38);
-  border-radius: 8px;
-  cursor: pointer;
-  transition: transform 0.12s ease, border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
-}
-body.theme-catan #catan-board .player-row:hover {
-  background: rgba(255, 250, 238, 0.85);
-  border-color: var(--gold-mid);
-}
-body.theme-catan #catan-board .player-row:active {
-  transform: scale(0.99);
-}
-body.theme-catan #catan-board .player-row.selected {
-  background: linear-gradient(135deg, rgba(255, 248, 224, 0.96), rgba(244, 218, 152, 0.75));
-  border-color: var(--gold-mid);
-  box-shadow: 0 0 0 2px rgba(200, 146, 30, 0.35), 0 3px 10px rgba(107, 68, 12, 0.18);
-}
-body.theme-catan #catan-board .player-row.winner {
-  background: linear-gradient(135deg, rgba(255, 247, 212, 0.98), rgba(242, 206, 114, 0.62));
-  border-color: var(--gold-mid);
-  box-shadow: 0 0 0 2px rgba(244, 200, 76, 0.45), 0 4px 12px rgba(139, 94, 18, 0.25);
-}
-body.theme-catan #catan-board .shield-wrap {
-  flex-shrink: 0;
-  width: 36px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  filter: drop-shadow(0 2px 2px rgba(44, 26, 12, 0.32));
-}
-body.theme-catan #catan-board .player-meta {
-  flex: 1;
-  min-width: 0;
-}
-body.theme-catan #catan-board .player-name-line {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  flex-wrap: wrap;
-}
-body.theme-catan #catan-board .player-name {
-  font-family: var(--font-display);
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--ink-dark);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-body.theme-catan #catan-board .winner-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.22rem;
-  padding: 0.08rem 0.42rem;
-  border-radius: 999px;
-  background: linear-gradient(135deg, #f7d35c, #c88e16);
-  border: 1px solid #7c5209;
-  color: #2c1a0c;
-  font-family: var(--font-display);
-  font-size: 0.62rem;
-  font-weight: 800;
-  letter-spacing: 0.8px;
-  text-transform: uppercase;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.22);
-}
-body.theme-catan #catan-board .stars {
-  display: flex;
-  align-items: center;
-  gap: 1.5px;
-  margin-top: 0.16rem;
-  line-height: 1;
-}
-body.theme-catan #catan-board .star-filled {
-  color: #d49412;
-  font-size: 0.82rem;
-  text-shadow: 0 1px 1px rgba(92, 54, 6, 0.35);
-}
-body.theme-catan #catan-board .star-empty {
-  color: rgba(139, 94, 18, 0.28);
-  font-size: 0.82rem;
-}
-body.theme-catan #catan-board .vp-badge {
-  flex-shrink: 0;
-  min-width: 48px;
-  text-align: right;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  justify-content: center;
-}
-body.theme-catan #catan-board .vp-num {
-  font-family: var(--font-display);
-  font-size: 1.7rem;
-  font-weight: 800;
-  line-height: 1;
-  background: linear-gradient(180deg, #e7b52f 0%, #b57a0d 62%, #7c4f07 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  filter: drop-shadow(0 1px 0 rgba(255, 248, 224, 0.9));
-}
-body.theme-catan #catan-board .vp-label {
-  font-family: var(--font-display);
-  font-size: 0.58rem;
-  font-weight: 700;
-  letter-spacing: 1.4px;
-  color: var(--ink-muted);
-  margin-top: 2px;
-}
-body.theme-catan #catan-board .leaderboard-hint {
-  text-align: center;
-  font-size: 0.85rem;
-  font-style: italic;
-  color: var(--ink-muted);
-  margin: 0.55rem 0 0;
-}
-body.theme-catan #catan-board .pad-player-banner {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.45rem;
-  margin: -0.15rem 0 0.6rem;
-  font-family: var(--font-display);
-  font-size: 0.92rem;
-  font-weight: 700;
-  color: var(--ink-dark);
-}
-body.theme-catan #catan-board .mode-toggle {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.25rem;
-  padding: 0.22rem;
-  margin: 0 0 0.75rem;
-  background: rgba(92, 60, 24, 0.16);
-  border: 1.5px solid rgba(139, 94, 18, 0.45);
-  border-radius: 8px;
-}
-body.theme-catan #catan-board .mode-toggle button {
-  font-family: var(--font-display);
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  padding: 0.5rem 0.6rem;
-  border: 1px solid transparent;
-  border-radius: 6px;
-  background: transparent;
-  color: var(--ink-mid);
-  cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
-}
-body.theme-catan #catan-board .mode-toggle button.active {
-  background: linear-gradient(180deg, #4b3019 0%, #2d1b0c 100%);
-  color: var(--parchment-light);
-  border-color: var(--gold-mid);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.28);
-}
-body.theme-catan #catan-board .adj-box {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1.25rem;
-  padding: 0.75rem 0.5rem;
-  background: rgba(255, 250, 236, 0.65);
-  border: 1.5px solid rgba(164, 126, 62, 0.45);
-  border-radius: 8px;
-  margin-bottom: 0.7rem;
-}
-body.theme-catan #catan-board .adj-btn {
-  width: 44px;
-  height: 44px;
-  border: 2px solid var(--gold-mid);
-  border-radius: 8px;
-  background: linear-gradient(180deg, #4a2f18 0%, #2c1a0c 100%);
-  color: var(--parchment-light);
-  font-family: var(--font-display);
-  font-size: 1.45rem;
-  font-weight: 700;
-  line-height: 1;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.28);
-  transition: transform 0.1s ease, filter 0.15s ease;
-}
-body.theme-catan #catan-board .adj-btn:hover {
-  filter: brightness(1.12);
-}
-body.theme-catan #catan-board .adj-btn:active {
-  transform: scale(0.95);
-}
-body.theme-catan #catan-board #adj-val {
-  min-width: 56px;
-  text-align: center;
-  font-family: var(--font-display);
-  font-size: 2rem;
-  font-weight: 800;
-  color: var(--gold-deep);
-}
-body.theme-catan #catan-board .cat-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.42rem;
-}
-body.theme-catan #catan-board .cat-row {
-  display: flex;
-  align-items: center;
-  gap: 0.65rem;
-  padding: 0.52rem 0.65rem;
-  background: linear-gradient(180deg, #fdf6e4 0%, #f4e4be 100%);
-  border: 1.5px solid rgba(154, 114, 52, 0.55);
-  border-radius: 8px;
-  cursor: pointer;
-  transition: transform 0.1s ease, border-color 0.15s ease, box-shadow 0.15s ease;
-  user-select: none;
-}
-body.theme-catan #catan-board .cat-row:hover {
-  border-color: var(--gold-mid);
-  box-shadow: 0 2px 8px rgba(139, 94, 18, 0.18);
-}
-body.theme-catan #catan-board .cat-row:active {
-  transform: scale(0.99);
-}
-body.theme-catan #catan-board .cat-row.has-count {
-  border-color: var(--gold-mid);
-  background: linear-gradient(180deg, #fff9e8 0%, #f5dfa2 100%);
-  box-shadow: 0 0 0 1.5px rgba(200, 146, 30, 0.35);
-}
-body.theme-catan #catan-board .cat-icon {
-  flex-shrink: 0;
-  width: 38px;
-  height: 38px;
-  border-radius: 7px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1.5px solid rgba(44, 26, 12, 0.25);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 1px 3px rgba(0, 0, 0, 0.22);
-}
-body.theme-catan #catan-board .cat-icon--settlement { background: linear-gradient(135deg, #c9473a, #8d251b); }
-body.theme-catan #catan-board .cat-icon--city { background: linear-gradient(135deg, #d49b24, #8f600b); }
-body.theme-catan #catan-board .cat-icon--road { background: linear-gradient(135deg, #3a8f63, #1e593a); }
-body.theme-catan #catan-board .cat-icon--army { background: linear-gradient(135deg, #864d9e, #542868); }
-body.theme-catan #catan-board .cat-icon--vpcard { background: linear-gradient(135deg, #d9a928, #9c6e0e); }
-body.theme-catan #catan-board .cat-info {
-  flex: 1;
-  min-width: 0;
-}
-body.theme-catan #catan-board .cat-name {
-  font-family: var(--font-display);
-  font-size: 0.92rem;
-  font-weight: 700;
-  color: var(--ink-dark);
-  line-height: 1.15;
-}
-body.theme-catan #catan-board .cat-vp {
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--gold-deep);
-}
-body.theme-catan #catan-board .cat-right {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-}
-body.theme-catan #catan-board .cat-count {
-  min-width: 24px;
-  text-align: center;
-  font-family: var(--font-display);
-  font-size: 0.9rem;
-  font-weight: 800;
-  color: var(--ink-dark);
-}
-body.theme-catan #catan-board .cat-step-btn {
-  width: 28px;
-  height: 28px;
-  border-radius: 6px;
-  border: 1.5px solid var(--bronze-border);
-  background: #3d2412;
-  color: var(--parchment-light);
-  font-family: var(--font-display);
-  font-size: 1rem;
-  font-weight: 700;
-  line-height: 1;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
-body.theme-catan #catan-board .round-summary {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin: 0.65rem 0 0.5rem;
-  padding: 0.45rem 0.65rem;
-  background: rgba(139, 94, 18, 0.1);
-  border: 1px dashed rgba(139, 94, 18, 0.45);
-  border-radius: 6px;
-}
-body.theme-catan #catan-board #round-total {
-  font-family: var(--font-display);
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: var(--ink-dark);
-}
-body.theme-catan #catan-board .btn-link-reset {
-  background: none;
-  border: none;
-  padding: 0.2rem 0.4rem;
-  font-family: var(--font-display);
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.8px;
-  text-transform: uppercase;
-  color: var(--crimson);
-  cursor: pointer;
-}
-body.theme-catan #catan-board .btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.45rem;
-  width: 100%;
-  padding: 0.72rem 1rem;
-  margin-top: 0.5rem;
-  border-radius: 7px;
-  border: 1.5px solid var(--gold-deep);
-  background: linear-gradient(180deg, #4b3019 0%, #2d1b0c 100%);
-  color: var(--parchment-light);
-  font-family: var(--font-display);
-  font-size: 0.88rem;
-  font-weight: 700;
-  letter-spacing: 0.9px;
-  text-transform: uppercase;
-  cursor: pointer;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
-  transition: transform 0.1s ease, filter 0.15s ease;
-}
-body.theme-catan #catan-board .btn:hover {
-  filter: brightness(1.08);
-}
-body.theme-catan #catan-board .btn:active {
-  transform: scale(0.985);
-}
-body.theme-catan #catan-board .btn.gold {
-  background: linear-gradient(180deg, #e5b334 0%, #ba8114 55%, #93620a 100%);
-  border-color: #6d4707;
-  color: #241304;
-  text-shadow: 0 1px 0 rgba(255, 240, 185, 0.55);
-}
-body.theme-catan #catan-board .btn.secondary {
-  background: linear-gradient(180deg, #faf0d4 0%, #e5cda0 100%);
-  border-color: var(--bronze-border);
-  color: var(--ink-dark);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.16);
-}
-body.theme-catan #catan-board .btn.subtle {
-  background: transparent;
-  border: 1px solid rgba(139, 94, 18, 0.45);
-  color: var(--ink-mid);
-  box-shadow: none;
-  font-size: 0.76rem;
-  padding: 0.52rem 0.8rem;
-}
-body.theme-catan #catan-board .action-row {
-  display: flex;
-  gap: 0.5rem;
-  margin-top: 0.2rem;
-}
-body.theme-catan #catan-board .action-row .btn {
-  margin-top: 0;
-}
-body.theme-catan #catan-board .action-row .btn-undo {
-  flex: 0 0 auto;
-  width: auto;
-  padding-left: 0.95rem;
-  padding-right: 0.95rem;
-}
-body.theme-catan #catan-board input[type="text"],
-body.theme-catan #catan-board input[type="email"] {
-  width: 100%;
-  padding: 0.65rem 0.75rem;
-  border: 1.5px solid rgba(139, 94, 18, 0.55);
-  border-radius: 7px;
-  background: #fdf6e4;
-  color: var(--ink-dark);
-  font-family: var(--font-body);
-  font-size: 1rem;
-  outline: none;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
-}
-body.theme-catan #catan-board .empty-note {
-  width: 100%;
-  text-align: center;
-  font-style: italic;
-  color: var(--ink-muted);
-  font-size: 0.95rem;
-  padding: 0.4rem 0;
-}
-body.theme-catan { color: var(--ink-dark); font-family: var(--font-body); }
-body.theme-catan #catan-board { position: relative; z-index: 1; max-width: 500px; margin: 0 auto; padding-top: .9rem; }
-body.theme-catan #catan-board .btn:disabled, body.theme-catan #catan-board .cat-step-btn:disabled { opacity: .45; cursor: not-allowed; filter: none; }
-body.theme-catan #catan-board .cat-step-btn.cat-dec:disabled { visibility: hidden; }
-body.theme-catan #catan-board .pad-player-banner .pad-current { font-family: var(--font-body); font-weight: 600; color: var(--gold-deep); font-size: .85rem; }
+
+
+body.theme-catan #catan-board .cg-header-card { padding: 9px 12px 8px; text-align: center; }
+body.theme-catan #catan-board .cg-title { margin: 0; font: 400 2.1rem/1.08 var(--cg-display); color: #22160a; letter-spacing: .3px; -webkit-text-stroke: .9px #22160a; text-shadow: 0 1px 0 rgba(255,246,220,.7); }
+body.theme-catan #catan-board .cg-divider { display: flex; align-items: center; justify-content: center; gap: 6px; margin: 4px auto 4px; width: 66%; }
+body.theme-catan #catan-board .cg-divider span { flex: 1; height: 1.5px; background: linear-gradient(90deg, transparent, #4a3218 20%, #4a3218 80%, transparent); }
+body.theme-catan #catan-board .cg-divider i { width: 7px; height: 7px; background: #4a3218; transform: rotate(45deg); }
+body.theme-catan #catan-board .cg-sub { margin: 0; font: 700 .72rem var(--cg-caps); letter-spacing: 1.6px; color: #3b2814; }
+
+
+body.theme-catan #catan-board .cg-board { padding-top: 4px; }
+body.theme-catan #catan-board .cg-ribbon { position: relative; z-index: 2; height: 28px; margin: 0 -2px 3px; display: flex; align-items: center; justify-content: center; }
+body.theme-catan #catan-board .cg-ribbon::before { content: ""; position: absolute; left: 16%; right: 16%; top: 0; bottom: 0;
+  background: linear-gradient(180deg, #d9b065 0%, #a8782f 45%, #7d5420 100%);
+  clip-path: polygon(0 0, 100% 0, 96% 50%, 100% 100%, 0 100%, 4% 50%);
+  filter: drop-shadow(0 2px 2px rgba(0,0,0,.5)); }
+body.theme-catan #catan-board .cg-ribbon::after { content: ""; position: absolute; left: 1%; right: 1%; top: 50%; height: 12px; transform: translateY(-50%);
+  background: linear-gradient(180deg, #b88a42, #7d5420); border-top: 1px solid #d9b46a; border-bottom: 1px solid #4a2f10; border-radius: 2px; z-index: -1; box-shadow: 0 1px 2px rgba(0,0,0,.4); }
+body.theme-catan #catan-board .cg-ribbon span { position: relative; font: 700 1.08rem var(--cg-caps); letter-spacing: 1.8px; color: #f6e6bd; text-transform: uppercase; text-shadow: 0 1px 1px rgba(60,35,10,.8); }
+body.theme-catan #catan-board .cg-ribbon span::before, body.theme-catan #catan-board .cg-ribbon span::after {
+  content: ""; position: absolute; top: 50%; width: 9px; height: 9px; margin-top: -5px; transform: rotate(45deg);
+  background: linear-gradient(135deg, #f3d488, #8a5e22); border: 1px solid #5a3a14; }
+body.theme-catan #catan-board .cg-ribbon span::before { left: -30%; }
+body.theme-catan #catan-board .cg-ribbon span::after { right: -30%; }
+
+
+body.theme-catan #catan-board .cg-leader-card { padding: 2px 10px; }
+body.theme-catan #catan-board .cg-row { display: grid; grid-template-columns: 44px 74px 1fr 40px; align-items: center; column-gap: 8px;
+  min-height: 50px; padding: 3px 2px; border-bottom: 1px dashed var(--cg-dash); cursor: pointer; border-radius: 4px; transition: background .15s; }
+body.theme-catan #catan-board .cg-row:last-child { border-bottom: none; }
+body.theme-catan #catan-board .cg-row.selected { background: linear-gradient(90deg, rgba(222,170,80,.38), rgba(222,170,80,.12)); box-shadow: inset 3px 0 0 #a5762c; }
+body.theme-catan #catan-board .cg-shield { width: 42px; height: 45px; object-fit: contain; display: block; filter: drop-shadow(0 1px 1px rgba(0,0,0,.35)); }
+body.theme-catan #catan-board .cg-name { font: 400 1.2rem/1.02 var(--cg-display); -webkit-text-stroke: .5px currentColor; color: #3a2410; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+body.theme-catan #catan-board .cg-name small { display: block; font: 600 .78rem var(--cg-body); -webkit-text-stroke: 0; color: inherit; opacity: .9; margin-top: 1px; }
+body.theme-catan #catan-board .cg-crown { width: 16px; height: 16px; vertical-align: -2px; margin-left: 3px; }
+body.theme-catan #catan-board .cg-stars { display: flex; flex-wrap: nowrap; gap: 3px; align-items: center; overflow: hidden; }
+body.theme-catan #catan-board .cg-stars svg { flex: 0 0 auto; width: 21px; height: 21px; filter: drop-shadow(0 1px .5px rgba(70,40,5,.45)); }
+body.theme-catan #catan-board .cg-stars.md svg { width: 17px; height: 17px; }
+body.theme-catan #catan-board .cg-stars.sm { gap: 2px; }
+body.theme-catan #catan-board .cg-stars.sm svg { width: 14px; height: 14px; }
+body.theme-catan #catan-board .cg-stars.xs { gap: 1px; }
+body.theme-catan #catan-board .cg-stars.xs svg { width: 11.5px; height: 11.5px; }
+body.theme-catan #catan-board .cg-vp { font: 700 2.55rem/1 var(--cg-name); color: #5e3f12; min-width: 40px; text-align: right; text-shadow: 0 1px 0 rgba(255,240,200,.7), 0 -1px 0 rgba(60,35,5,.25); }
+body.theme-catan #catan-board .cg-row.winner .cg-vp { color: #8a5a10; }
+
+
+body.theme-catan #catan-board .cg-adjust-card { padding: 5px 10px 4px; text-align: center; }
+body.theme-catan #catan-board .cg-adjust-title { font: 700 .8rem var(--cg-caps); letter-spacing: 1.3px; color: #3b2814; text-transform: uppercase; }
+body.theme-catan #catan-board .cg-adjust-row { display: flex; align-items: center; justify-content: center; gap: 14px; margin: 3px 0 1px; }
+body.theme-catan #catan-board .cg-orn { flex: 1; height: 8px; position: relative; max-width: 90px; }
+body.theme-catan #catan-board .cg-orn::before { content: ""; position: absolute; left: 6px; right: 6px; top: 50%; height: 1.2px; background: #4a3218; }
+body.theme-catan #catan-board .cg-orn::after { content: ""; position: absolute; width: 6px; height: 6px; top: 1px; right: 0; background: #4a3218; transform: rotate(45deg); box-shadow: -999px 0 0 transparent; }
+body.theme-catan #catan-board .cg-orn { background: radial-gradient(circle at 3px 50%, #4a3218 2.6px, transparent 3px); }
+body.theme-catan #catan-board .cg-orn-r { transform: scaleX(-1); }
+body.theme-catan #catan-board .cg-wood-btn { width: 40px; height: 32px; border-radius: 7px; border: 1px solid #140b04; cursor: pointer;
+  font: 700 1.6rem/1 var(--cg-body); color: #f2e2bc; padding: 0 0 3px;
+  background: linear-gradient(180deg, #5a3b1e, #2c1b0c), url('./assets/catan/wood-bg.svg') center / 300px auto;
+  box-shadow: inset 0 1px 0 rgba(255,215,150,.3), 0 2px 3px rgba(0,0,0,.45); }
+body.theme-catan #catan-board .cg-wood-btn:active { transform: translateY(1px); box-shadow: inset 0 2px 4px rgba(0,0,0,.6); }
+body.theme-catan #catan-board .cg-wood-btn:disabled { opacity: .45; cursor: not-allowed; }
+body.theme-catan #catan-board .cg-adj-val { min-width: 54px; font: 700 2.3rem/1.05 var(--cg-name); color: #2c1d0d; }
+body.theme-catan #catan-board .cg-selected { font: 600 .78rem var(--cg-body); color: #6a4d2a; letter-spacing: .3px; }
+body.theme-catan #catan-board .cg-selected b { color: #3a2410; }
+
+
+body.theme-catan #catan-board .cg-actions { padding: 5px 5px 0; }
+body.theme-catan #catan-board .cg-act { display: grid; grid-template-columns: 70px 1fr 26px; align-items: center; width: 100%; height: 46px; margin: 0 0 5px; padding: 0;
+  border: 2px solid #2a190a; border-radius: 7px; overflow: hidden; cursor: pointer; text-align: left; background: var(--cg-parch-bg);
+  box-shadow: inset 0 0 0 1px rgba(255,240,205,.5), inset 0 0 14px rgba(120,80,30,.3), 0 2px 3px rgba(0,0,0,.45); transition: transform .08s, filter .15s; }
+body.theme-catan #catan-board .cg-act:active { transform: scale(.985); filter: brightness(.95); }
+body.theme-catan #catan-board .cg-act-ic { width: 70px; height: 42px; object-fit: cover; display: block; }
+body.theme-catan #catan-board .cg-act-txt { padding-left: 14px; min-width: 0; }
+body.theme-catan #catan-board .cg-act-title { display: block; font: 700 1.28rem/1 var(--cg-name); color: #3a2410; white-space: nowrap; }
+body.theme-catan #catan-board .cg-act-vp { display: block; font: 700 .82rem/1.15 var(--cg-body); color: var(--cg-red); }
+body.theme-catan #catan-board .cg-act-chev { display: flex; align-items: center; justify-content: center; color: #4a3216; }
+body.theme-catan #catan-board .cg-act-chev svg { width: 12px; height: 18px; }
+body.theme-catan #catan-board .cg-act-count { font: 600 .72rem var(--cg-body); color: #6a4d2a; margin-left: 6px; }
+body.theme-catan #catan-board .cg-act.held { background-image: linear-gradient(90deg, rgba(222,170,80,.25), transparent), var(--cg-parch-bg); }
+
+
+body.theme-catan #catan-board .cg-footer { padding: 5px; }
+body.theme-catan #catan-board .cg-reset, body.theme-catan #catan-board .cg-wood-bar {
+  width: 100%; height: 38px; border-radius: 7px; border: 1px solid #120a03; cursor: pointer;
+  font: 700 .92rem var(--cg-caps); letter-spacing: 1.8px; text-transform: uppercase; color: #ead7ae;
+  background: linear-gradient(180deg, rgba(70,45,22,.9), rgba(30,18,8,.95)), url('./assets/catan/wood-bg.svg') center / 500px auto;
+  box-shadow: inset 0 1px 0 rgba(255,215,150,.22), inset 0 0 0 1px rgba(0,0,0,.4), 0 2px 3px rgba(0,0,0,.4); }
+body.theme-catan #catan-board .cg-reset:active, body.theme-catan #catan-board .cg-wood-bar:active { transform: translateY(1px); }
+body.theme-catan #catan-board .cg-reset-ic { font-size: 1.2rem; margin-right: 10px; vertical-align: -1px; letter-spacing: 0; }
+body.theme-catan #catan-board .cg-footer-row { display: flex; gap: 6px; margin-top: 6px; }
+body.theme-catan #catan-board .cg-wood-bar { flex: 1; height: 36px; font-size: .8rem; }
+body.theme-catan #catan-board .cg-wood-bar:disabled { opacity: .45; cursor: not-allowed; }
+body.theme-catan #catan-board .cg-wood-bar.cg-gold { color: #f3d58a; border-color: #8a6524; box-shadow: inset 0 0 0 1px rgba(201,154,62,.55), inset 0 1px 0 rgba(255,215,150,.25), 0 2px 3px rgba(0,0,0,.4); }
+
+
+@keyframes cgPulse { 0% { transform: scale(1); } 35% { transform: scale(1.22); color: #a8721c; } 100% { transform: scale(1); } }
+@keyframes cgFlash { 0% { filter: brightness(1.25) saturate(1.2); } 100% { filter: none; } }
+body.theme-catan #catan-board .cg-pulse { animation: cgPulse .38s ease-out; display: inline-block; }
+body.theme-catan #catan-board .cg-flash { animation: cgFlash .4s ease-out; }
+body.theme-catan #catan-board .cg-toast { position: fixed; left: 50%; bottom: 92px; transform: translateX(-50%) translateY(10px); opacity: 0; pointer-events: none; z-index: 60;
+  background: rgba(36,22,10,.95); color: #f2e2bc; border: 1px solid #a5762c; border-radius: 10px; padding: 7px 14px; font: 600 .9rem var(--cg-body); transition: opacity .2s, transform .2s; white-space: nowrap; }
+body.theme-catan #catan-board .cg-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+
+body.theme-catan .bottom-nav { background: linear-gradient(180deg, rgba(52,33,16,.97), rgba(24,14,6,.98)), url('./assets/catan/wood-bg.svg') center / 600px auto;
+  border-top: 1px solid #6e4b1e; box-shadow: 0 -4px 14px rgba(0,0,0,.5); gap: 4px; padding-left: 6px; padding-right: 6px; }
+body.theme-catan .bottom-nav button { font: 700 .66rem var(--cg-caps); letter-spacing: 1.2px; text-transform: uppercase; color: #8d7a5e; border: 1px solid transparent; border-radius: 8px; padding: .3rem .2rem; flex: 1; }
+body.theme-catan .bottom-nav button.active { color: #f0cf7a; border-color: #b8893a; background: linear-gradient(180deg, rgba(201,154,62,.22), rgba(201,154,62,.06)); box-shadow: inset 0 1px 0 rgba(255,225,160,.2); }
+body.theme-catan .bottom-nav #nav-new { display: none; }
+body.theme-catan .bottom-nav #nav-active { display: flex; }
+body.theme-catan .bottom-nav button .icon { filter: grayscale(1) sepia(.7) brightness(1.05); opacity: .8; }
+body.theme-catan .bottom-nav button.active .icon { filter: grayscale(1) sepia(1) saturate(2.2) brightness(1.15); opacity: 1; }
+body.theme-catan #catan-board .cg-row[data-color="red"] .cg-name { color: #7c2b15; }
+body.theme-catan #catan-board .cg-row[data-color="green"] .cg-name { color: #2f5020; }
+body.theme-catan #catan-board .cg-row[data-color="blue"] .cg-name { color: #1e3654; }
+body.theme-catan #catan-board .cg-row[data-color="purple"] .cg-name { color: #4b2c5c; }
 
 </style>
 </head>
 <body>
-<!-- Build: v4-neutral-shell-catan-theme-2026-11-26 -->
+<!-- Build: v5-catan-rendering-match-2026-11-26 -->
 
 <!-- Login: starts hidden until getSession() resolves -->
 <section id="login-view" class="auth-hidden" hidden aria-label="Sign in to Score Tracker">
@@ -804,30 +377,58 @@ body.theme-catan #catan-board .pad-player-banner .pad-current { font-family: var
       </div>
     </div>
 
-    <!-- Catan board: only visible with body.theme-catan -->
+    <!-- Catan board: only visible with body.theme-catan (layout from the approved rendering) -->
     <div id="catan-board">
-      <div class="parchment parchment-header">
-        <h1 class="header-title" id="catan-title">Catan</h1>
-        <p class="header-sub" id="catan-sub">FIRST TO 10 VICTORY POINTS</p>
-      </div>
-      <div class="parchment">
-        <div class="section-title">Victory Points</div>
-        <div id="leaderboard"></div>
-        <p class="leaderboard-hint">Tap a player to adjust their Victory Points</p>
-      </div>
-      <div class="parchment" id="pad" style="display:none">
-        <div class="section-title">Adjust Victory Points</div>
-        <div id="pad-player-banner" class="pad-player-banner"></div>
-        <div class="mode-toggle" role="tablist" aria-label="Scoring Mode">
-          <button id="mode-simple" type="button" class="active" role="tab" aria-selected="true" onclick="setCatanMode('simple')">Simple</button>
-          <button id="mode-detailed" type="button" role="tab" aria-selected="false" onclick="setCatanMode('detailed')">Detailed</button>
+      <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+        <defs>
+          <linearGradient id="cg-star-fill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fbe7a0"/><stop offset=".45" stop-color="#e8b84a"/><stop offset="1" stop-color="#b07a1c"/></linearGradient>
+          <linearGradient id="cg-star-hi" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff6cf" stop-opacity=".95"/><stop offset="1" stop-color="#fff6cf" stop-opacity="0"/></linearGradient>
+          <symbol id="cg-star" viewBox="0 0 24 24"><path d="M12 1.6l3.1 6.6 7.2.9-5.3 5 1.4 7.1L12 17.7l-6.4 3.5 1.4-7.1-5.3-5 7.2-.9z" fill="url(#cg-star-fill)" stroke="#7a5214" stroke-width="1.1" stroke-linejoin="round"/><path d="M12 4.4l2.2 4.7 5.1.6L12 12z" fill="url(#cg-star-hi)"/><path d="M12 12l-6.6-2.3 5.1-.6L12 4.4z" fill="#fff3c4" opacity=".35"/></symbol>
+          <symbol id="cg-crown" viewBox="0 0 24 24"><path d="M3 18h18l-1.6-10-4.6 4.2L12 5 9.2 12.2 4.6 8z" fill="url(#cg-star-fill)" stroke="#7a5214" stroke-width="1.1" stroke-linejoin="round"/><rect x="3" y="18.2" width="18" height="2.6" rx=".8" fill="#b07a1c" stroke="#7a5214" stroke-width=".8"/></symbol>
+        </defs>
+      </svg>
+
+      <header class="cg-frame cg-header">
+        <div class="cg-parch cg-header-card">
+          <h1 class="cg-title" id="catan-title">Score Tracker</h1>
+          <div class="cg-divider" aria-hidden="true"><span></span><i></i><span></span></div>
+          <p class="cg-sub" id="catan-sub">FIRST TO 10 VICTORY POINTS</p>
         </div>
-        <div id="score-form"></div>
-      </div>
-      <div class="action-row">
-        <button id="btn-undo" type="button" class="btn secondary btn-undo hidden" hidden onclick="undoLastRound()">Undo</button>
-        <button id="btn-save-catan" type="button" class="btn" onclick="endGame()">Save Game</button>
-      </div>
+      </header>
+
+      <section class="cg-frame cg-board" aria-label="Victory points leaderboard">
+        <div class="cg-ribbon"><span>Victory Points</span></div>
+        <div class="cg-parch cg-leader-card">
+          <div id="leaderboard" role="listbox" aria-label="Players"></div>
+        </div>
+      </section>
+
+      <section class="cg-frame cg-adjust" id="pad" aria-label="Adjust victory points">
+        <div class="cg-parch cg-adjust-card">
+          <div class="cg-adjust-title">Adjust Victory Points</div>
+          <div class="cg-adjust-row">
+            <span class="cg-orn" aria-hidden="true"></span>
+            <button type="button" class="cg-wood-btn" id="catan-minus" onclick="catanStep(-1)" aria-label="Subtract 1 VP">−</button>
+            <div id="adj-val" class="cg-adj-val" aria-live="polite">0</div>
+            <button type="button" class="cg-wood-btn" id="catan-plus" onclick="catanStep(1)" aria-label="Add 1 VP">+</button>
+            <span class="cg-orn cg-orn-r" aria-hidden="true"></span>
+          </div>
+          <div class="cg-selected" id="pad-player-banner">Selected: —</div>
+        </div>
+      </section>
+
+      <section class="cg-frame cg-actions" aria-label="Score a category">
+        <div id="score-form" class="cg-action-list"></div>
+      </section>
+
+      <section class="cg-frame cg-footer">
+        <button type="button" class="cg-reset" id="btn-reset-scores" onclick="resetCatanScores()"><span class="cg-reset-ic" aria-hidden="true">↻</span>Reset Scores</button>
+        <div class="cg-footer-row">
+          <button type="button" class="cg-wood-bar" id="btn-undo" onclick="undoLastRound()">Undo</button>
+          <button type="button" class="cg-wood-bar cg-gold" id="btn-save-catan" onclick="endGame()">Save Game</button>
+        </div>
+      </section>
+      <div id="cg-toast" class="cg-toast" role="status" aria-live="polite"></div>
     </div>
   </section>
 
@@ -839,224 +440,17 @@ body.theme-catan #catan-board .pad-player-banner .pad-current { font-family: var
   <nav class="bottom-nav" aria-label="Main navigation">
     <button type="button" id="nav-home" onclick="showView('home')"><span class="icon">🏠</span>Home</button>
     <button type="button" id="nav-new" onclick="showView('new')"><span class="icon">➕</span>Play</button>
+    <button type="button" id="nav-active" onclick="showView('active')"><span class="icon">▦</span>Tracker</button>
     <button type="button" id="nav-history" onclick="showView('history')"><span class="icon">📜</span>History</button>
     <button type="button" id="nav-signout" onclick="signOut()"><span class="icon">⎋</span>Exit</button>
   </nav>
 </div>
 
-<!-- Catan render helpers (window.ScoreTrackerUI) -->
-<script>
-window.ScoreTrackerUI = (function () {
-  const SHIELD_COLORS = ['#b52b27', '#2b6cb0', '#2f7a4d', '#d48a1c', '#76418c', '#8c5230'];
-
-  const CATEGORIES = [
-    { key: 'settlement', label: 'Settlements',  vp: 1, iconClass: 'cat-icon--settlement' },
-    { key: 'city',       label: 'Cities',       vp: 2, iconClass: 'cat-icon--city' },
-    { key: 'road',       label: 'Longest Road', vp: 2, iconClass: 'cat-icon--road' },
-    { key: 'army',       label: 'Largest Army', vp: 2, iconClass: 'cat-icon--army' },
-    { key: 'vpcard',     label: 'VP Card',      vp: 1, iconClass: 'cat-icon--vpcard' }
-  ];
-
-  function escapeHtml(str) {
-    return String(str ?? '')
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#39;');
-  }
-
-  function shieldColor(idx) {
-    return SHIELD_COLORS[idx % SHIELD_COLORS.length];
-  }
-
-  function shieldSvg(idx, name) {
-    const color = shieldColor(idx);
-    const initial = escapeHtml((name || '?').trim().charAt(0).toUpperCase());
-    return `
-      <svg width="34" height="38" viewBox="0 0 34 38" fill="none" aria-hidden="true">
-        <path d="M17 2L31 7V18.5C31 27.2 24.8 33.4 17 36C9.2 33.4 3 27.2 3 18.5V7L17 2Z"
-              fill="${color}" stroke="#d9a834" stroke-width="2.2"/>
-        <path d="M17 5.2L27.8 9.2V18.3C27.8 25.1 23 30.1 17 32.3C11 30.1 6.2 25.1 6.2 18.3V9.2L17 5.2Z"
-              fill="none" stroke="rgba(255,244,210,0.42)" stroke-width="1"/>
-        <text x="17" y="23" text-anchor="middle" fill="#fdf6e4"
-              font-family="Cinzel, Georgia, serif" font-size="13" font-weight="700">${initial}</text>
-      </svg>
-    `;
-  }
-
-  function crownSvg() {
-    return `
-      <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-        <path d="M3 18h18v2H3v-2zm0-2l2-9 5 4 2-6 2 6 5-4 2 9H3z"/>
-      </svg>
-    `;
-  }
-
-  function categoryIconSvg(key) {
-    switch (key) {
-      case 'settlement':
-        return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fdf6e4" stroke-width="2" stroke-linejoin="round" aria-hidden="true">
-          <path d="M4 11l8-7 8 7v9H4v-9z" fill="rgba(255,245,220,0.22)"/>
-          <path d="M10 20v-5h4v5"/>
-        </svg>`;
-      case 'city':
-        return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fdf6e4" stroke-width="1.9" stroke-linejoin="round" aria-hidden="true">
-          <path d="M3 20V11l4-3 4 3v9H3z" fill="rgba(255,245,220,0.22)"/>
-          <path d="M11 20V6l5-2 5 2v14H11z" fill="rgba(255,245,220,0.28)"/>
-          <path d="M15 10h2M15 14h2"/>
-        </svg>`;
-      case 'road':
-        return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fdf6e4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M4 19c2-5 5-6 8-7s6-2 8-7"/>
-          <path d="M9 19c1.5-3.5 3.5-4.3 6-5.2"/>
-          <circle cx="5" cy="18" r="1.5" fill="#fdf6e4"/>
-          <circle cx="19" cy="6" r="1.5" fill="#fdf6e4"/>
-        </svg>`;
-      case 'army':
-        return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fdf6e4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M6 18L18 6M15 6h3v3"/>
-          <path d="M18 18L6 6M9 6H6v3"/>
-          <path d="M8 16l-2 2M16 16l2 2"/>
-        </svg>`;
-      case 'vpcard':
-      default:
-        return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fdf6e4" stroke-width="1.9" stroke-linejoin="round" aria-hidden="true">
-          <rect x="5" y="3" width="14" height="18" rx="2" fill="rgba(255,245,220,0.22)"/>
-          <path d="M12 7.5l1.3 2.7 3 .4-2.2 2 .5 3-2.6-1.4-2.6 1.4.5-3-2.2-2 3-.4L12 7.5z" fill="#fdf6e4" stroke="none"/>
-        </svg>`;
-    }
-  }
-
-  function starsHtml(score, maxStars) {
-    const max = maxStars || 10;
-    const filled = Math.max(0, Math.min(Number(score) || 0, max));
-    let out = '';
-    for (let i = 0; i < max; i++) {
-      out += i < filled
-        ? '<span class="star-filled" aria-hidden="true">★</span>'
-        : '<span class="star-empty" aria-hidden="true">☆</span>';
-    }
-    return `<div class="stars" aria-label="${filled} of ${max} victory points">${out}</div>`;
-  }
-
-  function renderLeaderboardRow(player, idx, isSelected) {
-    const score = Number(player.score) || 0;
-    const isWinner = score >= 10;
-    const cls = ['player-row', isSelected ? 'selected' : '', isWinner ? 'winner' : ''].filter(Boolean).join(' ');
-    return `
-      <div class="${cls}" onclick="openPad(${idx})" role="button" tabindex="0">
-        <div class="shield-wrap">${shieldSvg(idx, player.name)}</div>
-        <div class="player-meta">
-          <div class="player-name-line">
-            <span class="player-name">${escapeHtml(player.name)}</span>
-            ${isWinner ? `<span class="winner-badge">${crownSvg()} Winner</span>` : ''}
-          </div>
-          ${starsHtml(score, 10)}
-        </div>
-        <div class="vp-badge">
-          <div class="vp-num">${score}</div>
-          <div class="vp-label">VP</div>
-        </div>
-      </div>
-    `;
-  }
-
-  function renderSimplePad(playerName, adjVal) {
-    const val = Number(adjVal) || 1;
-    const sign = val > 0 ? '+' : '';
-    return `
-      <div class="adj-box">
-        <button type="button" class="adj-btn" onclick="adj(-1)" aria-label="Decrease points">−</button>
-        <div id="adj-val">${sign}${val}</div>
-        <button type="button" class="adj-btn" onclick="adj(1)" aria-label="Increase points">+</button>
-      </div>
-      <button type="button" class="btn gold" onclick="commitSimple()">Apply to ${escapeHtml(playerName)}</button>
-    `;
-  }
-
-  function renderDetailedPad(playerName, counts, roundTotal) {
-    const c = counts || {};
-    const rows = CATEGORIES.map(cat => {
-      const qty = Number(c[cat.key]) || 0;
-      return `
-        <div class="cat-row ${qty > 0 ? 'has-count' : ''}" onclick="addCat('${cat.key}', ${cat.vp})">
-          <div class="cat-icon ${cat.iconClass}">${categoryIconSvg(cat.key)}</div>
-          <div class="cat-info">
-            <div class="cat-name">${cat.label}</div>
-            <div class="cat-vp">+${cat.vp} VP</div>
-          </div>
-          <div class="cat-right">
-            ${qty > 0 ? `<button type="button" class="cat-step-btn" onclick="event.stopPropagation(); addCat('${cat.key}', -${cat.vp})" aria-label="Remove ${cat.label}">−</button>` : ''}
-            <span class="cat-count">${qty > 0 ? qty : ''}</span>
-            <button type="button" class="cat-step-btn" onclick="event.stopPropagation(); addCat('${cat.key}', ${cat.vp})" aria-label="Add ${cat.label}">+</button>
-          </div>
-        </div>
-      `;
-    }).join('');
-
-    return `
-      <div class="cat-list">${rows}</div>
-      <div class="round-summary">
-        <div id="round-total">Round Total: +${Number(roundTotal) || 0} VP</div>
-        <button type="button" class="btn-link-reset" onclick="resetDetailed && resetDetailed()">Reset</button>
-      </div>
-      <button type="button" class="btn gold" onclick="commitDetailed()">Add to ${escapeHtml(playerName)}</button>
-    `;
-  }
-
-  function renderPlayerChip(name, idx) {
-    return `
-      <span class="player-chip">
-        <span class="player-chip-dot" style="background:${shieldColor(idx)}"></span>
-        <span>${escapeHtml(name)}</span>
-        <button type="button" class="player-chip-remove" onclick="removePlayer && removePlayer(${idx})" aria-label="Remove ${escapeHtml(name)}">×</button>
-      </span>
-    `;
-  }
-
-  function renderHistoryCard(game) {
-    const dt = game.endTime ? new Date(game.endTime).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : '';
-    const sorted = [...(game.players || [])].sort((a, b) => (b.score || 0) - (a.score || 0));
-    const topScore = sorted.length ? (sorted[0].score || 0) : 0;
-    const pills = sorted.map(p => {
-      const win = (p.score || 0) === topScore && topScore > 0;
-      return `<span class="history-score-pill ${win ? 'winner' : ''}">${win ? '👑 ' : ''}${escapeHtml(p.name)}: ${p.score || 0} VP</span>`;
-    }).join('');
-    return `
-      <div class="history-card">
-        <div class="history-card-top">
-          <span class="history-game-type">${escapeHtml(game.type || 'Catan')}</span>
-          <span class="history-date">${escapeHtml(dt)}</span>
-        </div>
-        <div class="history-scores">${pills}</div>
-      </div>
-    `;
-  }
-
-  return {
-    SHIELD_COLORS,
-    CATEGORIES,
-    escapeHtml,
-    shieldColor,
-    shieldSvg,
-    crownSvg,
-    categoryIconSvg,
-    starsHtml,
-    renderLeaderboardRow,
-    renderSimplePad,
-    renderDetailedPad,
-    renderPlayerChip,
-    renderHistoryCard
-  };
-})();
-</script>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <!-- App engine: defines window.onAuthReady / window.onAuthSignedOut before auth init -->
 <script id="score-engine">
-/* Score Tracker engine — game-agnostic shell, per-game scoring, Catan-only parchment theme. */
+/* Score Tracker engine — game-agnostic shell, per-game scoring, Catan-only wood/parchment theme. */
 (function (global) {
   'use strict';
 
@@ -1101,10 +495,9 @@ window.ScoreTrackerUI = (function () {
     { key: 'cities',      label: 'Cities',       vp: 2, max: 4, ui: 'city',       icon: 'cat-icon--city' },
     { key: 'longestRoad', label: 'Longest Road', vp: 2, max: 1, ui: 'road',       icon: 'cat-icon--road' },
     { key: 'largestArmy', label: 'Largest Army', vp: 2, max: 1, ui: 'army',       icon: 'cat-icon--army' },
-    { key: 'vpCards',     label: 'VP Card',      vp: 1, max: 5, ui: 'vpcard',     icon: 'cat-icon--vpcard' }
+    { key: 'vpCards',     label: 'VP Dev Card',      vp: 1, max: 5, ui: 'vpcard',     icon: 'cat-icon--vpcard' }
   ];
   const emptyBreakdown = () => ({ settlements: 0, cities: 0, longestRoad: 0, largestArmy: 0, vpCards: 0 });
-  const catanTotal = (d) => CATAN_CATS.reduce((s, c) => s + (Number(d[c.key]) || 0) * c.vp, 0);
 
   // ---------------- State ----------------
   let currentUser = null, initializedUserId = null;
@@ -1113,7 +506,6 @@ window.ScoreTrackerUI = (function () {
   let selectedGame = 'flip7', selectedVersion = null;
   const deselected = new Set();
   let scoringPlayer = null, padMode = 'simple';
-  let catanAdj = 1, catanDraft = emptyBreakdown();
   let flip = null;
 
   // ---------------- Utils ----------------
@@ -1324,13 +716,16 @@ window.ScoreTrackerUI = (function () {
     if (!currentGame || !currentGame.rounds.length) return null;
     const r = currentGame.rounds.pop();
     currentGame.players.forEach((p, i) => { p.score = Array.isArray(r.prev) ? r.prev[i] : p.score - (r.deltas[i] || 0); });
-    if (isCatan() && r.detail && r.detail.breakdown) {
+    if (isCatan() && Array.isArray(r.prevBd)) {
+      currentGame.players.forEach((p, i) => { p.breakdown = { ...emptyBreakdown(), ...(r.prevBd[i] || {}) }; });
+    } else if (isCatan() && r.detail && r.detail.breakdown) {
       const p = currentGame.players[r.detail.player];
       CATAN_CATS.forEach((c) => { p.breakdown[c.key] = Math.max(0, (p.breakdown[c.key] || 0) - (r.detail.breakdown[c.key] || 0)); });
     }
-    scoringPlayer = null;
+    if (!isCatan()) scoringPlayer = null;
     persistActive();
     renderActive();
+    if (isCatan()) cgFeedback(['.cg-vp']);
     return r;
   }
   function onlyFor(idx, pts) { return currentGame.players.map((_, i) => (i === idx ? pts : 0)); }
@@ -1387,7 +782,7 @@ window.ScoreTrackerUI = (function () {
   function openPad(idx) {
     if (!currentGame || !currentGame.players[idx]) return;
     scoringPlayer = idx;
-    if (isCatan()) { byId('pad').style.display = 'block'; renderCatanLeaderboard(); setCatanMode(padMode); return; }
+    if (isCatan()) { selectCatanPlayer(idx); return; }
     renderGeneric();
     const g = gameById(currentGame.type);
     const pad = byId('gen-pad');
@@ -1532,80 +927,124 @@ window.ScoreTrackerUI = (function () {
     }
   }
 
-  // ----- Catan (parchment theme) -----
+  // ----- Catan (wood + parchment theme, layout from the approved rendering) -----
+  const CG_SHIELDS = ['red', 'green', 'blue', 'purple'];
+  const CG_TAGS = ['Orange', 'Forest', 'Harbor', 'Desert', 'Hills', 'Pasture'];
+  const CG_ICONS = { settlements: 'icon-settlements.svg', cities: 'icon-cities.svg', longestRoad: 'icon-road.svg', largestArmy: 'icon-army.svg', vpCards: 'icon-vpcard.svg' };
+  const CG_ASSET = './assets/catan/';
+  const UNIQUE_CATS = ['longestRoad', 'largestArmy'];
+  const cgStar = '<svg viewBox="0 0 24 24" aria-hidden="true"><use href="#cg-star"/></svg>';
+  const cgCrown = '<svg class="cg-crown" viewBox="0 0 24 24" aria-label="Winner"><use href="#cg-crown"/></svg>';
+  function cgSelected() {
+    if (!isCatan() || !currentGame.players.length) return null;
+    if (scoringPlayer === null || !currentGame.players[scoringPlayer]) scoringPlayer = 0;
+    return scoringPlayer;
+  }
+  function cgFeedback(selectors) {
+    try { if (navigator.vibrate) navigator.vibrate(12); } catch (e) { /* ignore */ }
+    requestAnimationFrame(() => (selectors || []).forEach((sel) => document.querySelectorAll(sel).forEach((el) => {
+      const cls = el.classList.contains('cg-act') ? 'cg-flash' : 'cg-pulse';
+      el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls);
+    })));
+  }
+  let cgToastTimer = null;
+  function cgToast(msg) {
+    const t = byId('cg-toast'); if (!t) return;
+    t.textContent = msg; t.classList.add('show');
+    clearTimeout(cgToastTimer); cgToastTimer = setTimeout(() => t.classList.remove('show'), 1600);
+  }
+  // Every Catan change is one undoable round that snapshots scores + breakdowns.
+  function commitCatan(mutate, mode, detail) {
+    const prev = currentGame.players.map((p) => p.score);
+    const prevBd = currentGame.players.map((p) => ({ ...emptyBreakdown(), ...(p.breakdown || {}) }));
+    currentGame.players.forEach((p) => { p.breakdown = { ...emptyBreakdown(), ...(p.breakdown || {}) }; });
+    mutate(currentGame.players);
+    currentGame.players.forEach((p) => { p.score = Math.max(0, Number(p.score) || 0); });
+    const deltas = currentGame.players.map((p, i) => p.score - prev[i]);
+    if (deltas.every((d) => d === 0) && JSON.stringify(prevBd) === JSON.stringify(currentGame.players.map((p) => p.breakdown))) return false;
+    currentGame.rounds.push({ ts: new Date().toISOString(), by: scoringPlayer, mode, prev, prevBd, deltas, detail: detail || null });
+    persistActive();
+    renderCatan();
+    return true;
+  }
   function renderCatan() {
     const t = currentGame.targetVp || 10;
-    byId('catan-title').textContent = 'Catan';
+    byId('catan-title').textContent = 'Score Tracker';
     byId('catan-sub').textContent = `FIRST TO ${t} VICTORY POINTS`;
+    cgSelected();
     renderCatanLeaderboard();
-    if (scoringPlayer === null) byId('pad').style.display = 'none';
+    renderCatanPad();
+    renderCatanActions();
+    const u = byId('btn-undo'); if (u) u.disabled = !currentGame.rounds.length;
   }
   function renderCatanLeaderboard() {
-    const UI = global.ScoreTrackerUI, t = currentGame.targetVp || 10;
+    const t = currentGame.targetVp || 10;
     const sorted = currentGame.players.map((p, idx) => ({ ...p, idx })).sort((a, b) => (b.score - a.score) || (a.idx - b.idx));
     byId('leaderboard').innerHTML = sorted.map((p) => {
-      const win = p.score >= t;
-      const cls = ['player-row', p.idx === scoringPlayer ? 'selected' : '', win ? 'winner' : ''].filter(Boolean).join(' ');
-      return `<div class="${cls}" data-player-idx="${p.idx}" onclick="openPad(${p.idx})" role="button" tabindex="0">
-          <div class="shield-wrap">${UI.shieldSvg(p.idx, p.name)}</div>
-          <div class="player-meta">
-            <div class="player-name-line"><span class="player-name">${esc(p.name)}</span>${win ? `<span class="winner-badge">${UI.crownSvg()} Winner</span>` : ''}</div>
-            ${UI.starsHtml(p.score, t)}
-          </div>
-          <div class="vp-badge"><div class="vp-num">${p.score}</div><div class="vp-label">VP</div></div>
+      const win = p.score >= t, sel = p.idx === scoringPlayer;
+      const n = Math.max(0, p.score);
+      return `<div class="cg-row${sel ? ' selected' : ''}${win ? ' winner' : ''}" data-player-idx="${p.idx}" data-color="${CG_SHIELDS[p.idx % CG_SHIELDS.length]}" role="option" aria-selected="${sel}" tabindex="0"
+          onclick="selectCatanPlayer(${p.idx})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectCatanPlayer(${p.idx})}">
+          <img class="cg-shield" src="${CG_ASSET}shield-${CG_SHIELDS[p.idx % CG_SHIELDS.length]}.svg" alt="" width="44" height="47" draggable="false">
+          <div class="cg-name">${esc(p.name)}${win ? cgCrown : ''}<small>(${CG_TAGS[p.idx % CG_TAGS.length]})</small></div>
+          <div class="cg-stars${n > 10 ? ' xs' : n > 8 ? ' sm' : n > 6 ? ' md' : ''}" aria-label="${n} stars">${cgStar.repeat(n)}</div>
+          <div class="cg-vp vp-num" data-vp="${p.idx}">${p.score}</div>
         </div>`;
     }).join('');
-    setHidden(byId('btn-undo'), !currentGame.rounds.length);
   }
-  function setCatanMode(m) {
-    padMode = m === 'detailed' ? 'detailed' : 'simple';
-    ['simple', 'detailed'].forEach((k) => { const b = byId('mode-' + k); if (b) { b.classList.toggle('active', k === padMode); b.setAttribute('aria-selected', String(k === padMode)); } });
-    if (!isCatan() || scoringPlayer === null) return;
-    const p = currentGame.players[scoringPlayer];
-    byId('pad-player-banner').innerHTML = `<span class="shield-wrap">${global.ScoreTrackerUI.shieldSvg(scoringPlayer, p.name)}</span><span>${esc(p.name)}</span><span class="pad-current">· ${p.score} VP</span>`;
-    if (padMode === 'simple') { catanAdj = 1; renderCatanSimple(); } else { catanDraft = emptyBreakdown(); renderCatanDetailed(); }
+  function renderCatanPad() {
+    const idx = scoringPlayer, p = idx === null ? null : currentGame.players[idx];
+    byId('adj-val').textContent = p ? String(p.score) : '0';
+    byId('pad-player-banner').innerHTML = p ? `Selected: <b>${esc(p.name)}</b>` : 'Selected: —';
+    byId('catan-minus').disabled = !p || p.score <= 0;
+    byId('catan-plus').disabled = !p;
   }
-  function renderCatanSimple() {
-    const name = esc(currentGame.players[scoringPlayer].name);
-    byId('score-form').innerHTML = `<div class="adj-box">
-        <button type="button" class="adj-btn" id="catan-minus" onclick="catanStep(-1)" aria-label="Decrease">−</button>
-        <div id="adj-val">${signed(catanAdj)}</div>
-        <button type="button" class="adj-btn" id="catan-plus" onclick="catanStep(1)" aria-label="Increase">+</button>
-      </div>
-      <button type="button" id="commit-simple-btn" class="btn gold" onclick="commitCatanSimple()" ${catanAdj === 0 ? 'disabled' : ''}>${catanAdj >= 0 ? `Add ${signed(catanAdj)} VP to ${name}` : `Adjust ${catanAdj} VP for ${name}`}</button>`;
+  function renderCatanActions() {
+    const p = scoringPlayer === null ? null : currentGame.players[scoringPlayer];
+    byId('score-form').innerHTML = CATAN_CATS.map((c) => {
+      const have = p && p.breakdown ? (p.breakdown[c.key] || 0) : 0;
+      const held = UNIQUE_CATS.includes(c.key) && have > 0;
+      return `<button type="button" class="cg-act${held ? ' held' : ''}" data-cat="${c.key}" onclick="catanAction('${c.key}')" aria-label="${c.label}: add ${c.vp} VP">
+          <img class="cg-act-ic" src="${CG_ASSET}${CG_ICONS[c.key]}" alt="" width="70" height="46" draggable="false">
+          <span class="cg-act-txt"><span class="cg-act-title">${c.label}</span><span class="cg-act-vp">+${c.vp} VP${have ? `<span class="cg-act-count">${held ? '· held' : '· ×' + have}</span>` : ''}</span></span>
+          <span class="cg-act-chev" aria-hidden="true"><svg viewBox="0 0 12 18"><path d="M2.5 2.5l7 6.5-7 6.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </button>`;
+    }).join('');
   }
-  function catanStep(d) { catanAdj += d; renderCatanSimple(); }
-  function commitCatanSimple() { if (isCatan() && scoringPlayer !== null && catanAdj !== 0) commitRound(onlyFor(scoringPlayer, catanAdj), 'simple'); }
-  function renderCatanDetailed() {
-    const UI = global.ScoreTrackerUI, name = esc(currentGame.players[scoringPlayer].name), total = catanTotal(catanDraft);
-    byId('score-form').innerHTML = `<div class="cat-list">${CATAN_CATS.map((c) => {
-      const n = catanDraft[c.key] || 0;
-      return `<div class="cat-row ${n > 0 ? 'has-count' : ''}" data-cat="${c.key}" onclick="catanCat('${c.key}', 1)">
-          <div class="cat-icon ${c.icon}">${UI.categoryIconSvg(c.ui)}</div>
-          <div class="cat-info"><div class="cat-name">${c.label}</div><div class="cat-vp">+${c.vp} VP</div></div>
-          <div class="cat-right">
-            <button type="button" class="cat-step-btn cat-dec" onclick="event.stopPropagation(); catanCat('${c.key}', -1)" aria-label="Remove ${c.label}" ${n <= 0 ? 'disabled' : ''}>−</button>
-            <span class="cat-count" id="cat-count-${c.key}">${n}</span>
-            <button type="button" class="cat-step-btn cat-inc" onclick="event.stopPropagation(); catanCat('${c.key}', 1)" aria-label="Add ${c.label}" ${n >= c.max ? 'disabled' : ''}>+</button>
-          </div></div>`;
-    }).join('')}</div>
-      <div class="round-summary"><div id="round-total">Round Total: +${total} VP</div><button type="button" class="btn-link-reset" onclick="catanReset()">Reset</button></div>
-      <button type="button" id="commit-detailed-btn" class="btn gold" onclick="commitCatanDetailed()" ${total === 0 ? 'disabled' : ''}>Add +${total} VP to ${name}</button>`;
+  function selectCatanPlayer(idx) {
+    if (!isCatan() || !currentGame.players[idx]) return;
+    scoringPlayer = idx;
+    renderCatanLeaderboard(); renderCatanPad(); renderCatanActions();
+    try { if (navigator.vibrate) navigator.vibrate(6); } catch (e) { /* ignore */ }
   }
-  function catanCat(key, d) {
-    const c = CATAN_CATS.find((x) => x.key === key);
-    if (!c) return;
-    catanDraft[key] = Math.max(0, Math.min(c.max, (catanDraft[key] || 0) + d));
-    renderCatanDetailed();
+  function catanStep(d) {
+    const idx = cgSelected(); if (idx === null) return;
+    const ok = commitCatan((ps) => { ps[idx].score += d; }, 'simple', { player: idx, step: d });
+    if (ok) cgFeedback([`.cg-vp[data-vp="${idx}"]`, '#adj-val']);
   }
-  function catanReset() { catanDraft = emptyBreakdown(); renderCatanDetailed(); }
-  function commitCatanDetailed() {
-    if (!isCatan() || scoringPlayer === null) return;
-    const total = catanTotal(catanDraft);
-    if (!total) return;
-    const idx = scoringPlayer, bd = { ...catanDraft };
-    catanDraft = emptyBreakdown();
-    commitRound(onlyFor(idx, total), 'detailed', { player: idx, breakdown: bd });
+  function catanAction(key) {
+    const c = CATAN_CATS.find((x) => x.key === key); const idx = cgSelected();
+    if (!c || idx === null) return;
+    const me = currentGame.players[idx];
+    if (UNIQUE_CATS.includes(key) && (me.breakdown || {})[key] > 0) { cgToast(`${me.name} already holds ${c.label}`); return; }
+    let from = null;
+    const ok = commitCatan((ps) => {
+      if (UNIQUE_CATS.includes(key)) {
+        ps.forEach((q, i) => { if (i !== idx && (q.breakdown[key] || 0) > 0) { from = i; q.breakdown[key] = 0; q.score -= c.vp; } });
+      }
+      ps[idx].breakdown[key] = (ps[idx].breakdown[key] || 0) + 1;
+      ps[idx].score += c.vp;
+    }, 'detailed', { player: idx, breakdown: { [key]: 1 } });
+    if (!ok) return;
+    cgFeedback([`.cg-vp[data-vp="${idx}"]`, '#adj-val', `.cg-act[data-cat="${key}"]`].concat(from !== null ? [`.cg-vp[data-vp="${from}"]`] : []));
+    cgToast(`+${c.vp} VP ${me.name} · ${c.label}${from !== null ? ` (from ${currentGame.players[from].name})` : ''}`);
+  }
+  function resetCatanScores() {
+    if (!isCatan() || !currentGame.players.some((p) => p.score || Object.values(p.breakdown || {}).some(Boolean))) { cgToast('Scores are already 0'); return; }
+    if (!confirm('Reset every player to 0 VP? (You can Undo this.)')) return;
+    commitCatan((ps) => ps.forEach((p) => { p.score = 0; p.breakdown = emptyBreakdown(); }), 'reset', { reset: true });
+    cgFeedback(['.cg-vp']);
+    cgToast('Scores reset');
   }
 
   // ---------------- History ----------------
@@ -1637,7 +1076,7 @@ window.ScoreTrackerUI = (function () {
   Object.assign(global, {
     onAuthReady, onAuthSignedOut, showView, selectGame, togglePlayer, addPlayer, removePlayer, startGame, discardGame,
     openPad, setPadMode, closePad, flipToggle, updateGenericPreview, commitSimplePoints, commitGenericDetailed,
-    setCatanMode, catanStep, commitCatanSimple, catanCat, catanReset, commitCatanDetailed,
+    selectCatanPlayer, catanStep, catanAction, resetCatanScores,
     undoLastRound, undoLastAction: undoLastRound, endGame, deleteGame,
     ScoreTracker: { GAMES, getState: () => ({ players: [...players], history: [...history], currentGame, currentView, scoringPlayer, padMode, pendingSync }) }
   });

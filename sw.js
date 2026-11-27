@@ -1,10 +1,20 @@
 // Score Tracker service worker
-// v4: neutral shell + Catan-only theme. Network-first for HTML so new builds show up immediately; cache is only an offline fallback.
-const CACHE_NAME = 'score-tracker-v4-2026-11-26';
+// v5: neutral shell + Catan screen matched to the approved rendering (real cropped art in assets/catan). Network-first for HTML so new builds show up immediately; cache is only an offline fallback.
+const CACHE_NAME = 'score-tracker-v5-2026-11-26';
 const ASSETS = [
   './game_tracker.html',
   './manifest.json',
-  './icon-512.jpg'
+  './icon-512.jpg',
+  './assets/catan/wood-bg.svg',
+  './assets/catan/shield-red.svg',
+  './assets/catan/shield-green.svg',
+  './assets/catan/shield-blue.svg',
+  './assets/catan/shield-purple.svg',
+  './assets/catan/icon-settlements.svg',
+  './assets/catan/icon-cities.svg',
+  './assets/catan/icon-road.svg',
+  './assets/catan/icon-army.svg',
+  './assets/catan/icon-vpcard.svg'
 ];
 
 self.addEventListener('install', event => {
