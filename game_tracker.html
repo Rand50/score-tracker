@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0c0d10">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="score-tracker-build" content="v17-friends-qr-2026-11-27">
+<meta name="score-tracker-build" content="v18-7wonders-2026-11-27">
 <title>Score Tracker</title>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon-512.jpg" type="image/jpeg">
@@ -159,6 +159,8 @@ body.theme-catan .app-header { display: none; }
 #nz-shell { display: none; }
 /* Rummikub rack table is only shown when theme-rummikub is on */
 #rk-shell { display: none; }
+/* 7 Wonders papyrus ledger is only shown when theme-seven-wonders is on */
+#sw-shell { display: none; }
 /* Friends tab lives only in the neutral nav: themed game navs stay clean 4-tab bars */
 body.theme-catan .bottom-nav #nav-social, body.theme-flip7 .bottom-nav #nav-social, body.theme-carcassonne .bottom-nav #nav-social { display: none !important; }
 #soc-create-group-modal { z-index: 80; }
@@ -187,7 +189,7 @@ body.theme-catan .bottom-nav #nav-social, body.theme-flip7 .bottom-nav #nav-soci
   --shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 8px 24px rgba(0, 0, 0, 0.28);
   --font: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', 'Segoe UI', Roboto, system-ui, sans-serif;
 }
-body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub) {
+body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders) {
   background: var(--bg);
   color: var(--text);
   font-family: var(--font);
@@ -291,11 +293,11 @@ body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nert
 #sync-status[data-state="error"]::before {
   background: var(--accent-brass);
 }
-:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub)) .view {
+:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders)) .view {
   max-width: 760px;
   padding: 1rem 1.15rem 1.25rem;
 }
-:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub)) .card {
+:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders)) .card {
   background: var(--surface);
   border-radius: var(--radius);
   padding: 1.15rem;
@@ -303,7 +305,7 @@ body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nert
   border: 1px solid var(--border);
   box-shadow: none;
 }
-:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub)) .btn {
+:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders)) .btn {
   background: var(--surface2);
   color: var(--text);
   border: 1px solid var(--border);
@@ -314,13 +316,13 @@ body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nert
   cursor: pointer;
   transition: transform .08s ease, background .15s ease, border-color .15s ease, opacity .15s ease;
 }
-:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub)) .btn:active:not(:disabled) { transform: scale(0.985); }
-:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub)) .btn.primary {
+:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders)) .btn:active:not(:disabled) { transform: scale(0.985); }
+:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders)) .btn.primary {
   background: var(--accent);
   color: var(--accent-ink);
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
-:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub)) .btn.primary:hover:not(:disabled) {
+:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders)) .btn.primary:hover:not(:disabled) {
   background: #ffffff;
 }
 #view-home {
@@ -553,7 +555,7 @@ body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nert
   color: var(--muted);
   line-height: 1.45;
 }
-:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub)) .bottom-nav {
+:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders)) .bottom-nav {
   position: fixed;
   bottom: 0;
   left: 0;
@@ -569,7 +571,7 @@ body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nert
   padding: 0.42rem 0.25rem calc(0.45rem + env(safe-area-inset-bottom, 0px));
   font-family: var(--font);
 }
-:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub)) .bottom-nav button {
+:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders)) .bottom-nav button {
   position: relative;
   background: none;
   border: none;
@@ -586,7 +588,7 @@ body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nert
   padding: 0.24rem 0.35rem;
   transition: color .15s ease;
 }
-:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub)) .bottom-nav button .icon {
+:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders)) .bottom-nav button .icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -594,16 +596,16 @@ body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nert
   height: 22px;
   line-height: 1;
 }
-:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub)) .bottom-nav button .icon svg {
+:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders)) .bottom-nav button .icon svg {
   width: 20px;
   height: 20px;
   display: block;
 }
-:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub)) .bottom-nav button.active {
+:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders)) .bottom-nav button.active {
   color: var(--text);
   font-weight: 600;
 }
-:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub)) .bottom-nav button.active::before {
+:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders)) .bottom-nav button.active::before {
   content: "";
   position: absolute;
   top: -0.42rem;
@@ -4666,9 +4668,1002 @@ body.theme-rummikub .bottom-nav #nav-social {
 }
 
 </style>
+
+<!-- ===================== 7 WONDERS THEME (Illuminated Papyrus Ledger; strictly scoped to body.theme-seven-wonders) ===================== -->
+<style id="seven-wonders-theme">
+
+
+body.theme-seven-wonders {
+  --sw-paper: #f3e8d1;
+  --sw-paper-hi: #f8f0df;
+  --sw-paper-deep: #e8d8b7;
+  --sw-paper-edge: #dfc89e;
+  --sw-ink: #382515;
+  --sw-ink-soft: #634831;
+  --sw-ink-muted: #84684c;
+  --sw-rule: rgba(110, 76, 42, 0.28);
+  --sw-rule-strong: rgba(110, 76, 42, 0.52);
+  --sw-gold: #c99746;
+  --sw-gold-soft: rgba(212, 161, 79, 0.24);
+  --sw-gold-band: linear-gradient(180deg, #ecd09c 0%, #e1bc7a 100%);
+  --sw-terra: #9e4822;
+  --sw-terra-deep: #7f3516;
+  --sw-terra-hi: #b5572d;
+
+  
+  --sw-cat-military: #a62b22;
+  --sw-cat-treasury: #b8841e;
+  --sw-cat-wonder: #a85c27;
+  --sw-cat-civilian: #2b5a8a;
+  --sw-cat-commercial: #c28a1d;
+  --sw-cat-guilds: #6b3b75;
+  --sw-cat-science: #2d6f45;
+  --sw-cat-leaders: #6c6a64;
+  --sw-cat-cities: #3a3d45;
+  --sw-cat-armada: #1f6c78;
+
+  background-color: #eadbc0;
+  background-image:
+    radial-gradient(ellipse at 18% 12%, rgba(255, 249, 236, 0.65) 0%, transparent 52%),
+    radial-gradient(ellipse at 86% 84%, rgba(176, 134, 82, 0.22) 0%, transparent 56%),
+    linear-gradient(180deg, #f3e9d3 0%, #ead8b8 100%);
+  color: var(--sw-ink);
+  font-family: Georgia, "Iowan Old Style", "Palatino Linotype", Palatino, "Times New Roman", serif;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+
+body.theme-seven-wonders #view-active > :not(#sw-shell):not(#dice-sheet-backdrop):not(#dice-sheet) {
+  display: none !important;
+}
+
+body.theme-seven-wonders #sw-shell {
+  display: block;
+  position: relative;
+  max-width: 460px;
+  margin: 0 auto;
+  padding: 12px 12px 92px;
+  color: var(--sw-ink);
+}
+
+
+body.theme-seven-wonders .sw-folio {
+  position: relative;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 250, 238, 0.72), transparent 58%),
+    linear-gradient(180deg, var(--sw-paper-hi) 0%, var(--sw-paper) 54%, #ecdec1 100%);
+  border: 1.5px solid rgba(122, 82, 42, 0.45);
+  border-radius: 14px;
+  box-shadow:
+    inset 0 0 0 3px rgba(248, 240, 223, 0.65),
+    inset 0 0 28px rgba(154, 114, 65, 0.16),
+    0 8px 24px rgba(56, 37, 21, 0.14);
+  padding: 14px 12px 16px;
+  overflow: hidden;
+}
+
+
+body.theme-seven-wonders .sw-corner {
+  position: absolute;
+  width: 34px;
+  height: 34px;
+  color: rgba(126, 76, 37, 0.56);
+  pointer-events: none;
+  z-index: 1;
+}
+
+body.theme-seven-wonders .sw-corner.tl { top: 6px; left: 6px; }
+body.theme-seven-wonders .sw-corner.tr { top: 6px; right: 6px; transform: scaleX(-1); }
+body.theme-seven-wonders .sw-corner.bl { bottom: 6px; left: 6px; transform: scaleY(-1); }
+body.theme-seven-wonders .sw-corner.br { bottom: 6px; right: 6px; transform: scale(-1, -1); }
+
+
+body.theme-seven-wonders .sw-head {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 2px 26px 8px;
+}
+
+body.theme-seven-wonders .sw-head-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 2px;
+}
+
+body.theme-seven-wonders .sw-back-btn,
+body.theme-seven-wonders .sw-exp-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 32px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--sw-rule-strong);
+  background: rgba(248, 240, 223, 0.78);
+  color: var(--sw-ink-soft);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+body.theme-seven-wonders .sw-exp-toggle[aria-expanded="true"],
+body.theme-seven-wonders .sw-exp-toggle.has-active {
+  background: rgba(158, 72, 34, 0.12);
+  border-color: var(--sw-terra);
+  color: var(--sw-terra-deep);
+}
+
+body.theme-seven-wonders .sw-exp-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: var(--sw-terra);
+  color: #fdf6ea;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+body.theme-seven-wonders .sw-exp-badge:empty,
+body.theme-seven-wonders .sw-exp-badge[hidden] {
+  display: none;
+}
+
+body.theme-seven-wonders .sw-title {
+  margin: 2px 0 2px;
+  font-size: clamp(23px, 6.8vw, 28px);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: 0.08em;
+  color: var(--sw-ink);
+  text-transform: uppercase;
+  font-variant-caps: small-caps;
+}
+
+body.theme-seven-wonders .sw-flourish {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 4px auto 2px;
+  color: rgba(126, 76, 37, 0.62);
+}
+
+body.theme-seven-wonders .sw-flourish-line {
+  flex: 1;
+  max-width: 72px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(126, 76, 37, 0.52), transparent);
+}
+
+body.theme-seven-wonders .sw-subtitle {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--sw-ink-muted);
+}
+
+
+body.theme-seven-wonders .sw-exp-bar {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 8px 0 10px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px dashed var(--sw-rule-strong);
+  background: rgba(232, 216, 183, 0.55);
+}
+
+body.theme-seven-wonders .sw-exp-bar[hidden],
+body.theme-seven-wonders .sw-exp-bar.hidden {
+  display: none;
+}
+
+body.theme-seven-wonders .sw-exp-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--sw-rule-strong);
+  background: var(--sw-paper-hi);
+  color: var(--sw-ink-soft);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+body.theme-seven-wonders .sw-exp-chip input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+}
+
+body.theme-seven-wonders .sw-exp-chip.is-on {
+  background: var(--sw-terra);
+  border-color: var(--sw-terra-deep);
+  color: #fdf6ea;
+}
+
+body.theme-seven-wonders .sw-exp-chip svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+
+body.theme-seven-wonders .sw-leaderboard {
+  position: relative;
+  z-index: 2;
+  margin: 8px 0 12px;
+  border: 1px solid var(--sw-rule-strong);
+  border-radius: 10px;
+  background: rgba(248, 240, 223, 0.72);
+  overflow: hidden;
+  box-shadow: inset 0 1px 0 rgba(255, 252, 244, 0.75);
+}
+
+body.theme-seven-wonders .sw-lb-row {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 11px;
+  border-bottom: 1px solid var(--sw-rule);
+  background: transparent;
+  transition: background 0.16s ease;
+}
+
+body.theme-seven-wonders .sw-lb-row:last-child {
+  border-bottom: none;
+}
+
+body.theme-seven-wonders .sw-lb-row.is-leader {
+  background: var(--sw-gold-band);
+  border-bottom-color: rgba(154, 106, 38, 0.45);
+  box-shadow: inset 0 1px 0 rgba(255, 244, 214, 0.75);
+}
+
+body.theme-seven-wonders .sw-lb-rank {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--sw-ink-soft);
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+body.theme-seven-wonders .sw-lb-row.is-leader .sw-lb-rank {
+  color: var(--sw-ink);
+}
+
+body.theme-seven-wonders .sw-lb-name-wrap {
+  min-width: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+body.theme-seven-wonders .sw-lb-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--sw-ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+body.theme-seven-wonders .sw-lb-tie {
+  flex-shrink: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--sw-ink-muted);
+  background: rgba(184, 132, 30, 0.14);
+  border: 1px solid rgba(184, 132, 30, 0.32);
+  border-radius: 999px;
+  padding: 1px 6px;
+}
+
+body.theme-seven-wonders .sw-lb-score-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+body.theme-seven-wonders .sw-lb-score {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--sw-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+body.theme-seven-wonders .sw-lb-laurel {
+  width: 22px;
+  height: 22px;
+  color: #8a5b14;
+  flex-shrink: 0;
+}
+
+
+body.theme-seven-wonders .sw-leaderboard[data-count="5"],
+body.theme-seven-wonders .sw-leaderboard[data-count="6"],
+body.theme-seven-wonders .sw-leaderboard[data-count="7"] {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+body.theme-seven-wonders .sw-leaderboard[data-count="5"] .sw-lb-row.is-leader:first-child,
+body.theme-seven-wonders .sw-leaderboard[data-count="7"] .sw-lb-row.is-leader:first-child {
+  grid-column: 1 / -1;
+}
+
+body.theme-seven-wonders .sw-leaderboard[data-count="5"] .sw-lb-row,
+body.theme-seven-wonders .sw-leaderboard[data-count="6"] .sw-lb-row,
+body.theme-seven-wonders .sw-leaderboard[data-count="7"] .sw-lb-row {
+  padding: 5px 8px;
+  border-right: 1px solid var(--sw-rule);
+}
+
+body.theme-seven-wonders .sw-leaderboard[data-count="5"] .sw-lb-score,
+body.theme-seven-wonders .sw-leaderboard[data-count="6"] .sw-lb-score,
+body.theme-seven-wonders .sw-leaderboard[data-count="7"] .sw-lb-score {
+  font-size: 17px;
+}
+
+
+body.theme-seven-wonders .sw-section-rule {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 10px 0 8px;
+}
+
+body.theme-seven-wonders .sw-section-rule::before,
+body.theme-seven-wonders .sw-section-rule::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--sw-rule-strong);
+}
+
+body.theme-seven-wonders .sw-section-label {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--sw-ink-soft);
+}
+
+
+body.theme-seven-wonders .sw-cat-tabs {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 2px 2px 8px;
+  margin: 0 -2px 6px;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+body.theme-seven-wonders .sw-cat-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+body.theme-seven-wonders .sw-cat-tab {
+  position: relative;
+  flex: 0 0 auto;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  min-width: 62px;
+  padding: 6px 8px 5px;
+  border-radius: 10px;
+  border: 1.5px solid var(--sw-rule);
+  background: rgba(248, 240, 223, 0.72);
+  color: var(--sw-ink-soft);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  transition: transform 0.12s ease, background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+body.theme-seven-wonders .sw-cat-tab[hidden] {
+  display: none;
+}
+
+body.theme-seven-wonders .sw-cat-tab:active {
+  transform: scale(0.96);
+}
+
+body.theme-seven-wonders .sw-cat-tab-ico {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+body.theme-seven-wonders .sw-cat-tab-ico svg {
+  width: 22px;
+  height: 22px;
+}
+
+body.theme-seven-wonders .sw-cat-tab.is-active {
+  background: var(--sw-paper-hi);
+  color: var(--sw-ink);
+  border-color: var(--sw-tab-accent, var(--sw-terra));
+  box-shadow:
+    0 2px 8px rgba(56, 37, 21, 0.12),
+    inset 0 -3px 0 var(--sw-tab-accent, var(--sw-terra));
+}
+
+body.theme-seven-wonders .sw-cat-tab.is-done::after {
+  content: "";
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--sw-tab-accent, var(--sw-cat-science));
+}
+
+body.theme-seven-wonders .sw-cat-tab[data-cat="military"]   { --sw-tab-accent: var(--sw-cat-military); }
+body.theme-seven-wonders .sw-cat-tab[data-cat="treasury"]   { --sw-tab-accent: var(--sw-cat-treasury); }
+body.theme-seven-wonders .sw-cat-tab[data-cat="wonder"]     { --sw-tab-accent: var(--sw-cat-wonder); }
+body.theme-seven-wonders .sw-cat-tab[data-cat="civilian"]   { --sw-tab-accent: var(--sw-cat-civilian); }
+body.theme-seven-wonders .sw-cat-tab[data-cat="commercial"] { --sw-tab-accent: var(--sw-cat-commercial); }
+body.theme-seven-wonders .sw-cat-tab[data-cat="guilds"]     { --sw-tab-accent: var(--sw-cat-guilds); }
+body.theme-seven-wonders .sw-cat-tab[data-cat="science"]    { --sw-tab-accent: var(--sw-cat-science); }
+body.theme-seven-wonders .sw-cat-tab[data-cat="leaders"]    { --sw-tab-accent: var(--sw-cat-leaders); }
+body.theme-seven-wonders .sw-cat-tab[data-cat="cities"]     { --sw-tab-accent: var(--sw-cat-cities); }
+body.theme-seven-wonders .sw-cat-tab[data-cat="armada"]     { --sw-tab-accent: var(--sw-cat-armada); }
+
+
+body.theme-seven-wonders .sw-cat-card {
+  position: relative;
+  z-index: 2;
+  border: 1.5px solid var(--sw-rule-strong);
+  border-top: 3.5px solid var(--sw-active-accent, var(--sw-cat-military));
+  border-radius: 10px;
+  background: rgba(249, 242, 226, 0.86);
+  box-shadow: 0 3px 12px rgba(56, 37, 21, 0.08);
+  overflow: hidden;
+}
+
+body.theme-seven-wonders .sw-cat-card[data-cat="military"]   { --sw-active-accent: var(--sw-cat-military); }
+body.theme-seven-wonders .sw-cat-card[data-cat="treasury"]   { --sw-active-accent: var(--sw-cat-treasury); }
+body.theme-seven-wonders .sw-cat-card[data-cat="wonder"]     { --sw-active-accent: var(--sw-cat-wonder); }
+body.theme-seven-wonders .sw-cat-card[data-cat="civilian"]   { --sw-active-accent: var(--sw-cat-civilian); }
+body.theme-seven-wonders .sw-cat-card[data-cat="commercial"] { --sw-active-accent: var(--sw-cat-commercial); }
+body.theme-seven-wonders .sw-cat-card[data-cat="guilds"]     { --sw-active-accent: var(--sw-cat-guilds); }
+body.theme-seven-wonders .sw-cat-card[data-cat="science"]    { --sw-active-accent: var(--sw-cat-science); }
+body.theme-seven-wonders .sw-cat-card[data-cat="leaders"]    { --sw-active-accent: var(--sw-cat-leaders); }
+body.theme-seven-wonders .sw-cat-card[data-cat="cities"]     { --sw-active-accent: var(--sw-cat-cities); }
+body.theme-seven-wonders .sw-cat-card[data-cat="armada"]     { --sw-active-accent: var(--sw-cat-armada); }
+
+body.theme-seven-wonders .sw-cat-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--sw-rule-strong);
+  background: linear-gradient(180deg, rgba(236, 222, 192, 0.55) 0%, rgba(249, 242, 226, 0.25) 100%);
+}
+
+body.theme-seven-wonders .sw-cat-icon {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: rgba(248, 240, 223, 0.9);
+  border: 1px solid var(--sw-rule);
+}
+
+body.theme-seven-wonders .sw-cat-icon svg {
+  width: 28px;
+  height: 28px;
+}
+
+body.theme-seven-wonders .sw-cat-meta {
+  flex: 1;
+  min-width: 0;
+}
+
+body.theme-seven-wonders .sw-cat-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--sw-ink);
+}
+
+body.theme-seven-wonders .sw-cat-hint {
+  margin: 2px 0 0;
+  font-size: 12.5px;
+  font-style: italic;
+  color: var(--sw-ink-soft);
+}
+
+body.theme-seven-wonders .sw-cat-step {
+  flex-shrink: 0;
+  padding: 3px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--sw-rule);
+  background: rgba(248, 240, 223, 0.85);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--sw-ink-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+
+body.theme-seven-wonders .sw-player-rows {
+  display: flex;
+  flex-direction: column;
+}
+
+body.theme-seven-wonders .sw-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--sw-rule);
+}
+
+body.theme-seven-wonders .sw-row:last-child {
+  border-bottom: none;
+}
+
+body.theme-seven-wonders .sw-row-left {
+  flex: 1;
+  min-width: 0;
+}
+
+body.theme-seven-wonders .sw-row-name {
+  font-size: 15.5px;
+  font-weight: 700;
+  color: var(--sw-ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+body.theme-seven-wonders .sw-row-sub {
+  margin-top: 2px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 11.5px;
+  color: var(--sw-ink-muted);
+}
+
+body.theme-seven-wonders .sw-coin-vp {
+  display: inline-block;
+  margin-top: 2px;
+  font-size: 12.5px;
+  font-style: italic;
+  font-weight: 600;
+  color: #8c6211;
+}
+
+
+body.theme-seven-wonders .sw-stepper {
+  display: inline-flex;
+  align-items: stretch;
+  border: 1.5px solid var(--sw-rule-strong);
+  border-radius: 7px;
+  background: var(--sw-paper-hi);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+body.theme-seven-wonders .sw-step-btn {
+  width: clamp(35px, 10vw, 40px);
+  height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: rgba(232, 216, 183, 0.45);
+  color: var(--sw-terra-deep);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  transition: background 0.12s ease;
+}
+
+body.theme-seven-wonders .sw-step-btn:active {
+  background: rgba(158, 72, 34, 0.18);
+}
+
+body.theme-seven-wonders .sw-num-input {
+  width: clamp(48px, 14vw, 56px);
+  height: 38px;
+  border: none;
+  border-left: 1px solid var(--sw-rule);
+  border-right: 1px solid var(--sw-rule);
+  background: transparent;
+  color: var(--sw-ink);
+  text-align: center;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 17px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  padding: 0 4px;
+  outline: none;
+  -moz-appearance: textfield;
+}
+
+body.theme-seven-wonders .sw-num-input::-webkit-inner-spin-button,
+body.theme-seven-wonders .sw-num-input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+body.theme-seven-wonders .sw-num-input:focus {
+  background: rgba(212, 161, 79, 0.18);
+}
+
+
+body.theme-seven-wonders .sw-row.is-science {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+  padding: 10px 12px;
+}
+
+body.theme-seven-wonders .sw-sci-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+body.theme-seven-wonders .sw-sci-summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+body.theme-seven-wonders .sw-sci-vp-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: rgba(45, 111, 69, 0.14);
+  border: 1px solid rgba(45, 111, 69, 0.4);
+  color: #1f5432;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+body.theme-seven-wonders .sw-sci-wild-hint {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--sw-ink-muted);
+}
+
+body.theme-seven-wonders .sw-sci-override-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 11px;
+  color: var(--sw-ink-muted);
+}
+
+body.theme-seven-wonders .sw-sci-override-input {
+  width: 52px;
+  height: 28px;
+  border: 1px solid var(--sw-rule-strong);
+  border-radius: 6px;
+  background: var(--sw-paper-hi);
+  color: var(--sw-ink);
+  text-align: center;
+  font-family: Georgia, serif;
+  font-size: 16px;
+  font-weight: 700;
+  padding: 0 4px;
+  outline: none;
+}
+
+body.theme-seven-wonders .sw-sci-override-input:focus {
+  border-color: var(--sw-cat-science);
+  background: rgba(45, 111, 69, 0.08);
+}
+
+body.theme-seven-wonders .sw-sci-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border: 1.5px solid var(--sw-rule-strong);
+  border-radius: 8px;
+  background: var(--sw-paper-hi);
+  overflow: hidden;
+}
+
+body.theme-seven-wonders .sw-sci-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 6px 6px 7px;
+  border-right: 1px solid var(--sw-rule);
+  border-bottom: 1px solid var(--sw-rule);
+}
+
+body.theme-seven-wonders .sw-sci-cell:nth-child(2n) {
+  border-right: none;
+}
+
+body.theme-seven-wonders .sw-sci-cell:nth-child(n+3) {
+  border-bottom: none;
+}
+
+body.theme-seven-wonders .sw-sci-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--sw-ink-soft);
+}
+
+body.theme-seven-wonders .sw-sci-label svg {
+  width: 13px;
+  height: 13px;
+  color: var(--sw-cat-science);
+}
+
+body.theme-seven-wonders .sw-sci-ctrl {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 122px;
+}
+
+body.theme-seven-wonders .sw-sci-btn {
+  width: 34px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--sw-rule);
+  border-radius: 6px;
+  background: rgba(232, 216, 183, 0.55);
+  color: var(--sw-terra-deep);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+body.theme-seven-wonders .sw-sci-btn:active {
+  background: rgba(45, 111, 69, 0.18);
+}
+
+body.theme-seven-wonders .sw-sci-val {
+  min-width: 24px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--sw-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+
+body.theme-seven-wonders .sw-footer {
+  position: relative;
+  z-index: 2;
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+body.theme-seven-wonders .sw-nav-row {
+  display: grid;
+  grid-template-columns: 1fr auto 1.25fr;
+  gap: 8px;
+}
+
+body.theme-seven-wonders .sw-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 8px 12px;
+  border-radius: 9px;
+  border: 1.5px solid var(--sw-rule-strong);
+  background: var(--sw-paper-hi);
+  color: var(--sw-ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  transition: background 0.14s ease, border-color 0.14s ease;
+}
+
+body.theme-seven-wonders .sw-nav-btn:disabled {
+  opacity: 0.42;
+  cursor: not-allowed;
+}
+
+body.theme-seven-wonders .sw-nav-btn.is-next {
+  background: rgba(212, 161, 79, 0.24);
+  border-color: rgba(154, 106, 38, 0.58);
+  color: var(--sw-ink);
+}
+
+body.theme-seven-wonders .sw-nav-btn.is-undo {
+  color: var(--sw-ink-soft);
+  padding: 8px 11px;
+}
+
+body.theme-seven-wonders .sw-nav-btn svg {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
+
+
+body.theme-seven-wonders .sw-finish-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 50px;
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: 2px solid #6b2a10;
+  background: linear-gradient(180deg, var(--sw-terra-hi) 0%, var(--sw-terra) 52%, var(--sw-terra-deep) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 224, 190, 0.35),
+    0 4px 14px rgba(107, 42, 16, 0.28);
+  color: #fdf6ea;
+  font-family: Georgia, "Palatino Linotype", serif;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  transition: transform 0.12s ease, filter 0.15s ease;
+}
+
+body.theme-seven-wonders .sw-finish-btn:active {
+  transform: scale(0.985);
+  filter: brightness(0.95);
+}
+
+body.theme-seven-wonders .sw-finish-btn svg {
+  width: 20px;
+  height: 20px;
+  color: #f3d5a5;
+  flex-shrink: 0;
+}
+
+
+
+body.theme-seven-wonders .app-header {
+  display: none;
+}
+
+body.theme-seven-wonders #view-active {
+  max-width: 470px;
+  margin: 0 auto;
+  padding: calc(6px + env(safe-area-inset-top, 0px)) 0 calc(76px + env(safe-area-inset-bottom, 0px));
+}
+
+body.theme-seven-wonders #sw-shell button,
+body.theme-seven-wonders #sw-shell [role="tab"],
+body.theme-seven-wonders #sw-shell label,
+body.theme-seven-wonders .bottom-nav button {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+body.theme-seven-wonders #sw-shell input {
+  font-size: 16px !important;
+  touch-action: manipulation;
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+body.theme-seven-wonders .bottom-nav {
+  background: rgba(246, 236, 214, 0.97);
+  border-top: 1px solid rgba(122, 82, 42, 0.38);
+  box-shadow: 0 -6px 18px rgba(56, 37, 21, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+body.theme-seven-wonders .bottom-nav button {
+  color: #84684c;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+body.theme-seven-wonders .bottom-nav button.active {
+  color: #7f3516;
+  font-weight: 700;
+}
+
+body.theme-seven-wonders .bottom-nav button svg {
+  stroke: currentColor;
+}
+
+body.theme-seven-wonders .bottom-nav #nav-social {
+  display: none !important;
+}
+
+</style>
 </head>
 <body>
-<!-- Build: v17-friends-qr-2026-11-27 -->
+<!-- Build: v18-7wonders-2026-11-27 -->
 
 <!-- Login: starts hidden until getSession() resolves -->
 <section id="login-view" class="auth-hidden" hidden aria-label="Sign in to Score Tracker">
@@ -5204,6 +6199,232 @@ body.theme-rummikub .bottom-nav #nav-social {
   </div>
 </div>
 
+
+    <!-- 7 Wonders Illuminated Papyrus Ledger: only visible with body.theme-seven-wonders (3–7 players, category-by-category, auto Science, coin tiebreaker) -->
+<div id="sw-shell" data-cat="military">
+  <svg width="0" height="0" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
+    <defs>
+      <symbol id="sw-ico-corner" viewBox="0 0 36 36">
+        <path d="M2 34V2h32M6 34V6h28M6 12h8v-6M12 6v8H6M2 22h10v-6H8v3h2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"/>
+      </symbol>
+
+      <symbol id="sw-ico-laurel" viewBox="0 0 24 24">
+        <path d="M8.5 19.5C5.2 17.6 3.5 14.3 4 10.2c.3-2.5 1.5-4.7 3.4-6.2M15.5 19.5c3.3-1.9 5-5.2 4.5-9.3-.3-2.5-1.5-4.7-3.4-6.2M9.5 20.5h5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        <path d="M4.2 14.5l2.5-.6M4 11l2.6.2M5.2 7.5l2.3 1M19.8 14.5l-2.5-.6M20 11l-2.6.2M18.8 7.5l-2.3 1" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </symbol>
+
+      <symbol id="sw-ico-military" viewBox="0 0 28 28">
+        <path d="M14 2.5L23 6v7.5c0 5.6-3.9 9.7-9 12-5.1-2.3-9-6.4-9-12V6l9-3.5z" fill="#a62b22" stroke="#5c1611" stroke-width="1.5" stroke-linejoin="round"/>
+        <path d="M9.2 9.2l9.6 9.6M18.8 9.2l-9.6 9.6M8.5 16.5l3 3M19.5 16.5l-3 3" stroke="#fdf6ea" stroke-width="1.8" stroke-linecap="round"/>
+      </symbol>
+
+      <symbol id="sw-ico-treasury" viewBox="0 0 28 28">
+        <circle cx="14" cy="14" r="11" fill="#d9a538" stroke="#7d5610" stroke-width="1.6"/>
+        <circle cx="14" cy="14" r="8.2" fill="none" stroke="#8f6314" stroke-width="1"/>
+        <path d="M8.5 12L14 8.6 19.5 12h-11zM10 12v6M14 12v6M18 12v6M8.5 18.5h11" fill="none" stroke="#5c3e08" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </symbol>
+
+      <symbol id="sw-ico-wonder" viewBox="0 0 28 28">
+        <polygon points="14,4 25,23 3,23" fill="#c77a38" stroke="#6e3a12" stroke-width="1.5" stroke-linejoin="round"/>
+        <polygon points="14,4 25,23 14,23" fill="#a85c27" opacity="0.55"/>
+        <path d="M9.8 12h8.4M7.2 16.5h13.6M5 20.5h18" stroke="#6e3a12" stroke-width="1.2" opacity="0.7"/>
+      </symbol>
+
+      <symbol id="sw-ico-civilian" viewBox="0 0 28 28">
+        <rect x="6" y="4.5" width="16" height="3.5" rx="1.5" fill="#3a72ab" stroke="#1e3d5e" stroke-width="1.4"/>
+        <rect x="9" y="8" width="10" height="13" fill="#2b5a8a" stroke="#1e3d5e" stroke-width="1.4"/>
+        <path d="M12 8.5v12M16 8.5v12" stroke="#9ac2eb" stroke-width="1.2"/>
+        <rect x="6.5" y="21" width="15" height="3" rx="1" fill="#3a72ab" stroke="#1e3d5e" stroke-width="1.4"/>
+      </symbol>
+
+      <symbol id="sw-ico-commercial" viewBox="0 0 28 28">
+        <path d="M11 5h6l-.8 3.5c2.6 1.5 4.3 4.3 4.3 7.5 0 3.7-2.2 6.5-5.5 7.5h-2c-3.3-1-5.5-3.8-5.5-7.5 0-3.2 1.7-6 4.3-7.5L11 5z" fill="#d9a12b" stroke="#75520d" stroke-width="1.5" stroke-linejoin="round"/>
+        <path d="M10.5 7.5C7 7.5 6 10 7.8 12.2M17.5 7.5c3.5 0 4.5 2.5 2.7 4.7M9.5 23.5h9" fill="none" stroke="#75520d" stroke-width="1.5" stroke-linecap="round"/>
+      </symbol>
+
+      <symbol id="sw-ico-guilds" viewBox="0 0 28 28">
+        <path d="M14 4.5c4.6 0 7.5 3.2 7.5 7.8 0 4.5-1.8 8.7-4.5 11.2l-1.5-5.5h-3L11 23.5c-2.7-2.5-4.5-6.7-4.5-11.2 0-4.6 2.9-7.8 7.5-7.8z" fill="#774182" stroke="#3f1e47" stroke-width="1.5" stroke-linejoin="round"/>
+        <path d="M10 12.5h3v2.5h-3zM15 12.5h3v2.5h-3z" fill="#f3e8d1"/>
+      </symbol>
+
+      <symbol id="sw-ico-science" viewBox="0 0 28 28">
+        <rect x="4" y="5" width="12" height="17" rx="2" fill="#2d6f45" stroke="#184227" stroke-width="1.5"/>
+        <path d="M7 9.5h6M7 13h6M7 16.5h4" stroke="#e9f5ec" stroke-width="1.4" stroke-linecap="round"/>
+        <circle cx="19.5" cy="18.5" r="4.8" fill="#3a8a57" stroke="#184227" stroke-width="1.4"/>
+        <circle cx="19.5" cy="18.5" r="1.6" fill="#f3e8d1"/>
+        <path d="M19.5 6l-3.2 7.5M19.5 6l3.2 7.5" stroke="#184227" stroke-width="1.5" stroke-linecap="round"/>
+      </symbol>
+
+      <symbol id="sw-ico-tablet" viewBox="0 0 16 16">
+        <rect x="3" y="2" width="10" height="12" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M5.5 5.5h5M5.5 8h5M5.5 10.5h3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+      </symbol>
+      <symbol id="sw-ico-compass" viewBox="0 0 16 16">
+        <circle cx="8" cy="3.2" r="1.4" fill="none" stroke="currentColor" stroke-width="1.4"/>
+        <path d="M7.3 4.6L4 13.5M8.7 4.6L12 13.5M5.2 10.2h5.6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+      </symbol>
+      <symbol id="sw-ico-gear" viewBox="0 0 16 16">
+        <circle cx="8" cy="8" r="3.4" fill="none" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M8 2v2M8 12v2M2 8h2M12 8h2M3.8 3.8l1.4 1.4M10.8 10.8l1.4 1.4M12.2 3.8l-1.4 1.4M5.2 10.8l-1.4 1.4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+      </symbol>
+      <symbol id="sw-ico-wild" viewBox="0 0 16 16">
+        <polygon points="8,1.8 9.8,6.2 14.5,6.5 10.8,9.5 12,14.2 8,11.6 4,14.2 5.2,9.5 1.5,6.5 6.2,6.2" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+      </symbol>
+
+      <symbol id="sw-ico-leaders" viewBox="0 0 28 28">
+        <circle cx="14" cy="10" r="4.5" fill="#9c9689" stroke="#47433b" stroke-width="1.5"/>
+        <path d="M6.5 23c.8-4.2 3.8-6.5 7.5-6.5s6.7 2.3 7.5 6.5H6.5z" fill="#827c70" stroke="#47433b" stroke-width="1.5" stroke-linejoin="round"/>
+      </symbol>
+
+      <symbol id="sw-ico-cities" viewBox="0 0 28 28">
+        <path d="M6 23V10l3-4 2.5 3h5L19 6l3 4v13H6z" fill="#464b54" stroke="#1f2228" stroke-width="1.5" stroke-linejoin="round"/>
+        <rect x="11.5" y="15" width="5" height="8" rx="2.5" fill="#f3e8d1"/>
+      </symbol>
+
+      <symbol id="sw-ico-armada" viewBox="0 0 28 28">
+        <path d="M14 5v11M14 6.5l8 5.5-8 2.5" fill="#2c8c9b" stroke="#13454d" stroke-width="1.5" stroke-linejoin="round"/>
+        <path d="M4.5 18.5h19l-2.5 4.5H7l-2.5-4.5z" fill="#1f6c78" stroke="#13454d" stroke-width="1.5" stroke-linejoin="round"/>
+      </symbol>
+    </defs>
+  </svg>
+
+  <div class="sw-folio">
+    <svg class="sw-corner tl" aria-hidden="true"><use href="#sw-ico-corner"/></svg>
+    <svg class="sw-corner tr" aria-hidden="true"><use href="#sw-ico-corner"/></svg>
+    <svg class="sw-corner bl" aria-hidden="true"><use href="#sw-ico-corner"/></svg>
+    <svg class="sw-corner br" aria-hidden="true"><use href="#sw-ico-corner"/></svg>
+
+    <header class="sw-head">
+      <div class="sw-head-top">
+        <button type="button" id="sw-btn-back" class="sw-back-btn" onclick="window.goHome ? goHome() : (window.showView && showView('home'))">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+          <span>Games</span>
+        </button>
+
+        <button type="button" id="sw-exp-toggle" class="sw-exp-toggle" aria-expanded="false" aria-controls="sw-exp-bar" onclick="window.swToggleExpansionsDrawer && swToggleExpansionsDrawer()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M3 12h18"/></svg>
+          <span>Expansions</span>
+          <span id="sw-exp-badge" class="sw-exp-badge" hidden></span>
+        </button>
+      </div>
+
+      <h1 class="sw-title">7 Wonders</h1>
+      <div class="sw-flourish" aria-hidden="true">
+        <span class="sw-flourish-line"></span>
+        <svg width="14" height="10" viewBox="0 0 14 10" fill="currentColor"><path d="M7 0l2.2 5L7 10 4.8 5 7 0zM1 5l2-1.5L3 6.5 1 5zm12 0l-2-1.5v3L13 5z"/></svg>
+        <span class="sw-flourish-line"></span>
+      </div>
+      <p class="sw-subtitle">Illuminated Papyrus Ledger</p>
+    </header>
+
+    <div id="sw-exp-bar" class="sw-exp-bar" hidden role="region" aria-label="7 Wonders expansions">
+      <label class="sw-exp-chip" data-exp="leaders">
+        <input type="checkbox" id="sw-exp-leaders" onchange="window.swToggleExpansion && swToggleExpansion('leaders', this.checked)">
+        <svg aria-hidden="true"><use href="#sw-ico-leaders"/></svg>
+        <span>Leaders</span>
+      </label>
+      <label class="sw-exp-chip" data-exp="cities">
+        <input type="checkbox" id="sw-exp-cities" onchange="window.swToggleExpansion && swToggleExpansion('cities', this.checked)">
+        <svg aria-hidden="true"><use href="#sw-ico-cities"/></svg>
+        <span>Cities</span>
+      </label>
+      <label class="sw-exp-chip" data-exp="armada">
+        <input type="checkbox" id="sw-exp-armada" onchange="window.swToggleExpansion && swToggleExpansion('armada', this.checked)">
+        <svg aria-hidden="true"><use href="#sw-ico-armada"/></svg>
+        <span>Armada</span>
+      </label>
+    </div>
+
+    <section id="sw-leaderboard" class="sw-leaderboard" data-count="4" aria-label="Live standings"></section>
+
+    <div class="sw-section-rule">
+      <span class="sw-section-label">Score Breakdown</span>
+    </div>
+
+    <div id="sw-cat-tabs" class="sw-cat-tabs" role="tablist" aria-label="Scoring categories">
+      <button type="button" class="sw-cat-tab is-active" role="tab" aria-selected="true" data-cat="military" onclick="window.swSelectCategory && swSelectCategory('military')">
+        <span class="sw-cat-tab-ico"><svg aria-hidden="true"><use href="#sw-ico-military"/></svg></span>
+        <span>Military</span>
+      </button>
+      <button type="button" class="sw-cat-tab" role="tab" aria-selected="false" data-cat="treasury" onclick="window.swSelectCategory && swSelectCategory('treasury')">
+        <span class="sw-cat-tab-ico"><svg aria-hidden="true"><use href="#sw-ico-treasury"/></svg></span>
+        <span>Treasury</span>
+      </button>
+      <button type="button" class="sw-cat-tab" role="tab" aria-selected="false" data-cat="wonder" onclick="window.swSelectCategory && swSelectCategory('wonder')">
+        <span class="sw-cat-tab-ico"><svg aria-hidden="true"><use href="#sw-ico-wonder"/></svg></span>
+        <span>Wonder</span>
+      </button>
+      <button type="button" class="sw-cat-tab" role="tab" aria-selected="false" data-cat="civilian" onclick="window.swSelectCategory && swSelectCategory('civilian')">
+        <span class="sw-cat-tab-ico"><svg aria-hidden="true"><use href="#sw-ico-civilian"/></svg></span>
+        <span>Civilian</span>
+      </button>
+      <button type="button" class="sw-cat-tab" role="tab" aria-selected="false" data-cat="commercial" onclick="window.swSelectCategory && swSelectCategory('commercial')">
+        <span class="sw-cat-tab-ico"><svg aria-hidden="true"><use href="#sw-ico-commercial"/></svg></span>
+        <span>Commerce</span>
+      </button>
+      <button type="button" class="sw-cat-tab" role="tab" aria-selected="false" data-cat="guilds" onclick="window.swSelectCategory && swSelectCategory('guilds')">
+        <span class="sw-cat-tab-ico"><svg aria-hidden="true"><use href="#sw-ico-guilds"/></svg></span>
+        <span>Guilds</span>
+      </button>
+      <button type="button" class="sw-cat-tab" role="tab" aria-selected="false" data-cat="science" onclick="window.swSelectCategory && swSelectCategory('science')">
+        <span class="sw-cat-tab-ico"><svg aria-hidden="true"><use href="#sw-ico-science"/></svg></span>
+        <span>Science</span>
+      </button>
+      <button type="button" class="sw-cat-tab" role="tab" aria-selected="false" data-cat="leaders" hidden onclick="window.swSelectCategory && swSelectCategory('leaders')">
+        <span class="sw-cat-tab-ico"><svg aria-hidden="true"><use href="#sw-ico-leaders"/></svg></span>
+        <span>Leaders</span>
+      </button>
+      <button type="button" class="sw-cat-tab" role="tab" aria-selected="false" data-cat="cities" hidden onclick="window.swSelectCategory && swSelectCategory('cities')">
+        <span class="sw-cat-tab-ico"><svg aria-hidden="true"><use href="#sw-ico-cities"/></svg></span>
+        <span>Cities</span>
+      </button>
+      <button type="button" class="sw-cat-tab" role="tab" aria-selected="false" data-cat="armada" hidden onclick="window.swSelectCategory && swSelectCategory('armada')">
+        <span class="sw-cat-tab-ico"><svg aria-hidden="true"><use href="#sw-ico-armada"/></svg></span>
+        <span>Armada</span>
+      </button>
+    </div>
+
+    <section id="sw-cat-card" class="sw-cat-card" data-cat="military" aria-live="polite">
+      <header class="sw-cat-head">
+        <div id="sw-cat-icon" class="sw-cat-icon" aria-hidden="true">
+          <svg><use href="#sw-ico-military"/></svg>
+        </div>
+        <div class="sw-cat-meta">
+          <h2 id="sw-cat-title" class="sw-cat-title">Military Conflicts</h2>
+          <p id="sw-cat-hint" class="sw-cat-hint">Sum victory &amp; defeat tokens (−6 to +18 VP)</p>
+        </div>
+        <span id="sw-cat-step" class="sw-cat-step">1 / 7</span>
+      </header>
+
+      <div id="sw-player-rows" class="sw-player-rows"></div>
+    </section>
+
+    <footer class="sw-footer">
+      <div class="sw-nav-row">
+        <button type="button" id="sw-btn-prev" class="sw-nav-btn" onclick="window.swStepCategory && swStepCategory(-1)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+          <span>Prev</span>
+        </button>
+
+        <button type="button" id="sw-btn-undo" class="sw-nav-btn is-undo" onclick="window.swUndo && swUndo()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></svg>
+          <span>Undo</span>
+        </button>
+
+        <button type="button" id="sw-btn-next" class="sw-nav-btn is-next" onclick="window.swStepCategory && swStepCategory(1)">
+          <span id="sw-btn-next-label">Next Category</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+      </div>
+
+      <button type="button" id="sw-btn-finish" class="sw-finish-btn" onclick="window.swFinishGame && swFinishGame()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M16 20c-4.5-2.5-7-6.8-6.5-12.5.2-1.8.8-3.4 1.8-4.5M9.5 14l3.5-.8M9.5 10.2l3.4.3M10.5 6.8l2.8 1.2"/></svg>
+        <span>Finish Game</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M8 20c4.5-2.5 7-6.8 6.5-12.5-.2-1.8-.8-3.4-1.8-4.5M14.5 14l-3.5-.8M14.5 10.2l-3.4.3M13.5 6.8l-2.8 1.2"/></svg>
+      </button>
+    </footer>
+  </div>
+</div>
 
     <!-- Catan board: only visible with body.theme-catan (layout from the approved rendering) -->
     <div id="catan-board">
@@ -6091,6 +7312,23 @@ body.theme-rummikub .bottom-nav #nav-social {
   // 2. Shared Game Record Serialization
   // =========================================================================
 
+  function extractTiebreakCoins(p) {
+    if (!p || typeof p !== 'object') return null;
+    const candidates = [
+      p.tiebreakCoins,
+      p.coins,
+      p.meta && p.meta.tiebreakCoins,
+      p.meta && p.meta.coins,
+      p.scores && p.scores.treasury
+    ];
+    for (const c of candidates) {
+      if (c !== null && c !== undefined && c !== '' && Number.isFinite(Number(c))) {
+        return Number(c);
+      }
+    }
+    return null;
+  }
+
   function computeWinnersForGame(game) {
     const players = Array.isArray(game && game.players) ? game.players : [];
     if (!players.length) return { winnerIndices: new Set(), winnerNames: [] };
@@ -6102,13 +7340,38 @@ body.theme-rummikub .bottom-nav #nav-social {
       : (game.meta && typeof game.meta.low === 'boolean' ? game.meta.low : meta.low);
     const best = isLow ? Math.min(...scores) : Math.max(...scores);
 
+    let topIndices = [];
+    players.forEach((p, idx) => {
+      if ((Number(p.score) || 0) === best) topIndices.push(idx);
+    });
+
+    // Official 7 Wonders tiebreaker: highest raw Treasury coins breaks VP ties
+    const is7Wonders = meta.id === '7wonders' || meta.id === 'seven_wonders';
+    if (is7Wonders && topIndices.length > 1) {
+      const coinEntries = topIndices.map((idx) => ({
+        idx,
+        coins: extractTiebreakCoins(players[idx])
+      }));
+      if (coinEntries.some((e) => e.coins !== null)) {
+        const bestCoins = Math.max(...coinEntries.map((e) => (e.coins === null ? 0 : e.coins)));
+        topIndices = coinEntries
+          .filter((e) => (e.coins === null ? 0 : e.coins) === bestCoins)
+          .map((e) => e.idx);
+      } else {
+        // Coins not carried on this record (e.g. merged shared rows): honor the saved tiebreak winner flags
+        const flagged = topIndices.filter((idx) => {
+          const p = players[idx];
+          return Boolean(p && (p.is_winner === true || p.isWinner === true));
+        });
+        if (flagged.length && flagged.length < topIndices.length) topIndices = flagged;
+      }
+    }
+
     const winnerIndices = new Set();
     const winnerNames = [];
-    players.forEach((p, idx) => {
-      if ((Number(p.score) || 0) === best) {
-        winnerIndices.add(idx);
-        winnerNames.push(extractProfileName(p) || 'Player');
-      }
+    topIndices.forEach((idx) => {
+      winnerIndices.add(idx);
+      winnerNames.push(extractProfileName(players[idx]) || 'Player');
     });
     return { winnerIndices, winnerNames };
   }
@@ -6182,6 +7445,17 @@ body.theme-rummikub .bottom-nav #nav-social {
       } else if (gameType === 'carcassonne') {
         pMeta.scoring_mode = 'final_tally';
         if (rawP && rawP.color) pMeta.color = rawP.color;
+      } else if (gameType === '7wonders' || gameType === 'seven_wonders') {
+        const tbCoins = extractTiebreakCoins(rawP);
+        if (tbCoins !== null) {
+          pMeta.tiebreakCoins = tbCoins;
+          pMeta.coins = tbCoins;
+        }
+        if (rawP && rawP.treasuryVp !== undefined) pMeta.treasuryVp = Number(rawP.treasuryVp) || 0;
+        if (rawP && rawP.scienceVp !== undefined) pMeta.scienceVp = Number(rawP.scienceVp) || 0;
+        if (rawP && rawP.wonder) pMeta.wonder = rawP.wonder;
+        if (rawP && rawP.scores && typeof rawP.scores === 'object') pMeta.scores = { ...rawP.scores };
+        if (rawP && rawP.science && typeof rawP.science === 'object') pMeta.science = { ...rawP.science };
       }
 
       const roundScores = extractPlayerRoundScores(rounds, idx);
@@ -6209,7 +7483,8 @@ body.theme-rummikub .bottom-nav #nav-social {
       start_time: activeGame.startTime || null,
       end_time: playedAt,
       group_name: activeGame.groupName || activeGame.group_name || null,
-      created_by: creatorId
+      created_by: creatorId,
+      ...(activeGame.meta ? { meta: activeGame.meta } : {})
     };
 
     return {
@@ -6252,6 +7527,16 @@ body.theme-rummikub .bottom-nav #nav-social {
       if (gameType === 'catan' && pMeta.breakdown) out.breakdown = { ...emptyCatanBreakdown(), ...pMeta.breakdown };
       if (gameType === 'flip7' && pMeta.flip7Count !== undefined) out.flip7Count = Number(pMeta.flip7Count) || 0;
       if (gameType === 'carcassonne' && pMeta.color) out.color = pMeta.color;
+      if (gameType === '7wonders' || gameType === 'seven_wonders') {
+        const tbCoins = extractTiebreakCoins({ meta: pMeta });
+        if (tbCoins !== null) {
+          out.tiebreakCoins = tbCoins;
+          out.coins = tbCoins;
+        }
+        if (pMeta.wonder) out.wonder = pMeta.wonder;
+        if (pMeta.scores) out.scores = pMeta.scores;
+        if (pMeta.science) out.science = pMeta.science;
+      }
       // Team rows (e.g. Nertz partners) keep their members for display + per-partner leaderboard credit
       if (p && Array.isArray(p.members) && p.members.length) {
         out.members = p.members.map((m) => ({ name: extractProfileName(m) || 'Player', userId: extractUserId(m, false), isSelf: Boolean(currentUserId && extractUserId(m, false) === currentUserId) }));
@@ -6612,6 +7897,7 @@ body.theme-rummikub .bottom-nav #nav-social {
     buildDefaultPlayers,
     applyGroupPreset,
     buildGamePlayers,
+    computeWinnersForGame,
     buildSharedGamePayload,
     mergePersonalHistory,
     computeGroupLeaderboard
@@ -9605,6 +10891,722 @@ window.SocialUI = (function () {
 
 </script>
 
+<!-- 7 Wonders scoring logic (window.SevenWondersLogic): 7 categories + expansions, optimal Science with Wilds, coins→VP, coin tiebreaker, undo, finish payloads -->
+<script id="seven-wonders-logic">
+/* ==========================================================================
+   Score Tracker — 7 Wonders Scoring Module (Illuminated Papyrus Ledger)
+   ==========================================================================
+   Drop-in logic module for v3/engine.js. Exposes `window.SevenWondersLogic`
+   in browsers and `module.exports` in Node.
+
+   Canonical game key: '7wonders' (3–7 players, default 3–4, max 7).
+   Scoring flow: Category-by-category ledger across all 7 base categories
+   plus tucked-away optional expansions (Leaders, Cities, Armada — all OFF
+   by default).
+
+   Features:
+   - All 7 base categories:
+       1. Military (signed int, supports negative defeat tokens)
+       2. Treasury / Coins (enter raw Coins >= 0 -> Math.floor(coins / 3) VP;
+          raw coins retained as `coins` / `tiebreakCoins` for official tiebreaker)
+       3. Wonder (non-negative int)
+       4. Civilian / Blue (non-negative int)
+       5. Commercial / Yellow (non-negative int)
+       6. Guilds / Purple (non-negative int)
+       7. Science / Green (automatic optimal a² + b² + c² + 7*min(a,b,c)
+          across all Wild assignments + optional direct VP override)
+   - Optional expansions toggle (default OFF):
+       - Leaders (non-negative int)
+       - Cities (signed int, supports negative Debt tokens)
+       - Armada (signed int, supports naval defeats)
+   - Official tiebreaker: highest total VP, then highest raw Treasury coins,
+     then shared win if still tied.
+   - Undo stack, category navigation, ranked standings, and History / Supabase
+     shared payload builder (`swBuildFinishPayload`).
+   ========================================================================== */
+
+(function (global) {
+  'use strict';
+
+  const GAME_TYPE = '7wonders';
+  const MIN_PLAYERS = 3;
+  const MAX_PLAYERS = 7;
+  const MAX_SCIENCE_WILDS = 6;
+  const MAX_UNDO_STACK = 60;
+
+  const BASE_CATEGORIES = [
+    'military',
+    'treasury',
+    'wonder',
+    'civilian',
+    'commercial',
+    'guilds',
+    'science'
+  ];
+
+  const EXPANSION_CATEGORIES = ['leaders', 'cities', 'armada'];
+  const ALL_CATEGORIES = BASE_CATEGORIES.concat(EXPANSION_CATEGORIES);
+  const SCIENCE_SYMBOLS = ['tablets', 'compasses', 'gears', 'wilds'];
+
+  const CATEGORY_META = {
+    military:   { key: 'military',   label: 'Military',   shortLabel: 'Mil',  color: '#b91c1c', signed: true,  isCoins: false, isScience: false, expansion: null,      hint: 'Conflict tokens (supports negative defeats)' },
+    treasury:   { key: 'treasury',   label: 'Treasury',   shortLabel: 'Coin', color: '#b45309', signed: false, isCoins: true,  isScience: false, expansion: null,      hint: 'Enter raw Coins (3 coins = 1 VP; breaks ties)' },
+    wonder:     { key: 'wonder',     label: 'Wonder',     shortLabel: 'Wnd',  color: '#92400e', signed: false, isCoins: false, isScience: false, expansion: null,      hint: 'Built Wonder stage VP' },
+    civilian:   { key: 'civilian',   label: 'Civilian',   shortLabel: 'Civ',  color: '#1d4ed8', signed: false, isCoins: false, isScience: false, expansion: null,      hint: 'Blue structures' },
+    commercial: { key: 'commercial', label: 'Commercial', shortLabel: 'Com',  color: '#ca8a04', signed: false, isCoins: false, isScience: false, expansion: null,      hint: 'Yellow structures' },
+    guilds:     { key: 'guilds',     label: 'Guilds',     shortLabel: 'Gld',  color: '#6d28d9', signed: false, isCoins: false, isScience: false, expansion: null,      hint: 'Purple guild cards' },
+    science:    { key: 'science',    label: 'Science',    shortLabel: 'Sci',  color: '#15803d', signed: false, isCoins: false, isScience: true,  expansion: null,      hint: 'Tablets, Compasses, Gears & Wilds' },
+    leaders:    { key: 'leaders',    label: 'Leaders',    shortLabel: 'Ldr',  color: '#475569', signed: false, isCoins: false, isScience: false, expansion: 'leaders', hint: 'White Leaders expansion cards' },
+    cities:     { key: 'cities',     label: 'Cities',     shortLabel: 'Cty',  color: '#1f2937', signed: true,  isCoins: false, isScience: false, expansion: 'cities',  hint: 'Black Cities cards & Debt tokens (signed)' },
+    armada:     { key: 'armada',     label: 'Armada',     shortLabel: 'Arm',  color: '#0f766e', signed: true,  isCoins: false, isScience: false, expansion: 'armada',  hint: 'Naval conflicts, fleets & islands (signed)' }
+  };
+
+  const WONDERS = [
+    'Alexandria',
+    'Babylon',
+    'Éphesos',
+    'Gizah',
+    'Halikarnassos',
+    'Olympia',
+    'Rhodos'
+  ];
+
+  // ---------------- Helpers ----------------
+  function uid(prefix) {
+    return (prefix || 'sw') + '_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 6);
+  }
+
+  function cleanStr(v) {
+    return String(v ?? '').trim();
+  }
+
+  function clampInt(v, min, max) {
+    const n = typeof v === 'number' ? Math.trunc(v) : parseInt(String(v ?? '').trim(), 10);
+    if (!Number.isFinite(n)) return 0;
+    return Math.max(min, Math.min(max, n));
+  }
+
+  function parseCategoryValue(cat, raw) {
+    const meta = CATEGORY_META[cat];
+    if (!meta) return 0;
+    if (meta.signed) return clampInt(raw, -999, 999);
+    return clampInt(raw, 0, 999);
+  }
+
+  function normalizeExpansions(raw) {
+    const src = (raw && typeof raw === 'object') ? raw : {};
+    return {
+      leaders: Boolean(src.leaders),
+      cities: Boolean(src.cities),
+      armada: Boolean(src.armada)
+    };
+  }
+
+  function normalizeScienceInput(raw) {
+    const src = (raw && typeof raw === 'object') ? raw : {};
+    const hasOverride =
+      src.override !== null &&
+      src.override !== undefined &&
+      src.override !== '' &&
+      Number.isFinite(Number(src.override));
+    return {
+      tablets: clampInt(src.tablets, 0, 99),
+      compasses: clampInt(src.compasses, 0, 99),
+      gears: clampInt(src.gears, 0, 99),
+      wilds: clampInt(src.wilds, 0, MAX_SCIENCE_WILDS),
+      override: hasOverride ? clampInt(src.override, 0, 999) : null
+    };
+  }
+
+  function emptyScores() {
+    return {
+      military: 0,
+      treasury: 0, // raw coins (3 coins = 1 VP)
+      wonder: 0,
+      civilian: 0,
+      commercial: 0,
+      guilds: 0,
+      leaders: 0,
+      cities: 0,
+      armada: 0
+    };
+  }
+
+  function normalizeScores(raw) {
+    const src = (raw && typeof raw === 'object') ? raw : {};
+    const out = emptyScores();
+    for (const key of Object.keys(out)) {
+      out[key] = parseCategoryValue(key, src[key]);
+    }
+    return out;
+  }
+
+  function normalizePlayerInput(raw) {
+    if (typeof raw === 'string') {
+      const name = cleanStr(raw);
+      return name ? { name, userId: null, isSelf: false, wonder: null } : null;
+    }
+    if (!raw || typeof raw !== 'object') return null;
+    const name = cleanStr(
+      raw.name ||
+      raw.display_name ||
+      raw.displayName ||
+      (raw.profile && raw.profile.display_name)
+    );
+    if (!name) return null;
+    const userId = raw.userId ?? raw.user_id ?? (raw.profile && raw.profile.id) ?? null;
+    return {
+      name,
+      userId: userId ? String(userId) : null,
+      isSelf: Boolean(raw.isSelf || raw.is_self),
+      wonder: raw.wonder ? cleanStr(raw.wonder) : null,
+      scores: raw.scores,
+      science: raw.science
+    };
+  }
+
+  // ---------------- Science Calculator ----------------
+  /**
+   * Computes optimal 7 Wonders Science VP:
+   *   a² + b² + c² + 7 * min(a, b, c)
+   * across all valid (wa, wb, wc) wild assignments where wa + wb + wc = wilds.
+   * Respects `override` when set to a finite non-negative number, while still
+   * returning `autoVp` and `bestSplit` for UI display.
+   */
+  function swComputeScience(sciObj) {
+    const sci = normalizeScienceInput(sciObj);
+    const t = sci.tablets;
+    const c = sci.compasses;
+    const g = sci.gears;
+    const w = sci.wilds;
+
+    let bestTotal = -1;
+    let bestA = t;
+    let bestB = c;
+    let bestC = g;
+    let bestWa = 0;
+    let bestWb = 0;
+    let bestWc = 0;
+    let bestSets = 0;
+    let bestSquares = 0;
+
+    for (let wa = 0; wa <= w; wa++) {
+      for (let wb = 0; wb <= w - wa; wb++) {
+        const wc = w - wa - wb;
+        const a = t + wa;
+        const b = c + wb;
+        const cc = g + wc;
+        const squares = a * a + b * b + cc * cc;
+        const sets = Math.min(a, b, cc);
+        const total = squares + sets * 7;
+        if (total > bestTotal) {
+          bestTotal = total;
+          bestA = a;
+          bestB = b;
+          bestC = cc;
+          bestWa = wa;
+          bestWb = wb;
+          bestWc = wc;
+          bestSets = sets;
+          bestSquares = squares;
+        }
+      }
+    }
+
+    const autoVp = Math.max(0, bestTotal);
+    const isOverride = sci.override !== null;
+    const vp = isOverride ? sci.override : autoVp;
+
+    return {
+      vp,
+      autoVp,
+      isOverride,
+      tablets: t,
+      compasses: c,
+      gears: g,
+      wilds: w,
+      override: sci.override,
+      bestSplit: { tablets: bestA, compasses: bestB, gears: bestC },
+      wildAssignment: { tablets: bestWa, compasses: bestWb, gears: bestWc },
+      sets: bestSets,
+      setsScore: bestSets * 7,
+      squaresScore: bestSquares
+    };
+  }
+
+  // ---------------- Player & Game Totals ----------------
+  function swGetActiveCategories(game) {
+    const exp = normalizeExpansions(game && game.expansions);
+    const cats = BASE_CATEGORIES.slice();
+    if (exp.leaders) cats.push('leaders');
+    if (exp.cities) cats.push('cities');
+    if (exp.armada) cats.push('armada');
+    return cats;
+  }
+
+  function swComputePlayerTotal(player, expansions) {
+    const exp = normalizeExpansions(expansions);
+    const scores = normalizeScores(player && player.scores);
+    const sci = swComputeScience(player && player.science);
+
+    const coins = scores.treasury;
+    const treasuryVp = Math.floor(coins / 3);
+    const scienceVp = sci.vp;
+
+    let total =
+      scores.military +
+      treasuryVp +
+      scores.wonder +
+      scores.civilian +
+      scores.commercial +
+      scores.guilds +
+      scienceVp;
+
+    if (exp.leaders) total += scores.leaders;
+    if (exp.cities) total += scores.cities;
+    if (exp.armada) total += scores.armada;
+
+    return {
+      total,
+      coins,
+      treasuryVp,
+      scienceVp,
+      scienceDetail: sci
+    };
+  }
+
+  function recomputePlayer(player, expansions) {
+    player.scores = normalizeScores(player.scores);
+    player.science = normalizeScienceInput(player.science);
+    const res = swComputePlayerTotal(player, expansions);
+    player.coins = res.coins;
+    player.tiebreakCoins = res.coins;
+    player.treasuryVp = res.treasuryVp;
+    player.scienceVp = res.scienceVp;
+    player.score = res.total;
+    return res;
+  }
+
+  function recomputeAll(game) {
+    if (!game || !Array.isArray(game.players)) return;
+    game.expansions = normalizeExpansions(game.expansions);
+    const activeCats = swGetActiveCategories(game);
+    if (!activeCats.includes(game.activeCategory)) {
+      game.activeCategory = 'military';
+    }
+    game.players.forEach((p) => recomputePlayer(p, game.expansions));
+  }
+
+  function cloneSnapshot(game) {
+    return {
+      activeCategory: game.activeCategory,
+      expansions: { ...game.expansions },
+      players: game.players.map((p) => ({
+        name: p.name,
+        userId: p.userId || null,
+        isSelf: Boolean(p.isSelf),
+        wonder: p.wonder || null,
+        scores: { ...p.scores },
+        science: { ...p.science }
+      }))
+    };
+  }
+
+  function pushUndo(game) {
+    if (!Array.isArray(game.undoStack)) game.undoStack = [];
+    game.undoStack.push(cloneSnapshot(game));
+    if (game.undoStack.length > MAX_UNDO_STACK) {
+      game.undoStack.shift();
+    }
+  }
+
+  // ---------------- Game Factory & Normalization ----------------
+  function createSevenWondersGame(playerList, opts) {
+    const options = opts || {};
+    const rawList = Array.isArray(playerList) ? playerList : [];
+    const normalized = rawList
+      .map(normalizePlayerInput)
+      .filter(Boolean)
+      .slice(0, MAX_PLAYERS);
+
+    const expansions = normalizeExpansions(options.expansions);
+    const players = normalized.map((p) => {
+      const entry = {
+        name: p.name,
+        userId: p.userId,
+        isSelf: p.isSelf,
+        wonder: p.wonder,
+        scores: normalizeScores(p.scores),
+        science: normalizeScienceInput(p.science),
+        coins: 0,
+        tiebreakCoins: 0,
+        treasuryVp: 0,
+        scienceVp: 0,
+        score: 0
+      };
+      recomputePlayer(entry, expansions);
+      return entry;
+    });
+
+    const game = {
+      id: options.id || uid('sw'),
+      type: GAME_TYPE,
+      gameName: '7 Wonders',
+      version: '7 Wonders',
+      low: false,
+      startTime: options.startTime || new Date().toISOString(),
+      endTime: null,
+      groupId: options.groupId ?? null,
+      groupName: options.groupName ?? null,
+      activeCategory: 'military',
+      expansions,
+      players,
+      rounds: [],
+      undoStack: []
+    };
+
+    recomputeAll(game);
+    return game;
+  }
+
+  function ensureSevenWondersState(game) {
+    if (!game || typeof game !== 'object') return null;
+    game.type = GAME_TYPE;
+    game.gameName = game.gameName || '7 Wonders';
+    game.low = false;
+    game.expansions = normalizeExpansions(game.expansions);
+    if (!Array.isArray(game.players)) game.players = [];
+    if (!Array.isArray(game.undoStack)) game.undoStack = [];
+    if (!Array.isArray(game.rounds)) game.rounds = [];
+    game.players.forEach((p) => {
+      if (!p || typeof p !== 'object') return;
+      p.scores = normalizeScores(p.scores);
+      p.science = normalizeScienceInput(p.science);
+      recomputePlayer(p, game.expansions);
+    });
+    const cats = swGetActiveCategories(game);
+    if (!cats.includes(game.activeCategory)) {
+      game.activeCategory = cats[0] || 'military';
+    }
+    return game;
+  }
+
+  // ---------------- Category-by-Category Controls ----------------
+  function swSelectCategory(game, cat) {
+    ensureSevenWondersState(game);
+    const cats = swGetActiveCategories(game);
+    const key = String(cat || '').toLowerCase();
+    if (!cats.includes(key)) {
+      return { ok: false, activeCategory: game.activeCategory, categories: cats };
+    }
+    game.activeCategory = key;
+    const index = cats.indexOf(key);
+    return {
+      ok: true,
+      activeCategory: key,
+      index,
+      total: cats.length,
+      isFirst: index === 0,
+      isLast: index === cats.length - 1,
+      categories: cats
+    };
+  }
+
+  function swPrevCategory(game) {
+    ensureSevenWondersState(game);
+    const cats = swGetActiveCategories(game);
+    const idx = Math.max(0, cats.indexOf(game.activeCategory));
+    const nextIdx = Math.max(0, idx - 1);
+    return swSelectCategory(game, cats[nextIdx]);
+  }
+
+  function swNextCategory(game) {
+    ensureSevenWondersState(game);
+    const cats = swGetActiveCategories(game);
+    const idx = Math.max(0, cats.indexOf(game.activeCategory));
+    const nextIdx = Math.min(cats.length - 1, idx + 1);
+    return swSelectCategory(game, cats[nextIdx]);
+  }
+
+  function swStepScore(game, playerIdx, cat, delta) {
+    ensureSevenWondersState(game);
+    const p = game.players[playerIdx];
+    const key = String(cat || '').toLowerCase();
+    if (!p || !CATEGORY_META[key]) return null;
+    if (key === 'science') {
+      const cur = swComputeScience(p.science).vp;
+      return swSetScienceOverride(game, playerIdx, Math.max(0, cur + clampInt(delta, -999, 999)));
+    }
+    pushUndo(game);
+    const nextVal = parseCategoryValue(key, (p.scores[key] || 0) + clampInt(delta, -999, 999));
+    p.scores[key] = nextVal;
+    recomputePlayer(p, game.expansions);
+    return p;
+  }
+
+  function swSetScore(game, playerIdx, cat, val) {
+    ensureSevenWondersState(game);
+    const p = game.players[playerIdx];
+    const key = String(cat || '').toLowerCase();
+    if (!p || !CATEGORY_META[key]) return null;
+    if (key === 'science') {
+      return swSetScienceOverride(game, playerIdx, val);
+    }
+    pushUndo(game);
+    p.scores[key] = parseCategoryValue(key, val);
+    recomputePlayer(p, game.expansions);
+    return p;
+  }
+
+  function swStepScience(game, playerIdx, sym, delta) {
+    ensureSevenWondersState(game);
+    const p = game.players[playerIdx];
+    const key = String(sym || '').toLowerCase();
+    if (!p || !SCIENCE_SYMBOLS.includes(key)) return null;
+    pushUndo(game);
+    const maxVal = key === 'wilds' ? MAX_SCIENCE_WILDS : 99;
+    const cur = p.science[key] || 0;
+    p.science[key] = clampInt(cur + clampInt(delta, -99, 99), 0, maxVal);
+    // Actively adjusting Science symbols switches back to automatic calculation
+    p.science.override = null;
+    recomputePlayer(p, game.expansions);
+    return p;
+  }
+
+  function swSetScienceOverride(game, playerIdx, val) {
+    ensureSevenWondersState(game);
+    const p = game.players[playerIdx];
+    if (!p) return null;
+    pushUndo(game);
+    if (val === null || val === undefined || String(val).trim() === '') {
+      p.science.override = null;
+    } else {
+      p.science.override = clampInt(val, 0, 999);
+    }
+    recomputePlayer(p, game.expansions);
+    return p;
+  }
+
+  function swToggleExpansion(game, expKey) {
+    ensureSevenWondersState(game);
+    const key = String(expKey || '').toLowerCase();
+    if (!EXPANSION_CATEGORIES.includes(key)) {
+      return { ok: false, expansions: { ...game.expansions } };
+    }
+    pushUndo(game);
+    game.expansions[key] = !game.expansions[key];
+    const cats = swGetActiveCategories(game);
+    if (!cats.includes(game.activeCategory)) {
+      game.activeCategory = 'science';
+    }
+    recomputeAll(game);
+    return {
+      ok: true,
+      expansion: key,
+      enabled: game.expansions[key],
+      expansions: { ...game.expansions },
+      activeCategory: game.activeCategory,
+      categories: cats
+    };
+  }
+
+  function swUndo(game) {
+    ensureSevenWondersState(game);
+    if (!game.undoStack.length) return { ok: false, remaining: 0 };
+    const snap = game.undoStack.pop();
+    game.activeCategory = snap.activeCategory;
+    game.expansions = normalizeExpansions(snap.expansions);
+    game.players = snap.players.map((p) => {
+      const entry = {
+        name: p.name,
+        userId: p.userId || null,
+        isSelf: Boolean(p.isSelf),
+        wonder: p.wonder || null,
+        scores: normalizeScores(p.scores),
+        science: normalizeScienceInput(p.science),
+        coins: 0,
+        tiebreakCoins: 0,
+        treasuryVp: 0,
+        scienceVp: 0,
+        score: 0
+      };
+      recomputePlayer(entry, game.expansions);
+      return entry;
+    });
+    recomputeAll(game);
+    return { ok: true, remaining: game.undoStack.length };
+  }
+
+  // ---------------- Ranking & Official Tiebreaker ----------------
+  /**
+   * Ranks players by:
+   *   1. Highest total VP (`score`)
+   *   2. Highest raw Treasury coins (`coins` / `tiebreakCoins`)
+   *   3. Shared rank if both VP and coins tie
+   */
+  function swGetRankedPlayers(game) {
+    ensureSevenWondersState(game);
+    const list = game.players.map((p, idx) => {
+      const calc = swComputePlayerTotal(p, game.expansions);
+      return {
+        playerIdx: idx,
+        name: p.name,
+        userId: p.userId || null,
+        isSelf: Boolean(p.isSelf),
+        wonder: p.wonder || null,
+        score: calc.total,
+        total: calc.total,
+        coins: calc.coins,
+        tiebreakCoins: calc.coins,
+        treasuryVp: calc.treasuryVp,
+        scienceVp: calc.scienceVp,
+        science: calc.scienceDetail,
+        scores: { ...p.scores }
+      };
+    });
+
+    list.sort((a, b) => {
+      if (b.score !== a.score) return b.score - a.score;
+      if (b.coins !== a.coins) return b.coins - a.coins;
+      return a.playerIdx - b.playerIdx;
+    });
+
+    const topScore = list.length ? list[0].score : 0;
+    const topCoins = list.length ? list[0].coins : 0;
+    const tiedAtTopVp = list.filter((x) => x.score === topScore).length > 1;
+
+    let currentRank = 1;
+    list.forEach((entry, i) => {
+      if (i > 0) {
+        const prev = list[i - 1];
+        if (entry.score !== prev.score || entry.coins !== prev.coins) {
+          currentRank = i + 1;
+        }
+      }
+      entry.rank = currentRank;
+      entry.isWinner = currentRank === 1;
+      entry.wonByTiebreaker = Boolean(
+        entry.isWinner &&
+        tiedAtTopVp &&
+        list.some((other) => other.score === topScore && other.coins < topCoins)
+      );
+    });
+
+    return list;
+  }
+
+  // ---------------- Finish & Shared Payload Builder ----------------
+  function swBuildFinishPayload(game, currentUser) {
+    ensureSevenWondersState(game);
+    const ranked = swGetRankedPlayers(game);
+    const winners = ranked.filter((r) => r.isWinner);
+    const winnerNames = winners.map((w) => w.name);
+    const winnerSet = new Set(winners.map((w) => w.playerIdx));
+    const endTime = game.endTime || new Date().toISOString();
+
+    const playersPayload = game.players.map((p, idx) => {
+      const calc = swComputePlayerTotal(p, game.expansions);
+      return {
+        name: p.name,
+        userId: p.userId || null,
+        isSelf: Boolean(p.isSelf),
+        wonder: p.wonder || null,
+        score: calc.total,
+        coins: calc.coins,
+        tiebreakCoins: calc.coins,
+        treasuryVp: calc.treasuryVp,
+        scienceVp: calc.scienceVp,
+        isWinner: winnerSet.has(idx),
+        scores: { ...p.scores },
+        science: {
+          tablets: calc.scienceDetail.tablets,
+          compasses: calc.scienceDetail.compasses,
+          gears: calc.scienceDetail.gears,
+          wilds: calc.scienceDetail.wilds,
+          override: calc.scienceDetail.override,
+          vp: calc.scienceDetail.vp,
+          autoVp: calc.scienceDetail.autoVp,
+          bestSplit: calc.scienceDetail.bestSplit
+        }
+      };
+    });
+
+    const meta = {
+      gameType: GAME_TYPE,
+      low: false,
+      expansions: { ...game.expansions },
+      activeCategories: swGetActiveCategories(game),
+      tiebreaker: 'coins',
+      wonByTiebreaker: winners.some((w) => w.wonByTiebreaker),
+      winnerNames,
+      players: playersPayload
+    };
+
+    const finishedGame = {
+      ...game,
+      type: GAME_TYPE,
+      gameName: '7 Wonders',
+      low: false,
+      endTime,
+      winner: winnerNames.join(', '),
+      winnerNames,
+      players: playersPayload,
+      meta
+    };
+
+    let sharedPayload = null;
+    if (global.SocialScoring && typeof global.SocialScoring.buildSharedGamePayload === 'function') {
+      sharedPayload = global.SocialScoring.buildSharedGamePayload(finishedGame, currentUser);
+    }
+
+    return {
+      finishedGame,
+      ranked,
+      winners,
+      winnerNames,
+      meta,
+      sharedPayload
+    };
+  }
+
+  // ---------------- Exports ----------------
+  const api = {
+    GAME_TYPE,
+    MIN_PLAYERS,
+    MAX_PLAYERS,
+    MAX_SCIENCE_WILDS,
+    BASE_CATEGORIES,
+    EXPANSION_CATEGORIES,
+    ALL_CATEGORIES,
+    SCIENCE_SYMBOLS,
+    CATEGORY_META,
+    WONDERS,
+    createSevenWondersGame,
+    ensureSevenWondersState,
+    swGetActiveCategories,
+    swComputeScience,
+    swComputePlayerTotal,
+    swSelectCategory,
+    swPrevCategory,
+    swNextCategory,
+    swStepScore,
+    swSetScore,
+    swStepScience,
+    swSetScienceOverride,
+    swToggleExpansion,
+    swUndo,
+    swGetRankedPlayers,
+    swBuildFinishPayload
+  };
+
+  global.SevenWondersLogic = api;
+  if (typeof module !== 'undefined' && module.exports) {
+    module.exports = api;
+  }
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+
 <!-- Reusable dice roller + roll tracker logic (window.DiceLogic) -->
 <script id="dice-logic">
 /* ==========================================================================
@@ -10384,7 +12386,7 @@ window.SocialUI = (function () {
 
 <!-- App engine: defines window.onAuthReady / window.onAuthSignedOut before auth init -->
 <script id="score-engine">
-/* Score Tracker engine — Rummikub Classic Blue & Ivory Rack (2–6p, Points Up / Classic +/−, tile calculator), social layer (you, friends, groups, shared history), game-agnostic shell, per-game scoring, Catan wood/parchment theme, Flip 7 coastal card theme, Carcassonne sunlit meadow tally, Nertz Midnight Parlor & Gold Foil (Solo + unlimited Partners/Teams). */
+/* Score Tracker engine — 7 Wonders Illuminated Papyrus Ledger (3–7p, category-by-category, auto Science, coin tiebreaker), Rummikub Classic Blue & Ivory Rack (2–6p, Points Up / Classic +/−, tile calculator), social layer (you, friends, groups, shared history), game-agnostic shell, per-game scoring, Catan wood/parchment theme, Flip 7 coastal card theme, Carcassonne sunlit meadow tally, Nertz Midnight Parlor & Gold Foil (Solo + unlimited Partners/Teams). */
 (function (global) {
   'use strict';
 
@@ -10396,9 +12398,8 @@ window.SocialUI = (function () {
     { id: 'flip7', name: 'Flip 7', img: 'assets/games/flip7.svg', icon: '🃏',
       versions: ['Standard (to 200)', 'With a Vengeance', 'Thematic / Promo'],
       target: () => 200, detailedLabel: 'Card Pad' },
-    { id: '7wonders', name: '7 Wonders', img: '7wonders.jpg', icon: '🏛️',
-      versions: ['Base (1st/2nd Ed)', 'With Leaders', 'With Cities', 'With Armada', 'Other expansion'],
-      target: () => null, detailedLabel: 'Categories' },
+    { id: '7wonders', name: '7 Wonders', img: 'assets/games/7wonders.svg', art: 'assets/games/7wonders.svg', icon: '7', minPlayers: 3, maxPlayers: 7, defaultPlayers: 4,
+      theme: 'theme-seven-wonders', versions: ['Base Game', 'With Leaders', 'With Cities', 'With Armada'], target: () => null, detailedLabel: 'Categories' },
     { id: 'carcassonne', name: 'Carcassonne', img: 'assets/games/carcassonne.svg', icon: '🏰',
       versions: ['Classic (current scoring)', 'Older edition (small cities)', 'With Inns & Cathedrals', 'With other expansions'],
       target: () => null, detailedLabel: 'Features' },
@@ -10476,6 +12477,7 @@ window.SocialUI = (function () {
       g.players.forEach((p) => { p.score = Number(p.score) || 0; if (g.type === 'catan') p.breakdown = { ...emptyBreakdown(), ...(p.breakdown || {}) }; if (g.type === 'flip7') p.flip7Count = Number(p.flip7Count) || 0; });
       if (g.type === 'carcassonne') ccNormalize(g);
       if (g.type === 'rummikub' && global.RummikubLogic) global.RummikubLogic.rkNormalize(g);
+      if (g.type === '7wonders' && global.SevenWondersLogic) { global.SevenWondersLogic.ensureSevenWondersState(g); if (!Array.isArray(g.swDone)) g.swDone = []; }
       if (g.type === 'catan' && !g.targetVp) g.targetVp = gameById('catan').target(g.version);
       return g;
     } catch (_) { return null; }
@@ -10572,7 +12574,7 @@ window.SocialUI = (function () {
   function onAuthSignedOut() {
     currentUser = null; initializedUserId = null; players = []; history = []; currentGame = null; pendingSync = false;
     scoringPlayer = null; currentView = 'home'; closeDiceModal();
-    document.body.classList.remove('theme-catan', 'theme-flip7', 'theme-carcassonne', 'theme-nertz', 'theme-rummikub'); f7 = null; rkCalcOpen = false; rkCalcExpr = ''; nzSheetKind = null; nzPopIdx = -1;
+    document.body.classList.remove('theme-catan', 'theme-flip7', 'theme-carcassonne', 'theme-nertz', 'theme-rummikub', 'theme-seven-wonders'); f7 = null; swExpOpen = false; rkCalcOpen = false; rkCalcExpr = ''; nzSheetKind = null; nzPopIdx = -1;
     if (typeof unsubFriendships === 'function') { unsubFriendships(); unsubFriendships = null; }
     lastFriendsError = null;
     resetSocialState();
@@ -10593,13 +12595,16 @@ window.SocialUI = (function () {
     document.body.classList.toggle('theme-nertz', nzon);
     const rkon = currentView === 'active' && isRk();
     document.body.classList.toggle('theme-rummikub', rkon);
+    const swon = currentView === 'active' && isSw();
+    document.body.classList.toggle('theme-seven-wonders', swon);
+    if (!swon) swExpOpen = false;
     if (!rkon) rkCalcOpen = false;
     if (!nzon && (nzSheetKind || nzPopIdx >= 0)) { nzCloseSheet(); nzPopIdx = -1; }
     if (!ccon) ccHideAdd();
     if (!f7on) { const s = byId('f7-sheet'); if (s && !s.hidden) { setHidden(s, true); s.innerHTML = ''; } }
     syncDiceTrigger();
     const meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.setAttribute('content', on ? '#180f08' : f7on ? '#4bbdb8' : ccon ? '#6fa6d8' : nzon ? '#071222' : rkon ? '#0b2f69' : '#0c0d10');
+    if (meta) meta.setAttribute('content', on ? '#180f08' : f7on ? '#4bbdb8' : ccon ? '#6fa6d8' : nzon ? '#071222' : rkon ? '#0b2f69' : swon ? '#eadbc0' : '#0c0d10');
   }
   function showView(v) {
     if (!byId('view-' + v)) v = 'home';
@@ -10674,7 +12679,8 @@ window.SocialUI = (function () {
   function startGame() {
     const chosen = setupParticipants();
     if (!chosen.length) { alert('Add and select at least one player'); return null; }
-    const gMax = gameById(selectedGame).maxPlayers;
+    const gMax = gameById(selectedGame).maxPlayers, gMin = gameById(selectedGame).id === '7wonders' ? gameById(selectedGame).minPlayers : 0;
+    if (gMin && chosen.length < gMin) { alert(`${gameById(selectedGame).name} needs at least ${gMin} players — add ${gMin - chosen.length} more to start.`); return null; }
     if (gMax && chosen.length > gMax) { alert(`${gameById(selectedGame).name} supports up to ${gMax} players — deselect ${chosen.length - gMax} to start.`); return null; }
     if (currentGame && !confirm('Replace the current ' + gameLabel(currentGame) + ' game?')) return null;
     const g = gameById(selectedGame);
@@ -10699,6 +12705,7 @@ window.SocialUI = (function () {
     if (g.id === 'carcassonne') ccNormalize(currentGame);
     if (g.id === 'nertz') nzStartGame(chosen);
     if (g.id === 'rummikub') rkStartGame();
+    if (g.id === '7wonders' && SWL()) swStartGame();
     scoringPlayer = null; padMode = 'simple'; f7 = null;
     persistActive();
     showView('active');
@@ -10728,6 +12735,7 @@ window.SocialUI = (function () {
   function undoLastRound() {
     if (isNertz()) return nzUndo();
     if (isRk()) return rkUndo();
+    if (isSw()) return swUndoAction();
     if (!currentGame || !currentGame.rounds.length) return null;
     const r = currentGame.rounds.pop();
     currentGame.players.forEach((p, i) => { p.score = Array.isArray(r.prev) && r.prev[i] !== undefined ? r.prev[i] : p.score - ((r.deltas || [])[i] || 0); });
@@ -10766,6 +12774,12 @@ window.SocialUI = (function () {
       finished = RKL().rkPrepareFinish(currentGame);
       finished.version = RK_VERSIONS[finished.rkScoringMode] || finished.version;
       ['rkSel', 'rkDone', 'rkLogOpen'].forEach((k) => delete finished[k]);
+    } else if (isSw()) {
+      swExpOpen = false; swEditKey = null;
+      currentGame.endTime = new Date().toISOString();
+      finished = { ...SWL().swBuildFinishPayload(currentGame, currentUser).finishedGame };
+      finished.version = currentGame.version || finished.version;
+      ['undoStack', 'swDone', 'activeCategory'].forEach((k) => delete finished[k]);
     } else {
       finished = { ...currentGame, endTime: new Date().toISOString() };
       finished.winner = computeWinner(finished);
@@ -10794,7 +12808,7 @@ window.SocialUI = (function () {
       setHidden(byId('gen-pad'), true); setHidden(byId('gen-undo'), true);
       return;
     }
-    if (isCatan()) renderCatan(); else if (isFlip7()) renderFlip7(); else if (isCarc()) renderCarc(); else if (isNertz()) renderNertz(); else if (isRk()) renderRummikub(); else renderGeneric();
+    if (isCatan()) renderCatan(); else if (isFlip7()) renderFlip7(); else if (isCarc()) renderCarc(); else if (isNertz()) renderNertz(); else if (isRk()) renderRummikub(); else if (isSw()) renderSevenWonders(); else renderGeneric();
   }
 
   // ----- Generic (neutral) games -----
@@ -10817,6 +12831,7 @@ window.SocialUI = (function () {
     if (!currentGame || !currentGame.players[idx]) return;
     if (isNertz()) { nzUiSelect(idx); return; }
     if (isRk()) { rkSelect(idx); return; }
+    if (isSw()) return;
     scoringPlayer = idx;
     if (isCatan()) { selectCatanPlayer(idx); return; }
     if (isFlip7()) { f7Select(idx); return; }
@@ -11769,6 +13784,204 @@ window.SocialUI = (function () {
     if (!isNertz() || to === '' || to === undefined) return false;
     const ok = NZL().nzMovePartner(currentGame, i, j, Number(to)); nzCommit(true); return ok;
   }
+
+  // ----- 7 Wonders (Illuminated Papyrus Ledger · 3–7 players · category-by-category; math lives in SevenWondersLogic) -----
+  const SWL = () => global.SevenWondersLogic || null;
+  const isSw = () => !!(currentGame && currentGame.type === '7wonders' && SWL());
+  const SW_TITLES = { military: 'Military Conflicts', treasury: 'Treasury', wonder: 'Wonder Stages', civilian: 'Civilian Structures', commercial: 'Commercial Structures',
+    guilds: 'Guilds', science: 'Science', leaders: 'Leaders', cities: 'Cities', armada: 'Armada' };
+  const SW_HINTS = { military: 'Sum victory & defeat tokens (negative allowed)', treasury: 'Enter raw coins: every 3 coins = 1 VP (coins break ties)', wonder: 'VP from built Wonder stages',
+    civilian: 'Blue structure VP', commercial: 'Yellow structure VP', guilds: 'Purple guild VP', science: 'Tablets, Compasses, Gears & Wilds: optimal VP is automatic',
+    leaders: 'White Leaders card VP', cities: 'Black Cities VP & Debt tokens (negative allowed)', armada: 'Naval conflicts, fleets & islands (negative allowed)' };
+  const SW_SCI = [['tablets', 'Tablet', 'sw-ico-tablet'], ['compasses', 'Compass', 'sw-ico-compass'], ['gears', 'Gear', 'sw-ico-gear'], ['wilds', 'Wild', 'sw-ico-wild']];
+  let swExpOpen = false, swEditKey = null;
+  const swMinus = (n) => String(n).replace(/-/g, '−');
+  function swEnsure() {
+    const g = currentGame;
+    SWL().ensureSevenWondersState(g);
+    if (!Array.isArray(g.swDone)) g.swDone = [];
+    return g;
+  }
+  function swExpansionsFromVersion(v) {
+    return { leaders: /Leaders/i.test(v || ''), cities: /Cities/i.test(v || ''), armada: /Armada/i.test(v || '') };
+  }
+  function swStartGame() {
+    const base = currentGame;
+    const sw = SWL().createSevenWondersGame(base.players, { id: base.id, startTime: base.startTime, groupId: base.groupId || null, groupName: base.groupName || null,
+      expansions: swExpansionsFromVersion(base.version) });
+    Object.assign(base, sw, { id: base.id, version: base.version, target: null, swDone: [] });
+    swExpOpen = false; swEditKey = null;
+  }
+  function swCommit() { persistActive(); renderSevenWonders(); }
+  function swMarkDone(cat) { const g = currentGame; if (cat && !g.swDone.includes(cat)) g.swDone.push(cat); }
+  function swLaurel() { return '<svg class="sw-lb-laurel" viewBox="0 0 24 24" role="img" aria-label="Leader"><use href="#sw-ico-laurel"/></svg>'; }
+  function renderSevenWonders() {
+    const g = swEnsure(), L = SWL(), cats = L.swGetActiveCategories(g), cat = g.activeCategory, idx = Math.max(0, cats.indexOf(cat));
+    const shell = byId('sw-shell'); if (!shell) return;
+    shell.dataset.cat = cat;
+    // Expansions drawer
+    const bar = byId('sw-exp-bar'); setHidden(bar, !swExpOpen);
+    const tgl = byId('sw-exp-toggle'); if (tgl) tgl.setAttribute('aria-expanded', String(swExpOpen));
+    let onCount = 0;
+    L.EXPANSION_CATEGORIES.forEach((k) => {
+      const on = !!g.expansions[k]; if (on) onCount++;
+      const cb = byId('sw-exp-' + k); if (cb) { cb.checked = on; const chip = cb.closest('.sw-exp-chip'); if (chip) chip.classList.toggle('is-on', on); }
+    });
+    const badge = byId('sw-exp-badge'); if (badge) { badge.textContent = onCount ? String(onCount) : ''; setHidden(badge, !onCount); }
+    swRenderLeaderboard();
+    // Category tabs
+    document.querySelectorAll('#sw-cat-tabs .sw-cat-tab').forEach((t) => {
+      const k = t.dataset.cat, shown = cats.includes(k), active = k === cat;
+      t.hidden = !shown;
+      t.classList.toggle('is-active', active); t.setAttribute('aria-selected', String(active));
+      t.classList.toggle('is-done', shown && g.swDone.includes(k) && !active);
+    });
+    const at = document.querySelector(`#sw-cat-tabs .sw-cat-tab[data-cat="${cat}"]`);
+    if (at && at.scrollIntoView && at.parentElement) { const p = at.parentElement, l = at.offsetLeft - p.offsetLeft; if (l < p.scrollLeft || l + at.offsetWidth > p.scrollLeft + p.clientWidth) p.scrollLeft = Math.max(0, l - 16); }
+    // Active category card
+    const card = byId('sw-cat-card'); card.dataset.cat = cat;
+    byId('sw-cat-icon').innerHTML = `<svg><use href="#sw-ico-${cat}"/></svg>`;
+    byId('sw-cat-title').textContent = SW_TITLES[cat] || cat;
+    byId('sw-cat-hint').textContent = SW_HINTS[cat] || '';
+    byId('sw-cat-step').textContent = `${idx + 1} / ${cats.length}`;
+    swRenderRows();
+    // Footer
+    byId('sw-btn-prev').disabled = idx === 0;
+    const last = idx === cats.length - 1;
+    byId('sw-btn-next').disabled = last;
+    byId('sw-btn-next-label').textContent = last ? 'Last Category' : 'Next: ' + L.CATEGORY_META[cats[idx + 1]].label;
+    byId('sw-btn-undo').disabled = !(g.undoStack && g.undoStack.length);
+  }
+  function swRenderLeaderboard() {
+    const g = currentGame, ranked = SWL().swGetRankedPlayers(g), el = byId('sw-leaderboard');
+    el.dataset.count = String(Math.max(3, Math.min(7, g.players.length)));
+    const started = ranked.some((r) => r.score !== 0 || r.coins > 0);
+    el.innerHTML = ranked.map((r) => {
+      const lead = started && r.rank === 1, tied = started && ranked.filter((o) => o.score === r.score).length > 1;
+      return `<div class="sw-lb-row${lead ? ' is-leader' : ''}" data-idx="${r.playerIdx}" data-name="${esc(r.name)}" data-rank="${r.rank}">
+        <span class="sw-lb-rank">${r.rank}</span>
+        <span class="sw-lb-name-wrap"><span class="sw-lb-name">${esc(r.name)}</span>${tied ? `<span class="sw-lb-tie" title="Tied on VP: most coins wins">${r.coins} ${r.coins === 1 ? 'coin' : 'coins'}</span>` : ''}</span>
+        <span class="sw-lb-score-wrap"><span class="sw-lb-score">${swMinus(r.score)}</span>${lead ? swLaurel() : ''}</span>
+      </div>`;
+    }).join('');
+  }
+  function swRowSub(p) { return `Total ${swMinus(p.score)} VP`; }
+  function swRenderRows() {
+    const g = currentGame, cat = g.activeCategory, meta = SWL().CATEGORY_META[cat], el = byId('sw-player-rows');
+    if (cat === 'science') {
+      el.innerHTML = g.players.map((p, i) => {
+        const s = SWL().swComputeScience(p.science), wa = s.wildAssignment;
+        const hint = s.wilds > 0 ? 'Wild → ' + SW_SCI.slice(0, 3).filter(([k]) => wa[k] > 0).map(([k, l]) => (wa[k] > 1 ? wa[k] + '× ' : '') + l).join(', ') : '';
+        return `<div class="sw-row is-science" data-idx="${i}" data-name="${esc(p.name)}">
+          <div class="sw-sci-head">
+            <span class="sw-row-name">${esc(p.name)}</span>
+            <span class="sw-sci-summary"><span class="sw-sci-vp-pill" title="${s.squaresScore} + ${s.setsScore} (sets)">${s.vp} VP${s.isOverride ? ' · set' : ''}</span>${hint ? `<span class="sw-sci-wild-hint">${esc(hint)}</span>` : ''}</span>
+            <label class="sw-sci-override-wrap"><span>Set VP</span><input class="sw-sci-override-input" type="number" inputmode="numeric" min="0" placeholder="${s.autoVp}" value="${s.isOverride ? s.override : ''}" aria-label="Override ${esc(p.name)} Science VP"
+              onfocus="swBeginEdit()" oninput="swSciOverride(${i}, this.value, true)" onchange="swSciOverride(${i}, this.value)" onkeydown="if(event.key==='Enter')this.blur()"></label>
+          </div>
+          <div class="sw-sci-grid">${SW_SCI.map(([k, l, ico]) => `<div class="sw-sci-cell" data-sym="${k}">
+            <span class="sw-sci-label"><svg aria-hidden="true"><use href="#${ico}"/></svg>${l}</span>
+            <span class="sw-sci-ctrl"><button type="button" class="sw-sci-btn" aria-label="Remove ${l}" onclick="swSci(${i}, '${k}', -1)">−</button><span class="sw-sci-val">${s[k]}</span><button type="button" class="sw-sci-btn" aria-label="Add ${l}" onclick="swSci(${i}, '${k}', 1)">+</button></span>
+          </div>`).join('')}</div>
+        </div>`;
+      }).join('');
+      return;
+    }
+    const isCoins = cat === 'treasury';
+    el.innerHTML = g.players.map((p, i) => {
+      const v = Number(p.scores[cat]) || 0;
+      const sub = isCoins ? `<span class="sw-coin-vp">${v} ${v === 1 ? 'coin' : 'coins'} → ${Math.floor(v / 3)} VP</span>` : `<div class="sw-row-sub">${swRowSub(p)}</div>`;
+      return `<div class="sw-row${isCoins ? ' is-treasury' : ''}" data-idx="${i}" data-name="${esc(p.name)}">
+        <div class="sw-row-left"><div class="sw-row-name">${esc(p.name)}</div>${sub}</div>
+        <div class="sw-stepper">
+          <button type="button" class="sw-step-btn" aria-label="Decrease ${esc(p.name)} ${esc(meta.label)}" onclick="swStep(${i}, -1)">−</button>
+          <input class="sw-num-input" type="number" ${meta.signed ? '' : 'inputmode="numeric" min="0"'} value="${v}" aria-label="${esc(p.name)} ${esc(meta.label)}"
+            onfocus="swBeginEdit();this.select()" oninput="swSetVal(${i}, this.value, true)" onchange="swSetVal(${i}, this.value)" onkeydown="if(event.key==='Enter')this.blur()">
+          <button type="button" class="sw-step-btn" aria-label="Increase ${esc(p.name)} ${esc(meta.label)}" onclick="swStep(${i}, 1)">+</button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+  // Live partial refresh while typing (keeps focus in the input)
+  function swLiveRefresh(i) {
+    const g = currentGame, cat = g.activeCategory, row = document.querySelector(`#sw-player-rows .sw-row[data-idx="${i}"]`), p = g.players[i];
+    swRenderLeaderboard();
+    if (row && p) {
+      if (cat === 'treasury') { const v = Number(p.scores.treasury) || 0, b = row.querySelector('.sw-coin-vp'); if (b) b.textContent = `${v} ${v === 1 ? 'coin' : 'coins'} → ${Math.floor(v / 3)} VP`; }
+      else if (cat === 'science') { const s = SWL().swComputeScience(p.science), pill = row.querySelector('.sw-sci-vp-pill'); if (pill) pill.textContent = `${s.vp} VP${s.isOverride ? ' · set' : ''}`; }
+      else { const sub = row.querySelector('.sw-row-sub'); if (sub) sub.textContent = swRowSub(p); }
+    }
+    byId('sw-btn-undo').disabled = !(g.undoStack && g.undoStack.length);
+    persistActive();
+  }
+  // One undo snapshot per typing session (focus → blur), not per keystroke
+  function swBeginEdit() { swEditKey = null; }
+  function swTrackEdit(key, fn) {
+    const g = currentGame, before = (g.undoStack || []).length, r = fn();
+    if (swEditKey === key && g.undoStack.length > before) g.undoStack.pop();
+    swEditKey = key;
+    return r;
+  }
+  function swStep(i, delta) {
+    if (!isSw() || !currentGame.players[i]) return null;
+    const g = currentGame, cat = g.activeCategory; if (cat === 'science') return null;
+    swEditKey = null;
+    const r = SWL().swStepScore(g, i, cat, delta); swMarkDone(cat); swCommit(); return r ? (Number(r.scores[cat]) || 0) : null;
+  }
+  function swSetVal(i, val, live) {
+    if (!isSw() || !currentGame.players[i]) return null;
+    const g = currentGame, cat = g.activeCategory; if (cat === 'science') return null;
+    const raw = String(val ?? '').trim();
+    if (live && (raw === '' || raw === '-' || raw === '−')) return null;
+    const r = swTrackEdit(cat + ':' + i, () => SWL().swSetScore(g, i, cat, raw.replace('−', '-') || 0));
+    swMarkDone(cat);
+    if (live) swLiveRefresh(i); else { swEditKey = null; swCommit(); }
+    return r ? (Number(r.scores[cat]) || 0) : null;
+  }
+  function swSci(i, sym, delta) {
+    if (!isSw() || !currentGame.players[i]) return null;
+    swEditKey = null;
+    const r = SWL().swStepScience(currentGame, i, sym, delta); swMarkDone('science'); swCommit();
+    return r ? SWL().swComputeScience(r.science) : null;
+  }
+  function swSciOverride(i, val, live) {
+    if (!isSw() || !currentGame.players[i]) return null;
+    const g = currentGame, raw = String(val ?? '').trim();
+    const r = swTrackEdit('sci:' + i, () => SWL().swSetScienceOverride(g, i, raw === '' ? null : raw));
+    swMarkDone('science');
+    if (live) swLiveRefresh(i); else { swEditKey = null; swCommit(); }
+    return r ? SWL().swComputeScience(r.science) : null;
+  }
+  function swSelectCategory(cat) {
+    if (!isSw()) return null;
+    const r = SWL().swSelectCategory(currentGame, cat); swEditKey = null; swCommit(); swScrollCard(); return r;
+  }
+  function swScrollCard() { const c = byId('sw-cat-tabs'); if (c && c.getBoundingClientRect().top < 0) c.scrollIntoView({ block: 'start' }); }
+  function swStepCategory(dir) {
+    if (!isSw()) return null;
+    const g = currentGame;
+    if (dir > 0) swMarkDone(g.activeCategory);
+    const r = dir < 0 ? SWL().swPrevCategory(g) : SWL().swNextCategory(g);
+    swEditKey = null; swCommit(); swScrollCard(); return r;
+  }
+  function swToggleExpansionsDrawer(force) {
+    if (!isSw()) return false;
+    swExpOpen = typeof force === 'boolean' ? force : !swExpOpen; renderSevenWonders(); return swExpOpen;
+  }
+  function swToggleExpansion(key, checked) {
+    if (!isSw()) return null;
+    const g = currentGame, k = String(key || '').toLowerCase();
+    if (!SWL().EXPANSION_CATEGORIES.includes(k)) return null;
+    if (typeof checked === 'boolean' && !!g.expansions[k] === checked) { renderSevenWonders(); return { ...g.expansions }; }
+    SWL().swToggleExpansion(g, k);
+    if (!g.expansions[k]) g.swDone = g.swDone.filter((c) => c !== k);
+    swEditKey = null; swCommit(); return { ...g.expansions };
+  }
+  function swUndoAction() {
+    if (!isSw()) return null;
+    const r = SWL().swUndo(currentGame); swEditKey = null; swCommit(); return r;
+  }
+  function swFinishGame() { if (!isSw()) return null; return endGame(); }
 
   // ---------------- v15 Reusable 3D Dice Roller + Roll Tracker ----------------
   // ----- Rummikub (Classic Blue & Ivory Rack · 2–6 players · Points Up / Classic +/− · built-in tile calculator; math lives in RummikubLogic) -----
@@ -12767,7 +14980,7 @@ window.SocialUI = (function () {
       const payload = sc.buildSharedGamePayload(fin, user);
       const game = {
         ...fin, client_game_id: fin.id, group_id: payload.group_id || null,
-        winner: (fin.type === 'nertz' || fin.type === 'rummikub') ? fin.winner : ((payload.winner_names || []).join(', ') || fin.winner),
+        winner: (fin.type === 'nertz' || fin.type === 'rummikub' || fin.type === '7wonders') ? fin.winner : ((payload.winner_names || []).join(', ') || fin.winner),
         meta: fin.meta || null,
         players: fin.players.map((p, i) => ({ ...p, user_id: (payload.participants[i] || {}).user_id || null, is_winner: !!(payload.participants[i] || {}).is_winner, meta: (payload.participants[i] || {}).meta || {} })),
         summary: payload.summary
@@ -12807,6 +15020,7 @@ window.SocialUI = (function () {
     nzUiRemoveTeam, nzUiRenameTeam, nzUiAddPartner, nzUiRemovePartner, nzUiMovePartner,
     rkSelect, rkSetMode, rkSetSign, rkOnDeltaInput, rkStep, rkApplyJoker, rkConfirmRound, rkUndo, rkToggleHistory, rkAddPlayer, rkCycleColor, rkFinishGame,
     rkToggleCalc, rkCalcKey, rkCalcApply,
+    swSelectCategory, swStepCategory, swStep, swSetVal, swSci, swSciOverride, swBeginEdit, swToggleExpansionsDrawer, swToggleExpansion, swUndo: swUndoAction, swFinishGame, renderSevenWonders,
     undoLastRound, undoLastAction: undoLastRound, endGame, deleteGame,
     openDiceModal, closeDiceModal, rollVirtualDice, logPhysicalRoll, undoDiceRoll, resetDiceRolls, renderDiceUI,
     onAuthSignedIn: onAuthReady, removeSelf, addSelf, removeSetupFriend, toggleSetupFriend, includeFriendInNextGame, applyGroupPreset, clearSetupGroup,
@@ -12910,7 +15124,7 @@ window.SocialUI = (function () {
   }
 
   function showSignedOutUI() {
-    document.body.classList.remove('theme-catan', 'theme-flip7', 'theme-carcassonne', 'theme-nertz', 'theme-rummikub');
+    document.body.classList.remove('theme-catan', 'theme-flip7', 'theme-carcassonne', 'theme-nertz', 'theme-rummikub', 'theme-seven-wonders');
     const { loginView, appShell } = getEls();
     if (appShell) {
       appShell.hidden = true;
