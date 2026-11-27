@@ -27,6 +27,9 @@ input, select { background:#0b1220; border:1px solid var(--border); color:var(--
 .key.active { outline:3px solid var(--accent); }
 .player-row { background:var(--surface2); border-radius:14px; padding:0.9rem 1.1rem; margin:0.45rem 0; display:flex; justify-content:space-between; align-items:center; cursor:pointer; }
 .rank { width:28px; font-weight:700; color:var(--muted); }
+.theme-header { text-align:center; padding:1rem 0; font-size:1.4rem; font-weight:700; }
+.cat-row { display:flex; justify-content:space-between; align-items:center; padding:.5rem 0; border-bottom:1px solid var(--border); }
+.cat-icon { width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-weight:700; color:white; margin-right:.6rem; }
 </style>
 </head>
 <body>
@@ -70,7 +73,7 @@ input, select { background:#0b1220; border:1px solid var(--border); color:var(--
   </div>
   <div id="view-active" class="view hidden">
     <div class="card" id="active-card">
-      <h2 id="active-title" style="margin-top:0"></h2>
+      <div class="theme-header" id="theme-header"></div>
       <div id="leaderboard"></div>
       <div id="pad" class="hidden"></div>
       <div class="flex" style="margin-top:1rem">
@@ -100,14 +103,14 @@ const CARD_COLORS = {
 };
 
 const THEMES = {
-  flip7: { bg:'#0b1220', accent:'#22d3ee', surface:'#151c2c' },
-  '7wonders': { bg:'#0a1a1a', accent:'#d4a017', surface:'#1a2a2a' },
-  carcassonne: { bg:'#1a1f14', accent:'#7cb342', surface:'#2a3320' },
-  catan: { bg:'#1a120b', accent:'#e67e22', surface:'#2a1f14' },
-  ohhell: { bg:'#0d1a0d', accent:'#4caf50', surface:'#1a2a1a' },
-  hearts: { bg:'#1a0d0d', accent:'#e74c3c', surface:'#2a1515' },
-  nertz: { bg:'#1a140d', accent:'#f4d03f', surface:'#2a2214' },
-  other: { bg:'#0b1220', accent:'#22d3ee', surface:'#151c2c' }
+  flip7: { bg:'#0b1220', accent:'#22d3ee', surface:'#151c2c', icon:'🃏' },
+  '7wonders': { bg:'#0a1a1a', accent:'#d4a017', surface:'#1a2a2a', icon:'🏛️' },
+  carcassonne: { bg:'#1a1f14', accent:'#7cb342', surface:'#2a3320', icon:'🏰' },
+  catan: { bg:'#1a120b', accent:'#e67e22', surface:'#2a1f14', icon:'🏝️' },
+  ohhell: { bg:'#0d1a0d', accent:'#4caf50', surface:'#1a2a1a', icon:'🃏' },
+  hearts: { bg:'#1a0d0d', accent:'#e74c3c', surface:'#2a1515', icon:'❤️' },
+  nertz: { bg:'#1a140d', accent:'#f4d03f', surface:'#2a2214', icon:'🂡' },
+  other: { bg:'#0b1220', accent:'#22d3ee', surface:'#151c2c', icon:'🎲' }
 };
 
 let players = [];
@@ -115,15 +118,14 @@ let history = [];
 let currentGame = null;
 let selectedGame = 'flip7';
 let scoringPlayer = null;
-let currentRoundState = null;
 
 const games = [
-  { id:'flip7', name:'Flip 7', img:'flip7.jpg', versions:['Standard (to 200)','With a Vengeance'], theme:'flip7' },
-  { id:'7wonders', name:'7 Wonders', img:'7wonders.jpg', versions:['Base','With Leaders','With Cities'], theme:'7wonders' },
-  { id:'carcassonne', name:'Carcassonne', img:'', versions:['Classic','Inns & Cathedrals'], theme:'carcassonne' },
-  { id:'catan', name:'Catan', img:'', versions:['Base (to 10)','Cities & Knights'], theme:'catan' },
+  { id:'flip7', name:'Flip 7', img:'flip7.jpg', versions:['Standard (to 200)'], theme:'flip7' },
+  { id:'7wonders', name:'7 Wonders', img:'7wonders.jpg', versions:['Base'], theme:'7wonders' },
+  { id:'carcassonne', name:'Carcassonne', img:'', versions:['Classic'], theme:'carcassonne' },
+  { id:'catan', name:'Catan', img:'', versions:['Base (to 10)'], theme:'catan' },
   { id:'ohhell', name:'Oh Hell', img:'ohhell.jpg', versions:['Exact = 10+bid'], theme:'ohhell' },
-  { id:'hearts', name:'Hearts', img:'', versions:['Standard (to 100)'], theme:'hearts' },
+  { id:'hearts', name:'Hearts', img:'', versions:['Standard'], theme:'hearts' },
   { id:'nertz', name:'Nertz', img:'nertz.png', versions:['Standard'], theme:'nertz' },
   { id:'other', name:'Custom', img:'', versions:['Custom'], theme:'other' }
 ];
@@ -134,6 +136,11 @@ function applyTheme(themeKey) {
   document.documentElement.style.setProperty('--accent', t.accent);
   document.documentElement.style.setProperty('--surface', t.surface);
   document.body.style.background = t.bg;
+  const header = document.getElementById('theme-header');
+  if (header && currentGame) {
+    const g = games.find(x=>x.id===currentGame.type);
+    header.textContent = t.icon + ' ' + (g?.name || '');
+  }
 }
 
 async function checkSession() {
@@ -215,8 +222,6 @@ function startGame(){
 }
 
 function renderLeaderboard(){
-  const g = games.find(x=>x.id===currentGame.type);
-  document.getElementById('active-title').textContent = g.name;
   const sorted = [...currentGame.players].map((p,i)=>({...p,idx:i})).sort((a,b)=>b.score-a.score);
   document.getElementById('leaderboard').innerHTML = sorted.map((p, rank) => `
     <div class="player-row" onclick="openPad(${p.idx})">
@@ -232,10 +237,10 @@ function openPad(idx){
   const g = games.find(x=>x.id===currentGame.type);
   document.getElementById('pad').classList.remove('hidden');
   document.getElementById('pad').innerHTML = `
-    <div class="small" style="margin:.6rem 0">Score for <strong>${currentGame.players[idx].name}</strong></div>
+    <div class="small" style="margin:.6rem 0">${g.name} · ${currentGame.players[idx].name}</div>
     <div class="flex" style="margin-bottom:.6rem">
-      <button class="btn" id="mode-simple" onclick="setMode('simple')">Simple Points</button>
-      <button class="btn" id="mode-detailed" onclick="setMode('detailed')">Detailed</button>
+      <button class="btn" onclick="setMode('simple')">Simple Points</button>
+      <button class="btn" onclick="setMode('detailed')">Detailed</button>
     </div>
     <div id="score-form"></div>
   `;
@@ -254,66 +259,31 @@ function setMode(mode){
       </div>
     `;
   } else {
-    if (g.theme === 'flip7') form.innerHTML = getFlip7Form();
-    else if (g.theme === '7wonders') form.innerHTML = get7WondersForm();
-    else if (g.theme === 'catan') form.innerHTML = getCatanForm();
-    else if (g.theme === 'carcassonne') form.innerHTML = getCarcassonneForm();
-    else if (g.theme === 'ohhell') form.innerHTML = getOhHellForm();
-    else if (g.theme === 'hearts') form.innerHTML = getHeartsForm();
-    else if (g.theme === 'nertz') form.innerHTML = getNertzForm();
+    if (g.theme === '7wonders') form.innerHTML = `
+      <div class="cat-row"><div class="flex"><div class="cat-icon" style="background:#c0392b">⚔️</div>Military</div><input type="number" id="w-mil" value="0" style="width:70px"></div>
+      <div class="cat-row"><div class="flex"><div class="cat-icon" style="background:#27ae60">🔬</div>Science</div><input type="number" id="w-sci" value="0" style="width:70px"></div>
+      <div class="cat-row"><div class="flex"><div class="cat-icon" style="background:#2980b9">🏛️</div>Civilian</div><input type="number" id="w-civ" value="0" style="width:70px"></div>
+      <div class="cat-row"><div class="flex"><div class="cat-icon" style="background:#8e44ad">✨</div>Wonder</div><input type="number" id="w-won" value="0" style="width:70px"></div>
+      <div class="cat-row"><div class="flex"><div class="cat-icon" style="background:#d4a017">💰</div>Coins</div><input type="number" id="w-coin" value="0" style="width:70px"></div>
+      <button class="btn primary" style="margin-top:.6rem" onclick="commit7Wonders()">Add</button>
+    `;
+    else if (g.theme === 'catan') form.innerHTML = `
+      <div class="cat-row"><div class="flex"><div class="cat-icon" style="background:#8B4513">🏠</div>Settlements</div><input type="number" id="c-set" value="0" style="width:70px"></div>
+      <div class="cat-row"><div class="flex"><div class="cat-icon" style="background:#A0522D">🏙️</div>Cities</div><input type="number" id="c-cit" value="0" style="width:70px"></div>
+      <div class="cat-row"><div class="flex"><div class="cat-icon" style="background:#2ecc71">🛣️</div>Longest Road</div><input type="number" id="c-lr" value="0" style="width:70px"></div>
+      <div class="cat-row"><div class="flex"><div class="cat-icon" style="background:#e74c3c">⚔️</div>Largest Army</div><input type="number" id="c-la" value="0" style="width:70px"></div>
+      <div class="cat-row"><div class="flex"><div class="cat-icon" style="background:#f39c12">📜</div>Dev cards</div><input type="number" id="c-dev" value="0" style="width:70px"></div>
+      <button class="btn primary" style="margin-top:.6rem" onclick="commitCatan()">Add VP</button>
+    `;
+    else if (g.theme === 'carcassonne') form.innerHTML = `
+      <div class="cat-row"><div class="flex"><div class="cat-icon" style="background:#7f8c8d">🏰</div>Cities</div><input type="number" id="ca-cit" value="0" style="width:70px"></div>
+      <div class="cat-row"><div class="flex"><div class="cat-icon" style="background:#95a5a6">🛤️</div>Roads</div><input type="number" id="ca-road" value="0" style="width:70px"></div>
+      <div class="cat-row"><div class="flex"><div class="cat-icon" style="background:#34495e">⛪</div>Monasteries</div><input type="number" id="ca-mon" value="0" style="width:70px"></div>
+      <div class="cat-row"><div class="flex"><div class="cat-icon" style="background:#27ae60">🌾</div>Fields</div><input type="number" id="ca-field" value="0" style="width:70px"></div>
+      <button class="btn primary" style="margin-top:.6rem" onclick="commitCarcassonne()">Add</button>
+    `;
     else form.innerHTML = `<input type="number" id="simple-pts" value="0"><button class="btn primary" onclick="commitSimple()">Add</button>`;
   }
-}
-
-function getFlip7Form(){ return `<div class="small">Use the card pad on the main Flip 7 flow, or switch to Simple Points.</div>`; }
-function get7WondersForm(){
-  return `
-    <div class="flex" style="margin:.3rem 0"><span style="width:90px">Military</span><input type="number" id="w-mil" value="0" style="width:80px"></div>
-    <div class="flex" style="margin:.3rem 0"><span style="width:90px">Science</span><input type="number" id="w-sci" value="0" style="width:80px"></div>
-    <div class="flex" style="margin:.3rem 0"><span style="width:90px">Civilian</span><input type="number" id="w-civ" value="0" style="width:80px"></div>
-    <div class="flex" style="margin:.3rem 0"><span style="width:90px">Wonder</span><input type="number" id="w-won" value="0" style="width:80px"></div>
-    <div class="flex" style="margin:.3rem 0"><span style="width:90px">Coins</span><input type="number" id="w-coin" value="0" style="width:80px"></div>
-    <button class="btn primary" style="margin-top:.6rem" onclick="commit7Wonders()">Add</button>
-  `;
-}
-function getCatanForm(){
-  return `
-    <div class="flex" style="margin:.3rem 0"><span style="width:110px">Settlements</span><input type="number" id="c-set" value="0" style="width:70px"></div>
-    <div class="flex" style="margin:.3rem 0"><span style="width:110px">Cities</span><input type="number" id="c-cit" value="0" style="width:70px"></div>
-    <div class="flex" style="margin:.3rem 0"><span style="width:110px">Longest Road</span><input type="number" id="c-lr" value="0" style="width:70px"></div>
-    <div class="flex" style="margin:.3rem 0"><span style="width:110px">Largest Army</span><input type="number" id="c-la" value="0" style="width:70px"></div>
-    <div class="flex" style="margin:.3rem 0"><span style="width:110px">Dev cards</span><input type="number" id="c-dev" value="0" style="width:70px"></div>
-    <button class="btn primary" style="margin-top:.6rem" onclick="commitCatan()">Add VP</button>
-  `;
-}
-function getCarcassonneForm(){
-  return `
-    <div class="flex" style="margin:.3rem 0"><span style="width:100px">Cities</span><input type="number" id="ca-cit" value="0" style="width:80px"></div>
-    <div class="flex" style="margin:.3rem 0"><span style="width:100px">Roads</span><input type="number" id="ca-road" value="0" style="width:80px"></div>
-    <div class="flex" style="margin:.3rem 0"><span style="width:100px">Monasteries</span><input type="number" id="ca-mon" value="0" style="width:80px"></div>
-    <div class="flex" style="margin:.3rem 0"><span style="width:100px">Fields</span><input type="number" id="ca-field" value="0" style="width:80px"></div>
-    <button class="btn primary" style="margin-top:.6rem" onclick="commitCarcassonne()">Add</button>
-  `;
-}
-function getOhHellForm(){
-  return `
-    <div class="flex"><input type="number" id="oh-bid" placeholder="Bid" style="width:80px"><input type="number" id="oh-tricks" placeholder="Tricks" style="width:80px"></div>
-    <button class="btn primary" style="margin-top:.6rem" onclick="commitOhHell()">Add</button>
-  `;
-}
-function getHeartsForm(){
-  return `
-    <div class="flex"><span style="width:100px">Hearts</span><input type="number" id="h-hearts" value="0" style="width:70px"></div>
-    <div class="flex" style="margin-top:.4rem"><span style="width:100px">Queen</span><select id="h-queen"><option value="0">No</option><option value="13">Yes (+13)</option></select></div>
-    <button class="btn primary" style="margin-top:.6rem" onclick="commitHearts()">Add</button>
-  `;
-}
-function getNertzForm(){
-  return `
-    <div class="flex"><span style="width:120px">Cards played</span><input type="number" id="n-played" value="0" style="width:70px"></div>
-    <div class="flex" style="margin-top:.4rem"><span style="width:120px">Left in Nertz</span><input type="number" id="n-left" value="0" style="width:70px"></div>
-    <button class="btn primary" style="margin-top:.6rem" onclick="commitNertz()">Add</button>
-  `;
 }
 
 function commitSimple(){
@@ -336,25 +306,6 @@ function commitCatan(){
 function commitCarcassonne(){
   const pts = (+document.getElementById('ca-cit').value||0) + (+document.getElementById('ca-road').value||0) + (+document.getElementById('ca-mon').value||0) + (+document.getElementById('ca-field').value||0);
   currentGame.players[scoringPlayer].score += pts;
-  persistActive();
-  renderLeaderboard();
-}
-function commitOhHell(){
-  const bid = +document.getElementById('oh-bid').value || 0;
-  const tricks = +document.getElementById('oh-tricks').value || 0;
-  currentGame.players[scoringPlayer].score += (bid === tricks) ? 10 + bid : 0;
-  persistActive();
-  renderLeaderboard();
-}
-function commitHearts(){
-  currentGame.players[scoringPlayer].score += (+document.getElementById('h-hearts').value||0) + (+document.getElementById('h-queen').value||0);
-  persistActive();
-  renderLeaderboard();
-}
-function commitNertz(){
-  const played = +document.getElementById('n-played').value || 0;
-  const left = +document.getElementById('n-left').value || 0;
-  currentGame.players[scoringPlayer].score += played - (left * 2);
   persistActive();
   renderLeaderboard();
 }
