@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0c0d10">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="score-tracker-build" content="v24-qwirkle-linking-2026-11-27">
+<meta name="score-tracker-build" content="v24.1-linked-sync-2026-11-27">
 <meta name="apple-mobile-web-app-title" content="TallyIt">
 <title>TallyIt — Score Tracker</title>
 <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png">
@@ -11141,7 +11141,7 @@ html.v21-sheet-open, html.v21-sheet-open body { overscroll-behavior: contain; }
 </style>
 </head>
 <body>
-<!-- Build: v24-qwirkle-linking-2026-11-27 -->
+<!-- Build: v24.1-linked-sync-2026-11-27 -->
 
 <!-- Login: starts hidden until getSession() resolves -->
 <section id="login-view" class="auth-hidden" hidden aria-label="Sign in to Score Tracker">
@@ -15309,6 +15309,23 @@ html.v21-sheet-open, html.v21-sheet-open body { overscroll-behavior: contain; }
     }
   }
 
+  // v24.1: ping when a game_participants row for me is inserted/updated (someone linked me into a game)
+  function subscribeToMyGames(userId, onChange) {
+    const client = getClient();
+    if (!client || !userId || typeof client.channel !== 'function' || typeof onChange !== 'function') return () => {};
+    try {
+      const ch = client
+        .channel('my-games-live-' + Math.random().toString(36).slice(2, 8))
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'game_participants', filter: 'user_id=eq.' + userId }, () => {
+          try { onChange(); } catch (_) {}
+        })
+        .subscribe();
+      return () => { try { client.removeChannel(ch); } catch (_) {} };
+    } catch (_) {
+      return () => {};
+    }
+  }
+
   // ---------------------------------------------------------------------------
   // 3. Groups
   // ---------------------------------------------------------------------------
@@ -15894,6 +15911,7 @@ html.v21-sheet-open, html.v21-sheet-open body { overscroll-behavior: contain; }
     clearPendingFriendInvite,
     handleFriendQrOrCode,
     subscribeToFriendships,
+    subscribeToMyGames,
     getCachedProfile: () => cachedProfile,
     getDefaultPlayer: () => defaultPlayerFromProfile(cachedProfile),
     isMigrationReady: () => migrationReady,
@@ -22344,6 +22362,7 @@ try { if (window.TallyItV24Backend) window.TallyItV24Backend.capturePendingClaim
     scoringPlayer = null; currentView = 'home'; closeDiceModal();
     document.body.classList.remove('theme-catan', 'theme-flip7', 'theme-carcassonne', 'theme-nertz', 'theme-rummikub', 'theme-seven-wonders', 'theme-hearts', 'theme-ohhell', 'theme-qwirkle'); f7 = null; swExpOpen = false; rkCalcOpen = false; rkCalcExpr = ''; nzSheetKind = null; nzPopIdx = -1;
     if (typeof unsubFriendships === 'function') { unsubFriendships(); unsubFriendships = null; }
+    if (typeof unsubMyGames === 'function') { unsubMyGames(); unsubMyGames = null; }
     lastFriendsError = null;
     if (V20() && V20().onAuthChange) { try { V20().onAuthChange(null); } catch (_) {} }
     resetSocialState();
@@ -22395,9 +22414,9 @@ try { if (window.TallyItV24Backend) window.TallyItV24Backend.capturePendingClaim
     document.querySelectorAll('#app-shell .view').forEach((el) => el.classList.toggle('active', el.id === 'view-' + v));
     document.querySelectorAll('.bottom-nav button').forEach((b) => b.classList.toggle('active', b.id === 'nav-' + v));
     applyTheme();
-    if (v === 'home') renderHome();
+    if (v === 'home') { renderHome(); refreshGamesSoon(); }
     if (v === 'new') renderNew();
-    if (v === 'history') renderHistory();
+    if (v === 'history') { renderHistory(); refreshGamesSoon(); }
     if (v === 'social') { renderSocial(); refreshSocial(); }
     if (v === 'active') renderActive();
     window.scrollTo(0, 0);
@@ -24945,6 +24964,10 @@ try { if (window.TallyItV24Backend) window.TallyItV24Backend.capturePendingClaim
           if (currentUser && currentUser.id === user.id) refreshSocial();
         });
       }
+      if (typeof unsubMyGames === 'function') { unsubMyGames(); unsubMyGames = null; }
+      if (typeof api.subscribeToMyGames === 'function') {
+        unsubMyGames = api.subscribeToMyGames(user.id, () => { if (currentUser && currentUser.id === user.id) { clearTimeout(myGamesPing); myGamesPing = setTimeout(() => refreshSocial(false, true), 400); } });
+      }
       await refreshSocial();
       await consumePendingFriendInvite();
       try { await v24HandlePendingClaim(); } catch (e) { console.warn('[v24] claim link failed', e); }
@@ -24954,6 +24977,7 @@ try { if (window.TallyItV24Backend) window.TallyItV24Backend.capturePendingClaim
   let refreshSeq = 0;
   let lastSocialRefreshAt = 0;
   let unsubFriendships = null;
+  let unsubMyGames = null, myGamesPing = null;
   let lastFriendsError = null;
   const sameId = (a, b) => !!a && !!b && String(a).toLowerCase() === String(b).toLowerCase();
   function setSocialLoading(on) {
@@ -24987,12 +25011,12 @@ try { if (window.TallyItV24Backend) window.TallyItV24Backend.capturePendingClaim
     }
     showFriendsError(lastFriendsError);
   }
-  async function refreshSocial(force) {
+  async function refreshSocial(force, silent) {
     const api = SAPI(), user = currentUser; if (!api || !user) return;
     const seq = ++refreshSeq;
     lastSocialRefreshAt = Date.now();
     const stale = () => !currentUser || currentUser.id !== user.id || seq !== refreshSeq;
-    setSocialLoading(true);
+    if (!silent) setSocialLoading(true);
     try {
       const frP = api.listFriends().catch((e) => ({ error: (e && e.message) || 'Failed to load friends.' }));
       const grP = api.listGroups().catch(() => null);
@@ -25025,8 +25049,9 @@ try { if (window.TallyItV24Backend) window.TallyItV24Backend.capturePendingClaim
       pruneSetupFriends();
       social.ready = true;
     } catch (e) { console.warn('[social] refresh failed', e); }
-    finally { if (seq === refreshSeq) setSocialLoading(false); }
+    finally { if (seq === refreshSeq && !silent) setSocialLoading(false); }
     if (stale()) return;
+    if (silent) { if (currentView === 'history') renderHistory(); else if (currentView === 'home') renderHome(); updateNavDot(); return; }
     rerenderSocialViews();
   }
   function rerenderSocialViews() {
@@ -25539,9 +25564,28 @@ try { if (window.TallyItV24Backend) window.TallyItV24Backend.capturePendingClaim
   });
   const maybeRefreshOnResume = () => {
     if (!currentUser || document.hidden) return;
-    if (Date.now() - lastSocialRefreshAt < 15000) return;
+    if (Date.now() - lastSocialRefreshAt < 4000) return;
     refreshSocial();
   };
+  // v24.1: games other people link you into (Link players / claim) arrive in the cloud while this app is already open.
+  // Nothing used to re-pull them until a 15s-throttled resume, so a signed-in friend kept seeing a stale History.
+  // Re-pull (silently) when History/Home opens, on a light poll while visible, and on a realtime ping when available.
+  let gamesPollTimer = null;
+  function refreshGamesSoon() {
+    if (!currentUser || document.hidden || !social.ready) return;
+    if (Date.now() - lastSocialRefreshAt < 4000) return;
+    refreshSocial(false, true);
+  }
+  function startGamesPoll() {
+    if (gamesPollTimer) return;
+    gamesPollTimer = setInterval(() => {
+      if (!currentUser || document.hidden) return;
+      if (currentView !== 'history' && currentView !== 'home') return;
+      if (Date.now() - lastSocialRefreshAt < 9000) return;
+      refreshSocial(false, true);
+    }, 10000);
+  }
+  startGamesPoll();
   document.addEventListener('visibilitychange', maybeRefreshOnResume);
   global.addEventListener('focus', maybeRefreshOnResume);
 
