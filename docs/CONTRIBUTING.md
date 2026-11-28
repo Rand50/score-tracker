@@ -43,6 +43,7 @@ node tests/v26_backend.test.js
 node v3/tests/v24_tests.js
 node v3/tests/spoons_tests.js
 node v3/tests/v26_record_tools_tests.js
+node v3/tests/catan_board_tests.js
 ```
 
 SQL scenarios need a local Postgres 17 (`bash tests/run_v25_sql.sh`, `bash tests/run_v26_sql.sh`). They are not part of CI.
