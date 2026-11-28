@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0c0d10">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="score-tracker-build" content="v24.1-linked-sync-2026-11-27">
+<meta name="score-tracker-build" content="v24.2-play-home-2026-11-27">
 <meta name="apple-mobile-web-app-title" content="TallyIt">
 <title>TallyIt — Score Tracker</title>
 <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png">
@@ -151,7 +151,7 @@ input, textarea { -webkit-user-select: text; user-select: text; }
 body.theme-catan #catan-board { display: block; }
 body.theme-catan #generic-board { display: none; }
 body.theme-catan .app-header { display: none; }
-#nav-active { display: none; }
+/* v24.2: Tracker is always a tab (its empty state says Tap Play to start one) */
 /* Flip 7 board is only shown when theme-flip7 is on */
 #flip7-board { display: none; }
 /* Carcassonne tally is only shown when theme-carcassonne is on */
@@ -166,9 +166,67 @@ body.theme-catan .app-header { display: none; }
 #ht-shell, #oh-shell { display: none; }
 /* v24 Qwirkle Bright Playful Tile Grid: only shown with body.theme-qwirkle */
 #qw-shell { display: none; }
-/* Friends tab lives only in the neutral nav: themed game navs stay clean 4-tab bars */
-body.theme-catan .bottom-nav #nav-social, body.theme-flip7 .bottom-nav #nav-social, body.theme-carcassonne .bottom-nav #nav-social { display: none !important; }
+/* v24.2: Friends shows on every game screen too (Play / Tracker / Friends / History) */
 #soc-create-group-modal { z-index: 80; }
+
+/* TallyIt v24.2 — Play is the landing page (Home removed).
+   Neutral obsidian/brass shell CSS. Scoped to #view-new / .v24-2-* only: no theme-* selectors, no bare elements,
+   no @media (fluid clamp sizing; fits 390px with no sideways overflow). Load AFTER home_redesign.css, v21_flow.css,
+   v22_features.css and v24_link_players.css. */
+
+#view-new { padding-top: clamp(.75rem, 3vw, 1.25rem); overflow-x: hidden; }
+
+/* Top stack: requested-game banner, "Were you in these games?" banner, Resume card + In Progress list */
+.v24-2-play-top {
+  display: flex; flex-direction: column; gap: .75rem;
+  margin: 0 0 1rem; min-width: 0;
+}
+.v24-2-play-top > * { min-width: 0; max-width: 100%; box-sizing: border-box; margin-top: 0; margin-bottom: 0; }
+/* Collapse entirely when every child is hidden (no stray gap above Choose Game) */
+.v24-2-play-top:not(:has(> :not([hidden]):not(.hidden))) { display: none; }
+/* Play top is a Choose-step thing only; Setup step stays focused on the chosen game */
+#view-new[data-v21-step="setup"] .v24-2-play-top { display: none; }
+
+/* In Progress section keeps v21 styling; add the brass hairline divider that separates it from Choose Game */
+.v24-2-play-top #v21-active-games-section {
+  padding-bottom: .9rem;
+  border-bottom: 1px solid rgba(212, 168, 83, .22);
+}
+.v24-2-play-top #v21-active-games-section[hidden],
+.v24-2-play-top #v21-active-games-section.hidden { display: none; }
+.v24-2-play-top #btn-resume-game { width: 100%; min-width: 0; }
+.v24-2-play-top .home-resume-title,
+.v24-2-play-top .v21-active-name,
+.v24-2-play-top .v21-active-meta { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.v24-2-play-top .v21-active-info { min-width: 0; flex: 1 1 auto; }
+
+/* Banners: same obsidian card + brass edge in both cases, full-width on phones */
+.v24-2-play-top #v22-built-banner,
+.v24-2-play-top #v24-suggest-banner { width: 100%; }
+.v24-2-play-top #v22-built-banner[hidden],
+.v24-2-play-top #v24-suggest-banner[hidden] { display: none; }
+
+/* Choose Game heading sits directly under the top stack */
+#view-new #v21-choose-step > h2 { margin-top: .25rem; }
+
+/* Bottom nav: 4 tabs now (Play, Tracker, Friends, History); the shell's flex + space-around already fits 390px */
+
+/* v24.2: v21 stepper ("1 Game / 2 Setup / 3 Score") and "Tap any game" hint removed from Play and Setup.
+   Markup is gone via v24_2_no_stepper.patch; these rules are a safety net if an older v21 block is mounted. */
+#view-new #v21-choose-header,
+#view-new .v21-stepper,
+#view-new .v21-choose-sub { display: none; }
+#view-new #v21-setup-header .v21-setup-head { margin-top: 0; }
+
+
+/* TallyIt v24.2 — inline SVG icons that replace the last emojis (trophy on Flip 7 Finish, people on setup group note).
+   Neutral: class-scoped only, no theme-* selectors, no bare elements, no @media. */
+.v24-2-ico { width: 1.05em; height: 1.05em; flex: 0 0 auto; vertical-align: -.16em; margin-right: .35em; stroke: currentColor; }
+.f7-finish .v24-2-ico { margin-right: 0; }
+.f7-sbtn .v24-2-ico { width: 1.1em; height: 1.1em; }
+.soc-active-group-note #setup-active-group-label { display: inline-flex; align-items: center; gap: .35em; min-width: 0; }
+.soc-active-group-note #setup-active-group-label .v24-2-ico { margin-right: 0; }
+.soc-active-group-note #setup-active-group-label > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
 </style>
 
 <!-- ===================== HOME & SHELL REDESIGN (obsidian ink / alabaster / brass; shell chrome only) ===================== -->
@@ -621,6 +679,15 @@ body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nert
   border-radius: 0 0 2px 2px;
   background: var(--accent-brass);
 }
+#app-shell > .bottom-nav {
+  padding-left: max(.25rem, calc(50% - 320px));
+  padding-right: max(.25rem, calc(50% - 320px));
+}
+#generic-board .gen-start { display: none; }
+#generic-board.is-empty .gen-start { display: inline-flex; align-items: center; justify-content: center; }
+#generic-board.is-empty #gen-save,
+#generic-board.is-empty #gen-leave,
+#generic-board.is-empty .gen-hint { display: none !important; }
 /* v14 shell chrome glue (neutral only; themed game screens keep their own look) */
 /* Inline SVG nav icons need explicit sizing on every nav (neutral + themed) */
 .bottom-nav button .icon svg { width: 20px; height: 20px; display: block; }
@@ -1709,7 +1776,7 @@ body.theme-catan #catan-board .cg-parch {
 
 
 body.theme-catan #catan-board .cg-header-card { padding: 9px 12px 8px; text-align: center; }
-body.theme-catan #catan-board .cg-title { margin: 0; font: 400 2.1rem/1.08 var(--cg-display); color: #22160a; letter-spacing: .3px; -webkit-text-stroke: .9px #22160a; text-shadow: 0 1px 0 rgba(255,246,220,.7); }
+body.theme-catan #catan-board .cg-title { margin: 0; font: 400 34px/1.08 var(--cg-display); -webkit-font-smoothing: antialiased; color: #22160a; letter-spacing: .3px; -webkit-text-stroke: .9px #22160a; text-shadow: 0 1px 0 rgba(255,246,220,.7); }
 body.theme-catan #catan-board .cg-divider { display: flex; align-items: center; justify-content: center; gap: 6px; margin: 4px auto 4px; width: 66%; }
 body.theme-catan #catan-board .cg-divider span { flex: 1; height: 1.5px; background: linear-gradient(90deg, transparent, #4a3218 20%, #4a3218 80%, transparent); }
 body.theme-catan #catan-board .cg-divider i { width: 7px; height: 7px; background: #4a3218; transform: rotate(45deg); }
@@ -1724,7 +1791,7 @@ body.theme-catan #catan-board .cg-ribbon::before { content: ""; position: absolu
   filter: drop-shadow(0 2px 2px rgba(0,0,0,.5)); }
 body.theme-catan #catan-board .cg-ribbon::after { content: ""; position: absolute; left: 1%; right: 1%; top: 50%; height: 12px; transform: translateY(-50%);
   background: linear-gradient(180deg, #b88a42, #7d5420); border-top: 1px solid #d9b46a; border-bottom: 1px solid #4a2f10; border-radius: 2px; z-index: -1; box-shadow: 0 1px 2px rgba(0,0,0,.4); }
-body.theme-catan #catan-board .cg-ribbon span { position: relative; font: 700 1.08rem var(--cg-caps); letter-spacing: 1.8px; color: #f6e6bd; text-transform: uppercase; text-shadow: 0 1px 1px rgba(60,35,10,.8); }
+body.theme-catan #catan-board .cg-ribbon span { position: relative; font: 700 1.08rem var(--cg-caps); letter-spacing: 1.8px; color: #f6e6bd; text-transform: uppercase; text-shadow: 0 1px 0 rgba(60,35,10,.8); }
 body.theme-catan #catan-board .cg-ribbon span::before, body.theme-catan #catan-board .cg-ribbon span::after {
   content: ""; position: absolute; top: 50%; width: 9px; height: 9px; margin-top: -5px; transform: rotate(45deg);
   background: linear-gradient(135deg, #f3d488, #8a5e22); border: 1px solid #5a3a14; }
@@ -1748,7 +1815,7 @@ body.theme-catan #catan-board .cg-stars.sm { gap: 2px; }
 body.theme-catan #catan-board .cg-stars.sm svg { width: 14px; height: 14px; }
 body.theme-catan #catan-board .cg-stars.xs { gap: 1px; }
 body.theme-catan #catan-board .cg-stars.xs svg { width: 11.5px; height: 11.5px; }
-body.theme-catan #catan-board .cg-vp { font: 700 2.55rem/1 var(--cg-name); color: #5e3f12; min-width: 40px; text-align: right; text-shadow: 0 1px 0 rgba(255,240,200,.7), 0 -1px 0 rgba(60,35,5,.25); }
+body.theme-catan #catan-board .cg-vp { font: 700 41px/1 var(--cg-name); -webkit-font-smoothing: antialiased; color: #5e3f12; min-width: 40px; text-align: right; text-shadow: 0 1px 0 rgba(255,240,200,.7), 0 -1px 0 rgba(60,35,5,.25); }
 body.theme-catan #catan-board .cg-row.winner .cg-vp { color: #8a5a10; }
 
 
@@ -1778,7 +1845,7 @@ body.theme-catan #catan-board .cg-act { display: grid; grid-template-columns: 70
 body.theme-catan #catan-board .cg-act:active { transform: scale(.985); filter: brightness(.95); }
 body.theme-catan #catan-board .cg-act-ic { width: 70px; height: 42px; object-fit: cover; display: block; }
 body.theme-catan #catan-board .cg-act-txt { padding-left: 14px; min-width: 0; }
-body.theme-catan #catan-board .cg-act-title { display: block; font: 700 1.28rem/1 var(--cg-name); color: #3a2410; white-space: nowrap; }
+body.theme-catan #catan-board .cg-act-title { display: block; font: 700 20px/1 var(--cg-name); color: #3a2410; white-space: nowrap; }
 body.theme-catan #catan-board .cg-act-vp { display: block; font: 700 .82rem/1.15 var(--cg-body); color: var(--cg-red); }
 body.theme-catan #catan-board .cg-act-chev { display: flex; align-items: center; justify-content: center; color: #4a3216; }
 body.theme-catan #catan-board .cg-act-chev svg { width: 12px; height: 18px; }
@@ -1813,7 +1880,8 @@ body.theme-catan .bottom-nav { background: linear-gradient(180deg, rgba(52,33,16
   border-top: 1px solid #6e4b1e; box-shadow: 0 -4px 14px rgba(0,0,0,.5); gap: 4px; padding-left: 6px; padding-right: 6px; }
 body.theme-catan .bottom-nav button { font: 700 .66rem var(--cg-caps); letter-spacing: 1.2px; text-transform: uppercase; color: #8d7a5e; border: 1px solid transparent; border-radius: 8px; padding: .3rem .2rem; flex: 1; }
 body.theme-catan .bottom-nav button.active { color: #f0cf7a; border-color: #b8893a; background: linear-gradient(180deg, rgba(201,154,62,.22), rgba(201,154,62,.06)); box-shadow: inset 0 1px 0 rgba(255,225,160,.2); }
-body.theme-catan .bottom-nav #nav-new { display: none; }
+body.theme-catan .bottom-nav #nav-new { display: flex; } 
+body.theme-catan .bottom-nav #nav-social { display: flex !important; }
 body.theme-catan .bottom-nav #nav-active { display: flex; }
 body.theme-catan .bottom-nav button .icon { filter: grayscale(1) sepia(.7) brightness(1.05); opacity: .8; }
 body.theme-catan .bottom-nav button.active .icon { filter: grayscale(1) sepia(1) saturate(2.2) brightness(1.15); opacity: 1; }
@@ -1821,6 +1889,9 @@ body.theme-catan #catan-board .cg-row[data-color="red"] .cg-name { color: #7c2b1
 body.theme-catan #catan-board .cg-row[data-color="green"] .cg-name { color: #2f5020; }
 body.theme-catan #catan-board .cg-row[data-color="blue"] .cg-name { color: #1e3654; }
 body.theme-catan #catan-board .cg-row[data-color="purple"] .cg-name { color: #4b2c5c; }
+
+
+body.theme-catan #app-shell > .bottom-nav { padding-left: max(6px, calc(50% - 320px)); padding-right: max(6px, calc(50% - 320px)); }
 
 </style>
 
@@ -1854,7 +1925,7 @@ body.theme-flip7 .f7-pill { height: 34px; padding: 0 .85rem; border-radius: 999p
 body.theme-flip7 .f7-pill small { font-size: .74rem; font-weight: 700; opacity: .75; }
 
 
-body.theme-flip7 .f7-sub { display: flex; justify-content: space-between; align-items: center; margin: .2rem .15rem .55rem; font: 800 1.02rem var(--f7-caps); letter-spacing: .6px; color: var(--f7-ink); text-transform: uppercase; }
+body.theme-flip7 .f7-sub { display: flex; justify-content: space-between; align-items: center; margin: .2rem .15rem .55rem; font: 800 16px var(--f7-caps); letter-spacing: .6px; color: var(--f7-ink); text-transform: uppercase; }
 body.theme-flip7 .f7-sort { background: none; border: none; color: var(--f7-ink); font: 800 1rem var(--f7-caps); letter-spacing: .6px; padding: .3rem .1rem; text-transform: uppercase; }
 body.theme-flip7 .f7-sort span { display: inline-block; margin-right: .2rem; }
 
@@ -1895,13 +1966,13 @@ body.theme-flip7 .f7-board.scoring .f7-bar { bottom: 4px; height: 3px; }
 
 body.theme-flip7 .f7-drawer { margin-top: .8rem; display: flex; flex-direction: column; gap: .6rem; animation: f7-up .18s ease-out; }
 @keyframes f7-up { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
-body.theme-flip7 .f7-preview { background: rgba(232,251,250,0.82); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border-radius: 18px; padding: .7rem .9rem; border: 1.5px solid rgba(34,50,102,.14); }
+body.theme-flip7 .f7-preview { background: rgba(232,251,250,0.96); -webkit-backdrop-filter: none; backdrop-filter: none; border-radius: 18px; padding: .7rem .9rem; border: 1.5px solid rgba(34,50,102,.14); }
 body.theme-flip7 .f7-pv-top { display: flex; justify-content: space-between; align-items: center; gap: .5rem; }
 body.theme-flip7 .f7-pv-name { font: 800 1.3rem var(--f7-caps); text-transform: uppercase; letter-spacing: .5px; color: var(--f7-ink); line-height: 1.05; }
 body.theme-flip7 .f7-pv-trans { font: 700 1rem var(--f7-caps); color: rgba(34,50,102,.8); display: flex; align-items: center; gap: .25rem; }
 body.theme-flip7 .f7-pv-trans svg { width: 16px; height: 16px; }
-body.theme-flip7 .f7-pv-total { font: 800 2.6rem var(--f7-caps); line-height: 1; color: var(--f7-ink); font-variant-numeric: tabular-nums; }
-body.theme-flip7 .f7-pv-total.bust { font-size: 1.9rem; color: var(--f7-terra); }
+body.theme-flip7 .f7-pv-total { font: 800 42px var(--f7-caps); line-height: 1; -webkit-font-smoothing: antialiased; color: var(--f7-ink); font-variant-numeric: tabular-nums; }
+body.theme-flip7 .f7-pv-total.bust { font-size: 30px; color: var(--f7-terra); }
 body.theme-flip7 .f7-pv-cards { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin-top: .45rem; min-height: 36px; }
 body.theme-flip7 .f7-minis { display: inline-flex; padding-left: 4px; }
 body.theme-flip7 .f7-mini { width: 26px; height: 36px; margin-left: -4px; border-radius: 5px; border: 1.5px solid var(--f7-ink); background: #fffdf6;
@@ -1913,7 +1984,7 @@ body.theme-flip7 .f7-chip.mod { color: var(--f7-terra); }
 body.theme-flip7 .f7-chip.flip7 { background: linear-gradient(135deg, var(--f7-coral2), var(--f7-coral)); color: #fff; border-color: #b4410e; box-shadow: 0 0 10px rgba(249,115,22,.65); letter-spacing: .5px; }
 body.theme-flip7 .f7-pv-empty { font: 700 .9rem var(--f7-caps); letter-spacing: 1px; color: rgba(34,50,102,.55); text-transform: uppercase; }
 
-body.theme-flip7 .f7-pad { background: rgba(195,245,243,0.72); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border-radius: 22px; padding: 12px; border: 1.5px solid rgba(34,50,102,.12); }
+body.theme-flip7 .f7-pad { background: rgba(195,245,243,0.94); -webkit-backdrop-filter: none; backdrop-filter: none; border-radius: 22px; padding: 12px; border: 1.5px solid rgba(34,50,102,.12); }
 body.theme-flip7 .f7-pad-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
 body.theme-flip7 .f7-pad-mid { display: flex; gap: .4rem; }
 body.theme-flip7 .f7-x { width: 40px; height: 40px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; padding: 0;
@@ -1951,13 +2022,17 @@ body.theme-flip7 .f7-sheet input { background: #fffdf6; color: var(--f7-ink); bo
 
 
 body.theme-flip7 .bottom-nav { left: 50%; right: auto; bottom: calc(10px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); width: calc(100% - 28px); max-width: 340px;
-  padding: .35rem; border-radius: 999px; border: 1.5px solid rgba(34,50,102,.18); background: rgba(210,248,246,0.78); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+  padding: .35rem; border-radius: 999px; border: 1.5px solid rgba(34,50,102,.18); background: rgba(210,248,246,0.97); -webkit-backdrop-filter: none; backdrop-filter: none;
   box-shadow: 0 8px 24px rgba(20,60,70,.22); gap: .2rem; }
 body.theme-flip7 .bottom-nav button { flex: 1; min-width: 0; padding: .35rem .2rem; border-radius: 999px; color: var(--f7-ink); font: 700 .74rem var(--f7-caps); letter-spacing: 1px; text-transform: uppercase; opacity: .78; }
 body.theme-flip7 .bottom-nav button.active { opacity: 1; background: rgba(82,198,192,.38); box-shadow: inset 0 0 0 1.5px rgba(34,50,102,.18); }
 body.theme-flip7 .bottom-nav button .icon { font-size: 1.1rem; filter: saturate(.6); }
-body.theme-flip7 .bottom-nav #nav-new { display: none; }
+body.theme-flip7 .bottom-nav #nav-new { display: flex; } 
+body.theme-flip7 .bottom-nav #nav-social { display: flex !important; }
 body.theme-flip7 .bottom-nav #nav-active { display: flex; }
+
+
+body.theme-flip7 #app-shell > .bottom-nav { padding-left: .35rem; padding-right: .35rem; }
 
 </style>
 
@@ -1970,7 +2045,7 @@ body.theme-carcassonne {
   --cc-grain-svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.78' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
   background-color: #8fb86a;
   background-image: url('./assets/carcassonne/meadow-bg.svg');
-  background-size: cover; background-position: center top; background-attachment: fixed; background-repeat: no-repeat;
+  background-size: cover; background-position: center top; background-repeat: no-repeat; 
   color: var(--cc-walnut); font-family: var(--cc-serif);
   padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px));
 }
@@ -2021,7 +2096,7 @@ body.theme-carcassonne .cc-parch::after {
 
 body.theme-carcassonne .cc-banner { padding: 16px 18px 13px; text-align: center; }
 body.theme-carcassonne .cc-banner > * { position: relative; z-index: 1; }
-body.theme-carcassonne .cc-title { margin: 0; font: 700 2.15rem/1.05 var(--cc-caps); letter-spacing: 1.5px; text-transform: uppercase; color: var(--cc-walnut);
+body.theme-carcassonne .cc-title { margin: 0; font: 700 34px/1.05 var(--cc-caps); -webkit-font-smoothing: antialiased; letter-spacing: 1.5px; text-transform: uppercase; color: var(--cc-walnut);
   text-shadow: 0 1px 0 rgba(255,250,235,.78), 0 -1px 0 rgba(90,60,20,.22); }
 body.theme-carcassonne .cc-sub-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 6px; }
 body.theme-carcassonne .cc-sub { margin: 0; font: 700 .95rem/1 var(--cc-caps); letter-spacing: 2.4px; text-transform: uppercase; color: var(--cc-walnut2); white-space: nowrap; }
@@ -2134,7 +2209,7 @@ body.theme-carcassonne .cc-add input::placeholder { color: rgba(92,67,36,.45); }
 body.theme-carcassonne .cc-finish {
   position: relative; display: block; width: 100%; margin: 16px 0 4px; height: 58px; border-radius: 999px; border: 1px solid #173512;
   background: linear-gradient(180deg, #3b7430 0%, #244f1d 100%); color: #f6ecd2; font: 600 1.4rem/1 var(--cc-serif); letter-spacing: .4px;
-  text-shadow: 0 1px 1px rgba(0,0,0,.45);
+  text-shadow: 0 1px 0 rgba(0,0,0,.45);
   box-shadow: inset 0 1px 0 rgba(255,255,255,.28), inset 0 -2px 0 rgba(0,0,0,.25), 0 4px 0 #18380f, 0 9px 18px rgba(16,30,8,.38);
   transition: transform .08s ease, box-shadow .08s ease, filter .15s; }
 body.theme-carcassonne .cc-finish::before { content: ""; position: absolute; inset: 5px 8px; border: 1.5px dashed rgba(255,255,255,0.22); border-radius: 999px; pointer-events: none; }
@@ -2142,7 +2217,7 @@ body.theme-carcassonne .cc-finish:active { transform: translateY(3px); box-shado
 body.theme-carcassonne .cc-mini { display: flex; justify-content: center; gap: 10px; margin: 14px 0 0; }
 body.theme-carcassonne .cc-pill {
   height: 36px; padding: 0 16px; border-radius: 999px; border: 1px solid rgba(94,68,36,.45);
-  background: rgba(245,233,200,.86); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  background: rgba(245,233,200,.97); -webkit-backdrop-filter: none; backdrop-filter: none;
   color: var(--cc-walnut); font: 600 1rem/1 var(--cc-serif); letter-spacing: .3px; box-shadow: 0 2px 6px rgba(34,24,8,.22), inset 0 1px 0 rgba(255,255,255,.55); }
 body.theme-carcassonne .cc-pill:active { transform: translateY(1px); }
 body.theme-carcassonne .cc-add .cc-pill { height: 44px; flex: 0 0 auto; }
@@ -2163,13 +2238,18 @@ body.theme-carcassonne .bottom-nav button { position: relative; flex: 1; min-wid
 body.theme-carcassonne .bottom-nav button + button { border-left: 1px solid rgba(94,68,36,.32); border-radius: 0; }
 body.theme-carcassonne .bottom-nav button.active { color: var(--cc-walnut); background: rgba(94,68,36,.13); box-shadow: inset 0 1px 3px rgba(94,68,36,.22); border-radius: 8px; }
 body.theme-carcassonne .bottom-nav button.active + button { border-left-color: transparent; }
-body.theme-carcassonne .bottom-nav #nav-new { display: none; }
+body.theme-carcassonne .bottom-nav #nav-new { display: flex; } 
+body.theme-carcassonne .bottom-nav #nav-social { display: flex !important; }
 body.theme-carcassonne .bottom-nav #nav-active { display: flex; }
 body.theme-carcassonne .bottom-nav button .icon { font-size: 0; width: 26px; height: 26px; display: block; background-color: currentColor;
   -webkit-mask: var(--cc-ic) center / contain no-repeat; mask: var(--cc-ic) center / contain no-repeat; }
-body.theme-carcassonne .bottom-nav #nav-home { --cc-ic: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2.6 1.8 11.4l1.3 1.5 1.4-1.2V21.4h5.6v-6.2h3.8v6.2h5.6V11.7l1.4 1.2 1.3-1.5z'/%3E%3C/svg%3E"); }
+body.theme-carcassonne .bottom-nav #nav-new { --cc-ic: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3.2' y='3.2' width='17.6' height='17.6' rx='4'/%3E%3Cpath d='M12 7.8v8.4M7.8 12h8.4'/%3E%3C/svg%3E"); }
+body.theme-carcassonne .bottom-nav #nav-social { --cc-ic: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='9' cy='8.5' r='3.3'/%3E%3Cpath d='M3.4 19.6c0-3 2.5-5.1 5.6-5.1s5.6 2.1 5.6 5.1'/%3E%3Ccircle cx='16.6' cy='9.4' r='2.6'/%3E%3Cpath d='M16.6 14.4c2.3 0 4 1.6 4 4.7'/%3E%3C/svg%3E"); }
 body.theme-carcassonne .bottom-nav #nav-active { --cc-ic: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 1.8l3.1 6.5 7.1.9-5.2 4.9 1.3 7.1L12 17.7l-6.3 3.5 1.3-7.1-5.2-4.9 7.1-.9z'/%3E%3C/svg%3E"); }
 body.theme-carcassonne .bottom-nav #nav-history { --cc-ic: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='9.2'/%3E%3Cpath d='M12 6.6V12l3.8 2.6'/%3E%3C/svg%3E"); }
+
+
+body.theme-carcassonne #app-shell > .bottom-nav { padding-left: 4px; padding-right: 4px; }
 
 </style>
 
@@ -2957,7 +3037,7 @@ body.theme-nertz {
     radial-gradient(ellipse at 50% 8%, rgba(30, 62, 112, 0.48), transparent 55%),
     radial-gradient(ellipse at 50% 100%, rgba(16, 36, 68, 0.52), transparent 60%),
     var(--nz-damask);
-  background-attachment: fixed;
+  
   color: var(--nz-gold);
   font-family: var(--nz-body);
   padding-bottom: calc(92px + env(safe-area-inset-bottom, 0px));
@@ -3030,18 +3110,19 @@ body.theme-nertz .nz-spade {
   color: var(--nz-gold);
   font-size: 1.15rem;
   line-height: 1;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.7);
 }
 body.theme-nertz .nz-title {
   margin: 0;
-  font: 700 2.35rem/1 var(--nz-serif);
+  font: 700 38px/1 var(--nz-serif);
+  -webkit-font-smoothing: antialiased;
   letter-spacing: 5px;
   text-transform: uppercase;
   background: linear-gradient(180deg, #fbf0c4 0%, #e4be67 48%, #b3842d 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.65));
+  
 }
 body.theme-nertz .nz-rule {
   display: flex;
@@ -3541,7 +3622,7 @@ body.theme-nertz .nz-preview-val {
   font: 700 2rem/1 var(--nz-body);
   font-variant-numeric: lining-nums tabular-nums;
   color: var(--nz-gold-hi);
-  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.55);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.55);
 }
 body.theme-nertz .nz-preview-val.is-neg { color: var(--nz-crimson); }
 body.theme-nertz .nz-confirm {
@@ -3704,8 +3785,9 @@ body.theme-nertz .bottom-nav button.active::after {
   background: var(--nz-gold-hi);
   margin-top: 2px;
 }
+
 body.theme-nertz .bottom-nav #nav-new,
-body.theme-nertz .bottom-nav #nav-social { display: none !important; }
+body.theme-nertz .bottom-nav #nav-social { display: flex !important; }
 body.theme-nertz .bottom-nav #nav-active { display: flex; }
 
 
@@ -3900,7 +3982,7 @@ body.theme-rummikub {
     radial-gradient(ellipse at 50% 0%, rgba(44, 114, 214, 0.36), transparent 58%),
     radial-gradient(ellipse at 50% 100%, rgba(4, 16, 40, 0.55), transparent 62%),
     linear-gradient(180deg, var(--rk-blue-hi) 0%, var(--rk-blue) 45%, var(--rk-blue-lo) 100%);
-  background-attachment: fixed;
+  
   color: #ffffff;
   font-family: var(--rk-font);
   padding-bottom: calc(90px + env(safe-area-inset-bottom, 0px));
@@ -3966,11 +4048,14 @@ body.theme-rummikub .rk-top-bar {
 body.theme-rummikub .rk-wordmark {
   margin: 0;
   font-size: 1.68rem;
-  font-weight: 850;
+  font-weight: 800;
   letter-spacing: 0.04em;
   line-height: 1;
   color: #ffffff;
-  text-shadow: 0 2px 6px rgba(3, 12, 32, 0.45);
+  
+  text-shadow: 0 1px 0 rgba(3, 12, 32, 0.55);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
 }
 
 
@@ -3999,7 +4084,7 @@ body.theme-rummikub .rk-mode-btn {
 body.theme-rummikub .rk-mode-btn.active {
   background: var(--rk-ivory);
   color: var(--rk-ink);
-  box-shadow: 0 1px 4px rgba(3, 12, 32, 0.35);
+  box-shadow: 0 1px 0 rgba(3, 12, 32, 0.35);
 }
 
 body.theme-rummikub .rk-header-row {
@@ -4012,7 +4097,7 @@ body.theme-rummikub .rk-header-row {
 body.theme-rummikub .rk-tiles-strip {
   display: inline-flex;
   align-items: center;
-  gap: 0.32rem;
+  gap: 5px; 
 }
 
 body.theme-rummikub .rk-tile {
@@ -4020,15 +4105,17 @@ body.theme-rummikub .rk-tile {
   height: 40px;
   border-radius: 8px;
   background: linear-gradient(180deg, #fffdf8 0%, var(--rk-ivory2) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.7);
-  box-shadow: 0 2.5px 0 #c7bc9f, 0 4px 8px rgba(3, 12, 32, 0.36);
+  
+  border: 1px solid #ffffff;
+  box-shadow: 0 2px 0 #c7bc9f, 0 3px 0 rgba(3, 12, 32, 0.28);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.24rem;
+  font-size: 20px;
   font-weight: 800;
   font-variant-numeric: tabular-nums;
   line-height: 1;
+  -webkit-font-smoothing: antialiased;
 }
 
 body.theme-rummikub .rk-tile.t-red { color: var(--rk-red); }
@@ -4648,10 +4735,11 @@ body.theme-rummikub .rk-history-empty {
 
 
 body.theme-rummikub .bottom-nav {
-  background: rgba(250, 246, 236, 0.96);
+  background: #faf6ec;
   border-top: 1px solid #d5cab2;
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 body.theme-rummikub .bottom-nav button {
@@ -4667,9 +4755,10 @@ body.theme-rummikub .bottom-nav button.active::before {
   background: var(--rk-cobalt);
 }
 
-body.theme-rummikub .bottom-nav #nav-social {
-  display: none !important;
-}
+
+body.theme-rummikub .bottom-nav #nav-new,
+body.theme-rummikub .bottom-nav #nav-active { display: flex; }
+body.theme-rummikub .bottom-nav #nav-social { display: flex; }
 
 </style>
 
@@ -4827,7 +4916,8 @@ body.theme-seven-wonders .sw-exp-badge[hidden] {
 
 body.theme-seven-wonders .sw-title {
   margin: 2px 0 2px;
-  font-size: clamp(23px, 6.8vw, 28px);
+  font-size: 26px;
+  -webkit-font-smoothing: antialiased;
   font-weight: 700;
   line-height: 1.05;
   letter-spacing: 0.08em;
@@ -4855,7 +4945,7 @@ body.theme-seven-wonders .sw-flourish-line {
 body.theme-seven-wonders .sw-subtitle {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  font-size: 10.5px;
+  font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -5287,7 +5377,7 @@ body.theme-seven-wonders .sw-row-sub {
 body.theme-seven-wonders .sw-coin-vp {
   display: inline-block;
   margin-top: 2px;
-  font-size: 12.5px;
+  font-size: 13px;
   font-style: italic;
   font-weight: 600;
   color: #8c6211;
@@ -5642,8 +5732,8 @@ body.theme-seven-wonders .bottom-nav {
   background: rgba(246, 236, 214, 0.97);
   border-top: 1px solid rgba(122, 82, 42, 0.38);
   box-shadow: 0 -6px 18px rgba(56, 37, 21, 0.1);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 body.theme-seven-wonders .bottom-nav button {
@@ -5660,8 +5750,10 @@ body.theme-seven-wonders .bottom-nav button svg {
   stroke: currentColor;
 }
 
+
+body.theme-seven-wonders .bottom-nav #nav-active,
 body.theme-seven-wonders .bottom-nav #nav-social {
-  display: none !important;
+  display: flex !important;
 }
 
 </style>
@@ -5833,7 +5925,8 @@ body.theme-hearts .ht-title-row {
 body.theme-hearts .ht-title {
   margin: 0;
   font-family: var(--ht-serif);
-  font-size: clamp(2rem, 8.5vw, 2.55rem);
+  font-size: 33px;
+  -webkit-font-smoothing: antialiased;
   font-weight: 500;
   letter-spacing: 0.02em;
   line-height: 1.08;
@@ -6584,8 +6677,9 @@ body.theme-hearts .bottom-nav button.active {
   color: var(--ht-crimson);
 }
 
+
 body.theme-hearts .bottom-nav #nav-new {
-  display: none;
+  display: flex;
 }
 
 body.theme-hearts .bottom-nav #nav-active {
@@ -6593,7 +6687,7 @@ body.theme-hearts .bottom-nav #nav-active {
 }
 
 body.theme-hearts .bottom-nav #nav-social {
-  display: none !important;
+  display: flex !important;
 }
 
 </style>
@@ -6767,7 +6861,8 @@ body.theme-ohhell .oh-title-row {
 body.theme-ohhell .oh-title {
   margin: 0;
   font-family: var(--oh-serif);
-  font-size: clamp(2rem, 8.5vw, 2.55rem);
+  font-size: 33px;
+  -webkit-font-smoothing: antialiased;
   font-weight: 500;
   letter-spacing: 0.02em;
   line-height: 1.08;
@@ -7478,8 +7573,9 @@ body.theme-ohhell .bottom-nav button.active {
   color: var(--oh-emerald);
 }
 
+
 body.theme-ohhell .bottom-nav #nav-new {
-  display: none;
+  display: flex;
 }
 
 body.theme-ohhell .bottom-nav #nav-active {
@@ -7487,7 +7583,7 @@ body.theme-ohhell .bottom-nav #nav-active {
 }
 
 body.theme-ohhell .bottom-nav #nav-social {
-  display: none !important;
+  display: flex !important;
 }
 
 </style>
@@ -7577,7 +7673,7 @@ body.theme-qwirkle .qw-top-btn-end { color: var(--qw-red); border-color: rgba(22
 body.theme-qwirkle .qw-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 12px; }
 body.theme-qwirkle .qw-head-left { min-width: 0; }
 body.theme-qwirkle .qw-title {
-  margin: 0; font-family: var(--qw-font); font-size: clamp(2.1rem, 10vw, 2.6rem);
+  margin: 0; font-family: var(--qw-font); font-size: 40px; -webkit-font-smoothing: antialiased;
   font-weight: 900; letter-spacing: -0.01em; line-height: 1.02; color: var(--qw-navy);
 }
 body.theme-qwirkle .qw-turn-row { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
@@ -7615,7 +7711,7 @@ body.theme-qwirkle .qw-pcard.is-leader .qw-pname { color: var(--qw-green); }
 body.theme-qwirkle .qw-ptile { width: 40px; height: 40px; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; }
 body.theme-qwirkle .qw-ptile svg { width: 24px; height: 24px; }
 body.theme-qwirkle .qw-pname { max-width: 100%; font-size: 0.95rem; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 2px; }
-body.theme-qwirkle .qw-ptotal { font-size: clamp(1.7rem, 7.5vw, 2.15rem); font-weight: 900; line-height: 1; color: var(--qw-navy); }
+body.theme-qwirkle .qw-ptotal { font-size: 30px; font-weight: 900; line-height: 1; color: var(--qw-navy); }
 body.theme-qwirkle .qw-pdelta { min-width: 46px; padding: 2px 8px; border-radius: 8px; background: var(--qw-green); color: #FFFFFF; font-size: 0.82rem; font-weight: 800; text-align: center; }
 body.theme-qwirkle .qw-pdelta.is-low { background: var(--qw-orange); }
 body.theme-qwirkle .qw-pdelta.is-zero { background: #E7E4DC; color: var(--qw-muted); }
@@ -7651,7 +7747,7 @@ body.theme-qwirkle .qw-bonus-row { display: grid; grid-template-columns: 1fr 1fr
 body.theme-qwirkle .qw-bonus {
   min-height: 52px; border: 0; border-radius: 12px; color: #FFFFFF; font-family: var(--qw-font);
   font-size: clamp(1rem, 4.6vw, 1.2rem); font-weight: 900; cursor: pointer;
-  box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.14); text-shadow: 0 1px 2px rgba(0, 0, 0, 0.18);
+  box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.14); text-shadow: 0 1px 0 rgba(0, 0, 0, 0.18);
   touch-action: manipulation; user-select: none; -webkit-tap-highlight-color: transparent;
 }
 body.theme-qwirkle .qw-bonus-rainbow { background: linear-gradient(90deg, var(--qw-red) 0%, var(--qw-orange) 22%, var(--qw-yellow) 42%, var(--qw-green) 62%, var(--qw-blue) 82%, var(--qw-purple) 100%); }
@@ -7687,9 +7783,9 @@ body.theme-qwirkle .qw-history-item .qw-h-tag { padding: 1px 6px; border-radius:
 body.theme-qwirkle .bottom-nav { background: rgba(255, 255, 255, 0.97); border-top: 1px solid var(--qw-line); box-shadow: 0 -4px 14px rgba(14, 26, 58, 0.06); }
 body.theme-qwirkle .bottom-nav button { color: var(--qw-muted); font-family: var(--qw-font); font-weight: 800; }
 body.theme-qwirkle .bottom-nav button.active { color: var(--qw-navy); }
-body.theme-qwirkle .bottom-nav #nav-new { display: none; }
+body.theme-qwirkle .bottom-nav #nav-new { display: flex; } 
 body.theme-qwirkle .bottom-nav #nav-active { display: flex; }
-body.theme-qwirkle .bottom-nav #nav-social { display: none !important; }
+body.theme-qwirkle .bottom-nav #nav-social { display: flex !important; }
 
 </style>
 
@@ -7836,7 +7932,6 @@ body.theme-qwirkle .bottom-nav #nav-social { display: none !important; }
 .v24-row-name, .v24-row-sub { display: block; }
 
 .history-item .v24-link-slot { margin-top: .45rem; }
-#view-home #v24-suggest-banner { margin-bottom: .75rem; }
 </style>
 <!-- v20: Request a Game, Variations & Popularity, Private Admin Stats, Full Screen (neutral obsidian + warm brass) -->
 <style id="v20-features">
@@ -9012,94 +9107,6 @@ html.v20-standalone .app-header .v20-fs-wrap, html.v20-standalone #btn-fullscree
 }
 
 
-.v21-stepper {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 6px;
-  margin: 0 0 12px;
-  padding: 8px 10px;
-  border-radius: 12px;
-  border: 1px solid var(--v21-border);
-  background: var(--v21-surface-2);
-  box-sizing: border-box;
-}
-
-.v21-step {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  min-width: 0;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--v21-muted);
-  white-space: nowrap;
-}
-
-.v21-step-num {
-  width: 20px;
-  height: 20px;
-  border-radius: 999px;
-  border: 1px solid var(--v21-border-hi);
-  background: var(--v21-bg);
-  color: var(--v21-muted);
-  font-size: 11px;
-  font-weight: 700;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  font-variant-numeric: tabular-nums;
-}
-
-.v21-step-num svg {
-  width: 12px;
-  height: 12px;
-}
-
-.v21-step.is-active {
-  color: var(--v21-brass);
-}
-
-.v21-step.is-active .v21-step-num {
-  background: var(--v21-brass);
-  border-color: var(--v21-brass);
-  color: var(--v21-bg);
-}
-
-.v21-step.is-done {
-  color: var(--v21-text);
-}
-
-.v21-step.is-done .v21-step-num {
-  background: var(--v21-brass-soft);
-  border-color: var(--v21-brass-border);
-  color: var(--v21-brass);
-}
-
-.v21-step-sep {
-  flex: 1;
-  height: 1px;
-  min-width: 10px;
-  background: var(--v21-border-hi);
-}
-
-
-.v21-choose-sub {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  margin: 0 0 10px;
-  font-size: 12.5px;
-  color: var(--v21-muted);
-}
-
-.v21-choose-sub strong {
-  color: var(--v21-text);
-  font-weight: 600;
-}
-
 .v21-tile-cue {
   position: absolute;
   top: 7px;
@@ -9204,7 +9211,8 @@ html.v20-standalone .app-header .v20-fs-wrap, html.v20-standalone #btn-fullscree
   transform: translateX(-50%);
   bottom: calc(64px + env(safe-area-inset-bottom, 0px));
   z-index: 90;
-  width: min(520px, 100vw);
+  
+  width: min(calc(760px - 2.3rem), 100vw);
   padding: 10px 14px;
   background: linear-gradient(180deg, rgba(12, 13, 16, 0.84) 0%, rgba(12, 13, 16, 0.98) 38%);
   border-top: 1px solid var(--v21-border-hi);
@@ -10546,46 +10554,6 @@ html.v21-sheet-open, html.v21-sheet-open body { overscroll-behavior: contain; }
 }
 
 
-#setup-screen[class*="setup-theme-"] .v21-stepper {
-  background: var(--st-surface);
-  border-color: var(--st-surface-border);
-}
-
-#setup-screen[class*="setup-theme-"] .v21-step {
-  color: var(--st-muted);
-}
-
-#setup-screen[class*="setup-theme-"] .v21-step-num {
-  background: var(--st-input-bg);
-  border-color: var(--st-surface-border);
-  color: var(--st-muted);
-}
-
-#setup-screen[class*="setup-theme-"] .v21-step.is-active {
-  color: var(--st-accent);
-}
-
-#setup-screen[class*="setup-theme-"] .v21-step.is-active .v21-step-num {
-  background: var(--st-accent);
-  border-color: var(--st-accent);
-  color: var(--st-cta-text);
-}
-
-#setup-screen[class*="setup-theme-"] .v21-step.is-done {
-  color: var(--st-text);
-}
-
-#setup-screen[class*="setup-theme-"] .v21-step.is-done .v21-step-num {
-  background: var(--st-accent-soft);
-  border-color: var(--st-accent-border);
-  color: var(--st-accent);
-}
-
-#setup-screen[class*="setup-theme-"] .v21-step-sep {
-  background: var(--st-surface-border);
-}
-
-
 #setup-screen[class*="setup-theme-"] .v21-setup-head {
   border-bottom-color: var(--st-surface-border);
 }
@@ -11141,7 +11109,7 @@ html.v21-sheet-open, html.v21-sheet-open body { overscroll-behavior: contain; }
 </style>
 </head>
 <body>
-<!-- Build: v24.1-linked-sync-2026-11-27 -->
+<!-- Build: v24.2-play-home-2026-11-27 -->
 
 <!-- Login: starts hidden until getSession() resolves -->
 <section id="login-view" class="auth-hidden" hidden aria-label="Sign in to Score Tracker">
@@ -11238,9 +11206,9 @@ html.v21-sheet-open, html.v21-sheet-open body { overscroll-behavior: contain; }
     </div>
   </header>
 
-  <!-- HOME -->
-  <section id="view-home" class="view" aria-label="Home">
-    <div class="home-stack">
+  <!-- CHOOSE GAME -->
+  <section id="view-new" class="view" data-v21-step="choose">
+<div id="v24-2-play-top" class="v24-2-play-top" aria-label="Your games">
 <section id="v22-built-banner" class="v22-built-banner hidden" hidden aria-label="Requested game available">
   <div class="v22-built-top">
     <div class="v22-built-lead">
@@ -11306,77 +11274,12 @@ html.v21-sheet-open, html.v21-sheet-open body { overscroll-behavior: contain; }
       </button>
   <div id="v21-active-games-list" class="v21-active-list"></div>
 </section>
-
-    
-      <div class="home-hero">
-        <div class="home-hero-top">
-          <p class="home-eyebrow">Tabletop Ledger</p>
-          <h2 class="home-title">Start a new game</h2>
-        </div>
-
-        <button class="home-primary-cta" type="button" onclick="showView('new')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <line x1="12" y1="5" x2="12" y2="19"/>
-            <line x1="5" y1="12" x2="19" y2="12"/>
-          </svg>
-          <span>Start a Game</span>
-        </button>
-
-        <div class="home-quick-row" aria-label="Quick start a game">
-          <button type="button" class="home-quick-chip" data-game="catan" onclick="quickStart('catan')">Catan</button>
-          <button type="button" class="home-quick-chip" data-game="carcassonne" onclick="quickStart('carcassonne')">Carcassonne</button>
-          <button type="button" class="home-quick-chip" data-game="flip7" onclick="quickStart('flip7')">Flip 7</button>
-          <button type="button" class="home-quick-chip" data-game="nertz" onclick="quickStart('nertz')">Nertz</button>
-          <button type="button" class="home-quick-chip" data-game="hearts" onclick="quickStart('hearts')">Hearts</button>
-          <button type="button" class="home-quick-chip home-quick-more" onclick="showView('new')">All games</button>
-        </div>
-      </div>
-
-    
-      <div class="home-section">
-        <div class="home-section-head">
-          <h3 class="home-section-title">Recent Games</h3>
-          <button type="button" class="home-section-link" onclick="showView('history')">
-            History
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <polyline points="9 18 15 12 9 6"/>
-            </svg>
-          </button>
-        </div>
-        <div class="home-recent-card">
-          <div id="recent-list"></div>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- CHOOSE GAME -->
-  <section id="view-new" class="view" data-v21-step="choose">
+</div>
   <div id="setup-screen" class="v23-setup-screen">
     <div class="card v23-setup-card">
       <div id="v21-choose-step">
-<div id="v21-choose-header" class="v21-choose-header">
-  <div class="v21-stepper" aria-label="New game progress">
-    <span class="v21-step is-active" aria-current="step">
-      <span class="v21-step-num">1</span>
-      <span>Game</span>
-    </span>
-    <span class="v21-step-sep" aria-hidden="true"></span>
-    <span class="v21-step">
-      <span class="v21-step-num">2</span>
-      <span>Setup</span>
-    </span>
-    <span class="v21-step-sep" aria-hidden="true"></span>
-    <span class="v21-step">
-      <span class="v21-step-num">3</span>
-      <span>Score</span>
-    </span>
-  </div>
-  <p class="v21-choose-sub">
-    <span><strong>Tap any game</strong> to set up players &amp; rules</span>
-  </p>
-</div>
+<!-- v24.2: stepper pills and "Tap any game" hint removed. Empty mount kept so build.py's id check still passes. -->
+<div id="v21-choose-header" class="v21-choose-header hidden" hidden></div>
       <h2>Choose Game</h2>
 <div id="v22-game-search-wrap" class="v22-search-wrap">
   <svg class="v22-search-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -11425,25 +11328,6 @@ html.v21-sheet-open, html.v21-sheet-open body { overscroll-behavior: contain; }
       </div>
       <div id="v21-setup-step" class="hidden" hidden>
 <div id="v21-setup-header" class="v21-setup-header hidden" hidden>
-  <div class="v21-stepper" aria-label="New game progress">
-    <span class="v21-step is-done">
-      <span class="v21-step-num" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-      </span>
-      <span>Game</span>
-    </span>
-    <span class="v21-step-sep" aria-hidden="true"></span>
-    <span class="v21-step is-active" aria-current="step">
-      <span class="v21-step-num">2</span>
-      <span>Setup</span>
-    </span>
-    <span class="v21-step-sep" aria-hidden="true"></span>
-    <span class="v21-step">
-      <span class="v21-step-num">3</span>
-      <span>Score</span>
-    </span>
-  </div>
-
   <div class="v21-setup-head">
     <div class="v21-setup-game-wrap">
       <span class="v21-setup-eyebrow">Selected Game</span>
@@ -11591,11 +11475,12 @@ html.v21-sheet-open, html.v21-sheet-open body { overscroll-behavior: contain; }
         </div>
       </div>
       <div id="gen-leaderboard" style="margin-top:.7rem"></div>
-      <p class="small" style="margin:.3rem 0 0;text-align:center">Tap a player to score</p>
+      <p class="small gen-hint" style="margin:.3rem 0 0;text-align:center">Tap a player to score</p>
       <div id="gen-pad" class="hidden"></div>
       <div class="action-bar">
         <button class="btn hidden" id="gen-undo" type="button" hidden onclick="undoLastRound()">Undo</button>
         <button class="btn success" id="gen-save" type="button" onclick="openEndGameModal()">Finish Game</button>
+        <button class="btn primary gen-start" id="gen-start" type="button" onclick="showView('new')">Start a game</button>
       </div>
     </div>
 
@@ -11617,7 +11502,7 @@ html.v21-sheet-open, html.v21-sheet-open body { overscroll-behavior: contain; }
       </div>
       <div id="f7-board" class="f7-board" role="listbox" aria-label="Players"></div>
       <p class="f7-hint" id="f7-hint">Tap a player to score their round</p>
-      <button type="button" class="f7-finish hidden" id="f7-finish" hidden onclick="openEndGameModal()">🏆 Finish &amp; Save Game</button>
+      <button type="button" class="f7-finish hidden" id="f7-finish" hidden onclick="openEndGameModal()"><svg class="v24-2-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4h8v5a4 4 0 0 1-8 0V4z"/><path d="M8 6H5a3 3 0 0 0 3 4"/><path d="M16 6h3a3 3 0 0 1-3 4"/><path d="M12 13v4"/><path d="M8.5 20h7"/><path d="M10 17h4v3h-4z"/></svg><span>Finish &amp; Save Game</span></button>
       <div id="f7-drawer" class="f7-drawer hidden" hidden></div>
       <div id="f7-sheet" class="f7-sheet hidden" hidden onclick="if(event.target===this)f7CloseSheet()"></div>
     </div>
@@ -12050,7 +11935,7 @@ html.v21-sheet-open, html.v21-sheet-open body { overscroll-behavior: contain; }
 
     <header class="sw-head">
       <div class="sw-head-top">
-        <button type="button" id="sw-btn-back" class="sw-back-btn" onclick="window.goHome ? goHome() : (window.showView && showView('home'))">
+        <button type="button" id="sw-btn-back" class="sw-back-btn" onclick="window.goHome ? goHome() : (window.showView && showView('new'))">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
           <span>Games</span>
         </button>
@@ -12205,11 +12090,11 @@ html.v21-sheet-open, html.v21-sheet-open body { overscroll-behavior: contain; }
     </div>
 
     <div class="ht-topbar">
-      <button type="button" id="ht-btn-home" class="ht-top-btn" onclick="showView('home')" aria-label="Back to Home">
+      <button type="button" id="ht-btn-home" class="ht-top-btn" onclick="showView('new')" aria-label="Back to Play">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <polyline points="15 18 9 12 15 6"/>
         </svg>
-        <span>Home</span>
+        <span>Play</span>
       </button>
       <div class="ht-top-actions">
         <button type="button" id="ht-btn-undo" class="ht-top-btn" onclick="window.HeartsUI && window.HeartsUI.undoHand()" aria-label="Undo last hand" disabled>
@@ -12417,11 +12302,11 @@ html.v21-sheet-open, html.v21-sheet-open body { overscroll-behavior: contain; }
     </div>
 
     <div class="oh-topbar">
-      <button type="button" id="oh-btn-home" class="oh-top-btn" onclick="showView('home')" aria-label="Back to Home">
+      <button type="button" id="oh-btn-home" class="oh-top-btn" onclick="showView('new')" aria-label="Back to Play">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <polyline points="15 18 9 12 15 6"/>
         </svg>
-        <span>Home</span>
+        <span>Play</span>
       </button>
       <div class="oh-top-actions">
         <button type="button" id="oh-btn-undo" class="oh-top-btn" onclick="window.OhHellUI && window.OhHellUI.undoRound()" aria-label="Undo last round" disabled>
@@ -12589,9 +12474,9 @@ html.v21-sheet-open, html.v21-sheet-open body { overscroll-behavior: contain; }
   </svg>
 
   <div class="qw-topbar">
-    <button type="button" id="qw-btn-home" class="qw-top-btn" onclick="showView('home')" aria-label="Back to Home">
+    <button type="button" id="qw-btn-home" class="qw-top-btn" onclick="showView('new')" aria-label="Back to Play">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
-      <span>Home</span>
+      <span>Play</span>
     </button>
     <div class="qw-top-actions">
       <button type="button" id="qw-btn-undo" class="qw-top-btn" onclick="window.QwirkleUI && window.QwirkleUI.undoTurn()" aria-label="Undo last turn" disabled>
@@ -12772,7 +12657,7 @@ html.v21-sheet-open, html.v21-sheet-open body { overscroll-behavior: contain; }
 <section id="admin-screen" class="view v20-admin-view hidden" hidden aria-label="Admin Stats">
   <header class="v20-admin-head">
     <div class="v20-admin-head-left">
-      <button type="button" id="btn-admin-back" class="v20-admin-icon-btn" aria-label="Back" onclick="window.closeAdminScreen ? closeAdminScreen() : (window.showView && showView('home'))">
+      <button type="button" id="btn-admin-back" class="v20-admin-icon-btn" aria-label="Back" onclick="window.closeAdminScreen ? closeAdminScreen() : (window.showView && showView('new'))">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
       </button>
       <div>
@@ -13420,63 +13305,53 @@ html.v21-sheet-open, html.v21-sheet-open body { overscroll-behavior: contain; }
   </div>
 </div>
 
-  <nav class="bottom-nav" aria-label="Main navigation">
-    <button type="button" id="nav-home" onclick="showView('home')">
-      <span class="icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M3 10.5L12 3l9 7.5"/>
-          <path d="M5.5 9.5V20a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1V9.5"/>
-        </svg>
-      </span>
-      <span>Home</span>
-    </button>
+<nav class="bottom-nav" aria-label="Main navigation">
+  <button type="button" id="nav-new" onclick="showView('new')">
+    <span class="icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3.5" y="3.5" width="17" height="17" rx="4"/>
+        <line x1="12" y1="8.25" x2="12" y2="15.75"/>
+        <line x1="8.25" y1="12" x2="15.75" y2="12"/>
+      </svg>
+    </span>
+    <span>Play</span>
+  </button>
 
-    <button type="button" id="nav-new" onclick="showView('new')">
-      <span class="icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3.5" y="3.5" width="17" height="17" rx="4"/>
-          <line x1="12" y1="8.25" x2="12" y2="15.75"/>
-          <line x1="8.25" y1="12" x2="15.75" y2="12"/>
-        </svg>
-      </span>
-      <span>Play</span>
-    </button>
+  <button type="button" id="nav-active" onclick="showView('active')">
+    <span class="icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/>
+        <rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/>
+        <rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/>
+        <rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/>
+      </svg>
+    </span>
+    <span>Tracker</span>
+  </button>
 
-    <button type="button" id="nav-active" onclick="showView('active')">
-      <span class="icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/>
-          <rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/>
-          <rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/>
-          <rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/>
-        </svg>
-      </span>
-      <span>Tracker</span>
-    </button>
+  <button type="button" id="nav-social" onclick="showView('social')">
+    <span class="icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="9" cy="8.5" r="3.25"/>
+        <path d="M3.5 19.5c0-3 2.5-5 5.5-5s5.5 2 5.5 5"/>
+        <circle cx="16.5" cy="9.5" r="2.5"/>
+        <path d="M16.5 14.5c2.2 0 4 1.5 4 4.5"/>
+      </svg>
+    </span>
+    <span>Friends</span>
+    <span id="nav-social-dot" class="soc-nav-dot hidden" hidden aria-hidden="true"></span>
+  </button>
 
-    <button type="button" id="nav-social" onclick="showView('social')">
-      <span class="icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="9" cy="8.5" r="3.25"/>
-          <path d="M3.5 19.5c0-3 2.5-5 5.5-5s5.5 2 5.5 5"/>
-          <circle cx="16.5" cy="9.5" r="2.5"/>
-          <path d="M16.5 14.5c2.2 0 4 1.5 4 4.5"/>
-        </svg>
-      </span>
-      <span>Friends</span>
-      <span id="nav-social-dot" class="soc-nav-dot hidden" hidden aria-hidden="true"></span>
-    </button>
-
-    <button type="button" id="nav-history" onclick="showView('history')">
-      <span class="icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="8.5"/>
-          <polyline points="12 7.5 12 12 15 13.75"/>
-        </svg>
-      </span>
-      <span>History</span>
-    </button>
-  </nav>
+  <button type="button" id="nav-history" onclick="showView('history')">
+    <span class="icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="8.5"/>
+        <polyline points="12 7.5 12 12 15 13.75"/>
+      </svg>
+    </span>
+    <span>History</span>
+  </button>
+</nav>
 </div>
 
 <!-- v15 Dice trigger (moved by the engine into #catan-dice-slot / #gen-dice-slot) + slide-up sheet -->
@@ -18445,7 +18320,7 @@ window.SocialUI = (function () {
       cycle = [
         { key: 'left',  label: 'Pass Left',  arrow: '←' },
         { key: 'right', label: 'Pass Right', arrow: '→' },
-        { key: 'hold',  label: 'Hold',       arrow: '✋' }
+        { key: 'hold',  label: 'Hold',       arrow: '=' }
       ];
     } else if (n === 5) {
       cycle = [
@@ -18453,7 +18328,7 @@ window.SocialUI = (function () {
         { key: 'right',  label: 'Pass Right',   arrow: '→' },
         { key: 'left2',  label: 'Pass 2 Left',  arrow: '↞' },
         { key: 'right2', label: 'Pass 2 Right', arrow: '↠' },
-        { key: 'hold',   label: 'Hold',         arrow: '✋' }
+        { key: 'hold',   label: 'Hold',         arrow: '=' }
       ];
     } else {
       // Standard 4-player (and 6p) cycle
@@ -18461,7 +18336,7 @@ window.SocialUI = (function () {
         { key: 'left',   label: 'Pass Left',   arrow: '←' },
         { key: 'right',  label: 'Pass Right',  arrow: '→' },
         { key: 'across', label: 'Pass Across', arrow: '↔' },
-        { key: 'hold',   label: 'Hold',        arrow: '✋' }
+        { key: 'hold',   label: 'Hold',        arrow: '=' }
       ];
     }
 
@@ -22144,32 +22019,32 @@ try { if (window.TallyItV24Backend) window.TallyItV24Backend.capturePendingClaim
 
   // ---------------- Games ----------------
   const GAMES = [
-    { id: 'flip7', name: 'Flip 7', img: 'assets/games/flip7.svg', icon: '🃏',
+    { id: 'flip7', name: 'Flip 7', img: 'assets/games/flip7.svg', icon: '7',
       versions: ['Standard (to 200)', 'With a Vengeance', 'Thematic / Promo'],
       target: () => 200, detailedLabel: 'Card Pad' },
     { id: '7wonders', name: '7 Wonders', img: 'assets/games/7wonders.svg', art: 'assets/games/7wonders.svg', icon: '7', minPlayers: 3, maxPlayers: 7, defaultPlayers: 4,
       theme: 'theme-seven-wonders', versions: ['Base Game', 'With Leaders', 'With Cities', 'With Armada'], target: () => null, detailedLabel: 'Categories' },
-    { id: 'carcassonne', name: 'Carcassonne', img: 'assets/games/carcassonne.svg', icon: '🏰',
+    { id: 'carcassonne', name: 'Carcassonne', img: 'assets/games/carcassonne.svg', icon: 'C',
       versions: ['Classic (current scoring)', 'Older edition (small cities)', 'With Inns & Cathedrals', 'With other expansions'],
       target: () => null, detailedLabel: 'Features' },
     { id: 'catan', name: 'Catan', img: 'assets/games/catan.svg', icon: '⬢',
       versions: ['Base (to 10 VP)', 'Cities & Knights (to 13 VP)', 'Seafarers (to 12 VP)', '5-6 Player (to 10 VP)'],
       target: (v) => { const m = /to (\d+)/i.exec(v || ''); return m ? Number(m[1]) : 10; },
       dice: { count: 2, sides: 6, robberSum: 7 } },
-    { id: 'ohhell', name: 'Oh Hell', img: 'assets/games/ohhell.svg', icon: '♠️',
+    { id: 'ohhell', name: 'Oh Hell', img: 'assets/games/ohhell.svg', icon: 'OH',
       versions: ['Exact: 10+bid (miss=0)', '1 per trick +10 if exact', 'Other variant'],
       target: () => null, detailedLabel: 'Bid & Tricks' },
-    { id: 'hearts', name: 'Hearts', img: 'assets/games/hearts.svg', icon: '♥️', low: true,
+    { id: 'hearts', name: 'Hearts', img: 'assets/games/hearts.svg', icon: 'H', low: true,
       versions: ['Standard (to 100)', 'Short (to 50)', 'With Jack of Diamonds'],
       target: (v) => (/50/.test(v || '') ? 50 : 100), detailedLabel: 'Hand' },
-    { id: 'nertz', name: 'Nertz', img: 'assets/games/nertz.svg', icon: '🂠',
+    { id: 'nertz', name: 'Nertz', img: 'assets/games/nertz.svg', icon: 'N',
       versions: ['Standard (to 100)', 'Long game (to 150)', 'Short game (to 50)'],
       target: (v) => (/150/.test(v || '') ? 150 : /50\b/.test(v || '') ? 50 : 100), detailedLabel: 'Round' },
     { id: 'rummikub', name: 'Rummikub', img: 'assets/games/rummikub.svg', art: 'assets/games/rummikub.svg', icon: '▦', low: true, minPlayers: 2, maxPlayers: 6,
       versions: ['Points Up (Lowest Wins)', 'Classic (+/−)'], target: () => null, detailedLabel: 'Round' },
     { id: 'qwirkle', name: 'Qwirkle', img: 'assets/games/qwirkle.svg', art: 'assets/games/qwirkle.svg', icon: 'Q', minPlayers: 2, maxPlayers: 6,
       versions: ['Standard (play it out)', 'Short game (to 300)'], target: (v) => (/300/.test(v || '') ? 300 : null), detailedLabel: 'Turn' },
-    { id: 'other', name: 'Custom', img: 'assets/games/custom.svg', icon: '✏️',
+    { id: 'other', name: 'Custom', img: 'assets/games/custom.svg', icon: '+',
       versions: ['Custom rules'], target: () => null, detailedLabel: null }
   ];
   const V20 = () => global.TallyItV20 || null;
@@ -22195,7 +22070,7 @@ try { if (window.TallyItV24Backend) window.TallyItV24Backend.capturePendingClaim
   // ---------------- State ----------------
   let currentUser = null, initializedUserId = null;
   let players = [], history = [], pendingSync = false, syncInFlight = false;
-  let currentGame = null, currentView = 'home';
+  let currentGame = null, currentView = 'new';
   let selectedGame = 'flip7', selectedVersion = null;
   // v23 Hearts / Oh Hell ledgers
   const HTL = () => global.TallyItHearts || null;
@@ -22350,7 +22225,7 @@ try { if (window.TallyItV24Backend) window.TallyItV24Backend.capturePendingClaim
     currentUser = user; initializedUserId = user.id;
     selfPlayer = provisionalSelf(user); selfIncluded = true; setupFriends = []; setupGroup = null;
     currentGame = loadActive();
-    showView('home');
+    showView('new');
     const socialReady = socialInit(user);
     await loadData();
     if (initializedUserId === user.id) showView(currentView);
@@ -22359,7 +22234,7 @@ try { if (window.TallyItV24Backend) window.TallyItV24Backend.capturePendingClaim
   }
   function onAuthSignedOut() {
     currentUser = null; initializedUserId = null; players = []; history = []; currentGame = null; pendingSync = false;
-    scoringPlayer = null; currentView = 'home'; closeDiceModal();
+    scoringPlayer = null; currentView = 'new'; closeDiceModal();
     document.body.classList.remove('theme-catan', 'theme-flip7', 'theme-carcassonne', 'theme-nertz', 'theme-rummikub', 'theme-seven-wonders', 'theme-hearts', 'theme-ohhell', 'theme-qwirkle'); f7 = null; swExpOpen = false; rkCalcOpen = false; rkCalcExpr = ''; nzSheetKind = null; nzPopIdx = -1;
     if (typeof unsubFriendships === 'function') { unsubFriendships(); unsubFriendships = null; }
     if (typeof unsubMyGames === 'function') { unsubMyGames(); unsubMyGames = null; }
@@ -22404,18 +22279,18 @@ try { if (window.TallyItV24Backend) window.TallyItV24Backend.capturePendingClaim
     if (meta) meta.setAttribute('content', on ? '#180f08' : f7on ? '#4bbdb8' : ccon ? '#6fa6d8' : nzon ? '#071222' : rkon ? '#0b2f69' : swon ? '#eadbc0' : (hton || ohon) ? '#f5f0e6' : qwon ? '#fbf7ee' : '#0c0d10');
   }
   function showView(v) {
-    if (!byId('view-' + v)) v = 'home';
+    if (v === 'home') v = 'new';
+    if (!byId('view-' + v)) v = 'new';
     if (v === 'new' && !v21HoldStep) v21Step = 'choose';
     // v21: leaving a game for Home / Play never traps you in it: the game auto-pauses into In Progress
-    if ((v === 'home' || v === 'new') && currentView === 'active' && currentGame && SESS()) v21ParkCurrent();
+    if (v === 'new' && currentView === 'active' && currentGame && SESS()) v21ParkCurrent();
     // v21: the Tracker tab with nothing focused reopens the most recent open game
     if (v === 'active' && !currentGame && SESS()) { const hg = v21HomeGame(); if (hg) { resumeGame(hg.id); return; } }
     currentView = v;
     document.querySelectorAll('#app-shell .view').forEach((el) => el.classList.toggle('active', el.id === 'view-' + v));
     document.querySelectorAll('.bottom-nav button').forEach((b) => b.classList.toggle('active', b.id === 'nav-' + v));
     applyTheme();
-    if (v === 'home') { renderHome(); refreshGamesSoon(); }
-    if (v === 'new') renderNew();
+    if (v === 'new') { renderNew(); renderHome(); refreshGamesSoon(); }
     if (v === 'history') { renderHistory(); refreshGamesSoon(); }
     if (v === 'social') { renderSocial(); refreshSocial(); }
     if (v === 'active') renderActive();
@@ -22643,8 +22518,8 @@ try { if (window.TallyItV24Backend) window.TallyItV24Backend.capturePendingClaim
       if (isCarc()) ccHideAdd();
       closeDiceModal(); v21ResetTransient(); currentGame = null;
       if (!S) { try { localStorage.removeItem(KEY_ACTIVE); } catch (_) {} }
-      showView('home');
-    } else if (currentView === 'home') renderHome();
+      showView('new');
+    } else if (currentView === 'new') renderHome();
     return true;
   }
   function v21ResetTransient() {
@@ -22665,10 +22540,10 @@ try { if (window.TallyItV24Backend) window.TallyItV24Backend.capturePendingClaim
   }
   // v21: Keep Open (Pause) -> game stays in In Progress, focus cleared, back to Home
   function pauseGame() {
-    if (!currentGame) { showView('home'); return null; }
-    if (!SESS()) { const id = currentGame.id; persistActive(); showView('home'); return id; }
+    if (!currentGame) { showView('new'); return null; }
+    if (!SESS()) { const id = currentGame.id; persistActive(); showView('new'); return id; }
     const id = v21ParkCurrent();
-    showView('home');
+    showView('new');
     return id;
   }
   // The game Home's Resume card points at: the focused game, else the most recently paused one
@@ -22688,7 +22563,7 @@ try { if (window.TallyItV24Backend) window.TallyItV24Backend.capturePendingClaim
     if (currentGame) { S.pauseCurrentSession(currentGame); closeDiceModal(); currentGame = null; }
     const res = S.resumeSession(id);
     const g = res && res.ok ? normalizeLoadedGame(res.snapshot) : null;
-    if (!g) { if (currentView === 'home') renderHome(); return null; }
+    if (!g) { if (currentView === 'new') renderHome(); return null; }
     v21ResetTransient();
     currentGame = g;
     showView('active');
@@ -22796,8 +22671,10 @@ try { if (window.TallyItV24Backend) window.TallyItV24Backend.capturePendingClaim
       byId('gen-sub').textContent = 'Tap Play to start one.';
       byId('gen-leaderboard').innerHTML = '';
       setHidden(byId('gen-pad'), true); setHidden(byId('gen-undo'), true);
+      byId('generic-board').classList.add('is-empty');
       return;
     }
+    byId('generic-board').classList.remove('is-empty');
     if (isCatan()) renderCatan(); else if (isFlip7()) renderFlip7(); else if (isCarc()) renderCarc(); else if (isNertz()) renderNertz(); else if (isRk()) renderRummikub(); else if (isSw()) renderSevenWonders(); else if (isHt()) renderHearts(); else if (isOh()) renderOhHell(); else if (isQw()) renderQwirkle(); else renderGeneric();
   }
 
@@ -23158,7 +23035,7 @@ try { if (window.TallyItV24Backend) window.TallyItV24Backend.capturePendingClaim
           <h3>Game Options</h3>
           <div class="f7-sheet-lbl">Target score</div>
           <div class="f7-targets">${F7_TARGETS.map((v) => `<button type="button" class="f7-tgt${v === t ? ' on' : ''}" id="f7-tgt-${v}" onclick="f7SetTarget(${v})">${v}</button>`).join('')}</div>
-          <button type="button" class="f7-sbtn primary" id="f7-opt-finish" onclick="f7CloseSheet();openEndGameModal()">🏆 Finish &amp; Save Game</button>
+          <button type="button" class="f7-sbtn primary" id="f7-opt-finish" onclick="f7CloseSheet();openEndGameModal()"><svg class="v24-2-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4h8v5a4 4 0 0 1-8 0V4z"/><path d="M8 6H5a3 3 0 0 0 3 4"/><path d="M16 6h3a3 3 0 0 1-3 4"/><path d="M12 13v4"/><path d="M8.5 20h7"/><path d="M10 17h4v3h-4z"/></svg><span>Finish &amp; Save Game</span></button>
           <button type="button" class="f7-sbtn danger" id="f7-opt-reset" onclick="f7ResetScores()">↻ Reset Scores</button>
           <button type="button" class="f7-sbtn danger" id="f7-opt-discard" onclick="f7CloseSheet();openEndGameModal()">Discard Game</button>
           <button type="button" class="f7-sbtn" onclick="f7CloseSheet()">Close</button>
@@ -24842,7 +24719,7 @@ try { if (window.TallyItV24Backend) window.TallyItV24Backend.capturePendingClaim
     v24LinkTimer = setTimeout(async () => {
       try { await refreshSocial(true); } catch (_) {}
       if (currentView === 'history') renderHistory();
-      if (currentView === 'home') renderHome();
+      if (currentView === 'new') renderHome();
     }, 150);
   }
   async function v24RefreshSuggestions() {
@@ -25051,7 +24928,7 @@ try { if (window.TallyItV24Backend) window.TallyItV24Backend.capturePendingClaim
     } catch (e) { console.warn('[social] refresh failed', e); }
     finally { if (seq === refreshSeq && !silent) setSocialLoading(false); }
     if (stale()) return;
-    if (silent) { if (currentView === 'history') renderHistory(); else if (currentView === 'home') renderHome(); updateNavDot(); return; }
+    if (silent) { if (currentView === 'history') renderHistory(); else if (currentView === 'new') renderHome(); updateNavDot(); return; }
     rerenderSocialViews();
   }
   function rerenderSocialViews() {
@@ -25096,7 +24973,7 @@ try { if (window.TallyItV24Backend) window.TallyItV24Backend.capturePendingClaim
     v21UpdateSetupMeta();
     const note = byId('setup-active-group-note');
     setHidden(note, !setupGroup);
-    if (setupGroup && byId('setup-active-group-label')) byId('setup-active-group-label').textContent = '👥 Playing as group: ' + setupGroup.name;
+    if (setupGroup && byId('setup-active-group-label')) byId('setup-active-group-label').innerHTML = '<svg class="v24-2-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8.5" r="3.25"/><path d="M3.5 19.5c0-3 2.5-5 5.5-5s5.5 2 5.5 5"/><circle cx="16.5" cy="9.5" r="2.5"/><path d="M16.5 14.5c2.2 0 4 1.5 4 4.5"/></svg><span>Playing as group: ' + esc(setupGroup.name) + '</span>';
     const groups = social.groups || [], acc = social.friends.accepted || [];
     setHidden(byId('setup-groups-wrap'), !groups.length);
     setHidden(byId('setup-friends-wrap'), !acc.length);
@@ -25580,7 +25457,7 @@ try { if (window.TallyItV24Backend) window.TallyItV24Backend.capturePendingClaim
     if (gamesPollTimer) return;
     gamesPollTimer = setInterval(() => {
       if (!currentUser || document.hidden) return;
-      if (currentView !== 'history' && currentView !== 'home') return;
+      if (currentView !== 'history' && currentView !== 'new') return;
       if (Date.now() - lastSocialRefreshAt < 9000) return;
       refreshSocial(false, true);
     }, 10000);
@@ -27499,7 +27376,7 @@ try { if (window.TallyItV24Backend) window.TallyItV24Backend.capturePendingClaim
     const scr = $('admin-screen'); if (!scr) return;
     const wasOpen = !scr.hidden;
     show(scr, false); scr.classList.remove('active');
-    if (wasOpen && !silent && typeof global.showView === 'function') global.showView('home');
+    if (wasOpen && !silent && typeof global.showView === 'function') global.showView('new');
   }
   function banner(msg, tone) { const b = $('admin-status-banner'); if (!b) return; b.textContent = msg || ''; b.hidden = !msg; if (tone) b.dataset.tone = tone; else delete b.dataset.tone; }
   async function loadAdminStats() {
@@ -29785,7 +29662,7 @@ try { if (window.TallyItV24Backend) window.TallyItV24Backend.capturePendingClaim
     const hn = $('v22-hr-name'); if (hn) hn.addEventListener('input', () => { const m = $('v22-hr-msg'); if (m && m.dataset.tone === 'error') setMsg(''); });
     const ml = $('v22-admin-comm-list');
     if (ml) ml.addEventListener('click', (e) => { const b = e.target.closest('.v22-mod-btn'); if (b) moderate(b.dataset.id); });
-    const home = $('view-home');
+    const home = $('view-new');
     if (home && global.MutationObserver) new MutationObserver(() => { if (home.classList.contains('active') && user) refreshBuiltNotifications(false); })
       .observe(home, { attributes: true, attributeFilter: ['class'] });
     syncGuestEmail();
