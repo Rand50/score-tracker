@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0c0d10">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="score-tracker-build" content="v26-favorites-history-2026-11-28">
+<meta name="score-tracker-build" content="v26.1-detail-header-sharp-2026-11-28">
 <meta name="apple-mobile-web-app-title" content="TallyIt">
 <title>TallyIt — Score Tracker</title>
 <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png">
@@ -132,7 +132,7 @@ label.small, .field-label { display: block; margin: 0.7rem 0 0.3rem; color: var(
 
 /* Bottom nav (always neutral) */
 .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 50; display: flex; justify-content: space-around;
-  background: rgba(15, 23, 42, 0.96); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  background: #0f172a;
   border-top: 1px solid var(--border); padding: .55rem 0 calc(.55rem + env(safe-area-inset-bottom, 0px)); font-family: var(--font); }
 .bottom-nav button { background: none; border: none; color: var(--muted); font: 600 .72rem var(--font); display: flex; flex-direction: column; align-items: center; gap: .2rem; cursor: pointer; min-width: 64px; }
 .bottom-nav button .icon { font-size: 1.3rem; line-height: 1; }
@@ -629,9 +629,7 @@ body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nert
   display: flex;
   justify-content: space-around;
   align-items: stretch;
-  background: rgba(12, 13, 16, 0.92);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  background: #0c0d10;
   border-top: 1px solid var(--border);
   padding: 0.42rem 0.25rem calc(0.45rem + env(safe-area-inset-bottom, 0px));
   font-family: var(--font);
@@ -9397,10 +9395,8 @@ html.v20-standalone .app-header .v20-fs-wrap, html.v20-standalone #btn-fullscree
   
   width: min(calc(760px - 2.3rem), 100vw);
   padding: 10px 14px;
-  background: linear-gradient(180deg, rgba(12, 13, 16, 0.84) 0%, rgba(12, 13, 16, 0.98) 38%);
+  background: #0c0d10;
   border-top: 1px solid var(--v21-border-hi);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -11858,7 +11854,7 @@ html.v21-sheet-open, html.v21-sheet-open body { overscroll-behavior: contain; }
   --v26-win-soft: rgba(251, 191, 36, 0.13);
   --v26-danger: var(--danger, #f43f5e);
   --v26-neg: #fb7185;
-  --v26-bar: rgba(11, 18, 32, 0.92);
+  --v26-bar: #0b1220;
   --v26-input: #0f172a;
   --v26-font: var(--font, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif);
   --v26-head-font: var(--v26-font);
@@ -11887,13 +11883,12 @@ html.v21-sheet-open, html.v21-sheet-open body { overscroll-behavior: contain; }
   padding: max(10px, env(safe-area-inset-top)) max(12px, calc((100% - 760px) / 2 + 12px)) 10px;
   background: var(--v26-bar);
   border-bottom: 1px solid var(--v26-border);
-  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
 }
 .v26-hist-title { flex: 1 1 auto; min-width: 0; margin: 0; font: 700 1.06rem/1.25 var(--v26-head-font); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; outline: none; }
 .v26-hist-bar-right { flex: 0 0 auto; display: flex; gap: 8px; }
 .v26-hist-body { flex: 1 1 auto; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
 .v26-hist-col { width: 100%; max-width: 760px; margin: 0 auto; padding: 14px 14px calc(28px + env(safe-area-inset-bottom)); min-width: 0; }
-.v26-hist-foot { flex: 0 0 auto; background: var(--v26-bar); border-top: 1px solid var(--v26-border); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+.v26-hist-foot { flex: 0 0 auto; background: var(--v26-bar); border-top: 1px solid var(--v26-border); }
 .v26-hist-foot .v26-hist-col { padding-top: 10px; padding-bottom: max(10px, env(safe-area-inset-bottom)); }
 .v26-hist-foot-row { display: flex; gap: 10px; justify-content: flex-end; }
 .v26-hist-foot-row .v26-hist-btn { flex: 1 1 0; max-width: 260px; }
@@ -12043,7 +12038,7 @@ html.v21-sheet-open, html.v21-sheet-open body { overscroll-behavior: contain; }
 body.theme-flip7 .v26-hist-sheet {
   --v26-bg: #2f9693; --v26-bg2: #3aa9a6; --v26-surface: #f5f1e4; --v26-surface2: #ebe3cc; --v26-text: #223266; --v26-muted: #5a6690;
   --v26-border: rgba(34, 50, 102, 0.16); --v26-accent: #d9269e; --v26-accent-ink: #ffffff; --v26-win: #e0a800; --v26-win-soft: rgba(255, 200, 21, 0.2);
-  --v26-neg: #c84b31; --v26-bar: rgba(34, 50, 102, 0.94); --v26-input: #ffffff;
+  --v26-neg: #c84b31; --v26-bar: #223266; --v26-input: #ffffff;
 }
 body.theme-flip7 .v26-hist-bar, body.theme-flip7 .v26-hist-foot { color: #f1ece0; }
 body.theme-flip7 .v26-hist-bar .v26-hist-iconbtn { background: rgba(255, 255, 255, 0.1); border-color: rgba(255, 255, 255, 0.2); color: #f1ece0; }
@@ -12054,7 +12049,7 @@ body.theme-flip7 .v26-hist-col > .v26-hist-sec > .v26-hist-sec-h .v26-hist-hint 
 body.theme-seven-wonders .v26-hist-sheet {
   --v26-bg: #eadbc0; --v26-bg2: #f3e8d1; --v26-surface: #f8f0df; --v26-surface2: #e8d8b7; --v26-text: #382515; --v26-muted: #84684c;
   --v26-border: rgba(56, 37, 21, 0.16); --v26-accent: #9e4822; --v26-accent-ink: #fff7ea; --v26-win: #b8841e; --v26-win-soft: rgba(201, 151, 70, 0.18);
-  --v26-neg: #a62b22; --v26-bar: rgba(56, 37, 21, 0.95); --v26-input: #fffaf0; --v26-head-font: Georgia, 'Times New Roman', serif;
+  --v26-neg: #a62b22; --v26-bar: #382515; --v26-input: #fffaf0; --v26-head-font: Georgia, 'Times New Roman', serif;
 }
 body.theme-seven-wonders .v26-hist-bar, body.theme-seven-wonders .v26-hist-foot { color: #f8f0df; }
 body.theme-seven-wonders .v26-hist-bar .v26-hist-iconbtn { background: rgba(248, 240, 223, 0.08); border-color: rgba(248, 240, 223, 0.2); color: #f8f0df; }
@@ -12063,7 +12058,7 @@ body.theme-seven-wonders .v26-hist-foot .v26-hist-btn-ghost { color: #f8f0df; bo
 body.theme-carcassonne .v26-hist-sheet {
   --v26-bg: #8fb86a; --v26-bg2: #a6c983; --v26-surface: #faf3e0; --v26-surface2: #efe4c6; --v26-text: #23160a; --v26-muted: #6c5537;
   --v26-border: rgba(35, 22, 10, 0.16); --v26-accent: #4f371c; --v26-accent-ink: #faf3e0; --v26-win: #b8862a; --v26-win-soft: rgba(212, 160, 60, 0.2);
-  --v26-neg: #a8321f; --v26-bar: rgba(35, 22, 10, 0.94); --v26-input: #fffaf0;
+  --v26-neg: #a8321f; --v26-bar: #23160a; --v26-input: #fffaf0;
 }
 body.theme-carcassonne .v26-hist-bar, body.theme-carcassonne .v26-hist-foot { color: #faf3e0; }
 body.theme-carcassonne .v26-hist-bar .v26-hist-iconbtn { background: rgba(250, 243, 224, 0.08); border-color: rgba(250, 243, 224, 0.2); color: #faf3e0; }
@@ -12073,7 +12068,7 @@ body.theme-carcassonne .v26-hist-col > .v26-hist-sec > .v26-hist-sec-h, body.the
 body.theme-catan .v26-hist-sheet {
   --v26-bg: #24160b; --v26-bg2: #3a2412; --v26-surface: #f4e6c4; --v26-surface2: #e6d2a3; --v26-text: #3b2814; --v26-muted: #6a4d2a;
   --v26-border: rgba(59, 40, 20, 0.2); --v26-accent: #8a3418; --v26-accent-ink: #fff4dc; --v26-win: #c99a3e; --v26-win-soft: rgba(201, 154, 62, 0.22);
-  --v26-neg: #8a3418; --v26-bar: rgba(43, 26, 13, 0.96); --v26-input: #fffaf0; --v26-head-font: Georgia, 'Times New Roman', serif;
+  --v26-neg: #8a3418; --v26-bar: #2b1a0d; --v26-input: #fffaf0; --v26-head-font: Georgia, 'Times New Roman', serif;
 }
 body.theme-catan .v26-hist-bar, body.theme-catan .v26-hist-foot { color: #f0cf7a; }
 body.theme-catan .v26-hist-bar .v26-hist-iconbtn { background: rgba(240, 207, 122, 0.08); border-color: rgba(240, 207, 122, 0.25); color: #f0cf7a; }
@@ -12084,7 +12079,7 @@ body.theme-catan .v26-hist-col > .v26-hist-sec > .v26-hist-sec-h .v26-hist-hint 
 body.theme-ohhell .v26-hist-sheet {
   --v26-bg: #f5f0e6; --v26-bg2: #f5f0e6; --v26-surface: #fcf9f3; --v26-surface2: #efe8da; --v26-text: #1f1c18; --v26-muted: #555a53;
   --v26-border: rgba(62, 77, 68, 0.2); --v26-accent: #115539; --v26-accent-ink: #ffffff; --v26-win: #9a7b1c; --v26-win-soft: rgba(17, 85, 57, 0.08);
-  --v26-neg: #9a1b22; --v26-bar: rgba(11, 62, 41, 0.97); --v26-input: #ffffff; --v26-head-font: Georgia, 'Times New Roman', serif;
+  --v26-neg: #9a1b22; --v26-bar: #0b3e29; --v26-input: #ffffff; --v26-head-font: Georgia, 'Times New Roman', serif;
 }
 body.theme-ohhell .v26-hist-bar, body.theme-ohhell .v26-hist-foot { color: #faf7f0; }
 body.theme-ohhell .v26-hist-bar .v26-hist-iconbtn { background: rgba(250, 247, 240, 0.08); border-color: rgba(250, 247, 240, 0.22); color: #faf7f0; }
@@ -12094,7 +12089,7 @@ body.theme-ohhell .v26-hist-foot .v26-hist-btn-ghost { color: #faf7f0; border-co
 body.theme-hearts .v26-hist-sheet {
   --v26-bg: #f5f0e6; --v26-bg2: #f5f0e6; --v26-surface: #fcf9f3; --v26-surface2: #efe7da; --v26-text: #1f1c18; --v26-muted: #5c554c;
   --v26-border: rgba(79, 74, 68, 0.2); --v26-accent: #9a1b22; --v26-accent-ink: #ffffff; --v26-win: #9a1b22; --v26-win-soft: rgba(154, 27, 34, 0.07);
-  --v26-neg: #2d6a4f; --v26-bar: rgba(123, 17, 24, 0.97); --v26-input: #ffffff; --v26-head-font: Georgia, 'Times New Roman', serif;
+  --v26-neg: #2d6a4f; --v26-bar: #7b1118; --v26-input: #ffffff; --v26-head-font: Georgia, 'Times New Roman', serif;
 }
 body.theme-hearts .v26-hist-bar, body.theme-hearts .v26-hist-foot { color: #faf7f0; }
 body.theme-hearts .v26-hist-bar .v26-hist-iconbtn { background: rgba(250, 247, 240, 0.08); border-color: rgba(250, 247, 240, 0.22); color: #faf7f0; }
@@ -12105,13 +12100,13 @@ body.theme-hearts .v26-hist-st.is-winner .v26-hist-place { color: #ffffff; }
 body.theme-nertz .v26-hist-sheet {
   --v26-bg: #071222; --v26-bg2: #0c1d36; --v26-surface: #0c1d36; --v26-surface2: #12284a; --v26-text: #faf3e1; --v26-muted: #b9ad8f;
   --v26-border: rgba(230, 198, 119, 0.2); --v26-accent: #e6c677; --v26-accent-ink: #0f1b2d; --v26-win: #e6c677; --v26-win-soft: rgba(230, 198, 119, 0.12);
-  --v26-neg: #ff7a7a; --v26-bar: rgba(7, 18, 34, 0.95); --v26-input: #081529; --v26-head-font: Georgia, 'Times New Roman', serif;
+  --v26-neg: #ff7a7a; --v26-bar: #071222; --v26-input: #081529; --v26-head-font: Georgia, 'Times New Roman', serif;
 }
 
 body.theme-rummikub .v26-hist-sheet {
   --v26-bg: #0b2f69; --v26-bg2: #0f3f88; --v26-surface: #faf6ec; --v26-surface2: #efe7d5; --v26-text: #0f1f3d; --v26-muted: #55637c;
   --v26-border: rgba(15, 31, 61, 0.14); --v26-accent: #13469e; --v26-accent-ink: #ffffff; --v26-win: #df6d10; --v26-win-soft: rgba(223, 109, 16, 0.12);
-  --v26-neg: #c62828; --v26-bar: rgba(6, 28, 66, 0.96); --v26-input: #ffffff;
+  --v26-neg: #c62828; --v26-bar: #061c42; --v26-input: #ffffff;
 }
 body.theme-rummikub .v26-hist-bar, body.theme-rummikub .v26-hist-foot { color: #faf6ec; }
 body.theme-rummikub .v26-hist-bar .v26-hist-iconbtn { background: rgba(250, 246, 236, 0.08); border-color: rgba(250, 246, 236, 0.22); color: #faf6ec; }
@@ -12123,7 +12118,7 @@ body.theme-rummikub .v26-hist-col > .v26-hist-sec > .v26-hist-sec-h .v26-hist-hi
 body.theme-qwirkle .v26-hist-sheet {
   --v26-bg: #fbf7ee; --v26-bg2: #fbf7ee; --v26-surface: #ffffff; --v26-surface2: #fbf6ea; --v26-text: #0e1a3a; --v26-muted: #5b6480;
   --v26-border: rgba(14, 26, 58, 0.12); --v26-accent: #7b4fd6; --v26-accent-ink: #ffffff; --v26-win: #f47a13; --v26-win-soft: rgba(249, 194, 16, 0.14);
-  --v26-neg: #e5252c; --v26-bar: rgba(11, 26, 61, 0.96); --v26-input: #ffffff;
+  --v26-neg: #e5252c; --v26-bar: #0b1a3d; --v26-input: #ffffff;
 }
 body.theme-qwirkle .v26-hist-bar, body.theme-qwirkle .v26-hist-foot { color: #ffffff; }
 body.theme-qwirkle .v26-hist-bar .v26-hist-iconbtn { background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.22); color: #ffffff; }
@@ -12132,7 +12127,7 @@ body.theme-qwirkle .v26-hist-foot .v26-hist-btn-ghost { color: #ffffff; border-c
 body.theme-spoons .v26-hist-sheet {
   --v26-bg: #fbf3e4; --v26-bg2: #fff9ee; --v26-surface: #fff9ee; --v26-surface2: #f3e6cf; --v26-text: #4a2c14; --v26-muted: #7a5a3e;
   --v26-border: rgba(110, 69, 32, 0.2); --v26-accent: #b6322c; --v26-accent-ink: #ffffff; --v26-win: #b57d43; --v26-win-soft: rgba(214, 164, 104, 0.18);
-  --v26-neg: #b6322c; --v26-bar: rgba(143, 92, 44, 0.97); --v26-input: #ffffff; --v26-head-font: Georgia, 'Times New Roman', serif;
+  --v26-neg: #b6322c; --v26-bar: #8f5c2c; --v26-input: #ffffff; --v26-head-font: Georgia, 'Times New Roman', serif;
 }
 body.theme-spoons .v26-hist-sheet { background-image: linear-gradient(90deg, rgba(182, 50, 44, 0.05) 50%, transparent 50%), linear-gradient(rgba(182, 50, 44, 0.05) 50%, transparent 50%); background-size: 24px 24px; }
 body.theme-spoons .v26-hist-bar, body.theme-spoons .v26-hist-foot { color: #fff9ee; }
@@ -12331,7 +12326,7 @@ body.theme-spoons { --v25-bg: #fbf3e4; }
 </style>
 </head>
 <body>
-<!-- Build: v26-favorites-history-2026-11-28 -->
+<!-- Build: v26.1-detail-header-sharp-2026-11-28 -->
 
 <!-- Login: starts hidden until getSession() resolves -->
 <section id="login-view" class="auth-hidden" hidden aria-label="Sign in to Score Tracker">
@@ -34053,6 +34048,8 @@ if ('serviceWorker' in navigator) {
     root.hidden = false;
     root.classList.toggle('v26-hist-reduced', !!(global.matchMedia && global.matchMedia('(prefers-reduced-motion: reduce)').matches));
     root.classList.remove('v26-hist-enter'); void root.offsetWidth; root.classList.add('v26-hist-enter');
+    clearTimeout(root._v26EnterTimer);
+    root._v26EnterTimer = setTimeout(function () { root.classList.remove('v26-hist-enter'); }, 320);
     doc.documentElement.style.setProperty('overflow', 'hidden');
     render();
     const data = await getGame(id);
