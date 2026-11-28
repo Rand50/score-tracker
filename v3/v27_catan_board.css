@@ -1,0 +1,76 @@
+/* v27 Catan board generator sheet (neutral file: no theme-* selectors, no bare element selectors, no @media/@container).
+   The sheet is a Catan-only surface, so it carries the approved Catan wood + parchment recipe itself (same values as catan.css)
+   and works whether it opens from Setup (body has no theme class) or from the tracker (body.theme-catan).
+   Layout: v27_catan_board.js sets .v27-cb-phone / .v27-cb-tablet / .v27-cb-desk from the window size. */
+#v27-cb-sheet {
+  --v27-cb-ink: #2b1a0d; --v27-cb-cream: #f6e6bd; --v27-cb-soft: #dcc9a0; --v27-cb-muted: #cdb88c; --v27-cb-gold: #c99a3e; --v27-cb-gold-line: #8a6524;
+  --v27-cb-caps: 'Cinzel', 'Marcellus', Georgia, serif; --v27-cb-body: 'Crimson Text', Georgia, 'Times New Roman', serif;
+  --v27-cb-ui: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', 'Segoe UI', Roboto, system-ui, sans-serif;
+  --v27-cb-parch: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .24 0 0 0 0 .1 0 0 0 .22 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E"), radial-gradient(ellipse at 50% 45%, #efdcb2 0%, #e4cc99 50%, #cfae74 92%, #c29e62 100%);
+  position: fixed; inset: 0; z-index: 9000; display: flex; align-items: stretch; justify-content: center;
+  color: var(--v27-cb-cream); font-family: var(--v27-cb-body); -webkit-font-smoothing: antialiased; -webkit-text-size-adjust: 100%;
+}
+#v27-cb-sheet[hidden] { display: none !important; }
+.v27-cb-scrim { position: absolute; inset: 0; background: #120a04; }
+.v27-cb-panel {
+  position: relative; box-sizing: border-box; display: flex; flex-direction: column; width: 100%; height: 100%; overflow: hidden;
+  background: #24160b url('./assets/catan/wood-bg.svg') center top / cover no-repeat;
+}
+.v27-cb-head { flex: 0 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: calc(var(--tt-sat, 0px) + 8px) 14px 8px 16px; }
+.v27-cb-head-tx { min-width: 0; }
+.v27-cb-eyebrow { font: 700 12px/1.25 var(--v27-cb-caps); letter-spacing: 1.4px; text-transform: uppercase; color: var(--v27-cb-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.v27-cb-title { margin: 2px 0 0; font: 700 20px/1.15 var(--v27-cb-caps); letter-spacing: 1.4px; text-transform: uppercase; color: var(--v27-cb-cream); }
+.v27-cb-x {
+  appearance: none; -webkit-appearance: none; flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; padding: 0; margin: 0;
+  border-radius: 12px; border: 1px solid rgba(201,154,62,.45); background: transparent; color: #f0cf7a; cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
+.v27-cb-x svg { width: 20px; height: 20px; display: block; }
+.v27-cb-body { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
+.v27-cb-boardwrap { flex: 1 1 auto; min-height: 0; display: flex; align-items: center; justify-content: center; padding: 0 8px; }
+.v27-cb-svg { width: 100%; height: 100%; display: block; }
+.v27-cb-side { flex: 0 0 auto; display: flex; flex-direction: column; gap: 10px; padding: 10px 14px calc(var(--tt-sab, 0px) + 12px); }
+.v27-cb-seg { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; padding: 3px; border-radius: 12px; background: #1b1007; border: 1px solid #5b3e1d; }
+.v27-cb-seg-btn {
+  appearance: none; -webkit-appearance: none; height: 44px; margin: 0; padding: 0 8px; border-radius: 9px; border: 1px solid transparent; background: transparent; cursor: pointer;
+  color: #d8c598; font: 700 14px/1 var(--v27-cb-caps); letter-spacing: 1.2px; text-transform: uppercase; -webkit-tap-highlight-color: transparent;
+}
+.v27-cb-seg-btn[aria-checked="true"] { background: var(--v27-cb-parch); color: var(--v27-cb-ink); border-color: #5b3e1d; }
+.v27-cb-seg-btn:focus-visible, .v27-cb-primary:focus-visible, .v27-cb-x:focus-visible { outline: 2px solid #f0cf7a; outline-offset: 2px; }
+.v27-cb-help { margin: 0; font: 400 15px/1.3 var(--v27-cb-body); color: var(--v27-cb-soft); }
+.v27-cb-primary {
+  appearance: none; -webkit-appearance: none; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; height: 50px; margin: 0; padding: 0 12px;
+  border-radius: 12px; border: 1px solid var(--v27-cb-gold-line); background: var(--v27-cb-gold); color: var(--v27-cb-ink); cursor: pointer;
+  font: 700 15px/1 var(--v27-cb-caps); letter-spacing: 1.6px; text-transform: uppercase; -webkit-tap-highlight-color: transparent;
+}
+.v27-cb-primary svg { width: 20px; height: 20px; flex: 0 0 auto; }
+.v27-cb-primary:active, .v27-cb-seg-btn:active, .v27-cb-x:active { transform: scale(.98); }
+.v27-cb-fact { display: none; margin: 0; font: 400 14px/1.35 var(--v27-cb-body); color: #bba982; }
+.v27-cb-error { margin: 0; padding: 10px 12px; border-radius: 10px; background: #3a160b; border: 1px solid #a5482a; color: #ffd9c9; font: 600 15px/1.3 var(--v27-cb-body); }
+.v27-cb-error[hidden] { display: none; }
+.v27-cb-code { margin: 0; display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font: 700 12px/1.25 var(--v27-cb-caps); letter-spacing: 1.4px; text-transform: uppercase; color: var(--v27-cb-muted); }
+.v27-cb-code[hidden] { display: none; }
+.v27-cb-code-v { font: 700 16px/1 var(--v27-cb-caps); letter-spacing: 2px; color: #f0c66c; font-variant-numeric: tabular-nums; text-transform: none; }
+#v27-cb-board-btn[hidden] { display: none !important; }
+/* tablet portrait: centred dialog over a dimmed page */
+.v27-cb-tablet, .v27-cb-desk { align-items: center; padding: calc(var(--tt-sat, 0px) + 24px) 24px calc(var(--tt-sab, 0px) + 24px); box-sizing: border-box; }
+.v27-cb-tablet .v27-cb-scrim, .v27-cb-desk .v27-cb-scrim { background: rgba(14, 8, 3, .8); }
+.v27-cb-tablet .v27-cb-panel, .v27-cb-desk .v27-cb-panel { border-radius: 14px; border: 1px solid #1a0f06; box-shadow: inset 0 1px 0 rgba(255,214,150,.22), 0 24px 60px rgba(0,0,0,.6); background-size: 700px auto; }
+.v27-cb-tablet .v27-cb-panel { width: 700px; max-width: 100%; height: 1020px; max-height: 100%; }
+.v27-cb-tablet .v27-cb-head, .v27-cb-desk .v27-cb-head { padding: 14px 16px 8px 20px; }
+.v27-cb-tablet .v27-cb-boardwrap { padding: 0 24px; }
+.v27-cb-tablet .v27-cb-side { padding: 12px 24px 24px; }
+/* desktop and iPad landscape: board left, controls right */
+.v27-cb-desk .v27-cb-panel { width: 1120px; max-width: 100%; height: 720px; max-height: 100%; }
+.v27-cb-desk .v27-cb-body { flex-direction: row; gap: 24px; padding: 0 20px 20px; }
+.v27-cb-desk .v27-cb-boardwrap { padding: 0; }
+.v27-cb-desk .v27-cb-side { width: 340px; gap: 14px; padding: 6px 0 0; }
+.v27-cb-desk .v27-cb-fact { display: block; margin-top: auto; }
+/* Setup row (inside the Catan Setup card; inherits the Customize Rules row recipe from .v22-hr-toggle) */
+.v27-cb-entry-wrap[hidden] { display: none !important; }
+.v27-cb-entry { justify-content: flex-start !important; gap: 12px; min-height: 64px; text-align: left; }
+.v27-cb-entry-ic { width: 20px; height: 20px; flex: 0 0 auto; color: #8a3418; }
+.v27-cb-entry-tx { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.v27-cb-entry-label { font-weight: 600; }
+.v27-cb-entry-sub { font-size: 14px; line-height: 1.25; font-weight: 400; opacity: .85; }
+.v27-cb-entry-chev { width: 18px; height: 18px; flex: 0 0 auto; opacity: .7; }
+.v27-cb-board-btn { order: 2; }

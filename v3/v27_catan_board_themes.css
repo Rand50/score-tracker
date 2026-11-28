@@ -1,0 +1,5 @@
+/* v27 Catan board generator: Catan-scoped tweaks to existing Catan chrome (every rule starts body.theme-catan; no @media). */
+body.theme-catan #catan-dice-slot.has-dice, body.theme-catan #catan-dice-slot.v27-cb-has-board { display: flex; justify-content: center; align-items: center; gap: 10px; }
+/* tap targets: Dice and Board both 44px tall (Dice was 35px) */
+body.theme-catan #catan-dice-slot .dice-open-btn { min-height: 44px; padding-left: 16px; padding-right: 16px; box-sizing: border-box; }
+body.theme-catan #catan-dice-slot .v27-cb-board-btn svg { color: #f0c66c; }

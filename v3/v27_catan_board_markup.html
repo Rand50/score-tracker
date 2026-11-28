@@ -1,0 +1,48 @@
+<!-- v27 Catan board generator (UI). Mounted once before </body> by build.py. Zero emoji; 1.75px-stroke inline SVG icons.
+     The two templates are cloned by v27_catan_board.js into the Catan Setup (after Customize Rules) and the Catan tracker dice slot. -->
+<template id="v27-cb-tpl-row">
+  <div class="v22-hr-wrap v27-cb-entry-wrap" id="v27-cb-entry-wrap" hidden>
+    <button type="button" class="v22-hr-toggle v27-cb-entry" id="v27-cb-entry" aria-haspopup="dialog" aria-controls="v27-cb-sheet">
+      <svg class="v27-cb-entry-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.8l8 4.6v9.2l-8 4.6-8-4.6V7.4z"/><circle cx="12" cy="12" r="3.3"/></svg>
+      <span class="v27-cb-entry-tx"><span class="v27-cb-entry-label">Generate board</span><span class="v27-cb-entry-sub" id="v27-cb-entry-sub">Shuffle the island for this table</span></span>
+      <svg class="v27-cb-entry-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 6 15 12 9 18"/></svg>
+    </button>
+  </div>
+</template>
+<template id="v27-cb-tpl-btn">
+  <button type="button" id="v27-cb-board-btn" class="dice-open-btn v27-cb-board-btn" aria-haspopup="dialog" aria-controls="v27-cb-sheet" aria-label="Open board generator">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.8l8 4.6v9.2l-8 4.6-8-4.6V7.4z"/><circle cx="12" cy="12" r="3.3"/></svg>
+    <span>Board</span>
+  </button>
+</template>
+<div id="v27-cb-sheet" class="v27-cb-sheet" hidden>
+  <div class="v27-cb-scrim" id="v27-cb-scrim"></div>
+  <div class="v27-cb-panel" role="dialog" aria-modal="true" aria-labelledby="v27-cb-title" aria-describedby="v27-cb-help">
+    <header class="v27-cb-head">
+      <div class="v27-cb-head-tx">
+        <div class="v27-cb-eyebrow" id="v27-cb-eyebrow">Catan</div>
+        <h2 class="v27-cb-title" id="v27-cb-title">Board generator</h2>
+      </div>
+      <button type="button" class="v27-cb-x" id="v27-cb-close" aria-label="Close board generator">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </header>
+    <div class="v27-cb-body">
+      <div class="v27-cb-boardwrap" id="v27-cb-board" aria-live="polite"></div>
+      <div class="v27-cb-side">
+        <p class="v27-cb-code" id="v27-cb-code" hidden><span>Board code</span><span class="v27-cb-code-v" id="v27-cb-code-v"></span></p>
+        <p class="v27-cb-error" id="v27-cb-error" role="alert" hidden>The board could not be built. Tap Regenerate to try again.</p>
+        <div class="v27-cb-seg" role="radiogroup" aria-label="Layout style">
+          <button type="button" role="radio" class="v27-cb-seg-btn" data-mode="random" aria-checked="false">Random</button>
+          <button type="button" role="radio" class="v27-cb-seg-btn" data-mode="balanced" aria-checked="true">Balanced</button>
+        </div>
+        <p class="v27-cb-help" id="v27-cb-help">Rulebook rules, plus no three tiles of one resource joined together. Pairs are fine.</p>
+        <button type="button" class="v27-cb-primary" id="v27-cb-regen">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.5-4.2"/><path d="M4 4.5v3.8h3.8"/><path d="M4 13a8 8 0 0 0 14.5 4.2"/><path d="M20 19.5v-3.8h-3.8"/></svg>
+          <span>Regenerate</span>
+        </button>
+        <p class="v27-cb-fact" id="v27-cb-fact">Lay out the same tiles and numbers on the table, then close this. The Board button on the tracker brings the same island back.</p>
+      </div>
+    </div>
+  </div>
+</div>

@@ -549,3 +549,39 @@ if 'id="v262-controls-css"' not in html:
 assert 'viewport-fit=cover' in html
 (D/'game_tracker.html').write_text(html)
 print('v262 controls ok', len(html))
+
+# ---- v27 Catan board generator (UI: v27_catan_board.{css,_themes.css,_markup.html,js}). Board logic = window.TallyItCatanBoard from
+# Score Tracker Scoring (v3/catan_board.js, from scoring/catan_board.js). The build fails if it is missing. ----
+def _v27cb_scope(css, ok):
+    _d = 0
+    for _m in re.finditer(r'([^{}]*)([{}])', css):
+        _s, _b = _m.group(1).strip(), _m.group(2)
+        if _b == '{':
+            if _d == 0:
+                for _p in _s.split(','):
+                    if not re.match(ok, _p.strip()): raise SystemExit('v27 catan board css unscoped: ' + _p.strip())
+            _d += 1
+        else: _d -= 1
+_v27cb_css = re.sub(r'/\*.*?\*/', '', (V/'v27_catan_board.css').read_text(), flags=re.S)
+_v27cb_th = re.sub(r'/\*.*?\*/', '', (V/'v27_catan_board_themes.css').read_text(), flags=re.S)
+if re.search(r'theme-|@media|@container|@supports', _v27cb_css): raise SystemExit('v27_catan_board.css must stay neutral: no theme-*, @media, @container or @supports')
+if re.search(r'@media|@container|@supports', _v27cb_th): raise SystemExit('v27_catan_board_themes.css: no @media')
+_v27cb_scope(_v27cb_css, r'^[.#]v27-cb-')
+_v27cb_scope(_v27cb_th, r'^body\.theme-catan ')
+_v27cb_mk = (V/'v27_catan_board_markup.html').read_text()
+_v27cb_js = (V/'v27_catan_board.js').read_text(); assert 'global.TallyItV27CatanBoard' in _v27cb_js
+_v27cb_logic_path = V/'catan_board.js'  # Score Tracker Scoring's module, copied verbatim (do not edit here)
+if not _v27cb_logic_path.exists(): raise SystemExit('v27 catan board: v3/catan_board.js (Scoring) is missing')
+_v27cb_logic = _v27cb_logic_path.read_text()
+assert 'global.TallyItCatanBoard = api' in _v27cb_logic and 'generateBoard' in _v27cb_logic and 'validateBoard' in _v27cb_logic, 'catan_board.js must define window.TallyItCatanBoard'
+_v27cb_logic_id = 'v27-catan-board-logic'
+for _n, _t in [('css', _v27cb_css), ('themes', _v27cb_th), ('markup', _v27cb_mk), ('js', _v27cb_js), ('logic', _v27cb_logic)]:
+    assert not _emoji.search(_t), 'emoji in v27 catan board ' + _n
+html = (D/'game_tracker.html').read_text()
+assert html.count('</head>') == 1 and html.count('</body>') == 1
+assert 'id="catan-dice-slot"' in html and 'id="v22-house-rules-wrap"' in html and 'id="version-select"' in html
+if 'id="v27-catan-board-css"' not in html:
+    html = html.replace('</head>', '<style id="v27-catan-board-css">\n' + _v27cb_css + '\n' + _v27cb_th + '\n</style>\n</head>', 1)
+    html = html.replace('</body>', _v27cb_mk + '\n<script id="' + _v27cb_logic_id + '">\n' + _v27cb_logic + '\n</script>\n<script id="v27-catan-board">\n' + _v27cb_js + '\n</script>\n</body>', 1)
+(D/'game_tracker.html').write_text(html)
+print('v27 catan board ok', len(html))
