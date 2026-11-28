@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0c0d10">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="score-tracker-build" content="v23-hearts-ohhell-2026-11-27">
+<meta name="score-tracker-build" content="v24-qwirkle-linking-2026-11-27">
 <meta name="apple-mobile-web-app-title" content="TallyIt">
 <title>TallyIt — Score Tracker</title>
 <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png">
@@ -164,6 +164,8 @@ body.theme-catan .app-header { display: none; }
 #sw-shell { display: none; }
 /* v23 Hearts Ivory & Crimson Ledger / Oh Hell Ivory & Emerald Ledger: only shown with body.theme-hearts / body.theme-ohhell */
 #ht-shell, #oh-shell { display: none; }
+/* v24 Qwirkle Bright Playful Tile Grid: only shown with body.theme-qwirkle */
+#qw-shell { display: none; }
 /* Friends tab lives only in the neutral nav: themed game navs stay clean 4-tab bars */
 body.theme-catan .bottom-nav #nav-social, body.theme-flip7 .bottom-nav #nav-social, body.theme-carcassonne .bottom-nav #nav-social { display: none !important; }
 #soc-create-group-modal { z-index: 80; }
@@ -192,7 +194,7 @@ body.theme-catan .bottom-nav #nav-social, body.theme-flip7 .bottom-nav #nav-soci
   --shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 8px 24px rgba(0, 0, 0, 0.28);
   --font: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', 'Segoe UI', Roboto, system-ui, sans-serif;
 }
-body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders):not(.theme-hearts):not(.theme-ohhell) {
+body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders):not(.theme-hearts):not(.theme-ohhell):not(.theme-qwirkle) {
   background: var(--bg);
   color: var(--text);
   font-family: var(--font);
@@ -296,11 +298,11 @@ body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nert
 #sync-status[data-state="error"]::before {
   background: var(--accent-brass);
 }
-:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders):not(.theme-hearts):not(.theme-ohhell)) .view {
+:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders):not(.theme-hearts):not(.theme-ohhell):not(.theme-qwirkle)) .view {
   max-width: 760px;
   padding: 1rem 1.15rem 1.25rem;
 }
-:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders):not(.theme-hearts):not(.theme-ohhell)) .card {
+:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders):not(.theme-hearts):not(.theme-ohhell):not(.theme-qwirkle)) .card {
   background: var(--surface);
   border-radius: var(--radius);
   padding: 1.15rem;
@@ -308,7 +310,7 @@ body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nert
   border: 1px solid var(--border);
   box-shadow: none;
 }
-:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders):not(.theme-hearts):not(.theme-ohhell)) .btn {
+:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders):not(.theme-hearts):not(.theme-ohhell):not(.theme-qwirkle)) .btn {
   background: var(--surface2);
   color: var(--text);
   border: 1px solid var(--border);
@@ -319,13 +321,13 @@ body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nert
   cursor: pointer;
   transition: transform .08s ease, background .15s ease, border-color .15s ease, opacity .15s ease;
 }
-:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders):not(.theme-hearts):not(.theme-ohhell)) .btn:active:not(:disabled) { transform: scale(0.985); }
-:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders):not(.theme-hearts):not(.theme-ohhell)) .btn.primary {
+:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders):not(.theme-hearts):not(.theme-ohhell):not(.theme-qwirkle)) .btn:active:not(:disabled) { transform: scale(0.985); }
+:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders):not(.theme-hearts):not(.theme-ohhell):not(.theme-qwirkle)) .btn.primary {
   background: var(--accent);
   color: var(--accent-ink);
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
-:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders):not(.theme-hearts):not(.theme-ohhell)) .btn.primary:hover:not(:disabled) {
+:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders):not(.theme-hearts):not(.theme-ohhell):not(.theme-qwirkle)) .btn.primary:hover:not(:disabled) {
   background: #ffffff;
 }
 #view-home {
@@ -558,7 +560,7 @@ body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nert
   color: var(--muted);
   line-height: 1.45;
 }
-:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders):not(.theme-hearts):not(.theme-ohhell)) .bottom-nav {
+:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders):not(.theme-hearts):not(.theme-ohhell):not(.theme-qwirkle)) .bottom-nav {
   position: fixed;
   bottom: 0;
   left: 0;
@@ -574,7 +576,7 @@ body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nert
   padding: 0.42rem 0.25rem calc(0.45rem + env(safe-area-inset-bottom, 0px));
   font-family: var(--font);
 }
-:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders):not(.theme-hearts):not(.theme-ohhell)) .bottom-nav button {
+:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders):not(.theme-hearts):not(.theme-ohhell):not(.theme-qwirkle)) .bottom-nav button {
   position: relative;
   background: none;
   border: none;
@@ -591,7 +593,7 @@ body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nert
   padding: 0.24rem 0.35rem;
   transition: color .15s ease;
 }
-:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders):not(.theme-hearts):not(.theme-ohhell)) .bottom-nav button .icon {
+:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders):not(.theme-hearts):not(.theme-ohhell):not(.theme-qwirkle)) .bottom-nav button .icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -599,16 +601,16 @@ body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nert
   height: 22px;
   line-height: 1;
 }
-:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders):not(.theme-hearts):not(.theme-ohhell)) .bottom-nav button .icon svg {
+:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders):not(.theme-hearts):not(.theme-ohhell):not(.theme-qwirkle)) .bottom-nav button .icon svg {
   width: 20px;
   height: 20px;
   display: block;
 }
-:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders):not(.theme-hearts):not(.theme-ohhell)) .bottom-nav button.active {
+:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders):not(.theme-hearts):not(.theme-ohhell):not(.theme-qwirkle)) .bottom-nav button.active {
   color: var(--text);
   font-weight: 600;
 }
-:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders):not(.theme-hearts):not(.theme-ohhell)) .bottom-nav button.active::before {
+:where(body:not(.theme-catan):not(.theme-flip7):not(.theme-carcassonne):not(.theme-nertz):not(.theme-rummikub):not(.theme-seven-wonders):not(.theme-hearts):not(.theme-ohhell):not(.theme-qwirkle)) .bottom-nav button.active::before {
   content: "";
   position: absolute;
   top: -0.42rem;
@@ -7489,6 +7491,353 @@ body.theme-ohhell .bottom-nav #nav-social {
 }
 
 </style>
+
+<!-- ===================== v24 QWIRKLE (Bright Playful Tile Grid; strictly scoped to body.theme-qwirkle) ===================== -->
+<style id="qwirkle-theme">
+
+body.theme-qwirkle {
+  --qw-bg: #FBF7EE;
+  --qw-grid: rgba(28, 36, 64, 0.05);
+  --qw-card: #FFFFFF;
+  --qw-panel: #FBF6EA;
+  --qw-ink: #0E1A3A;
+  --qw-muted: #5B6480;
+  --qw-line: rgba(14, 26, 58, 0.12);
+  --qw-red: #E5252C;
+  --qw-orange: #F47A13;
+  --qw-yellow: #F9C210;
+  --qw-green: #33B04A;
+  --qw-blue: #1E7BF0;
+  --qw-purple: #7B4FD6;
+  --qw-navy: #0B1A3D;
+  --qw-font: "Nunito", "SF Pro Rounded", ui-rounded, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: var(--qw-bg);
+  background-image:
+    linear-gradient(var(--qw-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--qw-grid) 1px, transparent 1px);
+  background-size: 28px 28px;
+  color: var(--qw-ink);
+  font-family: var(--qw-font);
+  overflow-x: hidden;
+}
+
+body.theme-qwirkle .app-header,
+body.theme-qwirkle #generic-board,
+body.theme-qwirkle #catan-board,
+body.theme-qwirkle #flip7-board,
+body.theme-qwirkle #carc-board,
+body.theme-qwirkle #nz-shell,
+body.theme-qwirkle #rk-shell,
+body.theme-qwirkle #sw-shell,
+body.theme-qwirkle #ht-shell,
+body.theme-qwirkle #oh-shell { display: none !important; }
+
+body.theme-qwirkle #qw-shell {
+  display: block;
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto;
+  padding: 10px 14px calc(150px + env(safe-area-inset-bottom, 0px));
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+body.theme-qwirkle #qw-shell *,
+body.theme-qwirkle #qw-shell *::before,
+body.theme-qwirkle #qw-shell *::after { box-sizing: border-box; }
+
+body.theme-qwirkle .qw-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
+body.theme-qwirkle #qw-shell svg use { fill: currentColor; }
+
+
+body.theme-qwirkle .qw-c-red { background: var(--qw-red); color: #FFFFFF; }
+body.theme-qwirkle .qw-c-orange { background: var(--qw-orange); color: #FFFFFF; }
+body.theme-qwirkle .qw-c-yellow { background: var(--qw-yellow); color: #FFFFFF; }
+body.theme-qwirkle .qw-c-green { background: var(--qw-green); color: #FFFFFF; }
+body.theme-qwirkle .qw-c-blue { background: var(--qw-blue); color: #FFFFFF; }
+body.theme-qwirkle .qw-c-purple { background: var(--qw-purple); color: #FFFFFF; }
+body.theme-qwirkle .qw-ink-red { color: var(--qw-red); }
+body.theme-qwirkle .qw-ink-orange { color: var(--qw-orange); }
+body.theme-qwirkle .qw-ink-yellow { color: var(--qw-yellow); }
+
+
+body.theme-qwirkle .qw-topbar { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
+body.theme-qwirkle .qw-top-actions { display: flex; gap: 6px; }
+body.theme-qwirkle .qw-top-btn {
+  display: inline-flex; align-items: center; gap: 4px; min-height: 34px; padding: 5px 11px;
+  border-radius: 999px; border: 1px solid var(--qw-line); background: var(--qw-card); color: var(--qw-ink);
+  font-family: var(--qw-font); font-size: 0.8rem; font-weight: 800; cursor: pointer;
+  touch-action: manipulation; user-select: none; -webkit-tap-highlight-color: transparent;
+  box-shadow: 0 1px 3px rgba(14, 26, 58, 0.06);
+}
+body.theme-qwirkle .qw-top-btn svg { width: 15px; height: 15px; }
+body.theme-qwirkle .qw-top-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+body.theme-qwirkle .qw-top-btn-end { color: var(--qw-red); border-color: rgba(229, 37, 44, 0.35); }
+
+
+body.theme-qwirkle .qw-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 12px; }
+body.theme-qwirkle .qw-head-left { min-width: 0; }
+body.theme-qwirkle .qw-title {
+  margin: 0; font-family: var(--qw-font); font-size: clamp(2.1rem, 10vw, 2.6rem);
+  font-weight: 900; letter-spacing: -0.01em; line-height: 1.02; color: var(--qw-navy);
+}
+body.theme-qwirkle .qw-turn-row { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
+body.theme-qwirkle .qw-mini-tile { width: 26px; height: 26px; border-radius: 7px; display: inline-flex; align-items: center; justify-content: center; }
+body.theme-qwirkle .qw-mini-tile svg { width: 16px; height: 16px; }
+body.theme-qwirkle .qw-turn-label { font-size: 1.05rem; font-weight: 800; color: var(--qw-navy); }
+body.theme-qwirkle .qw-bag {
+  display: inline-flex; align-items: center; gap: 8px; padding: 4px; border: 0; background: transparent;
+  color: var(--qw-navy); font-family: var(--qw-font); text-align: left; cursor: pointer; flex-shrink: 0;
+  touch-action: manipulation; user-select: none; -webkit-tap-highlight-color: transparent;
+}
+body.theme-qwirkle .qw-bag[hidden] { display: none; }
+body.theme-qwirkle .qw-bag-tile { width: 46px; height: 46px; border-radius: 11px; display: inline-flex; align-items: center; justify-content: center; }
+body.theme-qwirkle .qw-bag-tile svg { width: 28px; height: 28px; }
+body.theme-qwirkle .qw-bag-text { display: flex; flex-direction: column; font-size: 0.86rem; font-weight: 800; line-height: 1.3; }
+
+
+body.theme-qwirkle .qw-tile-strip { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin-bottom: 14px; }
+body.theme-qwirkle .qw-strip-shape,
+body.theme-qwirkle .qw-strip-tile { aspect-ratio: 1 / 1; display: flex; align-items: center; justify-content: center; border-radius: 10px; }
+body.theme-qwirkle .qw-strip-shape svg { width: 100%; height: 100%; }
+body.theme-qwirkle .qw-strip-tile svg { width: 62%; height: 62%; }
+
+
+body.theme-qwirkle .qw-player-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(72px, 1fr)); gap: 8px; margin-bottom: 14px; }
+body.theme-qwirkle .qw-pcard {
+  display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 0;
+  padding: 10px 4px 10px; border-radius: 14px; border: 2px solid transparent; background: var(--qw-card);
+  box-shadow: 0 2px 8px rgba(14, 26, 58, 0.08); color: var(--qw-ink); font-family: var(--qw-font); cursor: pointer;
+  touch-action: manipulation; user-select: none; -webkit-tap-highlight-color: transparent;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+body.theme-qwirkle .qw-pcard.is-current { border-color: var(--qw-navy); transform: translateY(-2px); box-shadow: 0 6px 16px rgba(14, 26, 58, 0.16); }
+body.theme-qwirkle .qw-pcard.is-leader .qw-pname { color: var(--qw-green); }
+body.theme-qwirkle .qw-ptile { width: 40px; height: 40px; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; }
+body.theme-qwirkle .qw-ptile svg { width: 24px; height: 24px; }
+body.theme-qwirkle .qw-pname { max-width: 100%; font-size: 0.95rem; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 2px; }
+body.theme-qwirkle .qw-ptotal { font-size: clamp(1.7rem, 7.5vw, 2.15rem); font-weight: 900; line-height: 1; color: var(--qw-navy); }
+body.theme-qwirkle .qw-pdelta { min-width: 46px; padding: 2px 8px; border-radius: 8px; background: var(--qw-green); color: #FFFFFF; font-size: 0.82rem; font-weight: 800; text-align: center; }
+body.theme-qwirkle .qw-pdelta.is-low { background: var(--qw-orange); }
+body.theme-qwirkle .qw-pdelta.is-zero { background: #E7E4DC; color: var(--qw-muted); }
+
+
+body.theme-qwirkle .qw-points-panel { background: var(--qw-panel); border: 1px solid var(--qw-line); border-radius: 18px; padding: 12px 12px 14px; box-shadow: 0 2px 10px rgba(14, 26, 58, 0.06); }
+body.theme-qwirkle .qw-panel-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+body.theme-qwirkle .qw-panel-rule { flex: 1; height: 1px; background: var(--qw-line); }
+body.theme-qwirkle .qw-panel-title { font-size: 1rem; font-weight: 800; color: var(--qw-navy); }
+body.theme-qwirkle .qw-turn-total { display: flex; align-items: center; gap: 6px; margin-bottom: 10px; padding: 6px 8px 6px 12px; border-radius: 12px; background: var(--qw-card); border: 1px solid var(--qw-line); min-width: 0; }
+body.theme-qwirkle .qw-turn-player { font-weight: 900; color: var(--qw-navy); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+body.theme-qwirkle .qw-turn-eq { font-size: 0.8rem; font-weight: 700; color: var(--qw-muted); white-space: nowrap; }
+body.theme-qwirkle .qw-turn-points { margin-left: auto; font-size: 1.4rem; font-weight: 900; color: var(--qw-navy); }
+body.theme-qwirkle .qw-clear-btn { min-height: 30px; padding: 0 10px; border-radius: 8px; border: 1px solid var(--qw-line); background: #F3F0E8; color: var(--qw-muted); font-family: var(--qw-font); font-size: 0.78rem; font-weight: 800; cursor: pointer; touch-action: manipulation; user-select: none; }
+body.theme-qwirkle .qw-chip-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 7px; margin-bottom: 10px; }
+body.theme-qwirkle .qw-chip {
+  aspect-ratio: 1 / 0.92; border: 0; border-radius: 10px; font-family: var(--qw-font);
+  font-size: clamp(1.25rem, 6vw, 1.6rem); font-weight: 900; cursor: pointer;
+  box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.14);
+  touch-action: manipulation; user-select: none; -webkit-tap-highlight-color: transparent;
+}
+body.theme-qwirkle .qw-chip:active { transform: translateY(1px); box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.14); }
+body.theme-qwirkle .qw-chip.is-picked { outline: 3px solid var(--qw-navy); outline-offset: 1px; }
+body.theme-qwirkle .qw-custom-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+body.theme-qwirkle .qw-custom-lbl { font-size: 0.85rem; font-weight: 800; color: var(--qw-muted); }
+body.theme-qwirkle .qw-custom-input {
+  flex: 1; min-width: 0; height: 42px; padding: 0 12px; border-radius: 10px; border: 1.5px solid var(--qw-line);
+  background: var(--qw-card); color: var(--qw-ink); font-family: var(--qw-font); font-size: 16px; font-weight: 800;
+}
+body.theme-qwirkle .qw-custom-input:focus { outline: none; border-color: var(--qw-blue); }
+body.theme-qwirkle .qw-custom-add { height: 42px; padding: 0 16px; border: 0; border-radius: 10px; background: var(--qw-blue); color: #FFFFFF; font-family: var(--qw-font); font-size: 0.95rem; font-weight: 800; cursor: pointer; touch-action: manipulation; user-select: none; }
+body.theme-qwirkle .qw-bonus-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+body.theme-qwirkle .qw-bonus {
+  min-height: 52px; border: 0; border-radius: 12px; color: #FFFFFF; font-family: var(--qw-font);
+  font-size: clamp(1rem, 4.6vw, 1.2rem); font-weight: 900; cursor: pointer;
+  box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.14); text-shadow: 0 1px 2px rgba(0, 0, 0, 0.18);
+  touch-action: manipulation; user-select: none; -webkit-tap-highlight-color: transparent;
+}
+body.theme-qwirkle .qw-bonus-rainbow { background: linear-gradient(90deg, var(--qw-red) 0%, var(--qw-orange) 22%, var(--qw-yellow) 42%, var(--qw-green) 62%, var(--qw-blue) 82%, var(--qw-purple) 100%); }
+body.theme-qwirkle .qw-bonus-purple { background: var(--qw-purple); }
+body.theme-qwirkle .qw-bonus[aria-pressed="true"] { outline: 3px solid var(--qw-navy); outline-offset: 2px; }
+
+
+body.theme-qwirkle .qw-cta-wrap {
+  position: sticky; bottom: calc(68px + env(safe-area-inset-bottom, 0px)); z-index: 6;
+  margin-top: 14px; padding: 6px 0 4px;
+  background: linear-gradient(180deg, rgba(251, 247, 238, 0) 0%, var(--qw-bg) 35%);
+}
+body.theme-qwirkle .qw-cta-btn {
+  width: 100%; min-height: 56px; border: 0; border-radius: 999px; background: var(--qw-navy); color: #FFFFFF;
+  font-family: var(--qw-font); font-size: 1.3rem; font-weight: 900; cursor: pointer;
+  box-shadow: 0 6px 18px rgba(11, 26, 61, 0.28);
+  touch-action: manipulation; user-select: none; -webkit-tap-highlight-color: transparent;
+}
+body.theme-qwirkle .qw-cta-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+body.theme-qwirkle .qw-cta-btn:active { transform: translateY(1px); }
+
+
+body.theme-qwirkle .qw-history-drawer { margin-top: 10px; border: 1px solid var(--qw-line); border-radius: 14px; background: var(--qw-card); overflow: hidden; }
+body.theme-qwirkle .qw-history-summary { list-style: none; display: flex; align-items: center; justify-content: space-between; padding: 11px 14px; font-weight: 800; color: var(--qw-navy); cursor: pointer; user-select: none; }
+body.theme-qwirkle .qw-history-summary::-webkit-details-marker { display: none; }
+body.theme-qwirkle .qw-history-count { font-size: 0.78rem; color: var(--qw-blue); }
+body.theme-qwirkle .qw-history-list { border-top: 1px solid var(--qw-line); padding: 8px 10px; display: flex; flex-direction: column; gap: 6px; max-height: 240px; overflow-y: auto; }
+body.theme-qwirkle .qw-history-empty { font-size: 0.82rem; color: var(--qw-muted); text-align: center; padding: 6px 0; }
+body.theme-qwirkle .qw-history-item { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 6px 8px; border-radius: 8px; background: #F8F5EE; font-size: 0.84rem; font-weight: 700; }
+body.theme-qwirkle .qw-history-item .qw-h-tag { padding: 1px 6px; border-radius: 6px; background: var(--qw-purple); color: #FFFFFF; font-size: 0.7rem; font-weight: 800; }
+
+
+body.theme-qwirkle .bottom-nav { background: rgba(255, 255, 255, 0.97); border-top: 1px solid var(--qw-line); box-shadow: 0 -4px 14px rgba(14, 26, 58, 0.06); }
+body.theme-qwirkle .bottom-nav button { color: var(--qw-muted); font-family: var(--qw-font); font-weight: 800; }
+body.theme-qwirkle .bottom-nav button.active { color: var(--qw-navy); }
+body.theme-qwirkle .bottom-nav #nav-new { display: none; }
+body.theme-qwirkle .bottom-nav #nav-active { display: flex; }
+body.theme-qwirkle .bottom-nav #nav-social { display: none !important; }
+
+</style>
+
+<!-- ===================== v24 LINK PLAYERS + CLAIM (neutral obsidian/brass; .v24-* only) ===================== -->
+<style id="v24-link-players">
+
+.v24-backdrop {
+  --v24-bg: #0c0d10; --v24-card: #14161b; --v24-surface: #1c1f26;
+  --v24-text: #f4f1ea; --v24-muted: #989fa9; --v24-brass: #d4a853;
+  --v24-line: rgba(255, 255, 255, 0.1); --v24-danger: #e46a6a;
+  position: fixed; inset: 0; z-index: 900; display: flex; align-items: flex-end; justify-content: center;
+  background: rgba(4, 5, 7, 0.62); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: var(--v24-text);
+}
+.v24-backdrop[hidden] { display: none; }
+.v24-backdrop *, .v24-banner * { box-sizing: border-box; }
+.v24-sheet {
+  width: 100%; max-width: 480px; max-height: 88vh; overflow-y: auto; overflow-x: hidden;
+  background: var(--v24-card); border: 1px solid var(--v24-line); border-bottom: 0;
+  border-radius: 20px 20px 0 0; padding: 16px 16px calc(18px + env(safe-area-inset-bottom, 0px));
+  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.45);
+}
+.v24-sheet-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 12px; }
+.v24-sheet-title { margin: 0; font-family: Georgia, "Times New Roman", serif; font-size: 1.3rem; font-weight: 500; color: var(--v24-text); }
+.v24-sheet-sub { margin: 3px 0 0; font-size: 0.84rem; color: var(--v24-muted); }
+.v24-icon-btn {
+  width: 36px; height: 36px; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 999px; border: 1px solid var(--v24-line); background: var(--v24-surface); color: var(--v24-text);
+  cursor: pointer; touch-action: manipulation; user-select: none; -webkit-tap-highlight-color: transparent;
+}
+.v24-icon-btn svg { width: 16px; height: 16px; }
+.v24-step[hidden] { display: none; }
+.v24-hint { margin: 0 0 12px; font-size: 0.86rem; line-height: 1.45; color: var(--v24-muted); }
+.v24-hint strong { color: var(--v24-text); }
+.v24-list { display: flex; flex-direction: column; gap: 6px; }
+.v24-row {
+  display: flex; align-items: center; gap: 10px; width: 100%; min-height: 52px; padding: 8px 12px;
+  border-radius: 12px; border: 1px solid var(--v24-line); background: var(--v24-surface); color: var(--v24-text);
+  font: inherit; text-align: left; cursor: pointer; touch-action: manipulation; user-select: none; -webkit-tap-highlight-color: transparent;
+}
+.v24-row:disabled { cursor: default; opacity: 0.75; }
+.v24-row.is-picked { border-color: var(--v24-brass); box-shadow: 0 0 0 2px rgba(212, 168, 83, 0.22); }
+.v24-row-main { flex: 1; min-width: 0; }
+.v24-row-name { font-size: 0.98rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.v24-row-sub { font-size: 0.76rem; color: var(--v24-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.v24-row-chev { width: 16px; height: 16px; color: var(--v24-muted); flex-shrink: 0; }
+.v24-avatar {
+  width: 34px; height: 34px; flex-shrink: 0; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center;
+  background: rgba(212, 168, 83, 0.16); color: var(--v24-brass); font-size: 0.86rem; font-weight: 700;
+}
+.v24-avatar svg { width: 18px; height: 18px; }
+.v24-avatar-guest { background: rgba(255, 255, 255, 0.07); color: var(--v24-muted); }
+.v24-pill { flex-shrink: 0; padding: 3px 8px; border-radius: 999px; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.02em; }
+.v24-pill-linked { background: rgba(108, 196, 140, 0.14); color: #8fd6a8; border: 1px solid rgba(108, 196, 140, 0.32); }
+.v24-pill-pending { background: rgba(212, 168, 83, 0.14); color: var(--v24-brass); border: 1px solid rgba(212, 168, 83, 0.34); }
+.v24-pill-guest { background: rgba(255, 255, 255, 0.06); color: var(--v24-muted); border: 1px solid var(--v24-line); }
+.v24-pill-you { background: rgba(244, 241, 234, 0.1); color: var(--v24-text); border: 1px solid rgba(244, 241, 234, 0.2); }
+.v24-check {
+  width: 22px; height: 22px; flex-shrink: 0; border-radius: 6px; border: 1.5px solid rgba(255, 255, 255, 0.28);
+  display: inline-flex; align-items: center; justify-content: center; color: transparent;
+}
+.v24-row.is-picked .v24-check { background: var(--v24-brass); border-color: var(--v24-brass); color: #0c0d10; }
+.v24-check svg { width: 14px; height: 14px; }
+.v24-back-link {
+  display: inline-flex; align-items: center; gap: 4px; margin: 0 0 10px; padding: 4px 0; border: 0; background: transparent;
+  color: var(--v24-brass); font: inherit; font-size: 0.84rem; font-weight: 600; cursor: pointer; touch-action: manipulation;
+}
+.v24-back-link svg { width: 15px; height: 15px; }
+.v24-assign-head { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.v24-assign-name { font-family: Georgia, "Times New Roman", serif; font-size: 1.15rem; color: var(--v24-text); }
+.v24-assign-sub { font-size: 0.8rem; color: var(--v24-muted); }
+.v24-section-label { margin: 4px 0 8px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--v24-muted); }
+.v24-search {
+  display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 12px; margin-bottom: 8px;
+  border-radius: 12px; border: 1px solid var(--v24-line); background: var(--v24-bg); color: var(--v24-muted);
+}
+.v24-search svg { width: 17px; height: 17px; flex-shrink: 0; }
+.v24-search-input, .v24-code-input, .v24-link-input {
+  flex: 1; min-width: 0; border: 0; background: transparent; color: var(--v24-text); font: inherit; font-size: 16px; outline: none;
+}
+.v24-search-input::placeholder, .v24-code-input::placeholder { color: #6f7681; }
+.v24-friend-list { max-height: 34vh; overflow-y: auto; }
+.v24-empty { margin: 8px 0; font-size: 0.84rem; color: var(--v24-muted); text-align: center; }
+.v24-empty[hidden] { display: none; }
+.v24-divider { display: flex; align-items: center; gap: 10px; margin: 14px 0 10px; color: var(--v24-muted); font-size: 0.76rem; }
+.v24-divider::before, .v24-divider::after { content: ""; flex: 1; height: 1px; background: var(--v24-line); }
+.v24-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; min-height: 48px; padding: 0 16px;
+  border-radius: 12px; border: 1px solid transparent; font: inherit; font-size: 0.98rem; font-weight: 700; cursor: pointer;
+  touch-action: manipulation; user-select: none; -webkit-tap-highlight-color: transparent;
+}
+.v24-btn svg { width: 18px; height: 18px; }
+.v24-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.v24-btn-brass { background: linear-gradient(180deg, #e4bc6c 0%, #d4a853 100%); color: #0c0d10; box-shadow: 0 4px 14px rgba(212, 168, 83, 0.24); }
+.v24-btn-outline { background: transparent; border-color: rgba(212, 168, 83, 0.45); color: var(--v24-brass); margin-bottom: 8px; }
+.v24-btn-sm { width: auto; min-height: 40px; padding: 0 14px; font-size: 0.88rem; flex-shrink: 0; }
+.v24-text-btn {
+  display: block; width: 100%; margin-top: 6px; padding: 10px; border: 0; background: transparent; color: var(--v24-muted);
+  font: inherit; font-size: 0.88rem; font-weight: 600; cursor: pointer; touch-action: manipulation;
+}
+.v24-danger { color: var(--v24-danger); }
+.v24-code-box { margin-bottom: 10px; padding: 14px; border-radius: 14px; border: 1px dashed rgba(212, 168, 83, 0.5); background: rgba(212, 168, 83, 0.06); text-align: center; }
+.v24-code-k { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--v24-muted); }
+.v24-code { margin-top: 4px; font-family: "SF Mono", ui-monospace, Menlo, Consolas, monospace; font-size: 1.7rem; font-weight: 700; letter-spacing: 0.18em; color: var(--v24-brass); }
+.v24-link-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; padding: 4px 4px 4px 12px; border-radius: 12px; border: 1px solid var(--v24-line); background: var(--v24-bg); }
+.v24-link-input { font-size: 16px; color: var(--v24-muted); text-overflow: ellipsis; }
+.v24-fine { margin: 6px 0 0; font-size: 0.76rem; color: var(--v24-muted); text-align: center; }
+.v24-code-entry { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; padding: 4px 4px 4px 12px; border-radius: 12px; border: 1px solid var(--v24-line); background: var(--v24-bg); }
+.v24-code-entry[hidden] { display: none; }
+.v24-code-input { text-transform: uppercase; letter-spacing: 0.1em; }
+.v24-sheet-actions { margin-top: 14px; }
+.v24-status { margin-top: 10px; padding: 9px 12px; border-radius: 10px; font-size: 0.84rem; font-weight: 600; background: rgba(108, 196, 140, 0.12); color: #8fd6a8; border: 1px solid rgba(108, 196, 140, 0.3); }
+.v24-status.is-error { background: rgba(228, 106, 106, 0.12); color: #f0a0a0; border-color: rgba(228, 106, 106, 0.34); }
+.v24-status[hidden] { display: none; }
+
+
+.v24-link-trigger {
+  display: inline-flex; align-items: center; gap: 5px; margin-top: 0.45rem; min-height: 32px; padding: 0 11px;
+  border-radius: 999px; border: 1px solid rgba(212, 168, 83, 0.4); background: rgba(212, 168, 83, 0.08); color: #d4a853;
+  font: inherit; font-size: 0.8rem; font-weight: 600; cursor: pointer; touch-action: manipulation; user-select: none; -webkit-tap-highlight-color: transparent;
+}
+.v24-link-trigger svg { width: 14px; height: 14px; }
+.v24-link-trigger .v24-link-count { padding: 0 6px; border-radius: 999px; background: rgba(212, 168, 83, 0.2); font-size: 0.72rem; }
+
+
+.v24-banner {
+  display: flex; align-items: center; gap: 10px; margin: 0 0 12px; padding: 10px 10px 10px 12px;
+  border-radius: 14px; border: 1px solid rgba(212, 168, 83, 0.36); background: linear-gradient(180deg, #1c1f26 0%, #14161b 100%);
+  color: #f4f1ea; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; overflow: hidden;
+}
+.v24-banner[hidden] { display: none; }
+.v24-banner-icon { width: 36px; height: 36px; flex-shrink: 0; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; background: rgba(212, 168, 83, 0.14); color: #d4a853; }
+.v24-banner-icon svg { width: 20px; height: 20px; }
+.v24-banner-text { flex: 1; min-width: 0; }
+.v24-banner-title { font-size: 0.92rem; font-weight: 700; }
+.v24-banner-sub { font-size: 0.78rem; color: #989fa9; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.v24-banner .v24-icon-btn { width: 32px; height: 32px; background: transparent; border-color: transparent; color: #989fa9; }
+
+
+.v24-text-btn[hidden], .v24-btn[hidden], .v24-link-trigger[hidden] { display: none; }
+
+.v24-code { font-size: 1.05rem; letter-spacing: 0.04em; line-height: 1.35; word-break: break-all; overflow-wrap: anywhere; }
+.v24-code-input { text-transform: none; letter-spacing: 0; }
+.v24-row-name, .v24-row-sub { display: block; }
+
+.history-item .v24-link-slot { margin-top: .45rem; }
+#view-home #v24-suggest-banner { margin-bottom: .75rem; }
+</style>
 <!-- v20: Request a Game, Variations & Popularity, Private Admin Stats, Full Screen (neutral obsidian + warm brass) -->
 <style id="v20-features">
 
@@ -10758,10 +11107,41 @@ html.v21-sheet-open, html.v21-sheet-open body { overscroll-behavior: contain; }
   --st-font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
+
+#setup-screen.setup-theme-qwirkle {
+  --st-bg: #fbf7ee;
+  --st-bg-image:
+    linear-gradient(rgba(28, 36, 64, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(28, 36, 64, 0.05) 1px, transparent 1px);
+  --st-card: #ffffff;
+  --st-card-border: rgba(14, 26, 58, 0.12);
+  --st-surface: #fbf6ea;
+  --st-surface-border: rgba(14, 26, 58, 0.14);
+  --st-text: #0e1a3a;
+  --st-muted: #5b6480;
+  --st-accent: #1e7bf0;
+  --st-accent-soft: rgba(30, 123, 240, 0.10);
+  --st-accent-border: rgba(30, 123, 240, 0.42);
+  --st-cta-bg: #0b1a3d;
+  --st-cta-text: #ffffff;
+  --st-cta-shadow: 0 6px 18px rgba(11, 26, 61, 0.28);
+  --st-sticky-bg: rgba(251, 247, 238, 0.96);
+  --st-input-bg: #ffffff;
+  --st-input-text: #0e1a3a;
+  --st-input-placeholder: #7d8499;
+  --st-chip-bg: #f1ede3;
+  --st-chip-text: #0e1a3a;
+  --st-font-display: "Nunito", "SF Pro Rounded", ui-rounded, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --st-font-body: "Nunito", ui-rounded, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+#setup-screen.setup-theme-qwirkle {
+  background-size: 28px 28px, 28px 28px;
+}
+
 </style>
 </head>
 <body>
-<!-- Build: v23-hearts-ohhell-2026-11-27 -->
+<!-- Build: v24-qwirkle-linking-2026-11-27 -->
 
 <!-- Login: starts hidden until getSession() resolves -->
 <section id="login-view" class="auth-hidden" hidden aria-label="Sign in to Score Tracker">
@@ -10888,6 +11268,19 @@ html.v21-sheet-open, html.v21-sheet-open body { overscroll-behavior: contain; }
     </button>
   </div>
 </section>
+<div id="v24-suggest-banner" class="v24-banner" hidden>
+  <span class="v24-banner-icon" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8.5" r="3.25"/><path d="M3.5 19.5c0-3 2.5-5 5.5-5s5.5 2 5.5 5"/><polyline points="15.5 11 17.5 13 21 9.5"/></svg>
+  </span>
+  <div class="v24-banner-text">
+    <div class="v24-banner-title">Were you in these games?</div>
+    <div id="v24-suggest-sub" class="v24-banner-sub">2 games list a player named you</div>
+  </div>
+  <button type="button" id="v24-btn-review" class="v24-btn v24-btn-brass v24-btn-sm" onclick="V24Link.openClaimSheet()">Review</button>
+  <button type="button" id="v24-btn-dismiss" class="v24-icon-btn" aria-label="Dismiss" onclick="V24Link.dismissSuggestions()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+  </button>
+</div>
 <section id="v21-active-games-section" class="v21-active-section hidden" hidden aria-label="Games in progress">
   <div class="v21-active-head">
     <span class="v21-active-heading">
@@ -12182,6 +12575,121 @@ html.v21-sheet-open, html.v21-sheet-open body { overscroll-behavior: contain; }
   </div>
 </div>
 
+    <!-- v24 Qwirkle Bright Playful Tile Grid: only visible with body.theme-qwirkle (quick points, Qwirkle +6, Went Out +6, bag counter, undo) -->
+<div id="qw-shell" class="qw-shell" aria-label="Qwirkle Scoreboard">
+  <svg class="qw-defs" width="0" height="0" aria-hidden="true" focusable="false">
+    <defs>
+      <symbol id="qw-sh-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/></symbol>
+      <symbol id="qw-sh-square" viewBox="0 0 24 24"><rect x="4.5" y="4.5" width="15" height="15" rx="1.5"/></symbol>
+      <symbol id="qw-sh-diamond" viewBox="0 0 24 24"><path d="M12 2.5 21.5 12 12 21.5 2.5 12Z"/></symbol>
+      <symbol id="qw-sh-clover" viewBox="0 0 24 24"><circle cx="12" cy="7.4" r="4.3"/><circle cx="7.3" cy="12.4" r="4.3"/><circle cx="16.7" cy="12.4" r="4.3"/><path d="M11 13h2l1.2 8.5h-4.4Z"/></symbol>
+      <symbol id="qw-sh-star" viewBox="0 0 24 24"><path d="M12 2.8l2.8 5.9 6.4.8-4.7 4.4 1.2 6.4L12 17.2l-5.7 3.1 1.2-6.4L2.8 9.5l6.4-.8Z"/></symbol>
+      <symbol id="qw-sh-burst" viewBox="0 0 24 24"><path d="M12 1.8l2.2 5 5-2.2-2.2 5 5 2.4-5 2.2 2.2 5-5-2.2L12 22.2l-2.2-5.2-5 2.2 2.2-5-5-2.2 5-2.4-2.2-5 5 2.2Z"/></symbol>
+    </defs>
+  </svg>
+
+  <div class="qw-topbar">
+    <button type="button" id="qw-btn-home" class="qw-top-btn" onclick="showView('home')" aria-label="Back to Home">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+      <span>Home</span>
+    </button>
+    <div class="qw-top-actions">
+      <button type="button" id="qw-btn-undo" class="qw-top-btn" onclick="window.QwirkleUI && window.QwirkleUI.undoTurn()" aria-label="Undo last turn" disabled>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>
+        <span>Undo</span>
+      </button>
+      <button type="button" id="qw-btn-end" class="qw-top-btn qw-top-btn-end" onclick="window.openEndGameModal && openEndGameModal()" aria-label="End or pause game">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+        <span>End</span>
+      </button>
+    </div>
+  </div>
+
+  <header class="qw-header">
+    <div class="qw-head-left">
+      <h1 class="qw-title">Qwirkle</h1>
+      <div class="qw-turn-row">
+        <span class="qw-mini-tile qw-c-purple" aria-hidden="true"><svg><use href="#qw-sh-burst"/></svg></span>
+        <span id="qw-turn-label" class="qw-turn-label">Turn 1</span>
+      </div>
+    </div>
+    <button type="button" id="qw-bag" class="qw-bag" onclick="window.QwirkleUI && window.QwirkleUI.editBag()" aria-label="Tiles left in bag (tap to edit)">
+      <span class="qw-bag-tile qw-c-blue" aria-hidden="true"><svg><use href="#qw-sh-clover"/></svg></span>
+      <span class="qw-bag-text">
+        <span class="qw-bag-k">Bag:</span>
+        <span><span id="qw-bag-count">108</span> tiles left</span>
+      </span>
+    </button>
+  </header>
+
+  <div class="qw-tile-strip" aria-hidden="true">
+    <span class="qw-strip-shape qw-ink-red"><svg><use href="#qw-sh-circle"/></svg></span>
+    <span class="qw-strip-shape qw-ink-orange"><svg><use href="#qw-sh-square"/></svg></span>
+    <span class="qw-strip-shape qw-ink-yellow"><svg><use href="#qw-sh-diamond"/></svg></span>
+    <span class="qw-strip-tile qw-c-green"><svg><use href="#qw-sh-clover"/></svg></span>
+    <span class="qw-strip-tile qw-c-blue"><svg><use href="#qw-sh-star"/></svg></span>
+    <span class="qw-strip-tile qw-c-purple"><svg><use href="#qw-sh-burst"/></svg></span>
+  </div>
+
+  <section id="qw-player-cards" class="qw-player-cards" role="listbox" aria-label="Players — tap to choose who is scoring">
+    </section>
+
+  <section class="qw-points-panel" aria-label="Points this turn">
+    <div class="qw-panel-head">
+      <span class="qw-panel-rule" aria-hidden="true"></span>
+      <span class="qw-panel-title">Quick Points</span>
+      <span class="qw-panel-rule" aria-hidden="true"></span>
+    </div>
+
+    <div id="qw-turn-total" class="qw-turn-total" role="status" aria-live="polite">
+      <span id="qw-turn-player" class="qw-turn-player">Rand</span>
+      <span class="qw-turn-eq">this turn</span>
+      <span id="qw-turn-points" class="qw-turn-points">0</span>
+      <button type="button" id="qw-btn-clear" class="qw-clear-btn" onclick="window.QwirkleUI && window.QwirkleUI.clearTurn()" aria-label="Clear this turn">Clear</button>
+    </div>
+
+    <div id="qw-chip-grid" class="qw-chip-grid">
+      <button type="button" class="qw-chip qw-c-red" data-pts="1" onclick="QwirkleUI.addPoints(1)">1</button>
+      <button type="button" class="qw-chip qw-c-orange" data-pts="2" onclick="QwirkleUI.addPoints(2)">2</button>
+      <button type="button" class="qw-chip qw-c-yellow" data-pts="3" onclick="QwirkleUI.addPoints(3)">3</button>
+      <button type="button" class="qw-chip qw-c-green" data-pts="4" onclick="QwirkleUI.addPoints(4)">4</button>
+      <button type="button" class="qw-chip qw-c-blue" data-pts="5" onclick="QwirkleUI.addPoints(5)">5</button>
+      <button type="button" class="qw-chip qw-c-purple" data-pts="6" onclick="QwirkleUI.addPoints(6)">6</button>
+      <button type="button" class="qw-chip qw-c-red" data-pts="7" onclick="QwirkleUI.addPoints(7)">7</button>
+      <button type="button" class="qw-chip qw-c-orange" data-pts="8" onclick="QwirkleUI.addPoints(8)">8</button>
+      <button type="button" class="qw-chip qw-c-yellow" data-pts="9" onclick="QwirkleUI.addPoints(9)">9</button>
+      <button type="button" class="qw-chip qw-c-green" data-pts="10" onclick="QwirkleUI.addPoints(10)">10</button>
+      <button type="button" class="qw-chip qw-c-blue" data-pts="11" onclick="QwirkleUI.addPoints(11)">11</button>
+      <button type="button" class="qw-chip qw-c-purple" data-pts="12" onclick="QwirkleUI.addPoints(12)">12</button>
+    </div>
+
+    <div class="qw-custom-row">
+      <label for="qw-custom-input" class="qw-custom-lbl">Custom</label>
+      <input type="number" id="qw-custom-input" class="qw-custom-input" inputmode="numeric" pattern="[0-9]*" min="0" max="99" placeholder="Enter points">
+      <button type="button" id="qw-custom-add" class="qw-custom-add" onclick="window.QwirkleUI && window.QwirkleUI.addCustom()">Add</button>
+    </div>
+
+    <div class="qw-bonus-row">
+      <button type="button" id="qw-btn-qwirkle" class="qw-bonus qw-bonus-rainbow" aria-pressed="false" onclick="window.QwirkleUI && window.QwirkleUI.toggleQwirkle()">Qwirkle +6</button>
+      <button type="button" id="qw-btn-wentout" class="qw-bonus qw-bonus-purple" aria-pressed="false" onclick="window.QwirkleUI && window.QwirkleUI.toggleWentOut()">Went Out +6</button>
+    </div>
+  </section>
+
+  <div class="qw-cta-wrap">
+    <button type="button" id="qw-btn-add" class="qw-cta-btn" onclick="window.QwirkleUI && window.QwirkleUI.addTurn()">Add Turn</button>
+  </div>
+
+  <details id="qw-history-drawer" class="qw-history-drawer">
+    <summary class="qw-history-summary">
+      <span>Turn History</span>
+      <span id="qw-history-count" class="qw-history-count">0 turns</span>
+    </summary>
+    <div id="qw-history-list" class="qw-history-list">
+      <div class="qw-history-empty">No turns recorded yet.</div>
+    </div>
+  </details>
+</div>
+
     <!-- Catan board: only visible with body.theme-catan (layout from the approved rendering) -->
     <div id="catan-board">
       <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
@@ -12807,6 +13315,111 @@ html.v21-sheet-open, html.v21-sheet-open body { overscroll-behavior: contain; }
   </div>
 </div>
 
+  <!-- v24 Link players (creator) + claim sheet (claimer) -->
+<div id="v24-link-sheet" class="v24-backdrop" hidden role="dialog" aria-modal="true" aria-labelledby="v24-link-title" onclick="if(event.target===this && window.V24Link) V24Link.closeLinkSheet()">
+  <div class="v24-sheet">
+    <header class="v24-sheet-head">
+      <div>
+        <h3 id="v24-link-title" class="v24-sheet-title">Link players</h3>
+        <p id="v24-link-game" class="v24-sheet-sub">Game on date</p>
+      </div>
+      <button type="button" class="v24-icon-btn" aria-label="Close" onclick="V24Link.closeLinkSheet()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+      </button>
+    </header>
+
+    <!-- Step 1: pick a player from this game -->
+    <section id="v24-step-players" class="v24-step">
+      <p class="v24-hint">Tap a guest to link them to a TallyIt account. Linked players get this game in their own History and stats.</p>
+      <div id="v24-player-list" class="v24-list" role="list"></div>
+    </section>
+
+    <!-- Step 2: assign the chosen guest -->
+    <section id="v24-step-assign" class="v24-step" hidden>
+      <button type="button" id="v24-assign-back" class="v24-back-link" onclick="V24Link.backToPlayers()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+        <span>All players</span>
+      </button>
+      <div class="v24-assign-head">
+        <span class="v24-avatar v24-avatar-guest" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6"/></svg></span>
+        <div>
+          <div id="v24-assign-name" class="v24-assign-name">Guest</div>
+          <div class="v24-assign-sub">Who was this?</div>
+        </div>
+      </div>
+
+      <div class="v24-section-label">Assign to a friend</div>
+      <div class="v24-search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><line x1="16" y1="16" x2="20.5" y2="20.5"/></svg>
+        <input type="search" id="v24-friend-search" class="v24-search-input" placeholder="Search friends" autocomplete="off" oninput="V24Link.filterFriends(this.value)">
+      </div>
+      <div id="v24-friend-list" class="v24-list v24-friend-list" role="list"></div>
+      <p id="v24-friend-empty" class="v24-empty" hidden>No friends match. Use a claim link instead.</p>
+
+      <div class="v24-divider"><span>or</span></div>
+
+      <div class="v24-section-label">Not on your Friends list?</div>
+      <button type="button" id="v24-btn-make-claim" class="v24-btn v24-btn-outline" onclick="V24Link.createClaim()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a4.5 4.5 0 0 0 6.4 0l3-3a4.5 4.5 0 0 0-6.4-6.4l-1.2 1.2"/><path d="M14 10a4.5 4.5 0 0 0-6.4 0l-3 3a4.5 4.5 0 0 0 6.4 6.4l1.2-1.2"/></svg>
+        <span>Create claim link or code</span>
+      </button>
+    </section>
+
+    <!-- Step 3: claim link created -->
+    <section id="v24-step-claim" class="v24-step" hidden>
+      <button type="button" class="v24-back-link" onclick="V24Link.backToPlayers()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+        <span>All players</span>
+      </button>
+      <p class="v24-hint">Send this to <strong id="v24-claim-for">the guest</strong>. When they sign in and confirm, this game moves into their History.</p>
+      <div class="v24-code-box">
+        <div class="v24-code-k">Claim code</div>
+        <div id="v24-claim-code" class="v24-code">------</div>
+      </div>
+      <div class="v24-link-row">
+        <input type="text" id="v24-claim-url" class="v24-link-input" readonly value="" aria-label="Claim link">
+        <button type="button" id="v24-btn-copy" class="v24-btn v24-btn-brass v24-btn-sm" onclick="V24Link.copyClaim()">Copy</button>
+      </div>
+      <button type="button" id="v24-btn-share" class="v24-btn v24-btn-outline" onclick="V24Link.shareClaim()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><polyline points="7.5 7.5 12 3 16.5 7.5"/><path d="M5 13v6a1.5 1.5 0 0 0 1.5 1.5h11A1.5 1.5 0 0 0 19 19v-6"/></svg>
+        <span>Share link</span>
+      </button>
+      <p id="v24-claim-expiry" class="v24-fine">Link expires in 30 days. It works once, for one person.</p>
+      <button type="button" id="v24-btn-revoke" class="v24-text-btn v24-danger" hidden onclick="V24Link.revokeClaim()">Revoke this link</button>
+    </section>
+
+    <div id="v24-link-status" class="v24-status" role="status" aria-live="polite" hidden></div>
+  </div>
+</div>
+<div id="v24-claim-sheet" class="v24-backdrop" hidden role="dialog" aria-modal="true" aria-labelledby="v24-claim-title" onclick="if(event.target===this && window.V24Link) V24Link.closeClaimSheet()">
+  <div class="v24-sheet">
+    <header class="v24-sheet-head">
+      <div>
+        <h3 id="v24-claim-title" class="v24-sheet-title">Were you in these games?</h3>
+        <p id="v24-claim-sub" class="v24-sheet-sub">Confirm the games you played so they show up in your History.</p>
+      </div>
+      <button type="button" class="v24-icon-btn" aria-label="Close" onclick="V24Link.closeClaimSheet()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+      </button>
+    </header>
+
+    <!-- Manual code entry (shown when no code in URL) -->
+    <div id="v24-code-entry" class="v24-code-entry">
+      <input type="text" id="v24-code-input" class="v24-code-input" inputmode="text" autocapitalize="off" autocorrect="off" spellcheck="false" autocomplete="off" maxlength="200" placeholder="Paste claim link or code">
+      <button type="button" id="v24-btn-lookup" class="v24-btn v24-btn-brass v24-btn-sm" onclick="V24Link.lookupCode()">Find</button>
+    </div>
+
+    <div id="v24-claim-list" class="v24-list" role="list"></div>
+    <p id="v24-claim-empty" class="v24-empty" hidden>No games waiting to be claimed.</p>
+
+    <div class="v24-sheet-actions">
+      <button type="button" id="v24-btn-claim-confirm" class="v24-btn v24-btn-brass" onclick="V24Link.confirmClaims()" disabled>Yes, that was me</button>
+      <button type="button" id="v24-btn-claim-skip" class="v24-text-btn" onclick="V24Link.closeClaimSheet()">Not now</button>
+    </div>
+    <div id="v24-claim-status" class="v24-status" role="status" aria-live="polite" hidden></div>
+  </div>
+</div>
+
   <nav class="bottom-nav" aria-label="Main navigation">
     <button type="button" id="nav-home" onclick="showView('home')">
       <span class="icon" aria-hidden="true">
@@ -13068,6 +13681,7 @@ html.v21-sheet-open, html.v21-sheet-open body { overscroll-behavior: contain; }
     hearts:      { id: 'hearts',      name: 'Hearts',       low: true  },
     nertz:       { id: 'nertz',       name: 'Nertz',        low: false },
     rummikub:    { id: 'rummikub',    name: 'Rummikub',     low: true  },
+    qwirkle:     { id: 'qwirkle',     name: 'Qwirkle',      low: false },
     other:       { id: 'other',       name: 'Custom',       low: false }
   };
 
@@ -18564,6 +19178,1302 @@ window.SocialUI = (function () {
 
 </script>
 
+<!-- v24 Qwirkle scoring (window.TallyItQwirkle): +6 per Qwirkle, Went Out +6 ends game, bag counter, undo, stats -->
+<script id="qwirkle-scoring">
+/*
+ * TallyIt v24 — Qwirkle scoring logic.
+ * Exposes `window.TallyItQwirkle` in browsers and `module.exports` in Node.
+ * Pure state helpers: no DOM. Honors `TallyItHouseRules` overrides.
+ *
+ * Rules (defaults):
+ *   - Each turn scores the line points the player entered.
+ *   - Each Qwirkle (a completed line of 6) adds +6 on top of the line points.
+ *   - Going out (first to empty hand when the bag is empty) adds +6 and ends the game.
+ *   - Highest score wins.
+ */
+(function (global) {
+  'use strict';
+
+  const TOTAL_TILES = 108;
+  const HAND_SIZE = 6;
+  const DEFAULT_RULES = Object.freeze({
+    qwirkleBonus: 6,
+    wentOutBonus: 6,
+    targetScore: 0,   // 0 = no target; game ends when someone goes out
+    trackBag: true,
+    lowWins: false
+  });
+
+  function toInt(v, fallback) {
+    const n = Number(v);
+    return Number.isFinite(n) ? Math.trunc(n) : fallback;
+  }
+
+  function clone(v) {
+    return v === undefined ? v : JSON.parse(JSON.stringify(v));
+  }
+
+  function pickHouseRules(game) {
+    if (!game || typeof game !== 'object') return {};
+    const out = {};
+    const hrApi = global.TallyItHouseRules;
+    if (game.houseRules && typeof game.houseRules === 'object') Object.assign(out, game.houseRules);
+    if (game.scoringOverrides && typeof game.scoringOverrides === 'object') {
+      const so = game.scoringOverrides;
+      if (so.houseRules && typeof so.houseRules === 'object') Object.assign(out, so.houseRules);
+      ['targetScore', 'lowWins', 'qwirkleBonus', 'wentOutBonus', 'trackBag'].forEach((k) => {
+        if (so[k] !== undefined && so[k] !== null) out[k] = so[k];
+      });
+    }
+    if (game.customRules && hrApi && typeof hrApi.buildScoringOverrides === 'function') {
+      try {
+        const so = hrApi.buildScoringOverrides('qwirkle', game.customRules);
+        if (so && so.houseRules) Object.assign(out, so.houseRules);
+      } catch (_) {}
+    }
+    return out;
+  }
+
+  function resolveRules(game) {
+    const hr = pickHouseRules(game);
+    const rules = { ...DEFAULT_RULES };
+    if (hr.qwirkleBonus !== undefined) rules.qwirkleBonus = Math.max(0, toInt(hr.qwirkleBonus, 6));
+    if (hr.wentOutBonus !== undefined) rules.wentOutBonus = Math.max(0, toInt(hr.wentOutBonus, 6));
+    if (hr.targetScore !== undefined && hr.targetScore !== null) rules.targetScore = Math.max(0, toInt(hr.targetScore, 0));
+    if (hr.trackBag !== undefined) rules.trackBag = Boolean(hr.trackBag);
+    if (hr.lowWins !== undefined) rules.lowWins = Boolean(hr.lowWins);
+    if (game && game.target !== undefined && hr.targetScore === undefined && Number(game.target) > 0) {
+      rules.targetScore = toInt(game.target, 0);
+    }
+    return rules;
+  }
+
+  function normalizePlayers(raw) {
+    const list = Array.isArray(raw) ? raw : [];
+    return list.map((p, i) => {
+      const base = typeof p === 'string' ? { name: p } : (p && typeof p === 'object' ? p : {});
+      const name = String(base.name || base.display_name || base.displayName || ('Player ' + (i + 1))).trim();
+      return {
+        ...base,
+        name,
+        score: toInt(base.score, 0),
+        qwirkles: Math.max(0, toInt(base.qwirkles, 0)),
+        bestTurn: Math.max(0, toInt(base.bestTurn, 0)),
+        turns: Math.max(0, toInt(base.turns, 0)),
+        wentOut: Boolean(base.wentOut)
+      };
+    });
+  }
+
+  /**
+   * initState(gameOrPlayers, opts)
+   *   gameOrPlayers: array of names/player objects, or a game object { players, houseRules, ... }
+   *   opts: { houseRules, startingPlayer, tilesInBag, trackBag }
+   */
+  function initState(gameOrPlayers, opts) {
+    opts = opts || {};
+    const game = Array.isArray(gameOrPlayers) ? { players: gameOrPlayers } : (gameOrPlayers || {});
+    const merged = { ...game };
+    if (opts.houseRules) merged.houseRules = { ...(game.houseRules || {}), ...opts.houseRules };
+    const rules = resolveRules(merged);
+    if (opts.trackBag !== undefined) rules.trackBag = Boolean(opts.trackBag);
+    const players = normalizePlayers(game.players);
+    if (players.length < 2 || players.length > 4) {
+      // Qwirkle is officially 2–4 players; allow up to 6 for casual play but flag it.
+    }
+    const n = players.length;
+    const startingPlayer = n ? ((toInt(opts.startingPlayer ?? game.startingPlayer, 0) % n) + n) % n : 0;
+    const openingTiles = n * HAND_SIZE;
+    const tilesInBag = rules.trackBag
+      ? Math.max(0, toInt(opts.tilesInBag ?? game.tilesInBag, TOTAL_TILES - openingTiles))
+      : null;
+    const state = {
+      type: 'qwirkle',
+      gameKey: 'qwirkle',
+      rules,
+      qwirkleRules: rules,
+      players,
+      startingPlayer,
+      currentPlayerIndex: toInt(game.currentPlayerIndex, startingPlayer),
+      turnNumber: Math.max(0, toInt(game.turnNumber, 0)),
+      tilesInBag,
+      history: Array.isArray(game.history) ? clone(game.history) : [],
+      rounds: Array.isArray(game.rounds) ? clone(game.rounds) : [],
+      isGameOver: Boolean(game.isGameOver),
+      winnerIndices: Array.isArray(game.winnerIndices) ? game.winnerIndices.slice() : [],
+      winnerNames: Array.isArray(game.winnerNames) ? game.winnerNames.slice() : [],
+      endReason: game.endReason || null
+    };
+    return state;
+  }
+
+  function getCurrentPlayer(state) {
+    if (!state || !state.players.length) return null;
+    return { index: state.currentPlayerIndex, name: state.players[state.currentPlayerIndex].name };
+  }
+
+  function nextPlayerIndex(state, fromIdx) {
+    const n = state.players.length;
+    if (!n) return 0;
+    return ((toInt(fromIdx, state.currentPlayerIndex) + 1) % n + n) % n;
+  }
+
+  function computeTurnPoints(rules, points, opts) {
+    const base = Math.max(0, toInt(points, 0));
+    const qwirkles = Math.max(0, toInt(opts && opts.qwirkles, 0));
+    const wentOut = Boolean(opts && opts.wentOut);
+    const qwirkleBonus = qwirkles * rules.qwirkleBonus;
+    const wentOutBonus = wentOut ? rules.wentOutBonus : 0;
+    return { base, qwirkles, qwirkleBonus, wentOut, wentOutBonus, total: base + qwirkleBonus + wentOutBonus };
+  }
+
+  function computeWinners(state) {
+    const players = state.players;
+    if (!players.length) return { indices: [], names: [] };
+    const scores = players.map((p) => p.score);
+    const best = state.rules.lowWins ? Math.min(...scores) : Math.max(...scores);
+    const indices = scores.map((s, i) => (s === best ? i : -1)).filter((i) => i >= 0);
+    return { indices, names: indices.map((i) => players[i].name) };
+  }
+
+  function finalize(state, reason) {
+    const w = computeWinners(state);
+    state.isGameOver = true;
+    state.endReason = reason;
+    state.winnerIndices = w.indices;
+    state.winnerNames = w.names;
+    state.players.forEach((p, i) => { p.isWinner = w.indices.includes(i); });
+  }
+
+  /**
+   * scoreTurn(state, playerIdx, points, { qwirkles, wentOut, tilesPlayed, tilesDrawn, enforceTurnOrder, note })
+   *   - points: line points scored this turn (excluding Qwirkle/went-out bonuses).
+   *   - qwirkles: number of lines of 6 completed this turn (+qwirkleBonus each, default +6).
+   *   - wentOut: player emptied their hand with the bag empty (+wentOutBonus, default +6) and ends the game.
+   *   - tilesPlayed: optional; reduces bag by the refill (min(tilesPlayed, bag)).
+   * Returns { ok, error?, turn, state }.
+   */
+  function scoreTurn(state, playerIdx, points, opts) {
+    opts = opts || {};
+    if (!state || !Array.isArray(state.players) || !state.players.length) {
+      return { ok: false, error: 'No players in this Qwirkle game.' };
+    }
+    if (state.isGameOver) return { ok: false, error: 'The game is already over. Undo the last turn to keep playing.' };
+    const idx = playerIdx === undefined || playerIdx === null ? state.currentPlayerIndex : toInt(playerIdx, -1);
+    if (idx < 0 || idx >= state.players.length) return { ok: false, error: 'Invalid player index: ' + playerIdx };
+    if (opts.enforceTurnOrder && idx !== state.currentPlayerIndex) {
+      return { ok: false, error: 'It is ' + state.players[state.currentPlayerIndex].name + "'s turn." };
+    }
+    const rawPts = Number(points);
+    if (!Number.isFinite(rawPts) || rawPts < 0) return { ok: false, error: 'Points must be a number 0 or greater.' };
+    const q = toInt(opts.qwirkles, 0);
+    if (q < 0 || q > 4) return { ok: false, error: 'Qwirkles per turn must be between 0 and 4.' };
+    if (q > 0 && rawPts < 6 * q) {
+      return { ok: false, error: 'Each Qwirkle line is worth at least 6 line points; ' + q + ' Qwirkle(s) need at least ' + (6 * q) + ' line points.' };
+    }
+    if (opts.wentOut && state.rules.trackBag && state.tilesInBag > 0 && !opts.force) {
+      return { ok: false, error: 'You can only go out once the bag is empty (' + state.tilesInBag + ' tiles left). Pass force: true to override.' };
+    }
+
+    const calc = computeTurnPoints(state.rules, rawPts, opts);
+    const snapshot = {
+      players: clone(state.players),
+      currentPlayerIndex: state.currentPlayerIndex,
+      turnNumber: state.turnNumber,
+      tilesInBag: state.tilesInBag,
+      isGameOver: state.isGameOver,
+      winnerIndices: state.winnerIndices.slice(),
+      winnerNames: state.winnerNames.slice(),
+      endReason: state.endReason
+    };
+
+    const p = state.players[idx];
+    p.score += calc.total;
+    p.turns += 1;
+    p.qwirkles += calc.qwirkles;
+    if (calc.total > p.bestTurn) p.bestTurn = calc.total;
+
+    let tilesDrawn = 0;
+    if (state.rules.trackBag && state.tilesInBag !== null) {
+      const want = opts.tilesDrawn !== undefined ? toInt(opts.tilesDrawn, 0)
+        : (opts.tilesPlayed !== undefined ? toInt(opts.tilesPlayed, 0) : 0);
+      tilesDrawn = Math.max(0, Math.min(want, state.tilesInBag));
+      state.tilesInBag -= tilesDrawn;
+    }
+
+    state.turnNumber += 1;
+    const turn = {
+      turn: state.turnNumber,
+      playerIdx: idx,
+      playerName: p.name,
+      points: calc.base,
+      qwirkles: calc.qwirkles,
+      qwirkleBonus: calc.qwirkleBonus,
+      wentOut: calc.wentOut,
+      wentOutBonus: calc.wentOutBonus,
+      total: calc.total,
+      tilesDrawn,
+      tilesInBagAfter: state.tilesInBag,
+      runningScore: p.score,
+      note: opts.note || null,
+      at: opts.at || new Date().toISOString()
+    };
+    state.history.push({ ...turn, _snapshot: snapshot });
+    state.rounds.push({ playerIdx: idx, score: calc.total, detail: { points: calc.base, qwirkles: calc.qwirkles, wentOut: calc.wentOut } });
+    state.currentPlayerIndex = nextPlayerIndex(state, idx);
+
+    if (calc.wentOut) {
+      p.wentOut = true;
+      finalize(state, 'went_out');
+    } else if (state.rules.targetScore > 0 && p.score >= state.rules.targetScore) {
+      finalize(state, 'target');
+    }
+    return { ok: true, turn, state };
+  }
+
+  /** Records a pass/swap (0 points) and advances turn; optional tiles swapped don't change the bag size. */
+  function passTurn(state, playerIdx, opts) {
+    return scoreTurn(state, playerIdx, 0, { ...(opts || {}), qwirkles: 0, wentOut: false, tilesDrawn: 0, note: (opts && opts.note) || 'Pass / swap' });
+  }
+
+  function endGame(state, reason) {
+    if (!state || state.isGameOver) return { ok: false, error: 'Game already over.' };
+    finalize(state, reason || 'manual');
+    return { ok: true, state };
+  }
+
+  function undoLastTurn(state) {
+    if (!state || !state.history.length) return { ok: false, error: 'Nothing to undo.' };
+    const last = state.history.pop();
+    state.rounds.pop();
+    const s = last._snapshot;
+    state.players = s.players;
+    state.currentPlayerIndex = s.currentPlayerIndex;
+    state.turnNumber = s.turnNumber;
+    state.tilesInBag = s.tilesInBag;
+    state.isGameOver = s.isGameOver;
+    state.winnerIndices = s.winnerIndices;
+    state.winnerNames = s.winnerNames;
+    state.endReason = s.endReason;
+    const undone = { ...last };
+    delete undone._snapshot;
+    return { ok: true, undone, state };
+  }
+
+  function getHistory(state) {
+    return (state && state.history ? state.history : []).map((h) => {
+      const c = { ...h };
+      delete c._snapshot;
+      return c;
+    });
+  }
+
+  function getStandings(state) {
+    const low = state.rules.lowWins;
+    const rows = state.players.map((p, i) => ({ index: i, name: p.name, score: p.score, qwirkles: p.qwirkles, bestTurn: p.bestTurn, turns: p.turns }));
+    rows.sort((a, b) => (low ? a.score - b.score : b.score - a.score) || a.index - b.index);
+    let rank = 0;
+    let prev = null;
+    rows.forEach((r, i) => {
+      if (prev === null || r.score !== prev) rank = i + 1;
+      r.rank = rank;
+      prev = r.score;
+    });
+    return rows;
+  }
+
+  function getStats(state) {
+    const hist = getHistory(state);
+    let bestTurn = null;
+    hist.forEach((h) => {
+      if (!bestTurn || h.total > bestTurn.total) bestTurn = { playerIdx: h.playerIdx, playerName: h.playerName, total: h.total, turn: h.turn, qwirkles: h.qwirkles };
+    });
+    const totalQwirkles = state.players.reduce((s, p) => s + p.qwirkles, 0);
+    const perPlayer = state.players.map((p, i) => ({
+      index: i,
+      name: p.name,
+      score: p.score,
+      turns: p.turns,
+      qwirkles: p.qwirkles,
+      bestTurn: p.bestTurn,
+      avgPerTurn: p.turns ? Number((p.score / p.turns).toFixed(1)) : 0
+    }));
+    return { bestTurn, totalQwirkles, totalTurns: hist.length, tilesInBag: state.tilesInBag, perPlayer };
+  }
+
+  /** Serializes to the engine/social_scoring game shape { type, players:[{name,score,...}], rounds }. */
+  function toGameRecord(state, extra) {
+    return {
+      type: 'qwirkle',
+      players: state.players.map((p) => ({ ...p })),
+      rounds: clone(state.rounds),
+      target: state.rules.targetScore || null,
+      houseRules: { ...state.rules },
+      winnerNames: state.winnerNames.slice(),
+      meta: { totalQwirkles: getStats(state).totalQwirkles, endReason: state.endReason },
+      ...(extra || {})
+    };
+  }
+
+  const api = {
+    TOTAL_TILES,
+    HAND_SIZE,
+    DEFAULT_RULES,
+    resolveRules,
+    initState,
+    getCurrentPlayer,
+    nextPlayerIndex,
+    computeTurnPoints,
+    scoreTurn,
+    passTurn,
+    endGame,
+    undoLastTurn,
+    getHistory,
+    getStandings,
+    getStats,
+    toGameRecord
+  };
+
+  global.TallyItQwirkle = api;
+  if (typeof module !== 'undefined' && module.exports) module.exports = api;
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+<!-- v24 local/guest-history linking + leaderboard recompute (window.TallyItPlayerLink) -->
+<script id="player-linking">
+/*
+ * TallyIt v24 — Player linking helpers (pure, no DOM / no network).
+ * Exposes `window.TallyItPlayerLink` in browsers and `module.exports` in Node.
+ *
+ * Use case: someone played as a guest ("Audrey") and later creates an account.
+ * These helpers find their past games, re-attribute the guest name to their
+ * user_id + display name in both local history records and shared-game
+ * (Supabase) records, including Nertz team members, and recompute
+ * leaderboards/stats afterwards (delegating to SocialScoring when available).
+ *
+ * Supported record shapes:
+ *   Local/legacy: { id, type, players: [ 'Name' | { name, score, userId?, members?[] } ], winnerNames?, winner?, rounds? }
+ *   Shared:       { id, game_type, winner_names?, participants|game_participants: [ { user_id, display_name, score, is_winner, members?[], meta? } ] }
+ *   Normalized:   SocialScoring merged records ({ players: [{ name, userId, members? }] , winnerNames })
+ */
+(function (global) {
+  'use strict';
+
+  function getSocial() {
+    if (global.SocialScoring) return global.SocialScoring;
+    try { if (typeof require === 'function') return require('./social_scoring.js'); } catch (_) {}
+    return null;
+  }
+
+  function clone(v) { return v === undefined || v === null ? v : JSON.parse(JSON.stringify(v)); }
+
+  function cleanName(v) { return String(v ?? '').trim().replace(/\s+/g, ' '); }
+
+  function normName(v) {
+    return cleanName(v)
+      .toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9 ]+/g, '')
+      .trim();
+  }
+
+  // ---------- Fuzzy matching ----------
+  function levenshtein(a, b) {
+    if (a === b) return 0;
+    if (!a.length) return b.length;
+    if (!b.length) return a.length;
+    let prev = new Array(b.length + 1);
+    for (let j = 0; j <= b.length; j++) prev[j] = j;
+    for (let i = 1; i <= a.length; i++) {
+      const cur = [i];
+      for (let j = 1; j <= b.length; j++) {
+        cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+      }
+      prev = cur;
+    }
+    return prev[b.length];
+  }
+
+  /**
+   * nameSimilarity(a, b) -> { score 0..1, reason }
+   *   1.0 exact (case/accents/punctuation-insensitive)
+   *   0.9 first-name match ("Audrey" vs "Audrey Wilkinson"), or initial-dot match ("Rand W." vs "Rand Wilkinson")
+   *   0.85 prefix/nickname ("Zach" vs "Zachary")
+   *   0.8 first-name typo vs full name ("Audry" vs "Audrey Wilkinson")
+   *   else 1 - levenshtein/maxLen (typos: "Audry" vs "Audrey" ≈ 0.83)
+   */
+  function nameSimilarity(a, b) {
+    const x = normName(a);
+    const y = normName(b);
+    if (!x || !y) return { score: 0, reason: 'empty' };
+    if (x === y) return { score: 1, reason: 'exact' };
+    const xt = x.split(' ');
+    const yt = y.split(' ');
+    if (xt.length !== yt.length && xt[0] === yt[0]) {
+      const shorter = xt.length < yt.length ? xt : yt;
+      const longer = xt.length < yt.length ? yt : xt;
+      const ok = shorter.every((t, i) => t === longer[i] || (t.length === 1 && longer[i] && longer[i][0] === t));
+      if (ok) return { score: 0.9, reason: 'first_name' };
+    }
+    if (xt.length === yt.length && xt.length > 1 && xt[0] === yt[0]) {
+      const ok = xt.every((t, i) => t === yt[i] || (t.length === 1 && yt[i][0] === t) || (yt[i].length === 1 && t[0] === yt[i]));
+      if (ok) return { score: 0.9, reason: 'initial' };
+    }
+    const fx = xt[0];
+    const fy = yt[0];
+    if (Math.min(fx.length, fy.length) >= 3 && (fx.startsWith(fy) || fy.startsWith(fx))) {
+      return { score: 0.85, reason: 'prefix' };
+    }
+    if (xt.length !== yt.length && Math.min(fx.length, fy.length) >= 4 && levenshtein(fx, fy) === 1 &&
+        (xt.length === 1 || yt.length === 1)) {
+      return { score: 0.8, reason: 'first_name_typo' };
+    }
+    const d = levenshtein(x, y);
+    const score = Math.max(0, 1 - d / Math.max(x.length, y.length));
+    return { score: Number(score.toFixed(3)), reason: 'fuzzy' };
+  }
+
+  // ---------- Shape helpers ----------
+  function isShared(rec) {
+    return Boolean(rec && (Array.isArray(rec.participants) || Array.isArray(rec.game_participants)));
+  }
+
+  function participantList(rec) {
+    if (!rec || typeof rec !== 'object') return [];
+    if (Array.isArray(rec.participants)) return rec.participants;
+    if (Array.isArray(rec.game_participants)) return rec.game_participants;
+    if (Array.isArray(rec.players)) return rec.players;
+    return [];
+  }
+
+  function entryName(p) {
+    if (typeof p === 'string') return cleanName(p);
+    if (!p || typeof p !== 'object') return '';
+    return cleanName(p.display_name || p.displayName || p.name || (p.profile && (p.profile.display_name || p.profile.name)) || '');
+  }
+
+  function entryUserId(p) {
+    if (!p || typeof p !== 'object') return null;
+    const v = p.user_id !== undefined ? p.user_id : (p.userId !== undefined ? p.userId : (p.profile && p.profile.id));
+    return v === undefined || v === null || v === '' ? null : String(v);
+  }
+
+  /** Iterates every person slot in a record (top-level rows and team members). */
+  function forEachSlot(rec, fn) {
+    const list = participantList(rec);
+    list.forEach((p, idx) => {
+      fn({ entry: p, index: idx, memberIndex: null, isTeam: Boolean(p && Array.isArray(p.members) && p.members.length) });
+      if (p && typeof p === 'object' && Array.isArray(p.members)) {
+        p.members.forEach((m, mi) => fn({ entry: m, index: idx, memberIndex: mi, isTeam: false, parent: p }));
+      }
+    });
+  }
+
+  function recordId(rec) {
+    return rec && (rec.id || rec.sharedGameId || rec.shared_game_id || rec.local_game_id || (rec.summary && rec.summary.local_game_id)) || null;
+  }
+
+  function recordWhen(rec) {
+    return rec && (rec.played_at || rec.endTime || rec.playedAt || rec.startTime || rec.created_at) || null;
+  }
+
+  function recordType(rec) {
+    return String((rec && (rec.game_type || rec.type)) || 'other').toLowerCase();
+  }
+
+  // ---------- 1. Suggest matching past games ----------
+  /**
+   * suggestMatchingGames(account, records, opts)
+   *   account: { userId|user_id|id, displayName|display_name|name, aliases?: [] }
+   *   records: array of local and/or shared game records
+   *   opts: { threshold = 0.8, includeLinked = false }
+   * Returns [{ recordId, record, gameType, playedAt, matches: [{ index, memberIndex, guestName, score, reason }], bestScore }]
+   * Only guest slots (no user_id) are suggested; slots already linked to this user are skipped.
+   * Sorted by bestScore desc, then most recent first.
+   */
+  function suggestMatchingGames(account, records, opts) {
+    opts = opts || {};
+    const threshold = opts.threshold !== undefined ? Number(opts.threshold) : 0.8;
+    const uid = account && (account.userId || account.user_id || account.id) ? String(account.userId || account.user_id || account.id) : null;
+    const names = [account && (account.displayName || account.display_name || account.name)]
+      .concat(Array.isArray(account && account.aliases) ? account.aliases : [])
+      .map(cleanName).filter(Boolean);
+    if (!names.length) return [];
+    const out = [];
+    (Array.isArray(records) ? records : []).forEach((rec) => {
+      if (!rec || typeof rec !== 'object') return;
+      let alreadyIn = false;
+      const matches = [];
+      forEachSlot(rec, (slot) => {
+        if (slot.isTeam) return; // team rows are matched through their members
+        const sid = entryUserId(slot.entry);
+        if (uid && sid === uid) { alreadyIn = true; return; }
+        if (sid && !opts.includeLinked) return;
+        const nm = entryName(slot.entry);
+        let best = { score: 0, reason: 'none' };
+        names.forEach((n) => { const s = nameSimilarity(n, nm); if (s.score > best.score) best = s; });
+        if (best.score >= threshold) {
+          matches.push({ index: slot.index, memberIndex: slot.memberIndex, guestName: nm, score: best.score, reason: best.reason, linkedTo: sid });
+        }
+      });
+      if (alreadyIn && !opts.includeLinked) return;
+      if (!matches.length) return;
+      matches.sort((a, b) => b.score - a.score);
+      out.push({
+        recordId: recordId(rec),
+        record: rec,
+        source: isShared(rec) ? 'shared' : 'local',
+        gameType: recordType(rec),
+        playedAt: recordWhen(rec),
+        matches,
+        bestScore: matches[0].score
+      });
+    });
+    out.sort((a, b) => (b.bestScore - a.bestScore) || ((Date.parse(b.playedAt || 0) || 0) - (Date.parse(a.playedAt || 0) || 0)));
+    return out;
+  }
+
+  // ---------- 2. Re-attribute a guest slot ----------
+  function renameInList(list, from, to) {
+    if (!Array.isArray(list)) return list;
+    const f = normName(from);
+    return list.map((n) => (typeof n === 'string' && normName(n) === f ? to : n));
+  }
+
+  function applyLinkToEntry(entry, shared, userId, displayName) {
+    if (typeof entry === 'string') {
+      return { name: displayName, userId, isGuest: false, linkedFromGuest: entry };
+    }
+    const out = { ...entry };
+    const prevName = entryName(entry);
+    if (shared) {
+      out.user_id = userId;
+      out.display_name = displayName;
+      if ('userId' in out) out.userId = userId;
+      if ('name' in out) out.name = displayName;
+      if (out.meta && typeof out.meta === 'object') {
+        out.meta = { ...out.meta, is_guest: false, linked_from_guest: prevName };
+      } else {
+        out.meta = { is_guest: false, linked_from_guest: prevName };
+      }
+    } else {
+      out.name = displayName;
+      out.userId = userId;
+      if ('user_id' in out) out.user_id = userId;
+      if ('display_name' in out) out.display_name = displayName;
+      out.isGuest = false;
+      out.linkedFromGuest = prevName;
+    }
+    return out;
+  }
+
+  /**
+   * linkParticipant(record, target, user, opts) -> { ok, error?, record, changed: [{ index, memberIndex, from }] }
+   *   target: guest name string (case-insensitive) or { index, memberIndex? } or { name }
+   *   user: { userId|user_id|id, displayName|display_name|name }
+   *   opts: { fuzzy = false, threshold = 0.8, overwriteLinked = false, mutate = false }
+   * Returns a NEW record by default (pure). Renames winner name lists too, and
+   * team display names that embed the guest name ("Rand & Audrey").
+   */
+  function linkParticipant(record, target, user, opts) {
+    opts = opts || {};
+    if (!record || typeof record !== 'object') return { ok: false, error: 'No game record.' };
+    const userId = user && (user.userId || user.user_id || user.id) ? String(user.userId || user.user_id || user.id) : null;
+    const displayName = cleanName(user && (user.displayName || user.display_name || user.name));
+    if (!userId) return { ok: false, error: 'A user_id is required to link a player.' };
+    if (!displayName) return { ok: false, error: 'A display name is required to link a player.' };
+
+    const rec = opts.mutate ? record : clone(record);
+    const shared = isShared(rec);
+    const listKey = Array.isArray(rec.participants) ? 'participants' : (Array.isArray(rec.game_participants) ? 'game_participants' : 'players');
+    const list = Array.isArray(rec[listKey]) ? rec[listKey] : [];
+
+    // Resolve target slots
+    const slots = [];
+    if (target && typeof target === 'object' && Number.isInteger(target.index)) {
+      slots.push({ index: target.index, memberIndex: Number.isInteger(target.memberIndex) ? target.memberIndex : null });
+    } else {
+      const guest = typeof target === 'string' ? target : (target && target.name);
+      if (!cleanName(guest)) return { ok: false, error: 'Specify a guest name or slot index to link.' };
+      const threshold = opts.threshold !== undefined ? Number(opts.threshold) : 0.8;
+      const cands = [];
+      forEachSlot(rec, (slot) => {
+        if (slot.isTeam) return;
+        const sim = nameSimilarity(guest, entryName(slot.entry));
+        if (sim.score === 1 || (opts.fuzzy && sim.score >= threshold)) cands.push({ index: slot.index, memberIndex: slot.memberIndex, score: sim.score });
+      });
+      if (!cands.length) return { ok: false, error: 'No participant named "' + cleanName(guest) + '" in this game.' };
+      const top = Math.max(...cands.map((c) => c.score));
+      cands.filter((c) => c.score === top).forEach((c) => slots.push(c));
+    }
+
+    // Guard: user already appears in this game in another slot
+    const occupied = [];
+    forEachSlot(rec, (slot) => {
+      if (entryUserId(slot.entry) === userId) occupied.push(slot.index + ':' + slot.memberIndex);
+    });
+
+    const changed = [];
+    for (const s of slots) {
+      const row = list[s.index];
+      if (row === undefined) return { ok: false, error: 'No participant at index ' + s.index + '.' };
+      let entry = s.memberIndex === null ? row : (row && Array.isArray(row.members) ? row.members[s.memberIndex] : undefined);
+      if (entry === undefined) return { ok: false, error: 'No team member at ' + s.index + '/' + s.memberIndex + '.' };
+      if (s.memberIndex === null && row && Array.isArray(row.members) && row.members.length) {
+        return { ok: false, error: 'That row is a team; link one of its members instead (memberIndex).' };
+      }
+      const existing = entryUserId(entry);
+      if (existing === userId) continue;
+      if (existing && !opts.overwriteLinked) {
+        return { ok: false, error: '"' + entryName(entry) + '" is already linked to another account.' };
+      }
+      if (occupied.some((k) => k !== s.index + ':' + s.memberIndex)) {
+        return { ok: false, error: displayName + ' is already a participant in this game.' };
+      }
+      const from = entryName(entry);
+      const linked = applyLinkToEntry(entry, shared, userId, displayName);
+      if (s.memberIndex === null) {
+        list[s.index] = linked;
+      } else {
+        row.members[s.memberIndex] = linked;
+        // Update team label if it embeds the guest name
+        ['name', 'display_name', 'displayName'].forEach((k) => {
+          if (typeof row[k] === 'string' && from) {
+            const re = new RegExp('\\b' + from.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'i');
+            if (re.test(row[k])) row[k] = row[k].replace(re, displayName);
+          }
+        });
+      }
+      changed.push({ index: s.index, memberIndex: s.memberIndex, from });
+      // Winner name lists (top-level slots only — teams keep their team label)
+      if (s.memberIndex === null && from) {
+        if (Array.isArray(rec.winner_names)) rec.winner_names = renameInList(rec.winner_names, from, displayName);
+        if (Array.isArray(rec.winnerNames)) rec.winnerNames = renameInList(rec.winnerNames, from, displayName);
+        if (typeof rec.winner === 'string' && normName(rec.winner) === normName(from)) rec.winner = displayName;
+        if (rec.summary && Array.isArray(rec.summary.winner_names)) rec.summary.winner_names = renameInList(rec.summary.winner_names, from, displayName);
+      }
+    }
+    rec[listKey] = list;
+    if (changed.length) {
+      rec.linkedParticipants = (Array.isArray(rec.linkedParticipants) ? rec.linkedParticipants : [])
+        .concat(changed.map((c) => ({ ...c, userId, displayName, at: opts.at || new Date().toISOString() })));
+    }
+    return { ok: true, record: rec, changed };
+  }
+
+  /**
+   * linkAcrossRecords(records, links, user, opts)
+   *   links: output of suggestMatchingGames (or [{ recordId, matches:[{index, memberIndex}] }]) — the ones the user confirmed.
+   * Returns { records: newArray, linked: [{ recordId, changed }], errors: [{ recordId, error }] }
+   */
+  function linkAcrossRecords(records, links, user, opts) {
+    const list = Array.isArray(records) ? records.slice() : [];
+    const linked = [];
+    const errors = [];
+    (Array.isArray(links) ? links : []).forEach((ln) => {
+      const pos = list.findIndex((r) => (ln.record && r === ln.record) || (ln.recordId && recordId(r) === ln.recordId));
+      if (pos < 0) { errors.push({ recordId: ln.recordId, error: 'Record not found.' }); return; }
+      const top = (ln.matches || [])[0];
+      if (!top) { errors.push({ recordId: ln.recordId, error: 'No match to link.' }); return; }
+      const res = linkParticipant(list[pos], { index: top.index, memberIndex: top.memberIndex }, user, opts);
+      if (!res.ok) { errors.push({ recordId: ln.recordId, error: res.error }); return; }
+      list[pos] = res.record;
+      linked.push({ recordId: recordId(res.record), changed: res.changed });
+    });
+    return { records: list, linked, errors };
+  }
+
+  /** Builds the Supabase row updates for linked shared games: [{ game_id, participant_index, member_index, user_id, display_name }]. */
+  function buildSharedLinkUpdates(linkResults, user) {
+    const userId = String(user.userId || user.user_id || user.id);
+    const displayName = cleanName(user.displayName || user.display_name || user.name);
+    const out = [];
+    (linkResults || []).forEach((r) => (r.changed || []).forEach((c) => out.push({
+      game_id: r.recordId, participant_index: c.index, member_index: c.memberIndex, user_id: userId, display_name: displayName, previous_name: c.from
+    })));
+    return out;
+  }
+
+  // ---------- 3. Recompute leaderboards & stats ----------
+  /**
+   * recomputeAfterLink(records, opts) -> { leaderboard, byGameType: { [type]: leaderboard }, playerStats(userId|name) }
+   *   Delegates to SocialScoring.computeGroupLeaderboard (team members credited individually).
+   *   opts: { members, gameTypes: ['catan', ...], recentFormLength }
+   */
+  function recomputeAfterLink(records, opts) {
+    opts = opts || {};
+    const social = getSocial();
+    const recs = Array.isArray(records) ? records : [];
+    const compute = (gameType) => {
+      if (social && typeof social.computeGroupLeaderboard === 'function') {
+        return social.computeGroupLeaderboard(recs, opts.members || [], { gameType: gameType || 'all', recentFormLength: opts.recentFormLength });
+      }
+      return fallbackLeaderboard(recs, gameType);
+    };
+    const leaderboard = compute(null);
+    const types = Array.isArray(opts.gameTypes) ? opts.gameTypes : Array.from(new Set(recs.map(recordType)));
+    const byGameType = {};
+    types.forEach((t) => { byGameType[t] = compute(t); });
+    return {
+      leaderboard,
+      byGameType,
+      playerStats(idOrName) {
+        const key = String(idOrName || '');
+        const row = leaderboard.find((r) => (r.userId && r.userId === key) || normName(r.name) === normName(key));
+        if (!row) return null;
+        const perGame = {};
+        Object.keys(byGameType).forEach((t) => {
+          const g = byGameType[t].find((r) => (r.userId && r.userId === key) || normName(r.name) === normName(key));
+          if (g && g.gamesPlayed) perGame[t] = g;
+        });
+        return { ...row, perGame };
+      }
+    };
+  }
+
+  function fallbackLeaderboard(recs, gameType) {
+    const map = new Map();
+    recs.filter((r) => !gameType || recordType(r) === gameType).forEach((rec) => {
+      const winners = new Set((rec.winner_names || rec.winnerNames || []).map(normName));
+      participantList(rec).forEach((p) => {
+        const targets = p && Array.isArray(p.members) && p.members.length ? p.members : [p];
+        const won = Boolean(p && (p.is_winner || p.isWinner)) || winners.has(normName(entryName(p)));
+        targets.forEach((m) => {
+          const uid = entryUserId(m);
+          const key = uid ? 'id:' + uid : 'n:' + normName(entryName(m));
+          const b = map.get(key) || { name: entryName(m), userId: uid, gamesPlayed: 0, wins: 0, totalScore: 0 };
+          b.gamesPlayed += 1; if (won) b.wins += 1; b.totalScore += Number(p && p.score) || 0;
+          map.set(key, b);
+        });
+      });
+    });
+    return Array.from(map.values()).sort((a, b) => b.wins - a.wins || b.gamesPlayed - a.gamesPlayed)
+      .map((r, i) => ({ rank: i + 1, ...r, avgScore: r.gamesPlayed ? Number((r.totalScore / r.gamesPlayed).toFixed(1)) : 0 }));
+  }
+
+  const api = {
+    normName,
+    nameSimilarity,
+    suggestMatchingGames,
+    linkParticipant,
+    linkAcrossRecords,
+    buildSharedLinkUpdates,
+    recomputeAfterLink
+  };
+
+  global.TallyItPlayerLink = api;
+  if (typeof module !== 'undefined' && module.exports) module.exports = api;
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+<!-- v24 player-linking backend (window.TallyItV24Backend) + Link/Claim UI (window.V24Link). Loaded before the engine and auth:
+     the ?claim= deep link is captured (and stripped from the URL) here, before any OAuth redirect -->
+<script id="v24-backend">
+/**
+ * TallyIt — v24 Player Linking Backend (window.TallyItV24Backend)
+ * Drop-in module for game_tracker.html. Uses window.sb (Supabase v2 client).
+ * Requires supabase_v24_player_linking.sql. If the migration hasn't run yet,
+ * every call resolves to { ok:false, unavailable:true, error } and never throws.
+ *
+ * Exposes window.TallyItV24Backend:
+ *   linkGameParticipant(gameId, participant, friendUserId)   creator links a friend (participant = row id or name)
+ *   unlinkGameParticipant(gameId, participant)               creator or the linked player
+ *   createParticipantClaim(gameId, participant)              -> { ok, token, url, participant_name, expires_at }
+ *   previewParticipantClaim(token)                           works signed out
+ *   claimGameParticipant(token)                              signed-in player links themself
+ *   suggestMyUnlinkedGames({ force })                        -> { ok, suggestions: [...] } (30s cache, hides dismissed)
+ *   claimSuggestedParticipant(participantId)                 one-tap "That was me"
+ *   dismissSuggestion(participantId)                         hide a suggestion locally
+ *   buildClaimUrl(token) / parseClaimToken(urlOrSearch)
+ *   capturePendingClaimFromUrl({ stripUrl = true })          call on page load, before auth redirects
+ *   getPendingClaim() / clearPendingClaim()
+ *   consumePendingClaim()                                    call once signed in; claims and clears
+ *   clearCache() / isMigrationReady()
+ *
+ * Fires window event 'tallyit:participant-linked' with detail { game_id, participant_name, user_id, linked_via }
+ * after any successful link or claim so History / leaderboards can refresh.
+ */
+(function (global) {
+  'use strict';
+
+  const CLAIM_BASE_URL = 'https://tallyit.fun/';
+  const CLAIM_PARAM = 'claim';
+  const LS_PENDING = 'gst_v24_pending_claim';
+  const LS_DISMISSED = 'gst_v24_dismissed_suggestions';
+  const SUGGEST_TTL_MS = 30 * 1000;
+  const MIGRATION_RETRY_MS = 30 * 1000;
+  const TOKEN_RE = /^[A-Za-z0-9_-]{16,64}$/;
+
+  let migrationReady = null;
+  let migrationCheckedAt = 0;
+  let suggestCache = null; // { uid, rows, fetchedAt }
+
+  function getClient() { return global.sb || null; }
+
+  async function getAuthUser() {
+    if (global.ScoreAuth && typeof global.ScoreAuth.getUser === 'function') {
+      try { const u = await global.ScoreAuth.getUser(); if (u && u.id) return u; } catch (_) {}
+    }
+    const client = getClient();
+    if (!client || !client.auth || typeof client.auth.getSession !== 'function') return null;
+    try {
+      const { data: { session } } = await client.auth.getSession();
+      return session && session.user ? session.user : null;
+    } catch (_) { return null; }
+  }
+
+  function isMissingMigrationError(err) {
+    if (!err) return false;
+    const code = String(err.code || '').toUpperCase();
+    const msg = String(err.message || err.details || err.hint || '').toLowerCase();
+    if (code === '42P01' || code === '42883' || code === '42703' || code === 'PGRST202' || code === 'PGRST205') return true;
+    return msg.includes('does not exist') || msg.includes('could not find the table') || msg.includes('could not find the function');
+  }
+
+  function markMigrationMissing() { migrationReady = false; migrationCheckedAt = Date.now(); }
+
+  function shouldSkipSupabase(client) {
+    if (!client) return true;
+    if (migrationReady !== false) return false;
+    if (Date.now() - migrationCheckedAt > MIGRATION_RETRY_MS) { migrationReady = null; return false; }
+    return true;
+  }
+
+  function storageGet(store, key) { try { return store ? store.getItem(key) : null; } catch (_) { return null; } }
+  function storageSet(store, key, val) { try { if (store) store.setItem(key, val); } catch (_) {} }
+  function storageDel(store, key) { try { if (store) store.removeItem(key); } catch (_) {} }
+
+  function readJson(key, fallback) {
+    const raw = storageGet(global.localStorage, key);
+    if (!raw) return fallback;
+    try { return JSON.parse(raw); } catch (_) { return fallback; }
+  }
+
+  const UNAVAILABLE = 'Player linking is not available yet. Try again in a bit.';
+
+  function unavailable() { return { ok: false, unavailable: true, error: UNAVAILABLE }; }
+
+  async function callRpc(name, args, { requireUser = true } = {}) {
+    const client = getClient();
+    if (shouldSkipSupabase(client)) return unavailable();
+    if (requireUser) {
+      const user = await getAuthUser();
+      if (!user) return { ok: false, code: 'not_signed_in', error: 'Sign in first.' };
+    }
+    let res;
+    try {
+      res = await client.rpc(name, args || {});
+    } catch (e) {
+      return { ok: false, error: (e && e.message) || 'Network error. Try again.' };
+    }
+    const { data, error } = res || {};
+    if (error) {
+      if (isMissingMigrationError(error)) { markMigrationMissing(); return unavailable(); }
+      return { ok: false, code: error.code || null, error: error.message || 'Something went wrong.' };
+    }
+    migrationReady = true;
+    return { ok: true, data };
+  }
+
+  function dispatchLinked(detail) {
+    try {
+      if (typeof global.dispatchEvent === 'function' && typeof global.CustomEvent === 'function') {
+        global.dispatchEvent(new global.CustomEvent('tallyit:participant-linked', { detail }));
+      }
+    } catch (_) {}
+  }
+
+  // Wrap jsonb RPC replies ({ ok, code, error, ... }) and fire the link event on success
+  async function jsonRpc(name, args, opts, { fireEvent = false } = {}) {
+    const r = await callRpc(name, args, opts);
+    if (!r.ok) return r;
+    const payload = r.data && typeof r.data === 'object' ? r.data : { ok: false, error: 'Unexpected reply.' };
+    if (payload.ok && fireEvent && !payload.already_claimed) {
+      suggestCache = null;
+      dispatchLinked({
+        game_id: payload.game_id || null,
+        participant_name: payload.participant_name || null,
+        user_id: payload.user_id || null,
+        linked_via: payload.linked_via || null
+      });
+    }
+    return payload;
+  }
+
+  function cleanText(v) { return String(v == null ? '' : v).trim(); }
+
+  async function linkGameParticipant(gameId, participant, friendUserId) {
+    if (!gameId || !cleanText(participant) || !friendUserId) return { ok: false, code: 'bad_request', error: 'Pick a player and a friend.' };
+    return jsonRpc('link_game_participant', { p_game_id: gameId, p_participant: cleanText(participant), p_user_id: friendUserId }, undefined, { fireEvent: true });
+  }
+
+  async function unlinkGameParticipant(gameId, participant) {
+    if (!gameId || !cleanText(participant)) return { ok: false, code: 'bad_request', error: 'Pick a player.' };
+    const r = await jsonRpc('unlink_game_participant', { p_game_id: gameId, p_participant: cleanText(participant) });
+    if (r.ok) { suggestCache = null; dispatchLinked({ game_id: gameId, participant_name: r.participant_name || null, user_id: null, linked_via: 'unlink' }); }
+    return r;
+  }
+
+  function buildClaimUrl(token) {
+    return CLAIM_BASE_URL + '?' + CLAIM_PARAM + '=' + encodeURIComponent(token);
+  }
+
+  async function createParticipantClaim(gameId, participant) {
+    if (!gameId || !cleanText(participant)) return { ok: false, code: 'bad_request', error: 'Pick a player.' };
+    const r = await jsonRpc('create_participant_claim', { p_game_id: gameId, p_participant: cleanText(participant) });
+    if (r.ok && r.token && !r.url) r.url = buildClaimUrl(r.token);
+    return r;
+  }
+
+  function parseClaimToken(input) {
+    const s = cleanText(input);
+    if (!s) return null;
+    if (TOKEN_RE.test(s)) return s;
+    let query = s;
+    const qi = s.indexOf('?');
+    if (qi >= 0) query = s.slice(qi + 1);
+    query = query.split('#')[0];
+    const m = query.match(new RegExp('(?:^|&)' + CLAIM_PARAM + '=([^&]+)'));
+    if (!m) return null;
+    let tok;
+    try { tok = decodeURIComponent(m[1]); } catch (_) { return null; }
+    return TOKEN_RE.test(tok) ? tok : null;
+  }
+
+  async function previewParticipantClaim(token) {
+    const t = parseClaimToken(token);
+    if (!t) return { ok: false, code: 'invalid_token', error: 'This claim link is not valid.' };
+    return jsonRpc('preview_participant_claim', { p_token: t }, { requireUser: false });
+  }
+
+  async function claimGameParticipant(token) {
+    const t = parseClaimToken(token);
+    if (!t) return { ok: false, code: 'invalid_token', error: 'This claim link is not valid.' };
+    return jsonRpc('claim_game_participant', { p_token: t }, undefined, { fireEvent: true });
+  }
+
+  function getDismissed() {
+    const d = readJson(LS_DISMISSED, []);
+    return Array.isArray(d) ? d : [];
+  }
+
+  function dismissSuggestion(participantId) {
+    if (!participantId) return false;
+    const d = getDismissed();
+    if (!d.includes(participantId)) { d.push(participantId); storageSet(global.localStorage, LS_DISMISSED, JSON.stringify(d.slice(-500))); }
+    if (suggestCache) suggestCache.rows = suggestCache.rows.filter((r) => r.participant_id !== participantId);
+    return true;
+  }
+
+  async function suggestMyUnlinkedGames(options) {
+    const force = !!(options && options.force);
+    const user = await getAuthUser();
+    if (!user) return { ok: false, code: 'not_signed_in', error: 'Sign in first.', suggestions: [] };
+    if (!force && suggestCache && suggestCache.uid === user.id && Date.now() - suggestCache.fetchedAt < SUGGEST_TTL_MS) {
+      return { ok: true, cached: true, suggestions: suggestCache.rows.slice() };
+    }
+    const r = await callRpc('suggest_my_unlinked_games', {});
+    if (!r.ok) return Object.assign({ suggestions: [] }, r);
+    const dismissed = new Set(getDismissed());
+    const rows = (Array.isArray(r.data) ? r.data : []).filter((s) => s && !dismissed.has(s.participant_id));
+    suggestCache = { uid: user.id, rows, fetchedAt: Date.now() };
+    return { ok: true, suggestions: rows.slice() };
+  }
+
+  async function claimSuggestedParticipant(participantId) {
+    if (!participantId) return { ok: false, code: 'bad_request', error: 'Pick a game.' };
+    return jsonRpc('claim_suggested_participant', { p_participant_id: participantId }, undefined, { fireEvent: true });
+  }
+
+  // ---- Claim deep link: survives the Google OAuth / magic-link round trip ----
+  function savePending(token) {
+    const v = JSON.stringify({ token, savedAt: Date.now() });
+    storageSet(global.sessionStorage, LS_PENDING, v);
+    storageSet(global.localStorage, LS_PENDING, v);
+  }
+
+  function getPendingClaim() {
+    const raw = storageGet(global.sessionStorage, LS_PENDING) || storageGet(global.localStorage, LS_PENDING);
+    if (!raw) return null;
+    try {
+      const p = JSON.parse(raw);
+      if (!p || !TOKEN_RE.test(p.token || '')) return null;
+      if (Date.now() - (p.savedAt || 0) > 30 * 24 * 3600 * 1000) { clearPendingClaim(); return null; }
+      return p.token;
+    } catch (_) { return null; }
+  }
+
+  function clearPendingClaim() {
+    storageDel(global.sessionStorage, LS_PENDING);
+    storageDel(global.localStorage, LS_PENDING);
+  }
+
+  function capturePendingClaimFromUrl(options) {
+    const stripUrl = !options || options.stripUrl !== false;
+    const loc = global.location;
+    if (!loc) return null;
+    const token = parseClaimToken(loc.search || '') || parseClaimToken((loc.hash || '').replace(/^#/, '?'));
+    if (!token) return null;
+    savePending(token);
+    if (stripUrl && global.history && typeof global.history.replaceState === 'function') {
+      try {
+        const params = new URLSearchParams(loc.search || '');
+        params.delete(CLAIM_PARAM);
+        const qs = params.toString();
+        global.history.replaceState(global.history.state, '', loc.pathname + (qs ? '?' + qs : '') + (loc.hash || ''));
+      } catch (_) {}
+    }
+    return token;
+  }
+
+  // Call after sign-in. Keeps the token if the migration is missing or the network fails,
+  // clears it for any final answer (claimed, expired, revoked, invalid, success).
+  async function consumePendingClaim() {
+    const token = getPendingClaim();
+    if (!token) return { ok: false, code: 'no_pending_claim', error: 'Nothing to claim.' };
+    const user = await getAuthUser();
+    if (!user) return { ok: false, code: 'not_signed_in', pending: true, error: 'Sign in to claim this game.' };
+    const r = await claimGameParticipant(token);
+    const finalCodes = ['invalid_token', 'claimed', 'expired', 'revoked', 'already_linked', 'user_already_in_game', 'participant_not_found'];
+    if (r.ok || finalCodes.includes(r.code)) clearPendingClaim();
+    else r.pending = true;
+    return r;
+  }
+
+  function clearCache() { suggestCache = null; }
+  function isMigrationReady() { return migrationReady; }
+
+  global.TallyItV24Backend = {
+    linkGameParticipant,
+    unlinkGameParticipant,
+    createParticipantClaim,
+    previewParticipantClaim,
+    claimGameParticipant,
+    suggestMyUnlinkedGames,
+    claimSuggestedParticipant,
+    dismissSuggestion,
+    buildClaimUrl,
+    parseClaimToken,
+    capturePendingClaimFromUrl,
+    getPendingClaim,
+    clearPendingClaim,
+    consumePendingClaim,
+    clearCache,
+    isMigrationReady,
+    _isMissingMigrationError: isMissingMigrationError
+  };
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+<script id="v24-link-ui">
+/* TallyIt v24 — Link Players After a Game + Claim Flow (UI controller).
+   Pure UI: all persistence goes through a backend adapter set with V24Link.setBackend({...}).
+   Adapter contract (all may return Promises):
+     getGame(gameId)                       -> { id, label, date, createdBy, players:[{ name, userId?, claimStatus?: 'linked'|'pending'|null }] }
+     getFriends()                          -> [{ userId, displayName, friendCode? }]
+     getCurrentUserId()                    -> string|null
+     assignToFriend(gameId, playerName, friendUserId) -> { ok:true } | throws
+     createClaim(gameId, playerName)       -> { code, url, expiresAt? }
+     revokeClaim(code)                     -> { ok:true }
+     lookupClaim(code)                     -> [{ claimId, gameId, label, date, playerName }]
+     getSuggestions()                      -> [{ claimId?, gameId, label, date, playerName }]   (guest names that match the signed-in user)
+     confirmClaims(items)                  -> { ok:true, claimed:n }
+     onLinked?(gameId)                     -> called after any successful link/claim so the app can re-render History
+*/
+(function (global) {
+  'use strict';
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const initials = (n) => String(n || '?').trim().split(/\s+/).slice(0, 2).map((w) => w[0] || '').join('').toUpperCase() || '?';
+  const ICON_CHEV = '<svg class="v24-row-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>';
+  const ICON_CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="5 12.5 10 17 19 7.5"/></svg>';
+  const ICON_LINK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a4.5 4.5 0 0 0 6.4 0l3-3a4.5 4.5 0 0 0-6.4-6.4l-1.2 1.2"/><path d="M14 10a4.5 4.5 0 0 0-6.4 0l-3 3a4.5 4.5 0 0 0 6.4 6.4l1.2-1.2"/></svg>';
+  const ICON_GUEST = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6"/></svg>';
+
+  let backend = null;
+  const st = { game: null, player: null, friends: [], claim: null, claimItems: [], picked: new Set(), dismissed: false };
+
+  function show(el, on) { if (el) el.hidden = !on; }
+  function status(id, msg, isError) { const el = $(id); if (!el) return; el.textContent = msg || ''; el.classList.toggle('is-error', !!isError); el.hidden = !msg; }
+  function step(name) { ['players', 'assign', 'claim'].forEach((s) => show($('v24-step-' + s), s === name)); status('v24-link-status', ''); }
+  async function call(fn, ...args) { if (!backend || typeof backend[fn] !== 'function') throw new Error('Linking is not available yet.'); return backend[fn](...args); }
+
+  /* ---------- History trigger ---------- */
+  function renderLinkButton(game) {
+    if (!game || !backend) return '';
+    const uid = backend.getCurrentUserId ? backend.getCurrentUserId() : null;
+    if (!uid || !game.createdBy || String(game.createdBy) !== String(uid)) return '';
+    const guests = (game.players || []).filter((p) => !p.userId && p.claimStatus !== 'linked').length;
+    if (!guests) return '';
+    return `<button type="button" class="v24-link-trigger" data-v24-game="${esc(game.id)}" onclick="V24Link.openLinkSheet('${esc(game.id)}')">${ICON_LINK}<span>Link players</span><span class="v24-link-count">${guests}</span></button>`;
+  }
+
+  /* ---------- Link sheet (creator) ---------- */
+  async function openLinkSheet(gameId) {
+    try {
+      st.game = await call('getGame', gameId);
+      if (!st.game) return;
+      $('v24-link-game').textContent = [st.game.label, st.game.date].filter(Boolean).join(' · ');
+      renderPlayers(); step('players'); show($('v24-link-sheet'), true);
+    } catch (e) { alert(e.message || 'Could not open this game.'); }
+  }
+  function closeLinkSheet() { show($('v24-link-sheet'), false); st.game = null; st.player = null; st.claim = null; }
+  function renderPlayers() {
+    const uid = backend && backend.getCurrentUserId ? backend.getCurrentUserId() : null;
+    $('v24-player-list').innerHTML = (st.game.players || []).map((p, i) => {
+      const you = p.userId && uid && String(p.userId) === String(uid);
+      const linked = !!p.userId || p.claimStatus === 'linked';
+      const pill = you ? '<span class="v24-pill v24-pill-you">You</span>'
+        : linked ? '<span class="v24-pill v24-pill-linked">Linked</span>'
+        : p.claimStatus === 'pending' ? '<span class="v24-pill v24-pill-pending">Link sent</span>'
+        : '<span class="v24-pill v24-pill-guest">Guest</span>';
+      return `<button type="button" class="v24-row" role="listitem" ${linked ? 'disabled' : `onclick="V24Link.pickPlayer(${i})"`}>
+        <span class="v24-avatar${linked ? '' : ' v24-avatar-guest'}" aria-hidden="true">${linked ? esc(initials(p.name)) : ICON_GUEST}</span>
+        <span class="v24-row-main"><span class="v24-row-name">${esc(p.name)}</span></span>${pill}${linked ? '' : ICON_CHEV}</button>`;
+    }).join('');
+  }
+  async function pickPlayer(i) {
+    st.player = (st.game.players || [])[i]; if (!st.player) return;
+    $('v24-assign-name').textContent = st.player.name;
+    $('v24-friend-search').value = '';
+    try { st.friends = (await call('getFriends')) || []; } catch (_) { st.friends = []; }
+    filterFriends(''); step('assign');
+  }
+  function filterFriends(q) {
+    const needle = String(q || '').trim().toLowerCase();
+    const taken = new Set((st.game.players || []).filter((p) => p.userId).map((p) => String(p.userId)));
+    const list = st.friends.filter((f) => !taken.has(String(f.userId)) && (!needle || String(f.displayName || '').toLowerCase().includes(needle) || String(f.friendCode || '').toLowerCase().includes(needle)));
+    $('v24-friend-list').innerHTML = list.map((f) => `<button type="button" class="v24-row" role="listitem" onclick="V24Link.assignFriend('${esc(f.userId)}')">
+      <span class="v24-avatar" aria-hidden="true">${esc(initials(f.displayName))}</span>
+      <span class="v24-row-main"><span class="v24-row-name">${esc(f.displayName || 'Friend')}</span>${f.friendCode ? `<span class="v24-row-sub">${esc(f.friendCode)}</span>` : ''}</span>${ICON_CHEV}</button>`).join('');
+    show($('v24-friend-empty'), !list.length);
+  }
+  async function assignFriend(friendUserId) {
+    const f = st.friends.find((x) => String(x.userId) === String(friendUserId));
+    if (!st.player || !f) return;
+    if (!confirm(`Link ${st.player.name} in this game to ${f.displayName}?`)) return;
+    try {
+      await call('assignToFriend', st.game.id, st.player.name, f.userId);
+      st.player.userId = f.userId; st.player.claimStatus = 'linked';
+      renderPlayers(); step('players'); status('v24-link-status', `${st.player.name} is now linked to ${f.displayName}.`);
+      if (backend.onLinked) backend.onLinked(st.game.id);
+    } catch (e) { status('v24-link-status', e.message || 'Could not link that player.', true); }
+  }
+  async function createClaim() {
+    if (!st.player) return;
+    try {
+      st.claim = await call('createClaim', st.game.id, st.player.name);
+      st.player.claimStatus = 'pending';
+      $('v24-claim-for').textContent = st.player.name;
+      $('v24-claim-code').textContent = st.claim.code || '';
+      $('v24-claim-url').value = st.claim.url || '';
+      const canRevoke = !!(backend && typeof backend.revokeClaim === 'function');
+      show($('v24-btn-revoke'), canRevoke);
+      if (st.claim.expiresAt) $('v24-claim-expiry').textContent = `Link expires ${new Date(st.claim.expiresAt).toLocaleDateString()}.` + (canRevoke ? ' You can revoke it anytime.' : ' It works once, for one person.');
+      step('claim');
+    } catch (e) { status('v24-link-status', e.message || 'Could not create a claim link.', true); }
+  }
+  async function copyClaim() {
+    const txt = (st.claim && (st.claim.url || st.claim.code)) || '';
+    try { await navigator.clipboard.writeText(txt); status('v24-link-status', 'Copied.'); }
+    catch (_) { const el = $('v24-claim-url'); el.select(); try { document.execCommand('copy'); status('v24-link-status', 'Copied.'); } catch (__) {} }
+  }
+  async function shareClaim() {
+    if (!st.claim) return;
+    const text = `I added you to a ${st.game.label || 'game'} on TallyIt. Claim it with code ${st.claim.code}`;
+    if (navigator.share) { try { await navigator.share({ title: 'TallyIt game', text, url: st.claim.url }); } catch (_) {} }
+    else copyClaim();
+  }
+  async function revokeClaim() {
+    if (!st.claim || !confirm('Revoke this claim link?')) return;
+    try { await call('revokeClaim', st.claim.code); st.player.claimStatus = null; st.claim = null; renderPlayers(); step('players'); status('v24-link-status', 'Link revoked.'); }
+    catch (e) { status('v24-link-status', e.message || 'Could not revoke.', true); }
+  }
+  function backToPlayers() { renderPlayers(); step('players'); }
+
+  /* ---------- Claim sheet (newly signed-in player) ---------- */
+  function renderClaimItems() {
+    const items = st.claimItems;
+    $('v24-claim-list').innerHTML = items.map((g, i) => `<button type="button" class="v24-row${st.picked.has(i) ? ' is-picked' : ''}" role="listitem" aria-pressed="${st.picked.has(i)}" onclick="V24Link.toggleClaimItem(${i})">
+      <span class="v24-check" aria-hidden="true">${ICON_CHECK}</span>
+      <span class="v24-row-main"><span class="v24-row-name">${esc(g.label || 'Game')}</span><span class="v24-row-sub">${esc([g.date, g.playerName ? 'as ' + g.playerName : ''].filter(Boolean).join(' · '))}</span></span></button>`).join('');
+    show($('v24-claim-empty'), !items.length);
+    $('v24-btn-claim-confirm').disabled = !st.picked.size;
+  }
+  function toggleClaimItem(i) { st.picked.has(i) ? st.picked.delete(i) : st.picked.add(i); renderClaimItems(); }
+  async function openClaimSheet(code) {
+    status('v24-claim-status', '');
+    st.picked = new Set(); st.claimItems = [];
+    show($('v24-code-entry'), !code);
+    try { st.claimItems = (code ? await call('lookupClaim', code) : await call('getSuggestions')) || []; } catch (e) { status('v24-claim-status', e.message || 'Could not load games.', true); }
+    if (code) st.claimItems.forEach((_, i) => st.picked.add(i));
+    $('v24-claim-title').textContent = code ? 'Is this you?' : 'Were you in these games?';
+    renderClaimItems(); show($('v24-claim-sheet'), true);
+  }
+  function closeClaimSheet() { show($('v24-claim-sheet'), false); }
+  async function lookupCode() {
+    const code = String($('v24-code-input').value || '').trim(); if (!code) return;
+    try {
+      const found = (await call('lookupClaim', code)) || [];
+      const start = st.claimItems.length;
+      found.forEach((g) => { if (!st.claimItems.some((x) => x.gameId === g.gameId && x.playerName === g.playerName)) st.claimItems.push(g); });
+      for (let i = start; i < st.claimItems.length; i++) st.picked.add(i);
+      renderClaimItems(); status('v24-claim-status', found.length ? '' : 'That code did not match any game.', !found.length);
+    } catch (e) { status('v24-claim-status', e.message || 'Could not check that code.', true); }
+  }
+  async function confirmClaims() {
+    const items = [...st.picked].map((i) => st.claimItems[i]).filter(Boolean); if (!items.length) return;
+    try {
+      const r = await call('confirmClaims', items);
+      const n = (r && r.claimed) || items.length;
+      st.claimItems = st.claimItems.filter((_, i) => !st.picked.has(i)); st.picked = new Set(); renderClaimItems();
+      status('v24-claim-status', `${n} ${n === 1 ? 'game' : 'games'} added to your History.`);
+      if (backend.onLinked) items.forEach((g) => backend.onLinked(g.gameId));
+      refreshSuggestions();
+      setTimeout(() => { if (!st.claimItems.length) closeClaimSheet(); }, 1200);
+    } catch (e) { status('v24-claim-status', e.message || 'Could not claim those games.', true); }
+  }
+
+  /* ---------- Home suggestion banner ---------- */
+  async function refreshSuggestions() {
+    const b = $('v24-suggest-banner'); if (!b) return;
+    if (st.dismissed || !backend || !backend.getSuggestions) { show(b, false); return; }
+    try {
+      const s = (await backend.getSuggestions()) || [];
+      $('v24-suggest-sub').textContent = `${s.length} ${s.length === 1 ? 'game lists' : 'games list'} a player who might be you`;
+      show(b, s.length > 0);
+    } catch (_) { show(b, false); }
+  }
+  function dismissSuggestions() { st.dismissed = true; try { sessionStorage.setItem('v24-suggest-dismissed', '1'); } catch (_) {} show($('v24-suggest-banner'), false); }
+
+  /* ---------- Boot: ?claim=CODE deep link (call after sign-in) ---------- */
+  function handleClaimUrl() {
+    let code = null;
+    try { const u = new URL(location.href); code = u.searchParams.get('claim'); if (code) { u.searchParams.delete('claim'); history.replaceState(null, '', u.pathname + u.search + u.hash); } } catch (_) {}
+    if (code) { try { sessionStorage.setItem('v24-pending-claim', code); } catch (_) {} }
+    try { code = code || sessionStorage.getItem('v24-pending-claim'); } catch (_) {}
+    const uid = backend && backend.getCurrentUserId ? backend.getCurrentUserId() : null;
+    if (code && uid) { try { sessionStorage.removeItem('v24-pending-claim'); } catch (_) {} openClaimSheet(code); return true; }
+    return false;
+  }
+  function setBackend(b) {
+    backend = b || null;
+    try { st.dismissed = sessionStorage.getItem('v24-suggest-dismissed') === '1'; } catch (_) {}
+  }
+
+  global.V24Link = {
+    setBackend, renderLinkButton, openLinkSheet, closeLinkSheet, pickPlayer, filterFriends, assignFriend,
+    createClaim, copyClaim, shareClaim, revokeClaim, backToPlayers,
+    openClaimSheet, closeClaimSheet, toggleClaimItem, lookupCode, confirmClaims,
+    refreshSuggestions, dismissSuggestions, handleClaimUrl,
+  };
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+<script id="v24-claim-capture">
+try { if (window.TallyItV24Backend) window.TallyItV24Backend.capturePendingClaimFromUrl(); } catch (_) {}
+</script>
+
 <!-- Reusable dice roller + roll tracker logic (window.DiceLogic) -->
 <script id="dice-logic">
 /* ==========================================================================
@@ -19618,6 +21528,7 @@ window.SocialUI = (function () {
     hearts:      'Hearts',
     nertz:       'Nertz',
     rummikub:    'Rummikub',
+    qwirkle:     'Qwirkle',
     other:       'Custom'
   };
 
@@ -20238,6 +22149,8 @@ window.SocialUI = (function () {
       target: (v) => (/150/.test(v || '') ? 150 : /50\b/.test(v || '') ? 50 : 100), detailedLabel: 'Round' },
     { id: 'rummikub', name: 'Rummikub', img: 'assets/games/rummikub.svg', art: 'assets/games/rummikub.svg', icon: '▦', low: true, minPlayers: 2, maxPlayers: 6,
       versions: ['Points Up (Lowest Wins)', 'Classic (+/−)'], target: () => null, detailedLabel: 'Round' },
+    { id: 'qwirkle', name: 'Qwirkle', img: 'assets/games/qwirkle.svg', art: 'assets/games/qwirkle.svg', icon: 'Q', minPlayers: 2, maxPlayers: 6,
+      versions: ['Standard (play it out)', 'Short game (to 300)'], target: (v) => (/300/.test(v || '') ? 300 : null), detailedLabel: 'Turn' },
     { id: 'other', name: 'Custom', img: 'assets/games/custom.svg', icon: '✏️',
       versions: ['Custom rules'], target: () => null, detailedLabel: null }
   ];
@@ -20271,6 +22184,9 @@ window.SocialUI = (function () {
   const OHL = () => global.TallyItOhHell || null;
   const isHt = () => !!(currentGame && currentGame.type === 'hearts' && HTL());
   const isOh = () => !!(currentGame && currentGame.type === 'ohhell' && OHL());
+  // v24 Qwirkle
+  const QWL = () => global.TallyItQwirkle || null;
+  const isQw = () => !!(currentGame && currentGame.type === 'qwirkle' && QWL());
   let htSel = -1, htForceArmed = false, ohForceMsg = '';
   const deselected = new Set();
   let scoringPlayer = null, padMode = 'simple';
@@ -20328,6 +22244,7 @@ window.SocialUI = (function () {
       if (g.type === '7wonders' && global.SevenWondersLogic) { global.SevenWondersLogic.ensureSevenWondersState(g); if (!Array.isArray(g.swDone)) g.swDone = []; }
       if (g.type === 'hearts' && global.TallyItHearts) global.TallyItHearts.initState(g);
       if (g.type === 'ohhell' && global.TallyItOhHell) global.TallyItOhHell.initState(g);
+      if (g.type === 'qwirkle' && global.TallyItQwirkle && (!g.qw || !Array.isArray(g.qw.players) || g.qw.players.length !== g.players.length)) g.qw = null;
       if (g.type === 'catan' && !g.targetVp) g.targetVp = gameById('catan').target(g.version);
       return g;
     } catch (_) { return null; }
@@ -20425,7 +22342,7 @@ window.SocialUI = (function () {
   function onAuthSignedOut() {
     currentUser = null; initializedUserId = null; players = []; history = []; currentGame = null; pendingSync = false;
     scoringPlayer = null; currentView = 'home'; closeDiceModal();
-    document.body.classList.remove('theme-catan', 'theme-flip7', 'theme-carcassonne', 'theme-nertz', 'theme-rummikub', 'theme-seven-wonders', 'theme-hearts', 'theme-ohhell'); f7 = null; swExpOpen = false; rkCalcOpen = false; rkCalcExpr = ''; nzSheetKind = null; nzPopIdx = -1;
+    document.body.classList.remove('theme-catan', 'theme-flip7', 'theme-carcassonne', 'theme-nertz', 'theme-rummikub', 'theme-seven-wonders', 'theme-hearts', 'theme-ohhell', 'theme-qwirkle'); f7 = null; swExpOpen = false; rkCalcOpen = false; rkCalcExpr = ''; nzSheetKind = null; nzPopIdx = -1;
     if (typeof unsubFriendships === 'function') { unsubFriendships(); unsubFriendships = null; }
     lastFriendsError = null;
     if (V20() && V20().onAuthChange) { try { V20().onAuthChange(null); } catch (_) {} }
@@ -20453,6 +22370,9 @@ window.SocialUI = (function () {
     document.body.classList.toggle('theme-hearts', hton);
     const ohon = currentView === 'active' && isOh();
     document.body.classList.toggle('theme-ohhell', ohon);
+    const qwon = currentView === 'active' && isQw();
+    document.body.classList.toggle('theme-qwirkle', qwon);
+    if (!qwon) qwMsg = '';
     if (!hton) { htSel = -1; htForceArmed = false; }
     if (!ohon) ohForceMsg = '';
     if (!swon) swExpOpen = false;
@@ -20462,7 +22382,7 @@ window.SocialUI = (function () {
     if (!f7on) { const s = byId('f7-sheet'); if (s && !s.hidden) { setHidden(s, true); s.innerHTML = ''; } }
     syncDiceTrigger();
     const meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.setAttribute('content', on ? '#180f08' : f7on ? '#4bbdb8' : ccon ? '#6fa6d8' : nzon ? '#071222' : rkon ? '#0b2f69' : swon ? '#eadbc0' : (hton || ohon) ? '#f5f0e6' : '#0c0d10');
+    if (meta) meta.setAttribute('content', on ? '#180f08' : f7on ? '#4bbdb8' : ccon ? '#6fa6d8' : nzon ? '#071222' : rkon ? '#0b2f69' : swon ? '#eadbc0' : (hton || ohon) ? '#f5f0e6' : qwon ? '#fbf7ee' : '#0c0d10');
   }
   function showView(v) {
     if (!byId('view-' + v)) v = 'home';
@@ -20498,6 +22418,7 @@ window.SocialUI = (function () {
     if (meta) meta.textContent = resumeMeta(hgame);
     if (rb) rb.setAttribute('aria-label', hgame ? 'Resume ' + resumeMeta(hgame) : 'Resume Active Game');
     v21RenderActiveGames(hg ? hg.id : null);
+    if (currentUser) v24RefreshSuggestions();
     const el = byId('recent-list');
     if (!el) return;
     el.innerHTML = history.length
@@ -20565,7 +22486,7 @@ window.SocialUI = (function () {
     v21UpdateSetupMeta();
   }
   // v23: game-themed Setup screen (#setup-screen.setup-theme-<gameKey>) only while on the Setup step
-  const V23_THEMES = ['catan', '7wonders', 'flip7', 'carcassonne', 'rummikub', 'nertz', 'hearts', 'ohhell', 'other'];
+  const V23_THEMES = ['catan', '7wonders', 'flip7', 'carcassonne', 'rummikub', 'nertz', 'hearts', 'ohhell', 'qwirkle', 'other'];
   function v23ApplySetupTheme(on) {
     const scr = byId('setup-screen'); if (!scr) return;
     [...scr.classList].filter((c) => c.indexOf('setup-theme-') === 0).forEach((c) => scr.classList.remove(c));
@@ -20680,6 +22601,7 @@ window.SocialUI = (function () {
     if (g.id === '7wonders' && SWL()) swStartGame();
     if (g.id === 'hearts' && HTL()) htStartGame();
     if (g.id === 'ohhell' && OHL()) ohStartGame();
+    if (g.id === 'qwirkle' && QWL()) qwStartGame();
     if (v22o && g.id === 'rummikub' && v22o.scoringMode && RKL()) { currentGame.rkScoringMode = v22o.scoringMode === 'classic' ? 'classic' : 'points_up'; RKL().rkNormalize(currentGame); }
     scoringPlayer = null; padMode = 'simple'; f7 = null;
     currentGame.v20Recorded = true;
@@ -20709,7 +22631,7 @@ window.SocialUI = (function () {
   function v21ResetTransient() {
     scoringPlayer = null; f7 = null; flip = null; padMode = 'simple';
     swExpOpen = false; swEditKey = null; rkCalcOpen = false; rkCalcExpr = ''; nzSheetKind = null; nzPopIdx = -1;
-    htSel = -1; htForceArmed = false; ohForceMsg = '';
+    htSel = -1; htForceArmed = false; ohForceMsg = ''; qwMsg = '';
   }
   // v21: park the focused game in In Progress (saved, focus cleared) without navigating
   function v21ParkCurrent() {
@@ -20777,6 +22699,7 @@ window.SocialUI = (function () {
     if (isSw()) return swUndoAction();
     if (isHt()) return HeartsUI.undoHand();
     if (isOh()) return OhHellUI.undoRound();
+    if (isQw()) return QwirkleUI.undoTurn();
     if (!currentGame || !currentGame.rounds.length) return null;
     const r = currentGame.rounds.pop();
     currentGame.players.forEach((p, i) => { p.score = Array.isArray(r.prev) && r.prev[i] !== undefined ? r.prev[i] : p.score - ((r.deltas || [])[i] || 0); });
@@ -20824,6 +22747,7 @@ window.SocialUI = (function () {
       ['undoStack', 'swDone', 'activeCategory'].forEach((k) => delete finished[k]);
     } else {
       finished = { ...currentGame, endTime: new Date().toISOString() };
+      if (isQw()) qwPrepareFinish(finished);
       finished.winner = computeWinner(finished);
       if (finished.type === 'hearts' || finished.type === 'ohhell') ['htDraft', 'htMoon', 'ohDraft', 'ohDraftRound', 'ohTrump', 'currentCards', 'currentDealerIndex', 'currentTrump', 'currentRoundIndex'].forEach((k) => delete finished[k]);
     }
@@ -20855,7 +22779,7 @@ window.SocialUI = (function () {
       setHidden(byId('gen-pad'), true); setHidden(byId('gen-undo'), true);
       return;
     }
-    if (isCatan()) renderCatan(); else if (isFlip7()) renderFlip7(); else if (isCarc()) renderCarc(); else if (isNertz()) renderNertz(); else if (isRk()) renderRummikub(); else if (isSw()) renderSevenWonders(); else if (isHt()) renderHearts(); else if (isOh()) renderOhHell(); else renderGeneric();
+    if (isCatan()) renderCatan(); else if (isFlip7()) renderFlip7(); else if (isCarc()) renderCarc(); else if (isNertz()) renderNertz(); else if (isRk()) renderRummikub(); else if (isSw()) renderSevenWonders(); else if (isHt()) renderHearts(); else if (isOh()) renderOhHell(); else if (isQw()) renderQwirkle(); else renderGeneric();
   }
 
   // ----- Generic (neutral) games -----
@@ -20882,6 +22806,7 @@ window.SocialUI = (function () {
     if (isSw()) return;
     if (isHt()) { HeartsUI.selectPlayer(idx); return; }
     if (isOh()) return;
+    if (isQw()) { QwirkleUI.selectPlayer(idx); return; }
     scoringPlayer = idx;
     if (isCatan()) { selectCatanPlayer(idx); return; }
     if (isFlip7()) { f7Select(idx); return; }
@@ -22663,6 +24588,266 @@ window.SocialUI = (function () {
     }
   };
 
+  // ---------------- v24 Qwirkle: Bright Playful Tile Grid (window.QwirkleUI backed by window.TallyItQwirkle) ----------------
+  const QW_COLORS = ['red', 'orange', 'yellow', 'green', 'blue', 'purple'];
+  const QW_SHAPES = ['circle', 'square', 'diamond', 'clover', 'star', 'burst'];
+  let qwMsg = '';
+  function qwFreshDraft(idx) { return { idx: typeof idx === 'number' ? idx : 0, points: 0, qwirkles: 0, wentOut: false, picked: null }; }
+  function qwStartGame() {
+    const L = QWL(); if (!L || !currentGame) return;
+    currentGame.qw = L.initState({ players: currentGame.players.map((p) => ({ name: p.name })), houseRules: currentGame.houseRules || {}, target: currentGame.target || 0 });
+    currentGame.qwDraft = qwFreshDraft(currentGame.qw.currentPlayerIndex);
+    qwMsg = ''; qwSync();
+  }
+  function qwEnsure() {
+    const L = QWL(); if (!L || !currentGame) return null;
+    const q = currentGame.qw;
+    if (!q || !Array.isArray(q.players) || q.players.length !== currentGame.players.length) qwStartGame();
+    const d = currentGame.qwDraft;
+    if (!d || typeof d.idx !== 'number' || d.idx < 0 || d.idx >= currentGame.players.length) currentGame.qwDraft = qwFreshDraft(currentGame.qw.currentPlayerIndex);
+    return currentGame.qw;
+  }
+  // Mirror the Qwirkle state into the engine's shape so History, stats, sessions and cloud sync work like every other game
+  function qwSync() {
+    const q = currentGame && currentGame.qw; if (!q) return;
+    currentGame.players.forEach((p, i) => {
+      const s = q.players[i] || {};
+      p.score = Number(s.score) || 0; p.qwirkles = Number(s.qwirkles) || 0; p.bestTurn = Number(s.bestTurn) || 0; p.turns = Number(s.turns) || 0;
+      if (s.wentOut) p.wentOut = true; else delete p.wentOut;
+    });
+    currentGame.rounds = (q.history || []).map((h) => {
+      const prev = h._snapshot && Array.isArray(h._snapshot.players) ? h._snapshot.players.map((p) => Number(p.score) || 0) : currentGame.players.map(() => 0);
+      return { ts: h.at, by: h.playerIdx, mode: 'qwirkle', prev, deltas: currentGame.players.map((_, i) => (i === h.playerIdx ? h.total : 0)),
+        detail: { player: h.playerIdx, points: h.points, qwirkles: h.qwirkles, wentOut: !!h.wentOut, tilesDrawn: h.tilesDrawn || 0, tilesInBag: h.tilesInBagAfter } };
+    });
+  }
+  function qwDraftTotal(q, d) { return QWL().computeTurnPoints(q.rules, d.points, { qwirkles: d.qwirkles, wentOut: d.wentOut }).total; }
+  function renderQwirkle() {
+    const q = qwEnsure(); if (!q) return;
+    const g = currentGame, d = g.qwDraft, n = g.players.length;
+    const set = (id, t) => { const el = byId(id); if (el) el.textContent = t; };
+    set('qw-turn-label', q.isGameOver ? 'Game over' + (q.winnerNames.length ? ' · ' + q.winnerNames.join(' & ') + (q.winnerNames.length > 1 ? ' tie' : ' wins') : '') : 'Turn ' + (q.turnNumber + 1));
+    const bag = byId('qw-bag');
+    if (bag) bag.hidden = !q.rules.trackBag || q.tilesInBag === null;
+    set('qw-bag-count', q.tilesInBag === null ? '0' : String(q.tilesInBag));
+    const last = new Array(n).fill(null);
+    (q.history || []).forEach((h) => { last[h.playerIdx] = h.total; });
+    const scores = q.players.map((p) => p.score), best = q.rules.lowWins ? Math.min(...scores) : Math.max(...scores);
+    const anyTurns = (q.history || []).length > 0;
+    const cards = byId('qw-player-cards');
+    if (cards) cards.innerHTML = g.players.map((p, i) => {
+      const cur = i === d.idx, lead = anyTurns && q.players[i].score === best, lt = last[i];
+      const delta = lt === null ? '&ndash;' : (lt > 0 ? '+' + lt : '0');
+      const dcls = lt === null || lt === 0 ? ' is-zero' : (lt < 4 ? ' is-low' : '');
+      return `<button type="button" class="qw-pcard${cur ? ' is-current' : ''}${lead ? ' is-leader' : ''}" data-idx="${i}" role="option" aria-selected="${cur}" onclick="QwirkleUI.selectPlayer(${i})">
+        <span class="qw-ptile qw-c-${QW_COLORS[i % 6]}"><svg><use href="#qw-sh-${QW_SHAPES[i % 6]}"/></svg></span>
+        <span class="qw-pname">${esc(p.name)}</span>
+        <span class="qw-ptotal">${q.players[i].score}</span>
+        <span class="qw-pdelta${dcls}">${delta}</span>
+      </button>`;
+    }).join('');
+    set('qw-turn-player', g.players[d.idx] ? g.players[d.idx].name : '');
+    set('qw-turn-points', String(qwDraftTotal(q, d)));
+    const eq = document.querySelector('#qw-turn-total .qw-turn-eq');
+    if (eq) { eq.textContent = qwMsg || 'this turn'; eq.style.color = qwMsg ? '#C62828' : ''; eq.dataset.error = qwMsg ? '1' : ''; }
+    document.querySelectorAll('#qw-chip-grid .qw-chip').forEach((c) => c.classList.toggle('is-picked', Number(c.dataset.pts) === d.picked));
+    const qb = byId('qw-btn-qwirkle');
+    if (qb) { qb.setAttribute('aria-pressed', String(d.qwirkles > 0)); qb.textContent = d.qwirkles > 1 ? `${d.qwirkles} Qwirkles +${d.qwirkles * q.rules.qwirkleBonus}` : `Qwirkle +${q.rules.qwirkleBonus}`; qb.disabled = q.isGameOver; }
+    const wb = byId('qw-btn-wentout');
+    if (wb) { wb.setAttribute('aria-pressed', String(!!d.wentOut)); wb.textContent = `Went Out +${q.rules.wentOutBonus}`; wb.disabled = q.isGameOver; }
+    const add = byId('qw-btn-add');
+    if (add) { add.disabled = q.isGameOver; add.textContent = q.isGameOver ? 'Game over · tap End to save' : (qwDraftTotal(q, d) === 0 ? 'Pass / Swap Tiles' : 'Add Turn'); }
+    const undo = byId('qw-btn-undo'); if (undo) undo.disabled = !(q.history || []).length;
+    const hist = QWL().getHistory(q);
+    set('qw-history-count', hist.length + (hist.length === 1 ? ' turn' : ' turns'));
+    const hl = byId('qw-history-list');
+    if (hl) hl.innerHTML = hist.length ? hist.slice().reverse().map((h) => `<div class="qw-history-item" data-turn="${h.turn}">
+        <span class="qw-h-turn">T${h.turn}</span> <strong class="qw-h-name">${esc(h.playerName)}</strong>
+        <span class="qw-h-pts">${h.total > 0 ? '+' + h.total : (h.note ? esc(h.note) : '0')}</span>
+        ${h.qwirkles ? `<span class="qw-h-tag">${h.qwirkles > 1 ? h.qwirkles + ' Qwirkles' : 'Qwirkle'}</span>` : ''}${h.wentOut ? '<span class="qw-h-tag">Went Out</span>' : ''}
+        <span class="qw-h-run">${h.runningScore}</span>
+      </div>`).join('') : '<div class="qw-history-empty">No turns recorded yet.</div>';
+  }
+  function qwCommit() { qwSync(); persistActive(); renderQwirkle(); }
+  const QwirkleUI = {
+    render: () => { if (isQw()) renderQwirkle(); },
+    selectPlayer(i) { if (!isQw() || !currentGame.players[i]) return; qwEnsure(); currentGame.qwDraft.idx = i; qwMsg = ''; persistActive(); renderQwirkle(); },
+    addPoints(n) {
+      if (!isQw()) return; const q = qwEnsure(); if (q.isGameOver) return;
+      const v = Math.max(0, Math.trunc(Number(n) || 0)); const d = currentGame.qwDraft;
+      d.points = Math.min(999, d.points + v); d.picked = v; qwMsg = ''; persistActive(); renderQwirkle();
+    },
+    addCustom() {
+      if (!isQw()) return; const inp = byId('qw-custom-input'); const v = inp ? Number(inp.value) : NaN;
+      if (!Number.isFinite(v) || v <= 0) { qwMsg = 'Enter a points number first.'; renderQwirkle(); return; }
+      if (inp) inp.value = '';
+      QwirkleUI.addPoints(v); currentGame.qwDraft.picked = null; renderQwirkle();
+    },
+    clearTurn() { if (!isQw()) return; qwEnsure(); const d = currentGame.qwDraft; currentGame.qwDraft = qwFreshDraft(d.idx); qwMsg = ''; persistActive(); renderQwirkle(); },
+    toggleQwirkle() { if (!isQw()) return; const q = qwEnsure(); if (q.isGameOver) return; const d = currentGame.qwDraft; d.qwirkles = (d.qwirkles + 1) % 3; qwMsg = ''; persistActive(); renderQwirkle(); },
+    toggleWentOut() { if (!isQw()) return; const q = qwEnsure(); if (q.isGameOver) return; const d = currentGame.qwDraft; d.wentOut = !d.wentOut; qwMsg = ''; persistActive(); renderQwirkle(); },
+    addTurn() {
+      if (!isQw()) return null; const q = qwEnsure(), L = QWL(), d = currentGame.qwDraft;
+      let res;
+      if (!d.points && !d.qwirkles && !d.wentOut) res = L.passTurn(q, d.idx);
+      // Went Out always ends the game here: the bag counter is a manual aid, so a table that says it is out wins the +6
+      else res = L.scoreTurn(q, d.idx, d.points, { qwirkles: d.qwirkles, wentOut: d.wentOut, force: true });
+      if (!res || !res.ok) { qwMsg = (res && res.error) || 'Could not add that turn.'; renderQwirkle(); return res || null; }
+      if (d.wentOut && q.tilesInBag) q.tilesInBag = 0;
+      currentGame.qwDraft = qwFreshDraft(q.currentPlayerIndex); qwMsg = '';
+      qwCommit();
+      if (q.isGameOver && typeof global.openEndGameModal === 'function') { try { global.openEndGameModal(); } catch (_) {} }
+      return res;
+    },
+    undoTurn() {
+      if (!isQw()) return null; const q = qwEnsure(); const res = QWL().undoLastTurn(q);
+      if (!res.ok) return null;
+      const u = res.undone;
+      currentGame.qwDraft = { idx: u.playerIdx, points: u.points, qwirkles: u.qwirkles, wentOut: !!u.wentOut, picked: null }; qwMsg = '';
+      qwCommit(); return u;
+    },
+    editBag() {
+      if (!isQw()) return; const q = qwEnsure(); if (!q.rules.trackBag) return;
+      const raw = global.prompt ? global.prompt('Tiles left in the bag', String(q.tilesInBag ?? 0)) : null;
+      if (raw === null || raw === undefined) return;
+      const v = Math.trunc(Number(raw));
+      if (!Number.isFinite(v) || v < 0 || v > QWL().TOTAL_TILES) { qwMsg = 'Bag count must be 0 to ' + QWL().TOTAL_TILES + '.'; renderQwirkle(); return; }
+      q.tilesInBag = v; qwMsg = ''; qwCommit();
+    },
+    setBag(v) { if (!isQw()) return; const q = qwEnsure(); const n = Math.trunc(Number(v)); if (!Number.isFinite(n) || n < 0 || n > QWL().TOTAL_TILES) return; q.tilesInBag = n; qwCommit(); },
+    getState: () => (isQw() ? { qw: currentGame.qw, draft: { ...currentGame.qwDraft }, msg: qwMsg } : null)
+  };
+  function qwPrepareFinish(finished) {
+    const L = QWL(), q = currentGame.qw;
+    if (L && q) {
+      if (!q.isGameOver) L.endGame(q, 'manual');
+      qwSync();
+      const st = L.getStats(q);
+      finished.players = currentGame.players.map((p, i) => ({ ...p, isWinner: q.winnerIndices.includes(i) }));
+      finished.rounds = currentGame.rounds;
+      finished.houseRules = { ...(currentGame.houseRules || {}), ...q.rules };
+      finished.meta = { ...(finished.meta || {}), qwirkle: { totalQwirkles: st.totalQwirkles, totalTurns: st.totalTurns, bestTurn: st.bestTurn, endReason: q.endReason, tilesInBag: q.tilesInBag } };
+    }
+    ['qw', 'qwDraft'].forEach((k) => delete finished[k]);
+    return finished;
+  }
+
+  // ---------------- v24 Link players after a game + claim flow (V24Link UI <-> TallyItV24Backend) ----------------
+  const V24B = () => global.TallyItV24Backend || null;
+  const V24L = () => global.V24Link || null;
+  const v24Ready = () => !!(V24B() && currentUser && V24B().isMigrationReady() !== false);
+  function v24Flatten(players) {
+    const out = [];
+    (players || []).forEach((p) => {
+      if (Array.isArray(p.members) && p.members.length) p.members.forEach((m) => out.push({ name: m.name, userId: m.userId || m.user_id || null }));
+      else out.push({ name: p.name, userId: p.userId || p.user_id || null });
+    });
+    return out.map((p) => ({ ...p, claimStatus: p.userId ? 'linked' : null }));
+  }
+  function v24FindEntry(gameId) {
+    const id = String(gameId || '');
+    return historyEntries().find((g) => g && (String(g.sharedGameId || '') === id || String(g.id || '') === id)) || null;
+  }
+  function v24GameFor(g) {
+    if (!g || !g.sharedGameId) return null; // only cloud-synced games can be linked server-side
+    return { id: String(g.sharedGameId), label: gameLabel(g), date: new Date(g.endTime || g.startTime || Date.now()).toLocaleDateString(), createdBy: g.createdBy || null, players: v24Flatten(g.players) };
+  }
+  function v24LinkButton(g) {
+    const L = V24L(); if (!L || !v24Ready()) return '';
+    const game = v24GameFor(g); if (!game) return '';
+    try { const html = L.renderLinkButton(game); return html ? `<div class="v24-link-slot">${html}</div>` : ''; } catch (_) { return ''; }
+  }
+  const v24Err = (r, fallback) => new Error((r && r.error) || fallback);
+  // Keep the local copy (guest history in localStorage) in step with the cloud link, via TallyItPlayerLink
+  function v24LinkLocal(gameId, playerName, user) {
+    const PL = global.TallyItPlayerLink; if (!PL) return false;
+    const e = v24FindEntry(gameId); const localId = e ? String(e.id || '') : '';
+    const i = localId ? history.findIndex((h) => h && String(h.id || '') === localId) : -1;
+    if (i < 0) return false;
+    const r = PL.linkParticipant(history[i], playerName, user);
+    if (r && r.ok) { history[i] = r.record; saveCache(true); saveData(); return true; }
+    return false;
+  }
+  const V24_ADAPTER = {
+    getCurrentUserId: () => (currentUser ? currentUser.id : null),
+    getGame: async (gameId) => { const g = v24GameFor(v24FindEntry(gameId)); if (!g) throw new Error('This game has not synced to the cloud yet, so it cannot be linked.'); return g; },
+    getFriends: async () => (social.friends.accepted || []).map((f) => ({ userId: f.userId, displayName: f.displayName || f.name || 'Friend', friendCode: f.friendCode || '' })),
+    assignToFriend: async (gameId, playerName, friendUserId) => {
+      const r = await V24B().linkGameParticipant(gameId, playerName, friendUserId);
+      if (!r || !r.ok) throw v24Err(r, 'Could not link that player.');
+      const f = (social.friends.accepted || []).find((x) => String(x.userId) === String(friendUserId));
+      v24LinkLocal(gameId, playerName, { userId: friendUserId, displayName: (f && (f.displayName || f.name)) || r.display_name || playerName });
+      return { ok: true };
+    },
+    createClaim: async (gameId, playerName) => {
+      const r = await V24B().createParticipantClaim(gameId, playerName);
+      if (!r || !r.ok) throw v24Err(r, 'Could not create a claim link.');
+      return { code: r.token, url: r.url || V24B().buildClaimUrl(r.token), expiresAt: r.expires_at || null };
+    },
+    // no revokeClaim: there is no revoke RPC yet, so V24Link hides the Revoke button
+    lookupClaim: async (code) => {
+      const B = V24B(); const token = B.parseClaimToken(code);
+      if (!token) throw new Error('That does not look like a TallyIt claim link or code.');
+      const r = await B.previewParticipantClaim(token);
+      if (!r || !r.ok) throw v24Err(r, 'Could not check that claim.');
+      if (r.status && r.status !== 'open') {
+        if (B.getPendingClaim() === token) B.clearPendingClaim();
+        throw new Error(r.status === 'claimed' ? 'This game has already been claimed.' : r.status === 'expired' ? 'This claim link has expired. Ask the host for a new one.' : 'This claim link is no longer active.');
+      }
+      const label = gameById(r.game_type).name + (r.creator_name ? ' with ' + r.creator_name : '');
+      return [{ token, gameId: r.game_id || token, label, date: r.ended_at ? new Date(r.ended_at).toLocaleDateString() : '', playerName: r.participant_name || '' }];
+    },
+    getSuggestions: async () => {
+      const B = V24B(); if (!B || !currentUser) return [];
+      const r = await B.suggestMyUnlinkedGames();
+      if (!r || !r.ok) return [];
+      return (r.suggestions || []).map((s) => ({ participantId: s.participant_id, gameId: s.game_id, label: gameById(s.game_type).name + (s.creator_name ? ' with ' + s.creator_name : ''),
+        date: s.ended_at ? new Date(s.ended_at).toLocaleDateString() : '', playerName: s.participant_name || '' }));
+    },
+    confirmClaims: async (items) => {
+      const B = V24B(); let claimed = 0, lastErr = null;
+      for (const it of items || []) {
+        let r;
+        if (it.token) r = B.getPendingClaim() === it.token ? await B.consumePendingClaim() : await B.claimGameParticipant(it.token);
+        else if (it.participantId) r = await B.claimSuggestedParticipant(it.participantId);
+        if (r && r.ok) claimed++; else lastErr = r;
+      }
+      if (!claimed) throw v24Err(lastErr, 'Could not claim those games.');
+      return { ok: true, claimed };
+    },
+    onLinked: () => { v24AfterLink(); }
+  };
+  let v24LinkTimer = null;
+  function v24AfterLink() {
+    clearTimeout(v24LinkTimer);
+    v24LinkTimer = setTimeout(async () => {
+      try { await refreshSocial(true); } catch (_) {}
+      if (currentView === 'history') renderHistory();
+      if (currentView === 'home') renderHome();
+    }, 150);
+  }
+  async function v24RefreshSuggestions() {
+    const L = V24L(); if (!L || !currentUser || !V24B()) return;
+    try { await L.refreshSuggestions(); } catch (_) {}
+    if (V24B().isMigrationReady() === false && currentView === 'history') renderHistory();
+  }
+  // After sign-in: a ?claim= link captured at boot (TallyItV24Backend.capturePendingClaimFromUrl) opens the "Is this you?" sheet
+  async function v24HandlePendingClaim() {
+    const B = V24B(), L = V24L(); if (!B || !L || !currentUser) return false;
+    const token = B.getPendingClaim(); if (!token) return false;
+    const pv = await B.previewParticipantClaim(token);
+    if (pv && pv.unavailable) return false; // migration not run yet: keep the token for later
+    if (pv && !pv.ok && pv.code === 'invalid_token') { B.clearPendingClaim(); return false; }
+    await L.openClaimSheet(token);
+    return true;
+  }
+  function v24Init() {
+    const bind = () => { const L = V24L(); if (L) L.setBackend(V24_ADAPTER); return !!L; };
+    if (!bind() && typeof document !== 'undefined') document.addEventListener('DOMContentLoaded', bind, { once: true });
+    global.addEventListener('tallyit:participant-linked', () => v24AfterLink());
+  }
+  v24Init();
+
   function renderHistory() {
     const el = byId('history-list');
     renderHistoryFilter();
@@ -22684,7 +24869,7 @@ window.SocialUI = (function () {
           ${canDelete ? `<button class="btn danger sm" type="button" aria-label="Delete game" onclick="deleteHistoryEntry('${esc(g.id || '')}','${esc(sharedId || '')}')">×</button>` : ''}
         </div>${badges}
         <div style="margin-top:.3rem">${[...(g.players || [])].sort((a, b) => ((typeof g.low === 'boolean' ? g.low : g.meta && typeof g.meta.low === 'boolean' ? g.meta.low : gameById(g.type).low) ? a.score - b.score : b.score - a.score)).map((p) => `${esc(p.name)}${Array.isArray(p.members) && p.members.length ? ` <span class="small">(${esc(p.members.map((m) => m.name).join(' & '))})</span>` : ''}: <strong>${p.score}</strong>`).join(' · ')}</div>
-        <div class="winner">Winner: ${esc(g.winner || '—')}</div>${diceHistoryLine(g)}
+        <div class="winner">Winner: ${esc(g.winner || '—')}</div>${diceHistoryLine(g)}${window.V24Link ? v24LinkButton(g) : ''}
       </div>`;
     }).join('');
   }
@@ -22762,6 +24947,8 @@ window.SocialUI = (function () {
       }
       await refreshSocial();
       await consumePendingFriendInvite();
+      try { await v24HandlePendingClaim(); } catch (e) { console.warn('[v24] claim link failed', e); }
+      v24RefreshSuggestions();
     } catch (e) { console.warn('[social] init failed', e); }
   }
   let refreshSeq = 0;
@@ -23371,7 +25558,7 @@ window.SocialUI = (function () {
     rkSelect, rkSetMode, rkSetSign, rkOnDeltaInput, rkStep, rkApplyJoker, rkConfirmRound, rkUndo, rkToggleHistory, rkAddPlayer, rkCycleColor, rkFinishGame,
     rkToggleCalc, rkCalcKey, rkCalcApply,
     swSelectCategory, swStepCategory, swStep, swSetVal, swSci, swSciOverride, swBeginEdit, swToggleExpansionsDrawer, swToggleExpansion, swUndo: swUndoAction, swFinishGame, renderSevenWonders,
-    undoLastRound, undoLastAction: undoLastRound, endGame, deleteGame, deleteHistoryEntry, HeartsUI, OhHellUI, renderHearts, renderOhHell,
+    undoLastRound, undoLastAction: undoLastRound, endGame, deleteGame, deleteHistoryEntry, HeartsUI, OhHellUI, renderHearts, renderOhHell, QwirkleUI, renderQwirkle, v24HandlePendingClaim,
     openDiceModal, closeDiceModal, rollVirtualDice, logPhysicalRoll, undoDiceRoll, resetDiceRolls, renderDiceUI,
     onAuthSignedIn: onAuthReady, removeSelf, addSelf, removeSetupFriend, toggleSetupFriend, includeFriendInNextGame, applyGroupPreset, clearSetupGroup,
     startGameWithGroup, saveDisplayName, sendFriendRequest, respondFriendRequest, removeFriend, openCreateGroup, toggleGroupModalFriend,
@@ -23989,6 +26176,7 @@ window.SocialUI = (function () {
     'hearts': 'hearts',
     'nertz': 'nertz',
     'rummikub': 'rummikub',
+    'qwirkle': 'qwirkle',
     'other': 'other',
     'custom': 'other',
     'mexican_train': 'mexican_train',
@@ -24553,6 +26741,52 @@ window.SocialUI = (function () {
           lowWins: false,
           scoringMode: 'classic',
           notes: 'Signed round deltas, Joker −30, highest score wins.'
+        }
+      }
+    ],
+
+    // -----------------------------------------------------------------------
+    // 9b. QWIRKLE (v24)
+    // -----------------------------------------------------------------------
+    qwirkle: [
+      {
+        key: 'standard_play_out',
+        versionLabel: 'Standard (play it out)',
+        name: 'Standard (Play It Out)',
+        tagline: 'Official MindWare rules: score every line, +6 per Qwirkle, +6 for going out first.',
+        isDefault: true,
+        aliases: ['Standard (play it out)', 'Standard', 'Classic', 'Official'],
+        differences: [
+          'Each tile line scores 1 point per tile in it (a tile can score in two lines).',
+          'Completing a line of all six (a Qwirkle) adds a 6-point bonus.',
+          'The first player to empty their hand after the bag runs out scores +6 and ends the game; highest score wins.'
+        ],
+        scoringOverrides: {
+          targetScore: null,
+          playersMin: 2,
+          playersMax: 6,
+          lowWins: false,
+          notes: 'Play until someone goes out; highest score wins.'
+        }
+      },
+      {
+        key: 'to_300',
+        versionLabel: 'Short game (to 300)',
+        name: 'Short Game (to 300)',
+        tagline: 'Same scoring, but the first player to reach 300 points wins on the spot.',
+        isDefault: false,
+        aliases: ['Short game (to 300)', 'To 300', '300'],
+        differences: [
+          'Game ends as soon as any player reaches 300 points.',
+          'Qwirkle (+6) and Went Out (+6) bonuses unchanged.',
+          'Good for multi-round sessions across a night.'
+        ],
+        scoringOverrides: {
+          targetScore: 300,
+          playersMin: 2,
+          playersMax: 6,
+          lowWins: false,
+          notes: 'First to 300 wins.'
         }
       }
     ],
@@ -25801,6 +28035,33 @@ window.SocialUI = (function () {
         defaultValue: false,
         hint: 'Reverse scoring — lowest total wins.',
         diff: (v) => v ? 'Lowest score wins (instead of highest).' : 'Highest score wins.'
+      }
+    ],
+
+    qwirkle: [
+      {
+        key: 'wentOutBonus', label: 'Went Out Bonus', type: 'number',
+        defaultValue: 6, min: 0, max: 20, step: 1, unit: 'pts',
+        hint: 'Bonus for the first player to play their last tile (ends the game).',
+        diff: (v, d) => `Going out awards +${v} points (instead of +${d}).`
+      },
+      {
+        key: 'qwirkleBonus', label: 'Qwirkle Bonus', type: 'number',
+        defaultValue: 6, min: 0, max: 20, step: 1, unit: 'pts',
+        hint: 'Extra points for completing a line of 6 (on top of the line points).',
+        diff: (v, d) => `Each Qwirkle adds +${v} bonus points (instead of +${d}).`
+      },
+      {
+        key: 'targetScore', label: 'Target Score (0 = Play Out)', type: 'number',
+        defaultValue: 0, min: 0, max: 500, step: 25, unit: 'pts',
+        hint: 'Optional: end the game when a player reaches this score.',
+        diff: (v) => v > 0 ? `Game ends when a player reaches ${v} points.` : 'Play until someone goes out.'
+      },
+      {
+        key: 'trackBag', label: 'Track Tiles in Bag', type: 'boolean',
+        defaultValue: true,
+        hint: 'Count down the 108-tile bag as players draw.',
+        diff: (v) => v ? 'Tiles-in-bag counter on.' : 'Tiles-in-bag counter off.'
       }
     ],
 
@@ -27598,7 +29859,7 @@ window.SocialUI = (function () {
   }
 
   function showSignedOutUI() {
-    document.body.classList.remove('theme-catan', 'theme-flip7', 'theme-carcassonne', 'theme-nertz', 'theme-rummikub', 'theme-seven-wonders', 'theme-hearts', 'theme-ohhell');
+    document.body.classList.remove('theme-catan', 'theme-flip7', 'theme-carcassonne', 'theme-nertz', 'theme-rummikub', 'theme-seven-wonders', 'theme-hearts', 'theme-ohhell', 'theme-qwirkle');
     const { loginView, appShell } = getEls();
     if (appShell) {
       appShell.hidden = true;
