@@ -2809,6 +2809,9 @@
 
   function renderHistory() {
     const el = byId('history-list');
+    // v27: the hybrid History list (v27_history_list.js) owns #history-list when it is loaded; classic list below is the fallback
+    const v27 = global.TallyItV27HistoryList;
+    if (v27 && typeof v27.render === 'function' && el) { try { if (v27.render(el) !== false) return; } catch (e) { console.warn('[v27] history list failed, showing the classic list:', e); } }
     renderHistoryFilter();
     const entries = historyEntries().filter((g) => historyFilter === 'all' || String(g.groupId || '') === historyFilter);
     if (!entries.length) { el.innerHTML = `<p class="small">${historyFilter === 'all' ? 'Nothing here yet.' : 'No games for this group yet.'}</p>`; return; }
@@ -2879,7 +2882,21 @@
       if (currentView === 'history') renderHistory();
       return true;
     },
-    refresh: () => { if (currentView === 'history') renderHistory(); }, refreshSocial: () => refreshSocial()
+    refresh: () => { if (currentView === 'history') renderHistory(); }, refreshSocial: () => refreshSocial(),
+    // v27: read-only helpers for the hybrid History list + the detail sheet's owner-only Delete (reuses deleteHistoryEntry and its confirm)
+    groups: () => {
+      const map = new Map((social.groups || []).map((g) => [String(g.id), g.name]));
+      history.forEach((h) => { if (h && h.groupId && !map.has(String(h.groupId))) map.set(String(h.groupId), h.groupName || 'Group'); });
+      return [...map].map(([id, name]) => ({ id, name }));
+    },
+    canDelete: (e) => {
+      if (!e) return false;
+      const by = e.createdBy || e.created_by || null, uid = currentUser ? String(currentUser.id) : null;
+      if (by) return !!(uid && String(by) === uid);
+      return history.some((h) => h && String(h.id || '') === String(e.id || ''));
+    },
+    deleteEntry: (gameId, sharedId) => deleteHistoryEntry(gameId, sharedId),
+    linkButton: (e) => (global.V24Link && e ? v24LinkButton(e) : '')
   };
 
   // ---------------- Social layer: you + friends + groups ----------------
