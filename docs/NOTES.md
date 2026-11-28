@@ -116,3 +116,4 @@ Tests: node v3/tests/v24_tests.js (14), node tests/v24_backend.test.js (15), SQL
 - Sizes: 3-4 players (19 hexes, 1 desert, robber on that desert) and 5-6 players (30 hexes, 2 deserts, robber placed on one of the two deserts at random). Same seed + size + mode rebuilds the same board.
 - Tests: `node v3/tests/catan_board_tests.js` (29 checks, 10k boards per mode and size). CI already globs `v3/tests/*.js`, so the file runs with the other game-logic tests.
 - QA risk, check against the official art: the 5-6 extension harbor slots [0,3,7,12,15,17,21,24,27,29,33] were traced by eye from the official extension Illustration A and may be off by about one edge. The base harbor slots [0,3,7,10,13,17,20,23,27] differ by one edge from UI's earlier demo.
+- Board codes use the 31-character alphabet `23456789ABCDEFGHJKMNPQRSTUVWXYZ` (no 0, O, 1, I, or L), still shown as XXX-XXX, with SEED_SPACE = 31^6. Codes were never stored, so legacy base-36 codes are not decoded.

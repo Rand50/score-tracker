@@ -89,7 +89,9 @@ console.log('Catan board generator tests (' + N + ' boards per mode and size)');
       const b = B.generateBoard({ size, mode, seed });
       const ms = Number(process.hrtime.bigint() - t0) / 1e6; sumMs += ms; if (ms > maxMs) maxMs = ms;
       const probs = independentCheck(b, size, mode), v = B.validateBoard(b, mode);
-      if (probs.length || v.length) { bad++; if (!firstBad) firstBad = { seed, probs, v: v.slice(0, 2) }; }
+      if (/[01OIL]/.test(b.code)) probs.push('code has 0/O/1/I/L');
+      if (B.parseSeedCode(b.code) !== b.seed) probs.push('code does not round-trip');
+      if (probs.length || v.length) { bad++; if (!firstBad) firstBad = { seed, code: b.code, probs, v: v.slice(0, 2) }; }
       if (b.report.flags.sameResGroups3 > 0) groups3++;
       if (b.report.flags.sameResAdj > 0) pairsRes++;
       b.hexes.forEach((h) => { if (h.resource === 'desert') deserts[h.id] = (deserts[h.id] || 0) + 1; });
@@ -145,16 +147,31 @@ test('mode changes the board for the same seed (mode is part of the stream)', ()
   ok(a.mode === 'random' && b.mode === 'balanced');
 });
 test('board code round-trips: seed -> code -> seed -> same board', () => {
-  for (const seed of [0, 1, 35, 36, 46655, 999999, 2176782335]) {
-    const code = B.seedCode(seed); ok(/^[0-9A-Z]{3}-[0-9A-Z]{3}$/.test(code), code);
-    eq(B.parseSeedCode(code), seed, 'parse');
-    eq(B.parseSeedCode(code.toLowerCase().replace('-', ' ')), seed, 'lenient parse');
+  // 2176782335 is the old base-36 max and now reduces into the 31^6 space. Min and max still identity-round-trip.
+  for (const seed of [0, 1, 35, 36, 46655, 999999, 2176782335, B.SEED_SPACE - 1]) {
+    const code = B.seedCode(seed); ok(/^[2-9ABCDEFGHJKMNPQRSTUVWXYZ]{3}-[2-9ABCDEFGHJKMNPQRSTUVWXYZ]{3}$/.test(code), code);
+    ok(!/[01OIL]/.test(code), code);
+    const round = (seed >>> 0) % B.SEED_SPACE;
+    eq(B.parseSeedCode(code), round, 'parse');
+    eq(B.parseSeedCode(code.toLowerCase().replace('-', ' ')), round, 'lenient parse');
+    eq(B.parseSeedCode(code.toLowerCase()), round, 'lowercase');
+    eq(B.parseSeedCode(code.replace(/-/g, '')), round, 'dashless');
+    eq(B.parseSeedCode('  ' + code.slice(0, 3) + ' ' + code.slice(4) + '  '), round, 'trimmed and spaced');
   }
+  eq(B.SEED_SPACE, Math.pow(31, 6));
+  eq(B.parseSeedCode(B.seedCode(0)), 0, 'min seed');
+  eq(B.parseSeedCode(B.seedCode(B.SEED_SPACE - 1)), B.SEED_SPACE - 1, 'max seed');
   const a = B.generateBoard({ size: '56', mode: 'balanced' });   // random seed
   ok(Number.isInteger(a.seed) && a.seed >= 0 && a.seed < B.SEED_SPACE, 'seed in range');
+  ok(!/[01OIL]/.test(a.code), a.code);
   const b = B.generateBoard({ size: '56', mode: 'balanced', seed: a.code });  // code accepted as seed
   eq(JSON.parse(JSON.stringify(b)), JSON.parse(JSON.stringify(a)), 'rebuild from code');
   eq(B.parseSeedCode('not a code!'), null);
+  ['0', 'O', '1', 'I', 'L', 'o', 'i', 'l', '222-220', '22O222', '221-222', '22I-222', '22L-222', '000000'].forEach((bad) => {
+    eq(B.parseSeedCode(bad), null, 'rejected ' + bad);
+  });
+  eq(B.parseSeedCode(0), 0, 'raw integer 0');
+  eq(B.parseSeedCode(42), parseInt('42', 36), 'raw integer still parsed as before');
 });
 test('an out-of-range numeric seed is normalised into the code space (still reproducible)', () => {
   const a = B.generateBoard({ size: '34', mode: 'random', seed: 4294967295 }), b = B.generateBoard({ size: '34', mode: 'random', seed: a.seed });

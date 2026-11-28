@@ -41,7 +41,10 @@
 
   var VERSION = 27;
   var RES = ['wood', 'sheep', 'wheat', 'brick', 'ore'];
-  var SEED_SPACE = 2176782336; // 36^6: seeds are 0..SEED_SPACE-1 so a 6-char board code round-trips
+  // Board codes drop 0/O/1/I/L. 31^6 still fits in a 6-char XXX-XXX code.
+  // Seeds are 0..SEED_SPACE-1 so every seed round-trips. Legacy base-36 codes are not decoded.
+  var CODE_ALPHABET = '23456789ABCDEFGHJKMNPQRSTUVWXYZ';
+  var SEED_SPACE = 887503681; // 31^6
   var SQRT3 = Math.sqrt(3);
 
   var RULES = {
@@ -98,15 +101,31 @@
 
   // ---- seeds & board codes -------------------------------------------------
   function seedCode(seed) {
-    var c = ((seed >>> 0) % SEED_SPACE).toString(36).toUpperCase();
-    while (c.length < 6) c = '0' + c;
+    var n = (seed >>> 0) % SEED_SPACE;
+    var c = '';
+    for (var i = 0; i < 6; i++) {
+      c = CODE_ALPHABET.charAt(n % 31) + c;
+      n = Math.floor(n / 31);
+    }
     return c.slice(0, 3) + '-' + c.slice(3);
   }
   function parseSeedCode(code) {
-    var c = String(code == null ? '' : code).replace(/[\s-]/g, '').toUpperCase();
-    if (!/^[0-9A-Z]{1,6}$/.test(c)) return null;
-    var n = parseInt(c, 36);
-    return isFinite(n) ? n : null;
+    // A raw integer still takes the old path: stringify, then parse if it is 1-6 base-36 digits.
+    if (typeof code === 'number') {
+      var raw = String(code).replace(/[\s-]/g, '').toUpperCase();
+      if (!/^[0-9A-Z]{1,6}$/.test(raw)) return null;
+      var parsed = parseInt(raw, 36);
+      return isFinite(parsed) ? parsed : null;
+    }
+    var c = String(code == null ? '' : code).trim().replace(/[\s-]/g, '').toUpperCase();
+    if (c.length < 1 || c.length > 6) return null;
+    var n = 0;
+    for (var i = 0; i < c.length; i++) {
+      var d = CODE_ALPHABET.indexOf(c.charAt(i));
+      if (d < 0) return null;
+      n = n * 31 + d;
+    }
+    return n;
   }
   function normalizeSeed(seed) {
     if (typeof seed === 'string') {
