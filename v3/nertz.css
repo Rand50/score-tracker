@@ -1,0 +1,937 @@
+/* Nertz theme: Option 3 "Midnight Parlor & Gold Foil" — deep navy velvet parlor, gold foil hairlines,
+   ivory playing-card player/team rows with ornate deck-back swatches, Solo & unlimited Teams mode.
+   Every rule is strictly scoped under body.theme-nertz (validated by build.py). */
+body.theme-nertz {
+  --nz-bg: #071222;
+  --nz-bg2: #0c1d36;
+  --nz-panel: #081529;
+  --nz-gold: #e6c677;
+  --nz-gold-hi: #f5df9c;
+  --nz-gold-lo: #b08837;
+  --nz-gold-line: rgba(214, 179, 101, 0.62);
+  --nz-gold-soft: rgba(214, 179, 101, 0.24);
+  --nz-ivory: #faf3e1;
+  --nz-ivory2: #ebdcba;
+  --nz-ink: #0f1b2d;
+  --nz-crimson: #d13838;
+  --nz-serif: 'Cinzel', 'EB Garamond', Georgia, 'Times New Roman', serif;
+  --nz-body: 'EB Garamond', Georgia, 'Times New Roman', serif;
+  --nz-damask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%23d6b365' stroke-opacity='0.06' stroke-width='1'%3E%3Cpath d='M32 4C37 14 44 20 56 32 44 44 37 50 32 60 27 50 20 44 8 32 20 20 27 14 32 4z'/%3E%3Ccircle cx='32' cy='32' r='6'/%3E%3Cpath d='M0 0l12 12M64 0L52 12M0 64l12-12M64 64L52 52'/%3E%3C/g%3E%3C/svg%3E");
+  background-color: var(--nz-bg);
+  background-image:
+    radial-gradient(ellipse at 50% 8%, rgba(30, 62, 112, 0.48), transparent 55%),
+    radial-gradient(ellipse at 50% 100%, rgba(16, 36, 68, 0.52), transparent 60%),
+    var(--nz-damask);
+  /* v24.2: no background-attachment: fixed */
+  color: var(--nz-gold);
+  font-family: var(--nz-body);
+  padding-bottom: calc(92px + env(safe-area-inset-bottom, 0px));
+}
+body.theme-nertz .app-header,
+body.theme-nertz #generic-board,
+body.theme-nertz #catan-board,
+body.theme-nertz #flip7-board,
+body.theme-nertz #carc-board { display: none; }
+body.theme-nertz #nz-shell { display: block; }
+body.theme-nertz #view-active {
+  max-width: 470px;
+  padding: calc(10px + var(--tt-sat-c)) 12px 1rem;
+}
+body.theme-nertz #nz-shell button,
+body.theme-nertz #nz-shell [role="button"],
+body.theme-nertz #nz-shell [role="tab"],
+body.theme-nertz .bottom-nav button {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  cursor: pointer;
+}
+body.theme-nertz #nz-shell input {
+  font-size: 16px !important;
+  touch-action: manipulation;
+}
+
+/* ---- Outer Gold-Foil Parlor Frame ---- */
+body.theme-nertz .nz-frame {
+  position: relative;
+  border-radius: 16px;
+  padding: 12px 13px 16px;
+  background: linear-gradient(180deg, rgba(10, 24, 46, 0.92) 0%, rgba(6, 15, 30, 0.96) 100%);
+  border: 1.5px solid var(--nz-gold-line);
+  box-shadow:
+    0 18px 44px rgba(0, 0, 0, 0.65),
+    inset 0 0 0 4px rgba(7, 18, 34, 0.95),
+    inset 0 0 0 5px rgba(214, 179, 101, 0.28),
+    inset 0 0 40px rgba(0, 0, 0, 0.45);
+}
+
+/* ---- Header: Fanned Cards, Gold Foil Wordmark, Target & Solo/Teams Toggle ---- */
+body.theme-nertz .nz-head {
+  text-align: center;
+  padding: 2px 4px 10px;
+}
+body.theme-nertz .nz-fan-wrap {
+  display: flex;
+  justify-content: center;
+  margin: -4px auto 2px;
+  height: 46px;
+}
+body.theme-nertz .nz-fan-svg {
+  width: 210px;
+  height: 48px;
+  display: block;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.55));
+}
+body.theme-nertz .nz-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 2px;
+}
+body.theme-nertz .nz-spade {
+  color: var(--nz-gold);
+  font-size: 1.15rem;
+  line-height: 1;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.7);
+}
+body.theme-nertz .nz-title {
+  margin: 0;
+  font: 700 38px/1 var(--nz-serif);
+  -webkit-font-smoothing: antialiased;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  background: linear-gradient(180deg, #fbf0c4 0%, #e4be67 48%, #b3842d 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  /* v24.2: filter: drop-shadow rasterized the gold title into a soft bitmap on iOS; removed */
+}
+body.theme-nertz .nz-rule {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px auto 7px;
+  max-width: 280px;
+}
+body.theme-nertz .nz-rule::before,
+body.theme-nertz .nz-rule::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--nz-gold-line), transparent);
+}
+body.theme-nertz .nz-rule i {
+  width: 6px;
+  height: 6px;
+  background: var(--nz-gold);
+  transform: rotate(45deg);
+  display: block;
+}
+body.theme-nertz .nz-sub-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+body.theme-nertz .nz-target-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(214, 179, 101, 0.1);
+  border: 1px solid rgba(214, 179, 101, 0.42);
+  color: var(--nz-gold-hi);
+  font: 600 0.78rem/1.2 var(--nz-serif);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+body.theme-nertz .nz-target-pill:active { transform: scale(0.97); }
+body.theme-nertz .nz-dot-sep { color: var(--nz-gold-lo); font-size: 0.78rem; }
+body.theme-nertz .nz-round-label {
+  font: 600 0.8rem/1.2 var(--nz-serif);
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--nz-gold);
+}
+
+/* ---- Solo vs. Partners / Teams Mode Pill Toggle ---- */
+body.theme-nertz .nz-mode-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 10px 0 4px;
+}
+body.theme-nertz .nz-mode-pill {
+  display: inline-grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 3px;
+  border-radius: 999px;
+  background: rgba(5, 12, 24, 0.85);
+  border: 1px solid rgba(214, 179, 101, 0.42);
+}
+body.theme-nertz .nz-mode-btn {
+  padding: 6px 14px;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(230, 198, 119, 0.72);
+  font: 600 0.78rem/1 var(--nz-serif);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: background 0.15s, color 0.15s;
+}
+body.theme-nertz .nz-mode-btn.active {
+  background: linear-gradient(180deg, #efd282 0%, #c89c42 100%);
+  color: #091426;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+}
+body.theme-nertz .nz-teams-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 6px 0 2px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  background: rgba(214, 179, 101, 0.08);
+  border: 1px dashed rgba(214, 179, 101, 0.35);
+  font-size: 0.84rem;
+  color: var(--nz-gold);
+}
+body.theme-nertz .nz-teams-bar[hidden] { display: none !important; }
+body.theme-nertz .nz-mini-gold {
+  padding: 5px 10px;
+  border-radius: 8px;
+  background: rgba(214, 179, 101, 0.14);
+  border: 1px solid rgba(214, 179, 101, 0.5);
+  color: var(--nz-gold-hi);
+  font: 600 0.76rem/1 var(--nz-serif);
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+body.theme-nertz .nz-mini-gold:active { transform: scale(0.97); }
+
+/* ---- Ivory Playing-Card Player / Team Rows ---- */
+body.theme-nertz .nz-roster {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin: 8px 0 14px;
+}
+body.theme-nertz .nz-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 7px 14px 7px 7px;
+  border-radius: 11px;
+  background: linear-gradient(180deg, var(--nz-ivory) 0%, var(--nz-ivory2) 100%);
+  border: 1.5px solid #c9a14a;
+  box-shadow:
+    0 5px 14px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    inset 0 0 0 2px rgba(201, 161, 74, 0.22);
+  color: var(--nz-ink);
+  cursor: pointer;
+  transition: transform 0.08s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+body.theme-nertz .nz-row:active { transform: scale(0.99); }
+body.theme-nertz .nz-row.picker-open { z-index: 35; }
+body.theme-nertz .nz-row.selected {
+  border-color: #f6e19e;
+  box-shadow:
+    0 0 0 2px rgba(245, 223, 156, 0.85),
+    0 8px 22px rgba(230, 198, 119, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.92);
+}
+body.theme-nertz .nz-row.leader .nz-score { color: #7a4e08; }
+body.theme-nertz .nz-row.is-nertz-caller {
+  border-color: #f6e19e;
+  background: linear-gradient(180deg, #fff9e6 0%, #f3e2b2 100%);
+  box-shadow:
+    0 0 0 2px rgba(230, 198, 119, 0.78),
+    0 8px 22px rgba(230, 198, 119, 0.28),
+    inset 0 0 18px rgba(230, 198, 119, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.94);
+}
+body.theme-nertz .nz-nertz-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #efd282 0%, #c89c42 100%);
+  border: 1px solid #9c7224;
+  color: #091426;
+  font: 700 0.66rem/1.1 var(--nz-serif);
+  letter-spacing: 0.9px;
+  text-transform: uppercase;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.24), inset 0 1px 0 rgba(255, 250, 224, 0.75);
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+/* ---- Ornate Deck-Back Color Tile & Swatch Popover ---- */
+body.theme-nertz .nz-deck-btn {
+  position: relative;
+  flex: 0 0 54px;
+  width: 54px;
+  height: 54px;
+  padding: 3px;
+  border-radius: 8px;
+  border: 1.5px solid #c9a14a;
+  background: var(--nz-deck-bg, #7c1818);
+  box-shadow: inset 0 0 0 2px rgba(246, 225, 158, 0.45), 0 2px 5px rgba(0, 0, 0, 0.35);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.08s ease;
+}
+body.theme-nertz .nz-deck-btn:active { transform: scale(0.93); }
+body.theme-nertz .nz-deck-btn[data-deck="crimson"] { --nz-deck-bg: linear-gradient(145deg, #8e1d20, #5a0e10); }
+body.theme-nertz .nz-deck-btn[data-deck="emerald"] { --nz-deck-bg: linear-gradient(145deg, #155c47, #0a3629); }
+body.theme-nertz .nz-deck-btn[data-deck="sapphire"] { --nz-deck-bg: linear-gradient(145deg, #1b3b6f, #0d2040); }
+body.theme-nertz .nz-deck-btn[data-deck="plum"] { --nz-deck-bg: linear-gradient(145deg, #4b2354, #2a1030); }
+body.theme-nertz .nz-deck-btn[data-deck="gold"] { --nz-deck-bg: linear-gradient(145deg, #9a7022, #5e410d); }
+body.theme-nertz .nz-deck-btn[data-deck="obsidian"] { --nz-deck-bg: linear-gradient(145deg, #334155, #18202c); }
+body.theme-nertz .nz-deck-btn[data-deck="teal"] { --nz-deck-bg: linear-gradient(145deg, #146b74, #0a3b41); }
+body.theme-nertz .nz-deck-btn[data-deck="burgundy"] { --nz-deck-bg: linear-gradient(145deg, #6e1d36, #3d0d1d); }
+body.theme-nertz .nz-deck-svg { width: 46px; height: 46px; display: block; }
+body.theme-nertz .nz-deck-caret {
+  position: absolute;
+  right: -3px;
+  bottom: -3px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #09162a;
+  border: 1.5px solid var(--nz-gold);
+  color: var(--nz-gold-hi);
+  font: 700 9px/13px var(--nz-body);
+  text-align: center;
+  pointer-events: none;
+}
+
+body.theme-nertz .nz-color-pop {
+  position: absolute;
+  left: 64px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 45;
+  padding: 9px 10px;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #0d1f3a 0%, #071222 100%);
+  border: 1.5px solid var(--nz-gold);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.72), inset 0 0 0 2px rgba(214, 179, 101, 0.2);
+  animation: nz-pop-in 0.14s ease-out;
+}
+@keyframes nz-pop-in {
+  0% { opacity: 0; transform: translateY(-50%) scale(0.92); }
+  100% { opacity: 1; transform: translateY(-50%) scale(1); }
+}
+body.theme-nertz .nz-color-pop-title {
+  margin: 0 0 6px;
+  font: 700 0.68rem/1 var(--nz-serif);
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--nz-gold);
+  text-align: center;
+}
+body.theme-nertz .nz-swatch-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 44px);
+  gap: 6px;
+}
+body.theme-nertz .nz-swatch {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  padding: 2px;
+  border-radius: 8px;
+  border: 1.5px solid rgba(214, 179, 101, 0.45);
+  background: #1b3b6f;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+body.theme-nertz .nz-swatch[data-deck="crimson"] { background: linear-gradient(145deg, #8e1d20, #5a0e10); }
+body.theme-nertz .nz-swatch[data-deck="emerald"] { background: linear-gradient(145deg, #155c47, #0a3629); }
+body.theme-nertz .nz-swatch[data-deck="sapphire"] { background: linear-gradient(145deg, #1b3b6f, #0d2040); }
+body.theme-nertz .nz-swatch[data-deck="plum"] { background: linear-gradient(145deg, #4b2354, #2a1030); }
+body.theme-nertz .nz-swatch[data-deck="gold"] { background: linear-gradient(145deg, #9a7022, #5e410d); }
+body.theme-nertz .nz-swatch[data-deck="obsidian"] { background: linear-gradient(145deg, #334155, #18202c); }
+body.theme-nertz .nz-swatch[data-deck="teal"] { background: linear-gradient(145deg, #146b74, #0a3b41); }
+body.theme-nertz .nz-swatch[data-deck="burgundy"] { background: linear-gradient(145deg, #6e1d36, #3d0d1d); }
+body.theme-nertz .nz-swatch.active {
+  border-color: #fbf0c4;
+  box-shadow: 0 0 0 2px rgba(245, 223, 156, 0.75);
+}
+body.theme-nertz .nz-swatch-check {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  background: var(--nz-gold);
+  color: #071222;
+  border: 1.5px solid #071222;
+  font: 800 10px/14px var(--nz-body);
+  text-align: center;
+}
+
+body.theme-nertz .nz-info {
+  flex: 1;
+  min-width: 0;
+  padding-left: 4px;
+  border-left: 1px solid rgba(176, 136, 55, 0.32);
+}
+body.theme-nertz .nz-name-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+body.theme-nertz .nz-name {
+  font: 600 1.45rem/1.1 var(--nz-body);
+  color: var(--nz-ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+body.theme-nertz .nz-crown {
+  font-size: 0.9rem;
+  color: #b07a1c;
+  flex-shrink: 0;
+}
+body.theme-nertz .nz-partners {
+  margin-top: 2px;
+  font: 500 0.84rem/1.15 var(--nz-body);
+  color: #4a5568;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+body.theme-nertz .nz-round-tag {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  font: 700 0.72rem/1.2 var(--nz-serif);
+  background: rgba(15, 27, 45, 0.1);
+  color: #1e4d3b;
+}
+body.theme-nertz .nz-round-tag.neg { color: #b91c1c; }
+body.theme-nertz .nz-score {
+  font: 700 2rem/1 var(--nz-body);
+  font-variant-numeric: lining-nums tabular-nums;
+  color: var(--nz-ink);
+  flex-shrink: 0;
+  min-width: 44px;
+  text-align: right;
+}
+
+/* ---- Round Scoring Panel ---- */
+body.theme-nertz .nz-scorer {
+  position: relative;
+  border-radius: 14px;
+  padding: 12px 12px 14px;
+  background: linear-gradient(180deg, rgba(8, 22, 42, 0.94) 0%, rgba(5, 14, 28, 0.98) 100%);
+  border: 1.5px solid var(--nz-gold-line);
+  box-shadow: inset 0 0 0 3px rgba(7, 18, 34, 0.9), inset 0 0 0 4px rgba(214, 179, 101, 0.22);
+}
+body.theme-nertz .nz-scorer-head {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+body.theme-nertz .nz-scorer-head::before,
+body.theme-nertz .nz-scorer-head::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--nz-gold-line));
+}
+body.theme-nertz .nz-scorer-head::after {
+  background: linear-gradient(90deg, var(--nz-gold-line), transparent);
+}
+body.theme-nertz .nz-scorer-who {
+  font: 600 0.8rem/1 var(--nz-serif);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--nz-gold-hi);
+  white-space: nowrap;
+}
+/* Streamlined Round Addition / Subtraction + Got Nertz! Highlight */
+body.theme-nertz .nz-delta-wrap {
+  padding: 10px 9px 11px;
+  border-radius: 12px;
+  background: rgba(4, 11, 22, 0.76);
+  border: 1px solid rgba(214, 179, 101, 0.44);
+}
+body.theme-nertz .nz-delta-row {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+body.theme-nertz .nz-sign-toggle {
+  display: inline-grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 3px;
+  border-radius: 11px;
+  background: rgba(7, 18, 34, 0.95);
+  border: 1px solid rgba(214, 179, 101, 0.44);
+  flex-shrink: 0;
+}
+body.theme-nertz .nz-sign-btn {
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: rgba(230, 198, 119, 0.65);
+  font: 700 1.55rem/1 var(--nz-body);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.14s, color 0.14s, transform 0.08s;
+}
+body.theme-nertz .nz-sign-btn:active { transform: scale(0.94); }
+body.theme-nertz .nz-sign-btn.is-plus.active {
+  background: linear-gradient(180deg, #efd282 0%, #c89c42 100%);
+  color: #071222;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+}
+body.theme-nertz .nz-sign-btn.is-minus.active {
+  background: linear-gradient(180deg, #d94141 0%, #9f1d22 100%);
+  color: #fff8ec;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+}
+body.theme-nertz .nz-net-input {
+  flex: 1;
+  min-width: 0;
+  height: 52px;
+  padding: 0 12px;
+  text-align: center;
+  background: rgba(8, 22, 42, 0.94);
+  border: 1.5px solid var(--nz-gold);
+  border-radius: 11px;
+  color: var(--nz-gold-hi);
+  font: 700 1.8rem/1 var(--nz-body);
+  font-variant-numeric: lining-nums tabular-nums;
+  font-size: 26px !important;
+  outline: none;
+}
+body.theme-nertz .nz-net-input::placeholder { color: rgba(230, 198, 119, 0.36); }
+body.theme-nertz .nz-net-input:focus {
+  border-color: var(--nz-gold-hi);
+  box-shadow: 0 0 0 3px rgba(230, 198, 119, 0.22);
+}
+body.theme-nertz .nz-net-input.is-neg {
+  color: #f87171;
+  border-color: rgba(209, 56, 56, 0.78);
+}
+body.theme-nertz .nz-quick-row {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 5px;
+  margin-top: 9px;
+}
+body.theme-nertz .nz-net-step {
+  height: 38px;
+  padding: 0 2px;
+  border-radius: 8px;
+  background: rgba(214, 179, 101, 0.11);
+  border: 1px solid rgba(214, 179, 101, 0.42);
+  color: var(--nz-gold-hi);
+  font: 700 0.82rem/1 var(--nz-serif);
+  font-variant-numeric: lining-nums tabular-nums;
+  transition: transform 0.08s, background 0.12s;
+}
+body.theme-nertz .nz-net-step.is-neg {
+  background: rgba(209, 56, 56, 0.12);
+  border-color: rgba(209, 56, 56, 0.42);
+  color: #fca5a5;
+}
+body.theme-nertz .nz-net-step:active { transform: scale(0.94); }
+
+/* Tactile Gold-Foil "Got Nertz!" Toggle */
+body.theme-nertz .nz-got-nertz {
+  width: 100%;
+  margin-top: 10px;
+  height: 42px;
+  border-radius: 10px;
+  background: rgba(214, 179, 101, 0.08);
+  border: 1.5px dashed rgba(214, 179, 101, 0.52);
+  color: var(--nz-gold);
+  font: 700 0.84rem/1 var(--nz-serif);
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  transition: background 0.14s, color 0.14s, border-color 0.14s, box-shadow 0.14s, transform 0.08s;
+}
+body.theme-nertz .nz-got-nertz:active { transform: scale(0.98); }
+body.theme-nertz .nz-got-nertz.is-active {
+  background: linear-gradient(180deg, #f5dc8d 0%, #cfa042 100%);
+  border: 1.5px solid #fff3c4;
+  color: #071222;
+  box-shadow: 0 0 16px rgba(230, 198, 119, 0.42), inset 0 1px 0 rgba(255, 252, 232, 0.85);
+}
+body.theme-nertz .nz-got-nertz-ic { font-size: 1rem; line-height: 1; }
+
+/* Live Preview + Gold Foil Confirm Button */
+body.theme-nertz .nz-preview-wrap {
+  text-align: center;
+  margin-top: 10px;
+  padding-top: 9px;
+  border-top: 1px solid rgba(214, 179, 101, 0.34);
+}
+body.theme-nertz .nz-preview-label {
+  font: 600 0.72rem/1.1 var(--nz-serif);
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: rgba(230, 198, 119, 0.82);
+}
+body.theme-nertz .nz-preview-val {
+  margin: 4px 0 10px;
+  font: 700 2rem/1 var(--nz-body);
+  font-variant-numeric: lining-nums tabular-nums;
+  color: var(--nz-gold-hi);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.55);
+}
+body.theme-nertz .nz-preview-val.is-neg { color: var(--nz-crimson); }
+body.theme-nertz .nz-confirm {
+  width: 100%;
+  height: 48px;
+  border-radius: 10px;
+  border: 1.5px solid #f7e4a8;
+  background: linear-gradient(180deg, #efd282 0%, #cf9f43 55%, #b17f28 100%);
+  color: #0b1629;
+  font: 700 1.05rem/1 var(--nz-serif);
+  letter-spacing: 2.2px;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 0 5px 16px rgba(0, 0, 0, 0.52), inset 0 1px 0 rgba(255, 250, 224, 0.75);
+  transition: transform 0.08s ease, filter 0.12s ease;
+}
+body.theme-nertz .nz-confirm:active { transform: translateY(2px); filter: brightness(0.96); }
+
+/* ---- Footer Actions & Round History Drawer ---- */
+body.theme-nertz .nz-actions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 7px;
+  margin-top: 12px;
+}
+body.theme-nertz .nz-act-btn {
+  height: 38px;
+  border-radius: 9px;
+  background: rgba(214, 179, 101, 0.08);
+  border: 1px solid rgba(214, 179, 101, 0.4);
+  color: var(--nz-gold-hi);
+  font: 600 0.78rem/1 var(--nz-serif);
+  letter-spacing: 0.7px;
+  text-transform: uppercase;
+}
+body.theme-nertz .nz-act-btn:active { transform: scale(0.97); }
+body.theme-nertz .nz-act-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+body.theme-nertz .nz-finish {
+  width: 100%;
+  margin-top: 9px;
+  height: 44px;
+  border-radius: 10px;
+  background: rgba(214, 179, 101, 0.14);
+  border: 1.5px solid var(--nz-gold);
+  color: var(--nz-gold-hi);
+  font: 700 0.88rem/1 var(--nz-serif);
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+}
+body.theme-nertz .nz-finish.ready {
+  background: linear-gradient(180deg, #efd282 0%, #c6963c 100%);
+  color: #071222;
+}
+body.theme-nertz .nz-history-drawer {
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 11px;
+  background: rgba(4, 11, 22, 0.82);
+  border: 1px solid rgba(214, 179, 101, 0.36);
+}
+body.theme-nertz .nz-history-drawer[hidden] { display: none !important; }
+body.theme-nertz .nz-hist-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 5px 0;
+  font-size: 0.86rem;
+  border-bottom: 1px solid rgba(214, 179, 101, 0.14);
+  color: var(--nz-ivory);
+}
+body.theme-nertz .nz-hist-row:last-child { border-bottom: none; }
+
+/* ---- Modal Sheet (Teams Builder / Target Score) ---- */
+body.theme-nertz .nz-sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  background: rgba(3, 8, 16, 0.8);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 12px;
+}
+body.theme-nertz .nz-sheet[hidden] { display: none !important; }
+body.theme-nertz .nz-sheet-card {
+  width: 100%;
+  max-width: 440px;
+  max-height: 84vh;
+  overflow-y: auto;
+  border-radius: 16px;
+  padding: 14px;
+  background: linear-gradient(180deg, #0d1f3a 0%, #071222 100%);
+  border: 1.5px solid var(--nz-gold);
+  box-shadow: 0 22px 48px rgba(0, 0, 0, 0.75);
+  color: var(--nz-ivory);
+}
+body.theme-nertz .nz-sheet-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+body.theme-nertz .nz-sheet-head h3 {
+  margin: 0;
+  font: 700 1rem/1.1 var(--nz-serif);
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--nz-gold-hi);
+}
+body.theme-nertz .nz-team-card {
+  padding: 10px;
+  border-radius: 10px;
+  background: rgba(4, 11, 22, 0.65);
+  border: 1px solid rgba(214, 179, 101, 0.34);
+  margin-bottom: 8px;
+}
+body.theme-nertz .nz-partner-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+body.theme-nertz .nz-partner-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: rgba(214, 179, 101, 0.14);
+  border: 1px solid rgba(214, 179, 101, 0.4);
+  color: var(--nz-ivory);
+  font-size: 0.84rem;
+}
+
+/* ---- Bottom Nav: Midnight Parlor & Gold Foil ---- */
+body.theme-nertz .bottom-nav {
+  background: rgba(7, 18, 34, 0.97);
+  border-top: 1.5px solid var(--nz-gold-line);
+  box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.55);
+  font-family: var(--nz-body);
+}
+body.theme-nertz .bottom-nav button {
+  color: rgba(230, 198, 119, 0.66);
+  font: 600 0.78rem/1 var(--nz-body);
+  letter-spacing: 0.4px;
+}
+body.theme-nertz .bottom-nav button.active {
+  color: var(--nz-gold-hi);
+}
+body.theme-nertz .bottom-nav button.active::after {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--nz-gold-hi);
+  margin-top: 2px;
+}
+/* v24.2: Play/Tracker/Friends/History everywhere */
+body.theme-nertz .bottom-nav #nav-new,
+body.theme-nertz .bottom-nav #nav-social { display: flex !important; }
+body.theme-nertz .bottom-nav #nav-active { display: flex; }
+
+/* ---- v11 integration additions (engine-rendered pieces) ---- */
+body.theme-nertz .nz-winner-banner {
+  margin: 2px 0 4px;
+  padding: 9px 12px;
+  border-radius: 10px;
+  text-align: center;
+  font: 700 0.9rem/1.25 var(--nz-serif);
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: #071222;
+  background: linear-gradient(180deg, #f5df9c 0%, #d9ae55 60%, #b8862d 100%);
+  border: 1.5px solid #fbf0c4;
+  box-shadow: 0 6px 18px rgba(230, 198, 119, 0.3);
+}
+body.theme-nertz .nz-called-badge {
+  display: inline-block;
+  margin-left: 4px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  font: 700 0.7rem/1.3 var(--nz-serif);
+  letter-spacing: 0.8px;
+  color: #fbf0c4;
+  background: linear-gradient(180deg, #b3262a, #7a1216);
+  border: 1px solid #e6c677;
+  flex-shrink: 0;
+}
+body.theme-nertz .nz-calls {
+  margin-left: 4px;
+  font: 600 0.72rem/1 var(--nz-body);
+  color: #7a4e08;
+  flex-shrink: 0;
+}
+body.theme-nertz .nz-score.neg { color: #b91c1c; }
+body.theme-nertz .nz-row.done::after {
+  content: "\2713";
+  position: absolute;
+  top: 4px;
+  right: 7px;
+  font: 700 0.7rem/1 var(--nz-body);
+  color: #1e6b52;
+}
+body.theme-nertz .nz-progress {
+  margin: -4px 0 8px;
+  text-align: center;
+  font: 600 0.74rem/1.2 var(--nz-body);
+  letter-spacing: 0.5px;
+  color: rgba(230, 198, 119, 0.7);
+}
+body.theme-nertz .nz-sheet-close {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(214, 179, 101, 0.5);
+  background: transparent;
+  color: var(--nz-gold-hi);
+  font: 700 1rem/1 var(--nz-body);
+}
+body.theme-nertz .nz-field {
+  width: 100%;
+  min-width: 0;
+  height: 40px;
+  padding: 0 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(214, 179, 101, 0.45);
+  background: rgba(250, 243, 225, 0.96);
+  color: var(--nz-ink);
+  font-family: var(--nz-body);
+}
+body.theme-nertz .nz-field-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  margin-top: 7px;
+}
+body.theme-nertz .nz-sheet-btn {
+  flex-shrink: 0;
+  height: 40px;
+  padding: 0 12px;
+  border-radius: 8px;
+  border: 1px solid var(--nz-gold);
+  background: rgba(214, 179, 101, 0.14);
+  color: var(--nz-gold-hi);
+  font: 700 0.76rem/1 var(--nz-serif);
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+body.theme-nertz .nz-sheet-btn.primary {
+  background: linear-gradient(180deg, #efd282 0%, #c6963c 100%);
+  color: #071222;
+}
+body.theme-nertz .nz-sheet-btn.wide { width: 100%; margin-top: 10px; }
+body.theme-nertz .nz-sheet-btn.danger { border-color: rgba(209, 56, 56, 0.7); color: #f3a3a3; background: rgba(209, 56, 56, 0.1); }
+body.theme-nertz .nz-team-head {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+body.theme-nertz .nz-team-swatch {
+  flex: 0 0 28px;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 1.5px solid #c9a14a;
+}
+body.theme-nertz .nz-chip-x {
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border-radius: 50%;
+  border: none;
+  background: rgba(209, 56, 56, 0.25);
+  color: #fbe3e3;
+  font: 700 0.8rem/1 var(--nz-body);
+}
+body.theme-nertz .nz-move-sel {
+  height: 24px;
+  max-width: 92px;
+  border-radius: 6px;
+  border: 1px solid rgba(214, 179, 101, 0.4);
+  background: #0a1830;
+  color: var(--nz-gold-hi);
+  font-size: 0.74rem !important;
+}
+body.theme-nertz .nz-sheet .nz-quick-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+body.theme-nertz .nz-quick {
+  height: 34px;
+  padding: 0 11px;
+  border-radius: 999px;
+  border: 1px dashed rgba(214, 179, 101, 0.6);
+  background: transparent;
+  color: var(--nz-gold-hi);
+  font: 600 0.84rem/1 var(--nz-body);
+}
+body.theme-nertz .nz-quick.active { border-style: solid; background: rgba(214, 179, 101, 0.2); }
+body.theme-nertz .nz-sheet-note {
+  margin: 4px 0 0;
+  font-size: 0.8rem;
+  color: rgba(250, 243, 225, 0.66);
+}
+body.theme-nertz .nz-hist-empty { color: rgba(250, 243, 225, 0.6); font-size: 0.86rem; text-align: center; padding: 4px 0; }
+body.theme-nertz .nz-hist-round { font: 700 0.74rem/1.2 var(--nz-serif); letter-spacing: 1px; color: var(--nz-gold); padding-top: 6px; }
+body.theme-nertz .nz-hist-row .neg { color: #f19a9a; }
+body.theme-nertz .nz-sub-line {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+  margin-top: 3px;
+}
+body.theme-nertz .nz-sub-line .nz-partners { margin-top: 0; min-width: 0; flex: 1; }
+body.theme-nertz .nz-sub-line .nz-round-tag,
+body.theme-nertz .nz-sub-line .nz-called-badge { margin-left: 0; flex-shrink: 0; }
+body.theme-nertz .nz-hist-row.is-nertz-caller { color: var(--nz-gold-hi); }
+body.theme-nertz .nz-hist-row .nz-nertz-badge { margin-left: 6px; vertical-align: 1px; }
+body.theme-nertz #nz-shell .nz-net-input { font-size: 28px !important; letter-spacing: 0.5px; }

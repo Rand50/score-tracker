@@ -1,0 +1,16 @@
+<!-- v21: Home Resume card (most recent open game), mounted as the first item of #v21-active-games-section -->
+<button id="btn-resume-game" class="home-resume-card hidden" type="button" hidden onclick="resumeGame(this.dataset.sessionId || undefined)">
+        <span class="home-resume-left">
+          <span class="home-live-dot" aria-hidden="true"></span>
+          <span class="home-resume-text">
+            <span class="home-resume-label">Most Recent</span>
+            <span class="home-resume-title" id="home-resume-meta">Resume Active Game</span>
+          </span>
+        </span>
+        <span class="home-resume-cta">
+          Resume
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
+        </span>
+      </button>

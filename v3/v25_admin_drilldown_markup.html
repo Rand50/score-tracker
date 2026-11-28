@@ -1,0 +1,91 @@
+<!-- TallyIt v25 admin drill-down sheet. Mounted at body level (outside #app-shell); hidden until a stat box is activated. -->
+<div id="v25-admin-drill" class="v25-admin-overlay" hidden>
+  <div class="v25-admin-scrim" data-v25-close="1"></div>
+  <section class="v25-admin-panel" role="dialog" aria-modal="true" aria-labelledby="v25-admin-title" tabindex="-1" data-mode="sheet" data-layout="stack" data-view="list">
+    <header class="v25-admin-head">
+      <button type="button" id="v25-admin-back" class="v25-admin-icon-btn" aria-label="Back" hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <div class="v25-admin-headtext">
+        <h2 id="v25-admin-title" class="v25-admin-title">Admin</h2>
+        <p id="v25-admin-count" class="v25-admin-sub" role="status" aria-live="polite"></p>
+      </div>
+      <button type="button" id="v25-admin-refresh" class="v25-admin-icon-btn" aria-label="Refresh list">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+      </button>
+      <button type="button" id="v25-admin-close" class="v25-admin-icon-btn" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </header>
+
+    <nav id="v25-admin-crumbs" class="v25-admin-crumbs" aria-label="Drill-down path" hidden></nav>
+
+    <div id="v25-admin-tabs" class="v25-admin-tabs" role="tablist" aria-label="Lists" hidden></div>
+
+    <div class="v25-admin-body">
+      <!-- LIST VIEW -->
+      <div id="v25-admin-listview" class="v25-admin-listview">
+        <div class="v25-admin-toolbar">
+          <div class="v25-admin-search">
+            <svg class="v25-admin-search-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input id="v25-admin-search" class="v25-admin-input" type="search" inputmode="search" enterkeyhint="search" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Search" aria-label="Search">
+            <button type="button" id="v25-admin-clear" class="v25-admin-clear" aria-label="Clear search" hidden>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+          <div id="v25-admin-controls" class="v25-admin-controls"></div>
+          <div class="v25-admin-field v25-admin-sortfield">
+            <label class="v25-admin-field-label" for="v25-admin-sort">Sort</label>
+            <select id="v25-admin-sort" class="v25-admin-select" aria-label="Sort by"></select>
+            <button type="button" id="v25-admin-dir" class="v25-admin-icon-btn v25-admin-dir" data-dir="desc" aria-label="Sort direction: descending">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div id="v25-admin-scroll" class="v25-admin-scroll">
+          <div id="v25-admin-thead" class="v25-admin-thead" role="group" aria-label="Sort columns"></div>
+          <div id="v25-admin-skel" class="v25-admin-skel" aria-hidden="true" hidden>
+            <div class="v25-admin-skel-row"></div><div class="v25-admin-skel-row"></div><div class="v25-admin-skel-row"></div><div class="v25-admin-skel-row"></div><div class="v25-admin-skel-row"></div>
+          </div>
+          <div id="v25-admin-empty" class="v25-admin-state" data-kind="empty" hidden>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <strong id="v25-admin-empty-title">Nothing here</strong>
+            <p id="v25-admin-empty-text">No results.</p>
+          </div>
+          <div id="v25-admin-notice" class="v25-admin-state" data-kind="info" role="status" hidden>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            <strong id="v25-admin-notice-title">Not available</strong>
+            <p id="v25-admin-notice-text"></p>
+            <button type="button" id="v25-admin-notice-retry" class="v25-admin-btn" hidden>Check again</button>
+          </div>
+          <div id="v25-admin-error" class="v25-admin-state" data-kind="error" role="alert" hidden>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <strong>Could not load this list</strong>
+            <p id="v25-admin-error-text">Something went wrong.</p>
+            <button type="button" id="v25-admin-retry" class="v25-admin-btn">Try again</button>
+          </div>
+          <ul id="v25-admin-rows" class="v25-admin-rows" aria-label="Results"></ul>
+        </div>
+
+        <footer id="v25-admin-pager" class="v25-admin-pager" hidden>
+          <button type="button" id="v25-admin-prev" class="v25-admin-btn" aria-label="Previous page">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>Prev
+          </button>
+          <span id="v25-admin-range" class="v25-admin-range" aria-live="polite"></span>
+          <button type="button" id="v25-admin-next" class="v25-admin-btn" aria-label="Next page">Next
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </footer>
+      </div>
+
+      <!-- DETAIL VIEW -->
+      <div id="v25-admin-detail" class="v25-admin-detail" hidden>
+        <div id="v25-admin-detail-scroll" class="v25-admin-scroll">
+          <div id="v25-admin-detail-state" class="v25-admin-state" hidden></div>
+          <div id="v25-admin-detail-body" class="v25-admin-detail-body"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

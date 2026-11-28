@@ -1,0 +1,237 @@
+<!-- =========================================================================
+     Score Tracker — Friends Clarity Pass & Friend QR Modals Markup (v17)
+     Replaces <section id="view-social"> in v3/shell.html and appends
+     #soc-qr-modal and #soc-scan-modal inside #app-shell.
+     Preserves all existing #soc-* IDs; zero emojis; uniform 1.75px SVGs.
+     ========================================================================= -->
+
+<!-- PART 1: UPDATED #view-social -->
+<section id="view-social" class="view" aria-label="Friends and Groups">
+  <div class="soc-top-bar">
+    <h2 class="soc-top-title">Friends</h2>
+    <button type="button" id="btn-refresh-social" class="soc-refresh-btn" onclick="window.refreshSocial && refreshSocial(true)" aria-label="Refresh friends and requests">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M21 12a9 9 0 1 1-2.64-6.36"/>
+        <polyline points="21 3 21 9 15 9"/>
+      </svg>
+      <span>Refresh</span>
+    </button>
+  </div>
+
+  <!-- Loading / Error / Demo States -->
+  <div id="soc-loading-banner" class="soc-state-banner is-loading hidden" hidden role="status" aria-live="polite">
+    <span>Syncing friends and requests...</span>
+  </div>
+
+  <div id="soc-error-banner" class="soc-state-banner is-error hidden" hidden role="alert">
+    <span id="soc-error-text">Could not refresh friends. Check your connection.</span>
+    <button type="button" class="soc-state-retry" onclick="window.refreshSocial && refreshSocial(true)">Retry</button>
+  </div>
+
+  <div id="soc-demo-banner" class="soc-demo-banner hidden" hidden role="status">
+    <strong>Local demo mode</strong> — friends, groups and shared history are saved on this device until the Supabase social migration is applied.
+  </div>
+
+  <!-- Your Profile + QR Actions Card -->
+  <div class="card soc-profile-card">
+    <div class="soc-profile-top">
+      <div class="soc-avatar" id="soc-my-avatar" aria-hidden="true">?</div>
+      <div class="soc-profile-name-row">
+        <input type="text" id="soc-display-name" placeholder="Your display name" autocomplete="name" maxlength="32" aria-label="Display name">
+        <button type="button" class="btn sm primary" id="btn-save-display-name" onclick="window.saveDisplayName && saveDisplayName()">Save</button>
+      </div>
+    </div>
+
+    <div class="soc-code-strip">
+      <div>
+        <span class="soc-code-label">Your Friend Code</span>
+        <span class="soc-code-val" id="soc-friend-code">—</span>
+      </div>
+      <button type="button" class="soc-copy-btn" id="btn-copy-code" onclick="window.SocialUI && SocialUI.copyFriendCode()">Copy code</button>
+    </div>
+
+    <div class="soc-qr-actions">
+      <button type="button" id="btn-open-my-qr" class="soc-qr-btn primary" onclick="window.openMyQrModal && openMyQrModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3" y="3" width="7" height="7" rx="1"/>
+          <rect x="14" y="3" width="7" height="7" rx="1"/>
+          <rect x="3" y="14" width="7" height="7" rx="1"/>
+          <path d="M14 14h3v3h-3zM19 14h2v2M14 19h2v2M19 19h2v2"/>
+        </svg>
+        <span>My QR Code</span>
+      </button>
+      <button type="button" id="btn-open-scan-qr" class="soc-qr-btn" onclick="window.openScanQrModal && openScanQrModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M4 8V5a1 1 0 0 1 1-1h3"/>
+          <path d="M16 4h3a1 1 0 0 1 1 1v3"/>
+          <path d="M20 16v3a1 1 0 0 1-1 1h-3"/>
+          <path d="M8 20H5a1 1 0 0 1-1-1v-3"/>
+          <line x1="6" y1="12" x2="18" y2="12"/>
+        </svg>
+        <span>Scan QR</span>
+      </button>
+    </div>
+
+    <p id="soc-profile-msg" class="soc-status-msg" role="status" aria-live="polite"></p>
+  </div>
+
+  <!-- Sub-tabs: Friends | Groups -->
+  <div class="soc-tabs" role="tablist" aria-label="Social sections">
+    <button type="button" class="soc-tab active" id="soc-tab-friends" role="tab" aria-selected="true" onclick="window.SocialUI && SocialUI.switchSocialTab('friends')">
+      <span>Friends</span>
+      <span id="soc-pending-badge" class="soc-badge-count hidden" hidden>0</span>
+    </button>
+    <button type="button" class="soc-tab" id="soc-tab-groups" role="tab" aria-selected="false" onclick="window.SocialUI && SocialUI.switchSocialTab('groups')">
+      <span>Groups</span>
+    </button>
+  </div>
+
+  <!-- FRIENDS PANEL -->
+  <div id="soc-panel-friends" role="tabpanel" aria-labelledby="soc-tab-friends">
+    <!-- Prominent Incoming Requests -->
+    <div class="card soc-incoming-card hidden" id="soc-pending-card" hidden>
+      <div class="soc-sec-head">
+        <h3>Incoming Requests</h3>
+        <span id="soc-incoming-count" class="soc-count-pill is-brass">0</span>
+      </div>
+      <div id="soc-pending-list"></div>
+    </div>
+
+    <!-- Add Friend by Code / Handle / Email -->
+    <div class="card">
+      <div class="soc-sec-head">
+        <h3>Add a Friend</h3>
+      </div>
+      <div class="flex" style="flex-wrap:nowrap">
+        <input type="text" id="soc-add-friend-input" placeholder="Email, @handle, or friend code" autocomplete="off" style="flex:1" onkeydown="if(event.key==='Enter'){window.sendFriendRequest && sendFriendRequest();}">
+        <button type="button" class="btn primary sm" id="btn-send-friend-req" onclick="window.sendFriendRequest && sendFriendRequest()">Add</button>
+      </div>
+      <p id="soc-friend-msg" class="soc-status-msg" role="status" aria-live="polite"></p>
+    </div>
+
+    <!-- Sent Requests (Outgoing Pending) -->
+    <div class="card hidden" id="soc-sent-card" hidden>
+      <div class="soc-sec-head">
+        <h3>Sent Requests</h3>
+        <span id="soc-sent-count" class="soc-count-pill">0</span>
+      </div>
+      <div id="soc-sent-list"></div>
+    </div>
+
+    <!-- My Friends List -->
+    <div class="card">
+      <div class="soc-sec-head">
+        <h3>My Friends</h3>
+        <span id="soc-friends-count" class="soc-count-pill">0</span>
+      </div>
+      <div id="soc-friends-list">
+        <p class="soc-empty-note">No friends yet. Show your QR code, scan a friend, or add them by code above.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- GROUPS PANEL -->
+  <div id="soc-panel-groups" class="hidden" hidden role="tabpanel" aria-labelledby="soc-tab-groups">
+    <div class="flex space-between" style="margin-bottom:0.85rem">
+      <h2 style="margin:0;font-size:1.08rem">Game Groups</h2>
+      <button type="button" class="btn primary sm" id="btn-open-create-group" onclick="window.openCreateGroup && openCreateGroup()">+ Create Group</button>
+    </div>
+    <div id="soc-groups-list">
+      <div class="card">
+        <p class="soc-empty-note">Create a group (like "Friday Catan Crew") to load your regulars in one tap and track a group leaderboard.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PART 2: MY FRIEND QR CODE MODAL (place inside #app-shell) -->
+<div id="soc-qr-modal" class="soc-qr-backdrop hidden" hidden role="dialog" aria-modal="true" aria-labelledby="soc-qr-title" onclick="if(event.target===this && window.closeMyQrModal) closeMyQrModal()">
+  <div class="soc-qr-sheet">
+    <div class="soc-qr-handle" aria-hidden="true"></div>
+    <div class="soc-qr-head">
+      <h3 id="soc-qr-title">My Friend QR Code</h3>
+      <button type="button" class="soc-qr-close" aria-label="Close QR Code" onclick="window.closeMyQrModal && closeMyQrModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="soc-qr-card-frame">
+      <div id="soc-my-qr-svg" aria-label="Your scannable friend QR code"></div>
+    </div>
+
+    <div class="soc-qr-identity">
+      <span id="soc-qr-handle" class="soc-qr-handle-text">@player</span>
+      <span id="soc-qr-code-text" class="soc-qr-code-sub">—</span>
+    </div>
+    <p class="soc-qr-hint">Have a friend scan this with their camera or inside Score Tracker.</p>
+
+    <div class="soc-qr-btn-row">
+      <button type="button" id="btn-qr-copy-link" class="soc-qr-btn primary" onclick="window.copyFriendInviteLink && copyFriendInviteLink()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="9" y="9" width="11" height="11" rx="2"/>
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+        </svg>
+        <span>Copy Link</span>
+      </button>
+      <button type="button" id="btn-qr-share" class="soc-qr-btn" onclick="window.shareFriendInviteLink && shareFriendInviteLink()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7"/>
+          <polyline points="16 6 12 2 8 6"/>
+          <line x1="12" y1="2" x2="12" y2="15"/>
+        </svg>
+        <span>Share</span>
+      </button>
+    </div>
+
+    <p id="soc-qr-msg" class="soc-qr-msg" role="status" aria-live="polite"></p>
+  </div>
+</div>
+
+<!-- PART 3: SCAN FRIEND QR MODAL (place inside #app-shell) -->
+<div id="soc-scan-modal" class="soc-qr-backdrop hidden" hidden role="dialog" aria-modal="true" aria-labelledby="soc-scan-title" onclick="if(event.target===this && window.closeScanQrModal) closeScanQrModal()">
+  <div class="soc-qr-sheet">
+    <div class="soc-qr-handle" aria-hidden="true"></div>
+    <div class="soc-qr-head">
+      <h3 id="soc-scan-title">Scan Friend QR</h3>
+      <button type="button" class="soc-qr-close" aria-label="Close QR Scanner" onclick="window.closeScanQrModal && closeScanQrModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+
+    <div id="soc-scan-viewport" class="soc-scan-viewport">
+      <video id="soc-scan-video" playsinline muted autoplay></video>
+      <div class="soc-scan-reticle" aria-hidden="true">
+        <div class="soc-scan-line"></div>
+      </div>
+    </div>
+
+    <div id="soc-scan-fallback-note" class="soc-scan-fallback hidden" hidden role="status">
+      Camera scanning isn't available here. Upload a QR screenshot or paste a friend link/code below.
+    </div>
+
+    <label class="soc-scan-upload-label" for="soc-scan-file">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+        <polyline points="17 8 12 3 7 8"/>
+        <line x1="12" y1="3" x2="12" y2="15"/>
+      </svg>
+      <span>Upload QR Image</span>
+      <input type="file" id="soc-scan-file" accept="image/*" hidden onchange="window.handleScanQrFile && handleScanQrFile(this)">
+    </label>
+
+    <div class="soc-scan-divider"><span>or paste link / code</span></div>
+
+    <div class="soc-scan-paste-row">
+      <input type="text" id="soc-scan-paste-input" placeholder="Paste a friend link or code" autocomplete="off" onkeydown="if(event.key==='Enter'){window.submitScannedFriend && submitScannedFriend();}">
+      <button type="button" id="btn-scan-paste-add" class="btn primary sm" onclick="window.submitScannedFriend && submitScannedFriend()">Add</button>
+    </div>
+
+    <p id="soc-scan-msg" class="soc-qr-msg" role="status" aria-live="polite"></p>
+  </div>
+</div>

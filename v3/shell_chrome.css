@@ -1,0 +1,19 @@
+/* v14 shell chrome glue (neutral only; themed game screens keep their own look) */
+/* Inline SVG nav icons need explicit sizing on every nav (neutral + themed) */
+.bottom-nav button .icon svg { width: 20px; height: 20px; display: block; }
+/* Carcassonne paints its own masked icons on .icon — keep those, hide the inline SVG underneath */
+body.theme-carcassonne .bottom-nav button .icon svg { visibility: hidden; }
+/* Login: same obsidian / alabaster / brass language as Home */
+#login-view { background: radial-gradient(120% 60% at 50% 0%, rgba(212,168,83,0.10), transparent 62%), linear-gradient(180deg, #111318 0%, var(--bg) 55%, #08090b 100%); }
+.auth-card { background: var(--surface); border: 1px solid var(--border-strong); border-radius: 16px; box-shadow: 0 1px 2px rgba(0,0,0,.4), 0 18px 40px rgba(0,0,0,.45); }
+.auth-crest { width: 48px; height: 48px; border-radius: 12px; background: var(--surface2); border: 1px solid var(--border-strong); color: var(--accent-brass); box-shadow: none; }
+.auth-title { font-size: 1.45rem; font-weight: 700; letter-spacing: -0.03em; }
+.auth-subtitle { letter-spacing: 0.11em; font-size: 0.68rem; color: var(--muted); }
+.auth-btn-primary { background: var(--accent); color: var(--accent-ink); border: 1px solid rgba(255,255,255,0.2); box-shadow: none; }
+.auth-btn-primary:hover:not(:disabled) { filter: none; background: #fff; }
+#login-view .auth-input { background: var(--bg); border-color: var(--border-strong); }
+#login-view .auth-input:focus { border-color: var(--accent-brass); box-shadow: 0 0 0 3px rgba(212,168,83,0.18); }
+/* Quick-pick pills: balanced 3×2 grid so every game is visible on a 390px phone (no clipped / orphaned pill) */
+.home-quick-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.45rem; overflow: visible; }
+.home-quick-chip { padding: 0.5rem 0.4rem; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.home-quick-more { color: var(--text); border-style: dashed; border-color: var(--border-strong); background: transparent; }

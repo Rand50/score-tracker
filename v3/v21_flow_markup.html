@@ -1,0 +1,127 @@
+<!-- =========================================================================
+     TallyIt v21 Flow & Session UX Markup
+     Zero emojis; crisp 1.75px inline SVGs; mobile-first 390x844.
+     Delimited into mountable V21_* blocks for build.py / shell.html.
+     ========================================================================= -->
+
+<!-- ==================== BLOCK 1: CHOOSE GAME STEPPER + SUBHEAD =============
+     Mount at top of Choose Game step inside #view-new -->
+<!-- V21_FLOW_CHOOSE_HEADER_START -->
+<!-- v24.2: stepper pills and "Tap any game" hint removed. Empty mount kept so build.py's id check still passes. -->
+<div id="v21-choose-header" class="v21-choose-header hidden" hidden></div>
+<!-- V21_FLOW_CHOOSE_HEADER_END -->
+
+
+<!-- ==================== BLOCK 2: SETUP STEPPER + CHANGE GAME LINK ==========
+     Mount at top of Setup step inside #view-new -->
+<!-- V21_FLOW_SETUP_HEADER_START -->
+<div id="v21-setup-header" class="v21-setup-header hidden" hidden>
+  <div class="v21-setup-head">
+    <div class="v21-setup-game-wrap">
+      <span class="v21-setup-eyebrow">Selected Game</span>
+      <h2 id="v21-setup-game-name" class="v21-setup-game-name">Game Setup</h2>
+    </div>
+    <button type="button" id="btn-v21-change-game" class="v21-change-game-btn" onclick="window.v21BackToGames && v21BackToGames()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+      <span>Change Game</span>
+    </button>
+  </div>
+</div>
+<!-- V21_FLOW_SETUP_HEADER_END -->
+
+
+<!-- ==================== BLOCK 3: STICKY BOTTOM START SCORING CTA ===========
+     Mount inside #view-new (shown when Setup step is active) -->
+<!-- V21_FLOW_STICKY_CTA_START -->
+<div id="v21-setup-spacer" class="v21-setup-spacer hidden" hidden aria-hidden="true"></div>
+<div id="v21-sticky-cta" class="v21-sticky-cta hidden" hidden role="region" aria-label="Start game">
+  <div class="v21-cta-summary">
+    <span class="v21-cta-label">Ready to play</span>
+    <span id="v21-cta-meta" class="v21-cta-meta">Select players</span>
+  </div>
+  <button type="button" id="btn-v21-start-scoring" class="v21-start-btn" onclick="window.startGame && startGame()">
+    <span>Start Scoring</span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <line x1="5" y1="12" x2="19" y2="12"/>
+      <polyline points="12 5 19 12 12 19"/>
+    </svg>
+  </button>
+</div>
+<!-- V21_FLOW_STICKY_CTA_END -->
+
+
+<!-- ==================== BLOCK 4: ACTIVE GAMES SECTION ON HOME ==============
+     Mount inside #view-home .home-stack right above Recent Games -->
+<!-- V21_ACTIVE_GAMES_START -->
+<section id="v21-active-games-section" class="v21-active-section hidden" hidden aria-label="Games in progress">
+  <div class="v21-active-head">
+    <span class="v21-active-heading">
+      <span class="v21-live-dot" aria-hidden="true"></span>
+      <span>In Progress</span>
+    </span>
+    <span id="v21-active-games-count" class="v21-active-count">0 open</span>
+  </div>
+  <div id="v21-active-games-list" class="v21-active-list"></div>
+</section>
+<!-- V21_ACTIVE_GAMES_END -->
+
+
+<!-- ==================== BLOCK 5: UNIVERSAL END / LEAVE GAME SHEET ==========
+     Mount inside #app (above all themed boards via z-index: 260) -->
+<!-- V21_END_GAME_MODAL_START -->
+<div id="v21-end-game-modal" class="hidden" hidden role="dialog" aria-modal="true" aria-labelledby="v21-end-game-title" onclick="if(event.target===this && window.closeEndGameModal) closeEndGameModal()">
+  <div class="v21-modal-sheet">
+    <div class="v21-modal-handle" aria-hidden="true"></div>
+    <header class="v21-modal-head">
+      <div>
+        <h3 id="v21-end-game-title" class="v21-modal-title">Finish or Leave Game?</h3>
+        <p id="v21-end-game-sub" class="v21-modal-sub">Choose how to wrap up this session.</p>
+      </div>
+      <button type="button" class="v21-modal-close" aria-label="Close" onclick="window.closeEndGameModal && closeEndGameModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </header>
+
+    <div class="v21-sheet-actions">
+      <button type="button" id="btn-v21-end-save" class="v21-sheet-btn is-primary" onclick="window.v21ConfirmSaveAndFinish && v21ConfirmSaveAndFinish()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="9"/>
+          <polyline points="8.5 12.5 11 15 15.5 9.5"/>
+        </svg>
+        <span class="v21-sheet-btn-copy">
+          <span class="v21-sheet-btn-title">Save &amp; Finish Game</span>
+          <span class="v21-sheet-btn-desc">Record final scores to History &amp; leaderboards</span>
+        </span>
+      </button>
+
+      <button type="button" id="btn-v21-end-pause" class="v21-sheet-btn is-pause" onclick="window.v21KeepOpenAndLeave && v21KeepOpenAndLeave()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="6" y="5" width="4" height="14" rx="1"/>
+          <rect x="14" y="5" width="4" height="14" rx="1"/>
+        </svg>
+        <span class="v21-sheet-btn-copy">
+          <span class="v21-sheet-btn-title">Keep Open (Pause)</span>
+          <span class="v21-sheet-btn-desc">Return to Home and resume anytime from In Progress</span>
+        </span>
+      </button>
+
+      <button type="button" id="btn-v21-end-discard" class="v21-sheet-btn is-danger" data-confirm-step="0" onclick="window.v21DiscardWithoutSaving && v21DiscardWithoutSaving()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="3 6 5 6 21 6"/>
+          <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+          <path d="M10 11v6M14 11v6"/>
+          <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+        </svg>
+        <span class="v21-sheet-btn-copy">
+          <span id="v21-discard-title" class="v21-sheet-btn-title">End Without Recording</span>
+          <span id="v21-discard-desc" class="v21-sheet-btn-desc">Discard this game without saving to History</span>
+        </span>
+      </button>
+
+      <button type="button" id="btn-v21-end-cancel" class="v21-sheet-cancel" onclick="window.closeEndGameModal && closeEndGameModal()">
+        Keep Playing
+      </button>
+    </div>
+  </div>
+</div>
+<!-- V21_END_GAME_MODAL_END -->

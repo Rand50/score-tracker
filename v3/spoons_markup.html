@@ -1,0 +1,83 @@
+<!-- TallyIt v25 — Spoons: Kitchen Table Linen (#sp-shell). Driven by spoons.js (window.SpoonsUI) over window.TallyItSpoons. -->
+<div id="sp-shell" class="sp-shell" aria-label="Spoons">
+  <svg class="sp-defs" width="0" height="0" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="sp-wood-g" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#f0c68f"/><stop offset=".45" stop-color="#d49a5c"/><stop offset="1" stop-color="#a8703a"/></linearGradient>
+      <linearGradient id="sp-cup-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a8703a"/><stop offset="1" stop-color="#e2b076"/></linearGradient>
+      <symbol id="sp-ico-back" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></symbol>
+      <symbol id="sp-ico-undo" viewBox="0 0 24 24"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></symbol>
+      <symbol id="sp-ico-flag" viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></symbol>
+      <symbol id="sp-ico-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></symbol>
+      <symbol id="sp-ico-spoon" viewBox="0 0 24 24"><ellipse cx="16" cy="8" rx="4" ry="5.2" transform="rotate(40 16 8)"/><path d="M13.2 10.8 4 20"/></symbol>
+      <symbol id="sp-ico-check" viewBox="0 0 24 24"><polyline points="5 12.5 10 17.5 19 7"/></symbol>
+      <symbol id="sp-ico-save" viewBox="0 0 24 24"><path d="M5 4h11l3 3v13H5z"/><path d="M8 4v5h7V4"/><rect x="8" y="13" width="8" height="7"/></symbol>
+    </defs>
+  </svg>
+
+  <!-- Oak header bar: Back to Play, Undo, End -->
+  <div class="sp-topbar">
+    <div class="sp-topbar-in">
+      <button type="button" id="sp-btn-home" class="sp-top-btn" onclick="showView('new')" aria-label="Back to Play">
+        <svg class="sp-ico" aria-hidden="true"><use href="#sp-ico-back"/></svg><span>Play</span>
+      </button>
+      <div class="sp-top-actions">
+        <button type="button" id="sp-btn-undo-top" class="sp-top-btn" onclick="window.SpoonsUI && SpoonsUI.undo()" aria-label="Undo last knock-out" disabled>
+          <svg class="sp-ico" aria-hidden="true"><use href="#sp-ico-undo"/></svg><span>Undo</span>
+        </button>
+        <button type="button" id="sp-btn-end" class="sp-top-btn sp-top-btn-end" onclick="window.openEndGameModal &amp;&amp; openEndGameModal()" aria-label="End or pause game">
+          <svg class="sp-ico" aria-hidden="true"><use href="#sp-ico-flag"/></svg><span>End</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="sp-wrap">
+    <header class="sp-head">
+      <svg class="sp-hero-spoon" viewBox="0 0 80 150" aria-hidden="true" focusable="false">
+        <g transform="rotate(32 40 75)">
+          <path d="M33 62c1 24-1 48-3 68-1 10 2 16 10 16s11-6 10-16c-2-20-4-44-3-68z" fill="url(#sp-wood-g)" stroke="#7c4d22" stroke-width="2.4" stroke-linejoin="round"/>
+          <ellipse cx="40" cy="36" rx="22" ry="31" fill="url(#sp-wood-g)" stroke="#7c4d22" stroke-width="2.4"/>
+          <ellipse cx="40" cy="37" rx="15" ry="23.5" fill="url(#sp-cup-g)" stroke="#7c4d22" stroke-opacity=".5" stroke-width="1.6"/>
+          <path d="M33 26c-3 7-3 17 0 25" stroke="#fff3d8" stroke-opacity=".6" stroke-width="2.4" stroke-linecap="round" fill="none"/>
+        </g>
+      </svg>
+      <h1 class="sp-title">Spoons</h1>
+      <div class="sp-rule" aria-hidden="true"><span></span><i></i><span></span></div>
+      <div class="sp-round-pill" id="sp-round" aria-live="polite">Round 1</div>
+    </header>
+
+    <section class="sp-prompt" id="sp-prompt" aria-live="polite">
+      <h2 class="sp-q" id="sp-q">Who missed the spoon?</h2>
+      <p class="sp-hint" id="sp-hint">Tap a player to knock them out of this round.</p>
+    </section>
+
+    <section class="sp-winner" id="sp-winner" hidden aria-live="polite">
+      <svg class="sp-win-ico" aria-hidden="true"><use href="#sp-ico-spoon"/></svg>
+      <div class="sp-win-kicker">Last one holding a spoon</div>
+      <div class="sp-win-name" id="sp-win-name"></div>
+      <div class="sp-win-sub" id="sp-win-sub"></div>
+    </section>
+
+    <div class="sp-msg" id="sp-msg" role="status" hidden></div>
+
+    <div class="sp-list" id="sp-list" role="list" aria-label="Players"></div>
+
+    <div class="sp-actions">
+      <button type="button" id="sp-btn-undo" class="sp-pill-btn" onclick="window.SpoonsUI && SpoonsUI.undo()" disabled>
+        <svg class="sp-ico" aria-hidden="true"><use href="#sp-ico-undo"/></svg><span>Undo</span>
+      </button>
+      <button type="button" id="sp-btn-history" class="sp-pill-btn" onclick="window.SpoonsUI && SpoonsUI.toggleHistory()" aria-expanded="false" aria-controls="sp-history">
+        <svg class="sp-ico" aria-hidden="true"><use href="#sp-ico-clock"/></svg><span>Round History</span>
+      </button>
+    </div>
+
+    <section class="sp-history" id="sp-history" hidden aria-label="Round history">
+      <div class="sp-history-head"><span>Round History</span><span id="sp-history-count">0 rounds</span></div>
+      <ol class="sp-history-list" id="sp-history-list"></ol>
+    </section>
+
+    <button type="button" id="sp-btn-finish" class="sp-finish" onclick="window.SpoonsUI && SpoonsUI.finish()" disabled>
+      <svg class="sp-ico" aria-hidden="true"><use href="#sp-ico-save"/></svg><span>Finish &amp; Save</span>
+    </button>
+  </div>
+</div>

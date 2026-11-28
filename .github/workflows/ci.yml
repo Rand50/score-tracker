@@ -1,0 +1,109 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    # main is the deploy branch. cursor/** is included so a source-import
+    # branch runs these checks even before a pull request is open.
+    branches:
+      - main
+      - "cursor/**"
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Python build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build into a temp tree
+        run: |
+          set -euo pipefail
+          dest="${RUNNER_TEMP}/tallyit-build"
+          mkdir -p "$dest"
+          tar -C "$GITHUB_WORKSPACE" \
+            --exclude .git \
+            --exclude node_modules \
+            -cf - . | tar -C "$dest" -xf -
+          python3 "$dest/v3/build.py"
+          test -s "$dest/game_tracker.html"
+          python3 - "$dest/game_tracker.html" << 'PY'
+          import hashlib, pathlib, sys
+          p = pathlib.Path(sys.argv[1])
+          data = p.read_bytes()
+          print(f"bytes {len(data)}")
+          print(f"sha256 {hashlib.sha256(data).hexdigest()}")
+          PY
+          # The temp build must not touch the checkout's deployed site.
+          git diff --exit-code -- game_tracker.html sw.js index.html CNAME assets supabase_*.sql social-auth.js manifest.json README.md
+
+  unit:
+    name: Node unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Run unit tests
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          files=(tests/*.test.js v3/tests/*.js)
+          if [ ${#files[@]} -eq 0 ]; then
+            echo "no unit tests found"
+            exit 1
+          fi
+          for f in "${files[@]}"; do
+            echo "== $f"
+            node "$f"
+          done
+
+  cache-name:
+    name: sw.js CACHE_NAME vs BUILD
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compare CACHE_NAME to BUILD
+        run: |
+          python3 - << 'PY'
+          import pathlib, re, sys
+          root = pathlib.Path(".")
+          build = (root / "v3/build.py").read_text()
+          sw = (root / "sw.js").read_text()
+          bm = re.search(r"^BUILD\s*=\s*'([^']+)'", build, re.M)
+          sm = re.search(r"^const CACHE_NAME\s*=\s*'([^']+)'", sw, re.M)
+          if not bm or not sm:
+              print("::error::Could not parse BUILD or CACHE_NAME")
+              sys.exit(1)
+          build_name, cache_name = bm.group(1), sm.group(1)
+          print(f"BUILD={build_name}")
+          print(f"CACHE_NAME={cache_name}")
+          if build_name == cache_name:
+              print("CACHE_NAME matches BUILD")
+              sys.exit(0)
+          # main today ships v26.1 while these sources are already v26.2.
+          # That one drift is a warning. Any other mismatch fails the job.
+          known = (
+              "v26.1-detail-header-sharp-2026-11-28",
+              "v26.2-uniform-controls-safe-top-2026-11-28",
+          )
+          if (cache_name, build_name) == known:
+              print(
+                  "::warning::sw.js CACHE_NAME (%s) does not match v3/build.py BUILD (%s). "
+                  "This is the live v26.1 deploy versus the v26.2 sources. "
+                  "Release & QA bumps CACHE_NAME when that build ships. Not failing CI."
+                  % (cache_name, build_name)
+              )
+              sys.exit(0)
+          print(
+              "::error::sw.js CACHE_NAME (%s) does not match v3/build.py BUILD (%s)"
+              % (cache_name, build_name)
+          )
+          sys.exit(1)
+          PY

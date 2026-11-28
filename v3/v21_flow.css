@@ -1,0 +1,606 @@
+/* =========================================================================
+   TallyIt v21 Flow & Session UX
+   1. Choose Game -> Setup -> Score 3-step indicator + sticky Start CTA
+   2. Active Games ("IN PROGRESS") multi-game section on Home
+   3. Universal theme-independent End / Leave Game sheet (#v21-end-game-modal)
+   Obsidian + warm-brass theme. Strictly scoped to .v21-* / #v21-* / :root.
+   Zero theme-* selectors. Zero emojis. Mobile-first 390x844, zero overflow.
+   ========================================================================= */
+
+:root {
+  --v21-bg: #0c0d10;
+  --v21-surface: #14161b;
+  --v21-surface-2: #1c1f26;
+  --v21-border: rgba(255, 255, 255, 0.09);
+  --v21-border-hi: rgba(255, 255, 255, 0.16);
+  --v21-text: #f4f1ea;
+  --v21-muted: #989fa9;
+  --v21-brass: #d4a853;
+  --v21-brass-hi: #e4bc6c;
+  --v21-brass-soft: rgba(212, 168, 83, 0.14);
+  --v21-brass-border: rgba(212, 168, 83, 0.38);
+  --v21-danger: #f87171;
+  --v21-danger-soft: rgba(248, 113, 113, 0.12);
+  --v21-danger-border: rgba(248, 113, 113, 0.38);
+  --v21-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* ================= 1. CHOOSE/SETUP FLOW (v24.2: stepper and "Tap any game" hint removed) ================= */
+.v21-tile-cue {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: rgba(12, 13, 16, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: var(--v21-text);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.v21-tile-cue svg {
+  width: 12px;
+  height: 12px;
+}
+
+/* Setup header with Change Game back link */
+.v21-setup-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--v21-border);
+}
+
+.v21-setup-game-wrap {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.v21-setup-eyebrow {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--v21-brass);
+}
+
+.v21-setup-game-name {
+  margin: 0;
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--v21-text);
+  line-height: 1.15;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.v21-change-game-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 34px;
+  padding: 6px 11px;
+  border-radius: 999px;
+  border: 1px solid var(--v21-border-hi);
+  background: var(--v21-surface-2);
+  color: var(--v21-text);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  flex-shrink: 0;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  transition: border-color 0.14s ease, background 0.14s ease;
+}
+
+.v21-change-game-btn:active {
+  border-color: var(--v21-brass-border);
+  background: var(--v21-brass-soft);
+  color: var(--v21-brass);
+}
+
+.v21-change-game-btn svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+/* Sticky Bottom Primary CTA Bar on Setup */
+.v21-setup-spacer {
+  height: 76px;
+}
+
+.v21-sticky-cta {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: calc(64px + env(safe-area-inset-bottom, 0px));
+  z-index: 90;
+  /* v24.2 device pass: match the setup card column (760px view minus its 18.4px gutters) */
+  width: min(calc(760px - 2.3rem), 100vw);
+  padding: 10px 14px;
+  background: #0c0d10;
+  border-top: 1px solid var(--v21-border-hi);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  box-sizing: border-box;
+}
+
+.v21-sticky-cta[hidden],
+.v21-sticky-cta.hidden {
+  display: none !important;
+}
+
+.v21-cta-summary {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.v21-cta-label {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--v21-muted);
+}
+
+.v21-cta-meta {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--v21-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.v21-start-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 44px;
+  padding: 10px 18px;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(180deg, var(--v21-brass-hi) 0%, var(--v21-brass) 100%);
+  color: var(--v21-bg);
+  font-family: inherit;
+  font-size: 14.5px;
+  font-weight: 700;
+  white-space: nowrap;
+  flex-shrink: 0;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  box-shadow: 0 4px 16px rgba(212, 168, 83, 0.28);
+  transition: transform 0.12s ease, filter 0.14s ease;
+}
+
+.v21-start-btn:active {
+  transform: scale(0.98);
+  filter: brightness(0.94);
+}
+
+.v21-start-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.v21-start-btn svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+/* ================= 2. ACTIVE GAMES ("IN PROGRESS") SECTION ON HOME ================= */
+.v21-active-section {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.v21-active-section[hidden],
+.v21-active-section.hidden {
+  display: none !important;
+}
+
+.v21-active-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 0 2px;
+}
+
+.v21-active-heading {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--v21-brass);
+}
+
+.v21-live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--v21-brass);
+  box-shadow: 0 0 0 3px rgba(212, 168, 83, 0.22);
+  flex-shrink: 0;
+}
+
+.v21-active-count {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--v21-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.v21-active-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.v21-active-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 13px;
+  border-radius: 14px;
+  border: 1px solid var(--v21-brass-border);
+  background: linear-gradient(180deg, rgba(212, 168, 83, 0.08) 0%, var(--v21-surface) 100%);
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+.v21-active-info {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.v21-active-title-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.v21-active-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--v21-text);
+  line-height: 1.2;
+}
+
+.v21-active-var {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 7px;
+  border-radius: 999px;
+  border: 1px solid var(--v21-border-hi);
+  background: var(--v21-surface-2);
+  color: var(--v21-muted);
+  font-size: 10.5px;
+  font-weight: 600;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.v21-active-meta {
+  font-size: 12px;
+  color: var(--v21-muted);
+  line-height: 1.35;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.v21-active-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.v21-btn-resume {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-height: 36px;
+  padding: 7px 12px;
+  border-radius: 10px;
+  border: none;
+  background: var(--v21-brass);
+  color: var(--v21-bg);
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+.v21-btn-resume:active {
+  filter: brightness(0.92);
+}
+
+.v21-btn-resume svg {
+  width: 13px;
+  height: 13px;
+}
+
+.v21-btn-discard {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: 10px;
+  border: 1px solid var(--v21-border-hi);
+  background: var(--v21-surface-2);
+  color: var(--v21-muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  transition: color 0.14s ease, border-color 0.14s ease, background 0.14s ease;
+}
+
+.v21-btn-discard:hover,
+.v21-btn-discard:active,
+.v21-btn-discard.is-confirming {
+  color: var(--v21-danger);
+  border-color: var(--v21-danger-border);
+  background: var(--v21-danger-soft);
+}
+
+.v21-btn-discard svg {
+  width: 15px;
+  height: 15px;
+}
+
+/* ================= 3. UNIVERSAL END / LEAVE GAME SHEET ================= */
+#v21-end-game-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 260;
+  background: rgba(6, 7, 10, 0.8);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 12px;
+  box-sizing: border-box;
+  font-family: var(--v21-font);
+  color: var(--v21-text);
+}
+
+#v21-end-game-modal[hidden],
+#v21-end-game-modal.hidden {
+  display: none !important;
+}
+
+.v21-modal-sheet {
+  width: 100%;
+  max-width: 440px;
+  border-radius: 20px;
+  border: 1px solid var(--v21-border-hi);
+  background: var(--v21-surface);
+  box-shadow: 0 22px 56px rgba(0, 0, 0, 0.65);
+  padding: 16px 16px calc(16px + env(safe-area-inset-bottom, 0px));
+  color: var(--v21-text);
+  font-family: var(--v21-font);
+  box-sizing: border-box;
+}
+
+.v21-modal-handle {
+  width: 36px;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+  margin: 0 auto 12px;
+}
+
+.v21-modal-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.v21-modal-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--v21-text);
+  line-height: 1.2;
+}
+
+.v21-modal-sub {
+  margin: 4px 0 0;
+  font-size: 12.5px;
+  color: var(--v21-muted);
+  line-height: 1.35;
+}
+
+.v21-modal-close {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  border: 1px solid var(--v21-border);
+  background: var(--v21-surface-2);
+  color: var(--v21-muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+.v21-modal-close svg {
+  width: 16px;
+  height: 16px;
+}
+
+.v21-sheet-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.v21-sheet-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 52px;
+  padding: 11px 14px;
+  border-radius: 13px;
+  border: 1px solid var(--v21-border-hi);
+  background: var(--v21-surface-2);
+  color: var(--v21-text);
+  font-family: var(--v21-font);
+  text-align: left;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  box-sizing: border-box;
+  transition: transform 0.11s ease, background 0.14s ease, border-color 0.14s ease, color 0.14s ease;
+}
+
+.v21-sheet-btn:active {
+  transform: scale(0.985);
+}
+
+.v21-sheet-btn svg {
+  width: 19px;
+  height: 19px;
+  flex-shrink: 0;
+}
+
+.v21-sheet-btn-copy {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.v21-sheet-btn-title {
+  font-size: 14.5px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.v21-sheet-btn-desc {
+  font-size: 11.5px;
+  font-weight: 400;
+  opacity: 0.78;
+  margin-top: 2px;
+}
+
+/* Primary: Save & Finish Game (warm brass) */
+.v21-sheet-btn.is-primary {
+  border: none;
+  background: linear-gradient(180deg, var(--v21-brass-hi) 0%, var(--v21-brass) 100%);
+  color: var(--v21-bg);
+  box-shadow: 0 4px 16px rgba(212, 168, 83, 0.24);
+}
+
+.v21-sheet-btn.is-primary .v21-sheet-btn-desc {
+  color: rgba(12, 13, 16, 0.76);
+  opacity: 1;
+}
+
+/* Secondary: Keep Open (Pause) */
+.v21-sheet-btn.is-pause {
+  border-color: var(--v21-border-hi);
+  background: var(--v21-surface-2);
+  color: var(--v21-text);
+}
+
+.v21-sheet-btn.is-pause svg {
+  color: var(--v21-brass);
+}
+
+/* Subtle Danger Outline: End Without Recording + 2-tap confirm state */
+.v21-sheet-btn.is-danger {
+  border-color: var(--v21-danger-border);
+  background: transparent;
+  color: var(--v21-danger);
+}
+
+.v21-sheet-btn.is-danger .v21-sheet-btn-desc {
+  color: rgba(248, 113, 113, 0.8);
+  opacity: 1;
+}
+
+.v21-sheet-btn.is-danger.is-confirming {
+  border-color: var(--v21-danger);
+  background: var(--v21-danger-soft);
+  color: #fecaca;
+}
+
+.v21-sheet-btn.is-danger.is-confirming .v21-sheet-btn-desc {
+  color: #fca5a5;
+}
+
+/* Ghost Cancel: Keep Playing */
+.v21-sheet-cancel {
+  width: 100%;
+  min-height: 42px;
+  margin-top: 4px;
+  padding: 9px 14px;
+  border-radius: 11px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--v21-muted);
+  font-family: var(--v21-font);
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+.v21-sheet-cancel:active {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--v21-text);
+}

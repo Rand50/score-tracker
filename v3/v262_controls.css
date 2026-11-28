@@ -1,0 +1,67 @@
+/* TallyIt v26.2: uniform Leave / Log / Delete bar on every game screen + safe-area variables.
+   --tt-sat / --tt-sab are the ONE source for status-bar and home-indicator clearance (build.py rewrites every
+   env(safe-area-inset-*) in the shipped CSS to these). --tt-sat-c is the same value for the content under the bar, and it
+   drops to 0 while the control bar is showing because the bar itself already clears the status bar. */
+:root {
+  --tt-sat: max(env(safe-area-inset-top, 0px), var(--tt-sat-fb, 0px));
+  --tt-sab: max(env(safe-area-inset-bottom, 0px), var(--tt-sab-fb, 0px));
+  --tt-sat-c: var(--tt-sat);
+  --v262-gap: 12px;
+}
+html.v262-ctl-on { --tt-sat-c: 0px; }
+
+#v262-ctl {
+  --v262-bg: #0c0d10; --v262-fg: #f2f3f5; --v262-line: rgba(255,255,255,0.14); --v262-acc: #d4a853; --v262-acc-ink: #14161b; --v262-danger: #ff8f86;
+  position: sticky; top: 0; z-index: 40; box-sizing: border-box; width: 100%;
+  background: var(--v262-bg); color: var(--v262-fg); border-bottom: 1px solid var(--v262-line);
+  padding: calc(var(--tt-sat) + var(--v262-gap)) 12px 8px;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', 'Segoe UI', Roboto, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased; -webkit-text-size-adjust: 100%;
+}
+#v262-ctl[hidden] { display: none !important; }
+#v262-ctl .v262-ctl-in { max-width: 760px; margin: 0 auto; display: flex; align-items: center; gap: 8px; }
+#v262-ctl .v262-btn {
+  appearance: none; -webkit-appearance: none; box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  height: 40px; min-width: 40px; padding: 0 14px; margin: 0; border-radius: 12px; cursor: pointer; white-space: nowrap;
+  font: 600 14px/1 -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', 'Segoe UI', Roboto, system-ui, sans-serif; letter-spacing: 0; text-transform: none;
+  color: var(--v262-fg); background: transparent; border: 1.5px solid var(--v262-line); box-shadow: none; text-shadow: none;
+  -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+}
+#v262-ctl .v262-btn svg { width: 17px; height: 17px; flex: 0 0 auto; }
+#v262-ctl .v262-leave { margin-right: auto; padding-left: 10px; }
+#v262-ctl .v262-log { background: var(--v262-acc); color: var(--v262-acc-ink); border-color: var(--v262-acc); }
+#v262-ctl .v262-delete { color: var(--v262-danger); border-color: color-mix(in srgb, var(--v262-danger) 55%, transparent); }
+#v262-ctl .v262-btn:active { transform: scale(0.97); }
+#v262-ctl .v262-btn:focus-visible { outline: 2px solid var(--v262-acc); outline-offset: 2px; }
+
+/* per-game theme colors (same bar, same layout, same size - only the colors change) */
+body.theme-flip7 #v262-ctl { --v262-bg: #50c3be; --v262-fg: #223266; --v262-line: rgba(34,50,102,0.32); --v262-acc: #ffc815; --v262-acc-ink: #223266; --v262-danger: #a3175f; }
+body.theme-seven-wonders #v262-ctl { --v262-bg: #f1e6cc; --v262-fg: #382515; --v262-line: rgba(56,37,21,0.28); --v262-acc: #8e3a1e; --v262-acc-ink: #fbf3e1; --v262-danger: #8e2a1c; }
+body.theme-carcassonne #v262-ctl { --v262-bg: #2a1a0c; --v262-fg: #faf3e0; --v262-line: rgba(250,243,224,0.22); --v262-acc: #3f8a38; --v262-acc-ink: #ffffff; --v262-danger: #ff9a8c; }
+body.theme-catan #v262-ctl { --v262-bg: #1c0f07; --v262-fg: #f0cf7a; --v262-line: rgba(201,154,62,0.45); --v262-acc: #c99a3e; --v262-acc-ink: #2b1a0d; --v262-danger: #ff9a86; }
+body.theme-ohhell #v262-ctl, body.theme-hearts #v262-ctl { --v262-bg: #f5f0e6; --v262-fg: #1f1c18; --v262-line: rgba(31,28,24,0.28); --v262-acc: #a82a22; --v262-acc-ink: #ffffff; --v262-danger: #a82a22; }
+body.theme-nertz #v262-ctl { --v262-bg: #071222; --v262-fg: #e6c677; --v262-line: rgba(230,198,119,0.38); --v262-acc: #e6c677; --v262-acc-ink: #071222; --v262-danger: #ff9a8c; }
+body.theme-rummikub #v262-ctl { --v262-bg: #0b2f69; --v262-fg: #faf6ec; --v262-line: rgba(250,246,236,0.3); --v262-acc: #faf6ec; --v262-acc-ink: #0b2f69; --v262-danger: #ffb0a6; }
+body.theme-qwirkle #v262-ctl { --v262-bg: #fbf7ee; --v262-fg: #0e1a3a; --v262-line: rgba(14,26,58,0.24); --v262-acc: #2457c5; --v262-acc-ink: #ffffff; --v262-danger: #b3261e; }
+body.theme-spoons #v262-ctl { --v262-bg: #fbf3e4; --v262-fg: #4a2c14; --v262-line: rgba(74,44,20,0.3); --v262-acc: #7a4a22; --v262-acc-ink: #fff9ee; --v262-danger: #a02a24; }
+
+/* the old per-game leave / finish / end buttons are replaced by the bar above (their ids and handlers stay in the DOM) */
+html.v262-ctl-on #oh-btn-home, html.v262-ctl-on #oh-btn-end, html.v262-ctl-on #ht-btn-home, html.v262-ctl-on #ht-btn-end,
+html.v262-ctl-on #qw-btn-home, html.v262-ctl-on #qw-btn-end, html.v262-ctl-on #sp-btn-home, html.v262-ctl-on #sp-btn-end,
+html.v262-ctl-on #sw-btn-back, html.v262-ctl-on #sw-btn-finish, html.v262-ctl-on #cc-finish, html.v262-ctl-on #btn-save-catan,
+html.v262-ctl-on #rk-finish, html.v262-ctl-on #sp-btn-finish, html.v262-ctl-on #nz-finish, html.v262-ctl-on #gen-save,
+html.v262-ctl-on #gen-leave { display: none !important; }
+
+/* delete confirmation */
+.v262-del-modal { position: fixed; inset: 0; z-index: 9100; display: flex; align-items: flex-end; justify-content: center; padding: 0 12px calc(var(--tt-sab) + 12px); box-sizing: border-box; }
+.v262-del-modal[hidden] { display: none !important; }
+.v262-del-scrim { position: absolute; inset: 0; background: rgba(8,10,14,0.62); }
+.v262-del-card { position: relative; width: 100%; max-width: 420px; box-sizing: border-box; background: #14161b; color: #f2f3f5; border: 1px solid rgba(255,255,255,0.14); border-radius: 18px; padding: 18px 18px 16px;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', 'Segoe UI', Roboto, system-ui, sans-serif; box-shadow: 0 18px 50px rgba(0,0,0,0.5); }
+.v262-del-title { margin: 0 0 6px; font-size: 18px; font-weight: 700; letter-spacing: 0; }
+.v262-del-sub { margin: 0 0 16px; font-size: 14px; line-height: 1.4; color: #b4bac4; }
+.v262-del-actions { display: flex; gap: 10px; }
+.v262-del-btn { flex: 1; height: 46px; border-radius: 12px; border: 1.5px solid rgba(255,255,255,0.22); background: transparent; color: #f2f3f5; font: 600 15px/1 -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', system-ui, sans-serif; cursor: pointer; touch-action: manipulation; }
+.v262-del-danger { background: #d6453b; border-color: #d6453b; color: #ffffff; }
+html.v262-sheet-open body { overflow: hidden; }
+@media (min-width: 700px) { .v262-del-modal { align-items: center; } }

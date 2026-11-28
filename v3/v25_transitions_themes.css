@@ -1,0 +1,13 @@
+/* TallyIt v25 polish - per-game page background for the transition layer.
+   One rule per theme, scoped to body.theme-<game>; no @media, no emojis. A new game only needs a line here
+   (without one, v25_transitions.js falls back to the computed body background-color). */
+body.theme-catan { --v25-bg: #24160b; }
+body.theme-flip7 { --v25-bg: #3aa9a6; }
+body.theme-carcassonne { --v25-bg: #8fb86a; }
+body.theme-nertz { --v25-bg: #071222; }
+body.theme-rummikub { --v25-bg: #0b2f69; }
+body.theme-seven-wonders { --v25-bg: #eadbc0; }
+body.theme-hearts { --v25-bg: #f5f0e6; }
+body.theme-ohhell { --v25-bg: #f5f0e6; }
+body.theme-qwirkle { --v25-bg: #fbf7ee; }
+body.theme-spoons { --v25-bg: #fbf3e4; }

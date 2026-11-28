@@ -1,0 +1,16 @@
+/* TallyIt v25 polish - Request a Game sheet: keyboard-safe (neutral; every selector starts with #req-game-modal or .v25-rkb-).
+   No theme-* selectors, no @media, no emojis. Variables are set by v25_request_kb.js from window.visualViewport. */
+#req-game-modal {
+  padding-top: calc(12px + env(safe-area-inset-top, 0px));
+  padding-bottom: calc(12px + var(--v25-rkb-kb, 0px));
+  overscroll-behavior: contain;
+}
+#req-game-modal .v20-modal-sheet { max-height: var(--v25-rkb-max, 86vh); max-height: var(--v25-rkb-max, 86dvh); }
+#req-game-modal .v20-modal-body { display: flex; flex-direction: column; min-height: 0; padding-bottom: 0; overscroll-behavior: contain; scroll-padding-bottom: 96px; }
+#req-game-modal #req-game-form { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; }
+/* sticky footer: Submit always stays at the bottom of the visible sheet */
+#req-game-modal .v25-rkb-foot {
+  position: sticky; bottom: 0; z-index: 2; margin: 4px -16px 0; padding: 10px 16px calc(14px + env(safe-area-inset-bottom, 0px));
+  background: var(--v20-surface); border-top: 1px solid var(--v20-border); box-sizing: border-box;
+}
+#req-game-modal .v25-rkb-foot #btn-submit-game-request { width: 100%; }

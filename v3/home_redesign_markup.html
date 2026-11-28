@@ -1,0 +1,151 @@
+<!-- =========================================================================
+     Score Tracker — Home Screen, Top Header & Bottom Nav Redesign (v12)
+     Drop-in replacement for .app-header, #view-home, and .bottom-nav
+     in v3/shell.html.
+     Preserves every existing ID & onclick hook:
+       #view-home, #btn-resume-game, #sync-status, #recent-list,
+       #nav-home, #nav-new, #nav-active, #nav-social, #nav-social-dot,
+       #nav-history, #nav-signout
+     Zero basic emojis; uniform 1.75px inline SVG icons throughout.
+     ========================================================================= -->
+
+<!-- 1) TOP HEADER (replaces <header class="app-header">...</header>) -->
+<header class="app-header">
+  <div class="app-brand">
+    <span class="app-brand-mark" aria-hidden="true">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="6" y1="5" x2="6" y2="19"/>
+        <line x1="11" y1="5" x2="11" y2="19"/>
+        <line x1="16" y1="5" x2="16" y2="19"/>
+        <line x1="4" y1="17" x2="20" y2="7"/>
+      </svg>
+    </span>
+    <h1>Score Tracker</h1>
+  </div>
+  <div class="app-header-actions">
+    <span id="sync-status" role="status" aria-live="polite"></span>
+  </div>
+</header>
+
+<!-- 2) HOME VIEW (replaces <section id="view-home" class="view">...</section>) -->
+<section id="view-home" class="view" aria-label="Home">
+  <div class="home-stack">
+
+    <!-- Active Game Banner (only visible when currentGame exists; JS toggles #btn-resume-game) -->
+    <button id="btn-resume-game" class="home-resume-card hidden" type="button" hidden onclick="showView('active')">
+      <span class="home-resume-left">
+        <span class="home-live-dot" aria-hidden="true"></span>
+        <span class="home-resume-text">
+          <span class="home-resume-label">In Progress</span>
+          <span class="home-resume-title" id="home-resume-meta">Resume Active Game</span>
+        </span>
+      </span>
+      <span class="home-resume-cta">
+        Resume
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="9 18 15 12 9 6"/>
+        </svg>
+      </span>
+    </button>
+
+    <!-- Primary Action Card -->
+    <div class="home-hero">
+      <div class="home-hero-top">
+        <p class="home-eyebrow">Tabletop Ledger</p>
+        <h2 class="home-title">Start a new game</h2>
+      </div>
+
+      <button class="home-primary-cta" type="button" onclick="showView('new')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="12" y1="5" x2="12" y2="19"/>
+          <line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        <span>Start a Game</span>
+      </button>
+
+      <div class="home-quick-row" aria-label="Quick start a game">
+        <button type="button" class="home-quick-chip" onclick="selectGame('catan'); showView('new')">Catan</button>
+        <button type="button" class="home-quick-chip" onclick="selectGame('carcassonne'); showView('new')">Carcassonne</button>
+        <button type="button" class="home-quick-chip" onclick="selectGame('flip7'); showView('new')">Flip 7</button>
+        <button type="button" class="home-quick-chip" onclick="selectGame('nertz'); showView('new')">Nertz</button>
+        <button type="button" class="home-quick-chip" onclick="selectGame('hearts'); showView('new')">Hearts</button>
+      </div>
+    </div>
+
+    <!-- Recent Games -->
+    <div class="home-section">
+      <div class="home-section-head">
+        <h3 class="home-section-title">Recent Games</h3>
+        <button type="button" class="home-section-link" onclick="showView('history')">
+          History
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
+        </button>
+      </div>
+      <div class="home-recent-card">
+        <div id="recent-list"></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- 3) BOTTOM NAV (replaces <nav class="bottom-nav">...</nav>) -->
+<nav class="bottom-nav" aria-label="Main navigation">
+  <button type="button" id="nav-home" onclick="showView('home')">
+    <span class="icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 10.5L12 3l9 7.5"/>
+        <path d="M5.5 9.5V20a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1V9.5"/>
+      </svg>
+    </span>
+    <span>Home</span>
+  </button>
+
+  <button type="button" id="nav-new" onclick="showView('new')">
+    <span class="icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3.5" y="3.5" width="17" height="17" rx="4"/>
+        <line x1="12" y1="8.25" x2="12" y2="15.75"/>
+        <line x1="8.25" y1="12" x2="15.75" y2="12"/>
+      </svg>
+    </span>
+    <span>Play</span>
+  </button>
+
+  <button type="button" id="nav-active" onclick="showView('active')">
+    <span class="icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/>
+        <rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/>
+        <rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/>
+        <rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/>
+      </svg>
+    </span>
+    <span>Tracker</span>
+  </button>
+
+  <button type="button" id="nav-social" onclick="showView('social')">
+    <span class="icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="9" cy="8.5" r="3.25"/>
+        <path d="M3.5 19.5c0-3 2.5-5 5.5-5s5.5 2 5.5 5"/>
+        <circle cx="16.5" cy="9.5" r="2.5"/>
+        <path d="M16.5 14.5c2.2 0 4 1.5 4 4.5"/>
+      </svg>
+    </span>
+    <span>Friends</span>
+    <span id="nav-social-dot" class="soc-nav-dot hidden" hidden aria-hidden="true"></span>
+  </button>
+
+  <button type="button" id="nav-history" onclick="showView('history')">
+    <span class="icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="8.5"/>
+        <polyline points="12 7.5 12 12 15 13.75"/>
+      </svg>
+    </span>
+    <span>History</span>
+  </button>
+</nav>

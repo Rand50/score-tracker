@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="102" height="68" viewBox="0 0 102 68">
+<defs><linearGradient id="b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6b4688"/><stop offset="1" stop-color="#3f2656"/></linearGradient>
+<linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f0d58b"/><stop offset="1" stop-color="#b98d3a"/></linearGradient>
+<linearGradient id="s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4ead0"/><stop offset="1" stop-color="#d3c299"/></linearGradient></defs>
+<path d="M7 1.2 H95 L100.8 7 V61 L95 66.8 H7 L1.2 61 V7 Z" fill="url(#b)" stroke="url(#g)" stroke-width="2.2" stroke-linejoin="round"/>
+<path d="M7 1.2 H95 L100.8 7 V61 L95 66.8 H7 L1.2 61 V7 Z" fill="none" stroke="#000" stroke-opacity=".25" stroke-width="1" transform="translate(51 34) scale(.94) translate(-51 -34)"/>
+<path d="M51 8.5 C59 12 68 12.5 74 12.5 V33 C74 46 64 53 51 58 C38 53 28 46 28 33 V12.5 C34 12.5 43 12 51 8.5 Z" fill="#000" fill-opacity=".18" stroke="#d6c28f" stroke-width="1.8"/><g transform="translate(51 34) rotate(45)"><path d="M-2.2 -22 L2.2 -22 L2.2 6 L5.5 6 L5.5 9.5 L2.2 9.5 L2.2 19 L-2.2 19 L-2.2 9.5 L-5.5 9.5 L-5.5 6 L-2.2 6 Z" fill="url(#s)" stroke="#6b5a35" stroke-width=".8" stroke-linejoin="round"/><path d="M-2.2 -22 L0 -26 L2.2 -22 Z" fill="url(#s)"/></g><g transform="translate(51 34) rotate(-45)"><path d="M-2.2 -22 L2.2 -22 L2.2 6 L5.5 6 L5.5 9.5 L2.2 9.5 L2.2 19 L-2.2 19 L-2.2 9.5 L-5.5 9.5 L-5.5 6 L-2.2 6 Z" fill="url(#s)" stroke="#6b5a35" stroke-width=".8" stroke-linejoin="round"/><path d="M-2.2 -22 L0 -26 L2.2 -22 Z" fill="url(#s)"/></g>
+</svg>

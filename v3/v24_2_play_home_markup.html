@@ -1,0 +1,70 @@
+<!-- TallyIt v24.2 — Home screen removed; Play (#view-new) is the landing page.
+     Two blocks. Mount with the same START/END marker extraction build.py uses for v21/v24.
+     The __V22_BUILT_BANNER__, __V24_SUGGEST_BANNER__ and __V21_ACTIVE_GAMES__ placeholders move
+     OUT of #view-home (delete that whole <section>) and INTO the Play top block below, so build.py's
+     existing .replace() calls keep filling them unchanged. The v21 resume card (#btn-resume-game)
+     rides inside __V21_ACTIVE_GAMES__, so it moves too. No emojis. -->
+
+<!-- ==================== BLOCK 1: PLAY TOP (requested-game banner, suggestions, In Progress) ==========
+     Mount as the FIRST child of <section id="view-new" ...>, before <div id="setup-screen">.
+     Shown only on the Choose step; CSS hides it on the Setup step via #view-new[data-v21-step="setup"]. -->
+<!-- V24_2_PLAY_TOP_START -->
+<div id="v24-2-play-top" class="v24-2-play-top" aria-label="Your games">
+__V22_BUILT_BANNER__
+__V24_SUGGEST_BANNER__
+__V21_ACTIVE_GAMES__
+</div>
+<!-- V24_2_PLAY_TOP_END -->
+
+
+<!-- ==================== BLOCK 2: BOTTOM NAV (Home tab removed; Play first) ==========
+     Replaces the whole <nav class="bottom-nav"> in shell.html. Same IDs as before minus #nav-home. -->
+<!-- V24_2_BOTTOM_NAV_START -->
+<nav class="bottom-nav" aria-label="Main navigation">
+  <button type="button" id="nav-new" onclick="showView('new')">
+    <span class="icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3.5" y="3.5" width="17" height="17" rx="4"/>
+        <line x1="12" y1="8.25" x2="12" y2="15.75"/>
+        <line x1="8.25" y1="12" x2="15.75" y2="12"/>
+      </svg>
+    </span>
+    <span>Play</span>
+  </button>
+
+  <button type="button" id="nav-active" onclick="showView('active')">
+    <span class="icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/>
+        <rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/>
+        <rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/>
+        <rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/>
+      </svg>
+    </span>
+    <span>Tracker</span>
+  </button>
+
+  <button type="button" id="nav-social" onclick="showView('social')">
+    <span class="icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="9" cy="8.5" r="3.25"/>
+        <path d="M3.5 19.5c0-3 2.5-5 5.5-5s5.5 2 5.5 5"/>
+        <circle cx="16.5" cy="9.5" r="2.5"/>
+        <path d="M16.5 14.5c2.2 0 4 1.5 4 4.5"/>
+      </svg>
+    </span>
+    <span>Friends</span>
+    <span id="nav-social-dot" class="soc-nav-dot hidden" hidden aria-hidden="true"></span>
+  </button>
+
+  <button type="button" id="nav-history" onclick="showView('history')">
+    <span class="icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="8.5"/>
+        <polyline points="12 7.5 12 12 15 13.75"/>
+      </svg>
+    </span>
+    <span>History</span>
+  </button>
+</nav>
+<!-- V24_2_BOTTOM_NAV_END -->

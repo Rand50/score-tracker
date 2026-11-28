@@ -1,0 +1,771 @@
+/* =========================================================================
+   TallyIt v22 UI Features
+   1. Game Search bar + empty-search "Request this game" shortcut
+   2. Player Search inputs (Friends & History)
+   3. "Your Requested Game Is Built!" Home banner + Guest Email field
+   4. Collapsible "Customize Rules" (House Rules) drawer + Publish sub-form
+   5. Admin Community Variations Moderation card
+   Obsidian + warm-brass theme. Strictly scoped to .v22-* / #v22-* / :root.
+   Zero theme-* selectors. Zero emojis. Mobile-first 390x844, zero overflow.
+   ========================================================================= */
+
+:root {
+  --v22-bg: #0c0d10;
+  --v22-surface: #14161b;
+  --v22-surface-2: #1c1f26;
+  --v22-border: rgba(255, 255, 255, 0.09);
+  --v22-border-hi: rgba(255, 255, 255, 0.16);
+  --v22-text: #f4f1ea;
+  --v22-muted: #989fa9;
+  --v22-brass: #d4a853;
+  --v22-brass-hi: #e4bc6c;
+  --v22-brass-soft: rgba(212, 168, 83, 0.14);
+  --v22-brass-border: rgba(212, 168, 83, 0.38);
+  --v22-success: #4ade80;
+  --v22-danger: #f87171;
+  --v22-danger-soft: rgba(248, 113, 113, 0.12);
+  --v22-danger-border: rgba(248, 113, 113, 0.36);
+}
+
+/* ================= 1 & 2. SEARCH BARS (GAMES, FRIENDS, HISTORY) ================= */
+.v22-search-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin: 0 0 10px;
+  box-sizing: border-box;
+}
+
+.v22-search-ico {
+  position: absolute;
+  left: 12px;
+  width: 16px;
+  height: 16px;
+  color: var(--v22-muted);
+  pointer-events: none;
+}
+
+.v22-search-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 38px 10px 36px;
+  border-radius: 11px;
+  border: 1px solid var(--v22-border-hi);
+  background: var(--v22-bg);
+  color: var(--v22-text);
+  font-family: inherit;
+  font-size: 16px;
+  line-height: 1.25;
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.v22-search-input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.v22-search-input:focus {
+  border-color: var(--v22-brass);
+  box-shadow: 0 0 0 3px rgba(212, 168, 83, 0.15);
+}
+
+.v22-search-clear {
+  position: absolute;
+  right: 7px;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border-radius: 8px;
+  border: none;
+  background: var(--v22-surface-2);
+  color: var(--v22-muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+.v22-search-clear[hidden],
+.v22-search-clear.hidden {
+  display: none !important;
+}
+
+.v22-search-clear svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* Empty Game Search State + 1-tap Request Shortcut */
+.v22-search-empty {
+  margin: 10px 0 12px;
+  padding: 16px 14px;
+  border-radius: 13px;
+  border: 1px dashed var(--v22-brass-border);
+  background: rgba(28, 31, 38, 0.65);
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.v22-search-empty[hidden],
+.v22-search-empty.hidden {
+  display: none !important;
+}
+
+.v22-search-empty-title {
+  margin: 0 0 4px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--v22-text);
+}
+
+.v22-search-empty-sub {
+  margin: 0 0 12px;
+  font-size: 12.5px;
+  color: var(--v22-muted);
+}
+
+.v22-req-shortcut-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 38px;
+  padding: 8px 15px;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(180deg, var(--v22-brass-hi) 0%, var(--v22-brass) 100%);
+  color: var(--v22-bg);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+.v22-req-shortcut-btn svg {
+  width: 15px;
+  height: 15px;
+}
+
+/* ================= 3. "YOUR REQUESTED GAME IS BUILT!" BANNER ================= */
+.v22-built-banner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 13px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--v22-brass-border);
+  background: linear-gradient(135deg, rgba(212, 168, 83, 0.18) 0%, rgba(20, 22, 27, 0.96) 68%);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.32);
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.v22-built-banner[hidden],
+.v22-built-banner.hidden {
+  display: none !important;
+}
+
+.v22-built-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.v22-built-lead {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  min-width: 0;
+  flex: 1;
+}
+
+.v22-built-ico {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: var(--v22-brass-soft);
+  border: 1px solid var(--v22-brass-border);
+  color: var(--v22-brass);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.v22-built-ico svg {
+  width: 18px;
+  height: 18px;
+}
+
+.v22-built-eyebrow {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--v22-brass);
+  line-height: 1.2;
+}
+
+.v22-built-title {
+  margin: 3px 0 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--v22-text);
+  line-height: 1.25;
+}
+
+.v22-built-dismiss {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border-radius: 8px;
+  border: 1px solid var(--v22-border);
+  background: rgba(12, 13, 16, 0.45);
+  color: var(--v22-muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+.v22-built-dismiss svg {
+  width: 14px;
+  height: 14px;
+}
+
+.v22-built-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.v22-built-play-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 7px 14px;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(180deg, var(--v22-brass-hi) 0%, var(--v22-brass) 100%);
+  color: var(--v22-bg);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+.v22-built-play-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* Optional Guest Email field in Request a Game modal */
+.v22-guest-email-field {
+  margin-bottom: 13px;
+}
+
+.v22-guest-email-field[hidden],
+.v22-guest-email-field.hidden {
+  display: none !important;
+}
+
+/* ================= 4. COLLAPSIBLE "CUSTOMIZE RULES" (HOUSE RULES) ================= */
+.v22-hr-wrap {
+  margin-top: 8px;
+  box-sizing: border-box;
+}
+
+.v22-hr-wrap[hidden],
+.v22-hr-wrap.hidden {
+  display: none !important;
+}
+
+.v22-hr-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  min-height: 40px;
+  padding: 9px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--v22-border-hi);
+  background: var(--v22-surface-2);
+  color: var(--v22-text);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.v22-hr-toggle[aria-expanded="true"] {
+  border-color: var(--v22-brass-border);
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  background: rgba(212, 168, 83, 0.08);
+}
+
+.v22-hr-toggle-left {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.v22-hr-toggle-left svg {
+  width: 15px;
+  height: 15px;
+  color: var(--v22-brass);
+  flex-shrink: 0;
+}
+
+.v22-hr-badge {
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: var(--v22-brass-soft);
+  border: 1px solid var(--v22-brass-border);
+  color: var(--v22-brass);
+  font-size: 10.5px;
+  font-weight: 700;
+}
+
+.v22-hr-badge[hidden],
+.v22-hr-badge:empty {
+  display: none;
+}
+
+.v22-hr-chev {
+  width: 15px;
+  height: 15px;
+  color: var(--v22-muted);
+  transition: transform 0.18s ease;
+}
+
+.v22-hr-toggle[aria-expanded="true"] .v22-hr-chev {
+  transform: rotate(180deg);
+  color: var(--v22-brass);
+}
+
+.v22-hr-drawer {
+  padding: 12px;
+  border: 1px solid var(--v22-brass-border);
+  border-top: none;
+  border-radius: 0 0 12px 12px;
+  background: var(--v22-surface);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-sizing: border-box;
+}
+
+.v22-hr-drawer[hidden],
+.v22-hr-drawer.hidden {
+  display: none !important;
+}
+
+/* Knobs list */
+.v22-hr-knobs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.v22-hr-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.v22-hr-row-label {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.v22-hr-row-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--v22-text);
+}
+
+.v22-hr-row-hint {
+  font-size: 11px;
+  color: var(--v22-muted);
+}
+
+/* Target score stepper */
+.v22-hr-stepper {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--v22-border-hi);
+  border-radius: 9px;
+  background: var(--v22-bg);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.v22-hr-step-btn {
+  width: 34px;
+  height: 34px;
+  border: none;
+  background: var(--v22-surface-2);
+  color: var(--v22-text);
+  font-size: 18px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+.v22-hr-num {
+  width: 54px;
+  height: 34px;
+  border: none;
+  border-left: 1px solid var(--v22-border);
+  border-right: 1px solid var(--v22-border);
+  background: transparent;
+  color: var(--v22-text);
+  text-align: center;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  outline: none;
+}
+
+/* Highest / Lowest segmented toggle */
+.v22-hr-seg {
+  display: inline-flex;
+  padding: 2px;
+  border-radius: 9px;
+  border: 1px solid var(--v22-border-hi);
+  background: var(--v22-bg);
+  flex-shrink: 0;
+}
+
+.v22-hr-seg-btn {
+  padding: 5px 10px;
+  border-radius: 7px;
+  border: none;
+  background: transparent;
+  color: var(--v22-muted);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+.v22-hr-seg-btn.is-active {
+  background: var(--v22-brass);
+  color: var(--v22-bg);
+}
+
+/* Boolean rule switch */
+.v22-hr-switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  width: 44px;
+  height: 26px;
+  flex-shrink: 0;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+.v22-hr-switch input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+
+.v22-hr-switch-track {
+  width: 44px;
+  height: 26px;
+  border-radius: 999px;
+  border: 1px solid var(--v22-border-hi);
+  background: var(--v22-bg);
+  transition: background 0.16s ease, border-color 0.16s ease;
+  position: relative;
+}
+
+.v22-hr-switch-track::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  background: var(--v22-muted);
+  transition: transform 0.16s ease, background 0.16s ease;
+}
+
+.v22-hr-switch input:checked + .v22-hr-switch-track {
+  background: var(--v22-brass-soft);
+  border-color: var(--v22-brass);
+}
+
+.v22-hr-switch input:checked + .v22-hr-switch-track::after {
+  transform: translateX(18px);
+  background: var(--v22-brass);
+}
+
+/* Auto-generated differences preview */
+.v22-hr-diff-box {
+  padding: 10px 11px;
+  border-radius: 10px;
+  border: 1px solid var(--v22-border);
+  background: rgba(12, 13, 16, 0.55);
+}
+
+.v22-hr-diff-title {
+  margin: 0 0 5px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--v22-brass);
+}
+
+.v22-hr-diff-list {
+  margin: 0;
+  padding-left: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 12px;
+  color: var(--v22-text);
+  line-height: 1.35;
+}
+
+.v22-hr-diff-none {
+  margin: 0;
+  font-size: 12px;
+  color: var(--v22-muted);
+}
+
+/* Compact "Name & Publish as Variation" sub-form */
+.v22-hr-publish {
+  padding-top: 10px;
+  border-top: 1px solid var(--v22-border);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.v22-hr-publish-title {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--v22-text);
+}
+
+.v22-hr-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 9px 11px;
+  border-radius: 9px;
+  border: 1px solid var(--v22-border-hi);
+  background: var(--v22-bg);
+  color: var(--v22-text);
+  font-family: inherit;
+  font-size: 16px;
+  outline: none;
+}
+
+.v22-hr-input:focus {
+  border-color: var(--v22-brass);
+}
+
+.v22-hr-msg {
+  margin: 0;
+  font-size: 12px;
+  color: var(--v22-brass);
+}
+
+.v22-hr-msg:empty,
+.v22-hr-msg[hidden] {
+  display: none;
+}
+
+.v22-hr-actions {
+  display: grid;
+  grid-template-columns: 1fr 1.25fr;
+  gap: 8px;
+}
+
+.v22-hr-btn-local {
+  min-height: 38px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid var(--v22-border-hi);
+  background: var(--v22-surface-2);
+  color: var(--v22-text);
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+.v22-hr-btn-pub {
+  min-height: 38px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(180deg, var(--v22-brass-hi) 0%, var(--v22-brass) 100%);
+  color: var(--v22-bg);
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+/* ================= 5. ADMIN COMMUNITY VARIATIONS MODERATION ================= */
+.v22-admin-card {
+  padding: 14px;
+  border-radius: 14px;
+  border: 1px solid var(--v22-border);
+  background: var(--v22-surface);
+  margin-bottom: 12px;
+  box-sizing: border-box;
+}
+
+.v22-admin-card-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.v22-admin-card-title {
+  margin: 0;
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--v22-text);
+}
+
+.v22-admin-card-meta {
+  font-size: 11.5px;
+  color: var(--v22-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.v22-mod-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.v22-mod-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 11px;
+  border: 1px solid var(--v22-border);
+  background: var(--v22-surface-2);
+  box-sizing: border-box;
+}
+
+.v22-mod-row.is-hidden {
+  opacity: 0.62;
+  border-style: dashed;
+}
+
+.v22-mod-info {
+  min-width: 0;
+  flex: 1;
+}
+
+.v22-mod-top {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.v22-mod-name {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--v22-text);
+}
+
+.v22-mod-game {
+  padding: 1px 7px;
+  border-radius: 999px;
+  border: 1px solid var(--v22-border-hi);
+  background: var(--v22-bg);
+  color: var(--v22-muted);
+  font-size: 10.5px;
+  font-weight: 600;
+}
+
+.v22-mod-meta {
+  margin-top: 2px;
+  font-size: 11.5px;
+  color: var(--v22-muted);
+}
+
+.v22-mod-btn {
+  min-height: 34px;
+  padding: 6px 11px;
+  border-radius: 9px;
+  border: 1px solid var(--v22-danger-border);
+  background: var(--v22-danger-soft);
+  color: var(--v22-danger);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  flex-shrink: 0;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+.v22-mod-btn.is-restore {
+  border-color: var(--v22-brass-border);
+  background: var(--v22-brass-soft);
+  color: var(--v22-brass);
+}
+
+.v22-empty-note {
+  padding: 14px 8px;
+  text-align: center;
+  font-size: 12.5px;
+  color: var(--v22-muted);
+}

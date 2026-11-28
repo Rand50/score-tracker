@@ -1,0 +1,594 @@
+<!-- =========================================================================
+     Score Tracker — Auth Module (self-contained HTML + CSS + Supabase JS)
+     Drop-in snippet for game_tracker.html:
+       1. Place the <style> block inside <head> (or before #login-view).
+       2. Place #login-view before #app-shell inside <body>.
+       3. Place the Supabase CDN + auth <script> after #app-shell (or before
+          app scripts that define window.onAuthReady / window.onAuthSignedOut).
+     ========================================================================= -->
+
+<style id="score-auth-styles">
+  :root {
+    --auth-wood-dark: #140d07;
+    --auth-wood: #1a120b;
+    --auth-wood-mid: #2a1d12;
+    --auth-parchment: #f5e6c8;
+    --auth-parchment-deep: #ead4aa;
+    --auth-parchment-input: #fbf5e6;
+    --auth-ink: #3d2914;
+    --auth-ink-muted: #6e5230;
+    --auth-gold: #c4921e;
+    --auth-gold-dark: #8b6914;
+    --auth-border: #8b6914;
+    --auth-border-soft: #c4a574;
+    --auth-error: #8f241c;
+    --auth-success: #2a623d;
+  }
+
+  /* Hard-hide guarantee so login and app shell can never overlap */
+  [hidden],
+  .auth-hidden,
+  #login-view[hidden],
+  #login-view.auth-hidden,
+  #app-shell[hidden],
+  #app-shell.auth-hidden {
+    display: none !important;
+  }
+
+  /* Centered full-viewport login gate */
+  #login-view {
+    min-height: 100vh;
+    min-height: 100dvh;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem 1rem;
+    background:
+      radial-gradient(circle at 50% 25%, rgba(184, 134, 11, 0.16), transparent 60%),
+      linear-gradient(180deg, var(--auth-wood-mid) 0%, var(--auth-wood) 55%, var(--auth-wood-dark) 100%);
+    font-family: Georgia, "Times New Roman", serif;
+    color: var(--auth-ink);
+  }
+
+  .auth-card {
+    width: 100%;
+    max-width: 390px;
+    box-sizing: border-box;
+    background: linear-gradient(180deg, var(--auth-parchment) 0%, var(--auth-parchment-deep) 100%);
+    border: 3px solid var(--auth-border);
+    border-radius: 10px;
+    padding: 1.75rem 1.5rem 1.5rem;
+    box-shadow:
+      0 18px 40px rgba(0, 0, 0, 0.55),
+      inset 0 0 0 2px rgba(255, 248, 228, 0.55),
+      inset 0 0 18px rgba(139, 105, 20, 0.18);
+    position: relative;
+  }
+
+  .auth-crest {
+    width: 48px;
+    height: 48px;
+    margin: 0 auto 0.65rem;
+    border-radius: 50%;
+    background: linear-gradient(145deg, var(--auth-gold), var(--auth-gold-dark));
+    border: 2px solid var(--auth-ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--auth-parchment);
+    font-size: 1.35rem;
+    box-shadow: 0 3px 10px rgba(61, 41, 20, 0.35);
+    user-select: none;
+  }
+
+  .auth-title {
+    margin: 0;
+    text-align: center;
+    font-size: 1.65rem;
+    letter-spacing: 0.5px;
+    color: var(--auth-ink);
+  }
+
+  .auth-subtitle {
+    margin: 0.3rem 0 1.35rem;
+    text-align: center;
+    font-size: 0.78rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--auth-gold-dark);
+  }
+
+  .auth-btn {
+    width: 100%;
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    padding: 0.78rem 1rem;
+    border-radius: 6px;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 0.96rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.08s ease, filter 0.15s ease, opacity 0.15s ease;
+  }
+
+  .auth-btn:active:not(:disabled) {
+    transform: translateY(1px);
+  }
+
+  .auth-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .auth-btn-google {
+    background: #fffdf8;
+    color: #2c241b;
+    border: 1.5px solid var(--auth-border-soft);
+    box-shadow: 0 2px 5px rgba(61, 41, 20, 0.14);
+  }
+
+  .auth-btn-google:hover:not(:disabled) {
+    filter: brightness(0.98);
+    border-color: var(--auth-border);
+  }
+
+  .auth-btn-gold {
+    background: linear-gradient(135deg, var(--auth-gold) 0%, var(--auth-gold-dark) 100%);
+    color: #fffaf0;
+    border: 1.5px solid #6b4e0d;
+    box-shadow: 0 3px 8px rgba(61, 41, 20, 0.28);
+    margin-top: 0.65rem;
+  }
+
+  .auth-btn-gold:hover:not(:disabled) {
+    filter: brightness(1.06);
+  }
+
+  .auth-divider {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 1.15rem 0;
+    color: var(--auth-ink-muted);
+    font-size: 0.75rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  .auth-divider::before,
+  .auth-divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--auth-border-soft), transparent);
+  }
+
+  .auth-label {
+    display: block;
+    font-size: 0.78rem;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--auth-ink-muted);
+    margin-bottom: 0.35rem;
+  }
+
+  .auth-input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.72rem 0.8rem;
+    border: 1.5px solid var(--auth-border-soft);
+    border-radius: 6px;
+    background: var(--auth-parchment-input);
+    color: var(--auth-ink);
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .auth-input:focus {
+    border-color: var(--auth-border);
+    box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.18);
+  }
+
+  #login-msg {
+    min-height: 1.25rem;
+    margin: 0.85rem 0 0;
+    text-align: center;
+    font-size: 0.84rem;
+    line-height: 1.35;
+    color: var(--auth-ink-muted);
+  }
+
+  #login-msg[data-tone="error"] {
+    color: var(--auth-error);
+  }
+
+  #login-msg[data-tone="success"] {
+    color: var(--auth-success);
+  }
+</style>
+
+<!-- Starts hidden until getSession() resolves to prevent login/app flash -->
+<section id="login-view" class="auth-hidden" hidden aria-label="Sign in to Score Tracker">
+  <div class="auth-card">
+    <div class="auth-crest" aria-hidden="true">&#9733;</div>
+    <h1 class="auth-title">Score Tracker</h1>
+    <p class="auth-subtitle">Sign in to sync your games</p>
+
+    <button id="btn-google-signin" type="button" class="auth-btn auth-btn-google">
+      <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+        <path fill="#4285F4" d="M17.64 9.2c0-.64-.06-1.25-.16-1.84H9v3.48h4.84a4.14 4.14 0 0 1-1.8 2.72v2.26h2.92c1.7-1.57 2.68-3.88 2.68-6.62z"/>
+        <path fill="#34A853" d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.92-2.26c-.8.54-1.84.86-3.04.86-2.34 0-4.33-1.58-5.04-3.71H.96v2.33A9 9 0 0 0 9 18z"/>
+        <path fill="#FBBC05" d="M3.96 10.71A5.41 5.41 0 0 1 3.68 9c0-.59.1-1.17.28-1.71V4.96H.96A9 9 0 0 0 0 9c0 1.45.35 2.82.96 4.04l3-2.33z"/>
+        <path fill="#EA4335" d="M9 3.58c1.32 0 2.5.45 3.44 1.35l2.58-2.59C13.46.89 11.43 0 9 0A9 9 0 0 0 .96 4.96l3 2.33C4.67 5.16 6.66 3.58 9 3.58z"/>
+      </svg>
+      <span>Continue with Google</span>
+    </button>
+
+    <div class="auth-divider"><span>or</span></div>
+
+    <form id="magic-link-form" novalidate>
+      <label class="auth-label" for="email">Email magic link</label>
+      <input
+        id="email"
+        class="auth-input"
+        type="email"
+        autocomplete="email"
+        inputmode="email"
+        placeholder="you@example.com"
+        required
+      >
+      <button id="btn-email-signin" type="submit" class="auth-btn auth-btn-gold">
+        Send magic link
+      </button>
+    </form>
+
+    <p id="login-msg" role="status" aria-live="polite"></p>
+  </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script id="score-auth-script">
+(function () {
+  const SUPABASE_URL = 'https://lezfdnqqfejqyxqwlcfg.supabase.co';
+  const SUPABASE_ANON_KEY = 'sb_publishable_HEGO45Fw5dl1s8sAbFnSkg_VzWU_guj';
+  // Dynamic: works on https://tallyit.fun/game_tracker.html, rand50.github.io/score-tracker/game_tracker.html, or any host.
+  const REDIRECT = (function () {
+    try {
+      const loc = window.location;
+      if (/^https?:$/i.test(loc.protocol)) {
+        const dir = loc.pathname.replace(/[^\/]*$/, '');
+        return loc.origin + (/game_tracker\.html$/i.test(loc.pathname) ? loc.pathname : dir + 'game_tracker.html');
+      }
+    } catch (_) {}
+    return 'https://tallyit.fun/game_tracker.html';
+  })();
+
+  const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: true
+    }
+  });
+  window.sb = sb;
+
+  let currentUser = null;
+  let readyUserId = null;
+  let wasSignedIn = false;
+
+  function getEls() {
+    return {
+      loginView: document.getElementById('login-view'),
+      appShell: document.getElementById('app-shell'),
+      emailInput: document.getElementById('email'),
+      googleBtn: document.getElementById('btn-google-signin'),
+      emailBtn: document.getElementById('btn-email-signin'),
+      msgEl: document.getElementById('login-msg'),
+      formEl: document.getElementById('magic-link-form')
+    };
+  }
+
+  function setMsg(text, tone) {
+    const { msgEl } = getEls();
+    if (!msgEl) return;
+    msgEl.textContent = text || '';
+    if (tone) msgEl.setAttribute('data-tone', tone);
+    else msgEl.removeAttribute('data-tone');
+  }
+
+  function setBusy(busy) {
+    const { googleBtn, emailBtn, emailInput } = getEls();
+    if (googleBtn) googleBtn.disabled = busy;
+    if (emailBtn) emailBtn.disabled = busy;
+    if (emailInput) emailInput.disabled = busy;
+  }
+
+  function hideBothInitially() {
+    const { loginView, appShell } = getEls();
+    if (loginView) {
+      loginView.hidden = true;
+      loginView.classList.add('auth-hidden');
+      loginView.classList.remove('active');
+      loginView.style.display = 'none';
+    }
+    if (appShell) {
+      appShell.hidden = true;
+      appShell.classList.add('auth-hidden');
+      appShell.style.display = 'none';
+    }
+  }
+
+  function showSignedInUI() {
+    const { loginView, appShell } = getEls();
+    if (loginView) {
+      loginView.hidden = true;
+      loginView.classList.add('auth-hidden');
+      loginView.classList.remove('active');
+      loginView.style.setProperty('display', 'none', 'important');
+    }
+    if (appShell) {
+      appShell.hidden = false;
+      appShell.classList.remove('auth-hidden', 'hidden');
+      appShell.style.display = 'block';
+    }
+  }
+
+  function showSignedOutUI() {
+    const { loginView, appShell } = getEls();
+    if (appShell) {
+      appShell.hidden = true;
+      appShell.classList.add('auth-hidden', 'hidden');
+      appShell.style.setProperty('display', 'none', 'important');
+    }
+    if (loginView) {
+      loginView.hidden = false;
+      loginView.classList.remove('auth-hidden');
+      loginView.classList.add('active');
+      loginView.style.display = 'flex';
+    }
+  }
+
+  function readAndCleanAuthUrlParams() {
+    try {
+      const url = new URL(window.location.href);
+      const searchParams = url.searchParams;
+      const hashParams = new URLSearchParams(url.hash.replace(/^#/, ''));
+      const errDesc =
+        searchParams.get('error_description') ||
+        hashParams.get('error_description') ||
+        searchParams.get('error') ||
+        hashParams.get('error');
+
+      const authKeys = [
+        'code',
+        'error',
+        'error_code',
+        'error_description',
+        'access_token',
+        'refresh_token',
+        'expires_in',
+        'expires_at',
+        'token_type',
+        'provider_token',
+        'type'
+      ];
+
+      let dirty = false;
+      authKeys.forEach((k) => {
+        if (searchParams.has(k)) {
+          searchParams.delete(k);
+          dirty = true;
+        }
+        if (hashParams.has(k)) {
+          hashParams.delete(k);
+          dirty = true;
+        }
+      });
+
+      if (dirty && window.history && window.history.replaceState) {
+        const cleanSearch = searchParams.toString();
+        const cleanHash = hashParams.toString();
+        const nextUrl =
+          url.origin +
+          url.pathname +
+          (cleanSearch ? '?' + cleanSearch : '') +
+          (cleanHash ? '#' + cleanHash : '');
+        window.history.replaceState({}, document.title, nextUrl);
+      }
+
+      return errDesc || null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function applySession(session, eventName) {
+    if (session && session.user) {
+      currentUser = session.user;
+      wasSignedIn = true;
+      setBusy(false);
+      setMsg('', '');
+      showSignedInUI();
+      readAndCleanAuthUrlParams();
+
+      if (readyUserId !== session.user.id) {
+        readyUserId = session.user.id;
+        if (typeof window.onAuthReady === 'function') {
+          try {
+            window.onAuthReady(session.user);
+          } catch (err) {
+            console.error('onAuthReady error:', err);
+          }
+        }
+      }
+    } else {
+      const shouldNotifySignedOut = wasSignedIn || eventName === 'SIGNED_OUT';
+      currentUser = null;
+      readyUserId = null;
+      wasSignedIn = false;
+      setBusy(false);
+      showSignedOutUI();
+
+      if (shouldNotifySignedOut && typeof window.onAuthSignedOut === 'function') {
+        try {
+          window.onAuthSignedOut();
+        } catch (err) {
+          console.error('onAuthSignedOut error:', err);
+        }
+      }
+    }
+  }
+
+  async function signInWithGoogle() {
+    setBusy(true);
+    setMsg('Redirecting to Google…', '');
+    try {
+      const { error } = await sb.auth.signInWithOAuth({
+        provider: 'google',
+        options: { redirectTo: REDIRECT }
+      });
+      if (error) {
+        setBusy(false);
+        setMsg(error.message || 'Google sign-in failed.', 'error');
+      }
+    } catch (err) {
+      setBusy(false);
+      setMsg((err && err.message) || 'Google sign-in failed.', 'error');
+    }
+  }
+
+  async function signInWithEmail(evt) {
+    if (evt && typeof evt.preventDefault === 'function') evt.preventDefault();
+    const { emailInput } = getEls();
+    const email = emailInput ? emailInput.value.trim() : '';
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setMsg('Please enter a valid email address.', 'error');
+      if (emailInput) emailInput.focus();
+      return;
+    }
+
+    setBusy(true);
+    setMsg('Sending magic link…', '');
+    try {
+      const { error } = await sb.auth.signInWithOtp({
+        email,
+        options: { emailRedirectTo: REDIRECT }
+      });
+      setBusy(false);
+      if (error) {
+        setMsg(error.message || 'Could not send magic link.', 'error');
+      } else {
+        setMsg('Check your email for your sign-in link.', 'success');
+      }
+    } catch (err) {
+      setBusy(false);
+      setMsg((err && err.message) || 'Could not send magic link.', 'error');
+    }
+  }
+
+  async function signOut() {
+    try {
+      await sb.auth.signOut();
+    } catch (err) {
+      console.error('signOut error:', err);
+    }
+    applySession(null, 'SIGNED_OUT');
+  }
+
+  async function getUser() {
+    if (currentUser) return currentUser;
+    const { data: { session } } = await sb.auth.getSession();
+    currentUser = session ? session.user : null;
+    return currentUser;
+  }
+
+  // Wire UI listeners
+  function bindEvents() {
+    const { googleBtn, formEl } = getEls();
+    if (googleBtn && !googleBtn.dataset.bound) {
+      googleBtn.dataset.bound = '1';
+      googleBtn.addEventListener('click', signInWithGoogle);
+    }
+    if (formEl && !formEl.dataset.bound) {
+      formEl.dataset.bound = '1';
+      formEl.addEventListener('submit', signInWithEmail);
+    }
+  }
+
+  // Expose public API + legacy globals
+  window.ScoreAuth = { signInWithGoogle, signInWithEmail, signOut, getUser };
+  window.signInWithGoogle = signInWithGoogle;
+  window.signInWithEmail = signInWithEmail;
+  window.signOut = signOut;
+
+  function persistPendingFriendInviteFromUrl() {
+    try {
+      if (window.SocialAPI && typeof window.SocialAPI.capturePendingFriendFromUrl === 'function') {
+        window.SocialAPI.capturePendingFriendFromUrl(window.location.href);
+        return;
+      }
+      const u = new URL(window.location.href);
+      const raw = u.searchParams.get('addFriend') || u.searchParams.get('addfriend') || u.searchParams.get('friend');
+      if (raw && raw.trim().length >= 3) {
+        const p = JSON.stringify({ identifier: raw.trim(), capturedAt: Date.now() });
+        try { if (window.sessionStorage) window.sessionStorage.setItem('gst_pending_add_friend_v1', p); } catch (_) {}
+        try { if (window.localStorage) window.localStorage.setItem('gst_pending_add_friend_v1', p); } catch (_) {}
+      }
+    } catch (_) {}
+  }
+
+  async function initAuth() {
+    persistPendingFriendInviteFromUrl();
+    hideBothInitially();
+    bindEvents();
+
+    // Capture any OAuth error before Supabase finishes URL handling
+    const urlError = (() => {
+      try {
+        const u = new URL(window.location.href);
+        const h = new URLSearchParams(u.hash.replace(/^#/, ''));
+        return u.searchParams.get('error_description') || h.get('error_description') || u.searchParams.get('error') || h.get('error');
+      } catch (_) {
+        return null;
+      }
+    })();
+
+    sb.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_OUT') {
+        applySession(null, 'SIGNED_OUT');
+      } else if (session) {
+        applySession(session, event);
+      }
+    });
+
+    try {
+      const { data: { session }, error } = await sb.auth.getSession();
+      if (error) {
+        applySession(null, 'INIT_ERROR');
+        setMsg(error.message || 'Unable to verify session.', 'error');
+        return;
+      }
+      applySession(session, 'INITIAL_SESSION');
+      if (!session && urlError) {
+        readAndCleanAuthUrlParams();
+        setMsg(urlError, 'error');
+      }
+    } catch (err) {
+      applySession(null, 'INIT_ERROR');
+      setMsg((err && err.message) || 'Unable to verify session.', 'error');
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAuth, { once: true });
+  } else {
+    initAuth();
+  }
+})();
+</script>

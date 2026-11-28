@@ -1,0 +1,130 @@
+<!-- TallyIt v24 — Qwirkle: Bright Playful Tile Grid (#qw-shell) -->
+<div id="qw-shell" class="qw-shell" aria-label="Qwirkle Scoreboard">
+  <!-- Reusable tile-shape symbols -->
+  <svg class="qw-defs" width="0" height="0" aria-hidden="true" focusable="false">
+    <defs>
+      <symbol id="qw-sh-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/></symbol>
+      <symbol id="qw-sh-square" viewBox="0 0 24 24"><rect x="4.5" y="4.5" width="15" height="15" rx="1.5"/></symbol>
+      <symbol id="qw-sh-diamond" viewBox="0 0 24 24"><path d="M12 2.5 21.5 12 12 21.5 2.5 12Z"/></symbol>
+      <symbol id="qw-sh-clover" viewBox="0 0 24 24"><circle cx="12" cy="7.4" r="4.3"/><circle cx="7.3" cy="12.4" r="4.3"/><circle cx="16.7" cy="12.4" r="4.3"/><path d="M11 13h2l1.2 8.5h-4.4Z"/></symbol>
+      <symbol id="qw-sh-star" viewBox="0 0 24 24"><path d="M12 2.8l2.8 5.9 6.4.8-4.7 4.4 1.2 6.4L12 17.2l-5.7 3.1 1.2-6.4L2.8 9.5l6.4-.8Z"/></symbol>
+      <symbol id="qw-sh-burst" viewBox="0 0 24 24"><path d="M12 1.8l2.2 5 5-2.2-2.2 5 5 2.4-5 2.2 2.2 5-5-2.2L12 22.2l-2.2-5.2-5 2.2 2.2-5-5-2.2 5-2.4-2.2-5 5 2.2Z"/></symbol>
+    </defs>
+  </svg>
+
+  <!-- Top utility bar: Home + Undo + Universal End Game -->
+  <div class="qw-topbar">
+    <button type="button" id="qw-btn-home" class="qw-top-btn" onclick="showView('new')" aria-label="Back to Play">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+      <span>Play</span>
+    </button>
+    <div class="qw-top-actions">
+      <button type="button" id="qw-btn-undo" class="qw-top-btn" onclick="window.QwirkleUI && window.QwirkleUI.undoTurn()" aria-label="Undo last turn" disabled>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>
+        <span>Undo</span>
+      </button>
+      <button type="button" id="qw-btn-end" class="qw-top-btn qw-top-btn-end" onclick="window.openEndGameModal && openEndGameModal()" aria-label="End or pause game">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+        <span>End</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Header: title, turn number, optional bag counter -->
+  <header class="qw-header">
+    <div class="qw-head-left">
+      <h1 class="qw-title">Qwirkle</h1>
+      <div class="qw-turn-row">
+        <span class="qw-mini-tile qw-c-purple" aria-hidden="true"><svg><use href="#qw-sh-burst"/></svg></span>
+        <span id="qw-turn-label" class="qw-turn-label">Turn 1</span>
+      </div>
+    </div>
+    <button type="button" id="qw-bag" class="qw-bag" onclick="window.QwirkleUI && window.QwirkleUI.editBag()" aria-label="Tiles left in bag (tap to edit)">
+      <span class="qw-bag-tile qw-c-blue" aria-hidden="true"><svg><use href="#qw-sh-clover"/></svg></span>
+      <span class="qw-bag-text">
+        <span class="qw-bag-k">Bag:</span>
+        <span><span id="qw-bag-count">108</span> tiles left</span>
+      </span>
+    </button>
+  </header>
+
+  <!-- Six tile colors & shapes strip (decorative) -->
+  <div class="qw-tile-strip" aria-hidden="true">
+    <span class="qw-strip-shape qw-ink-red"><svg><use href="#qw-sh-circle"/></svg></span>
+    <span class="qw-strip-shape qw-ink-orange"><svg><use href="#qw-sh-square"/></svg></span>
+    <span class="qw-strip-shape qw-ink-yellow"><svg><use href="#qw-sh-diamond"/></svg></span>
+    <span class="qw-strip-tile qw-c-green"><svg><use href="#qw-sh-clover"/></svg></span>
+    <span class="qw-strip-tile qw-c-blue"><svg><use href="#qw-sh-star"/></svg></span>
+    <span class="qw-strip-tile qw-c-purple"><svg><use href="#qw-sh-burst"/></svg></span>
+  </div>
+
+  <!-- Player cards (rendered by QwirkleUI.renderPlayers) -->
+  <section id="qw-player-cards" class="qw-player-cards" role="listbox" aria-label="Players — tap to choose who is scoring">
+    <!-- Template per player:
+    <button type="button" class="qw-pcard is-current" data-idx="0" role="option" aria-selected="true" onclick="QwirkleUI.selectPlayer(0)">
+      <span class="qw-ptile qw-c-red"><svg><use href="#qw-sh-circle"/></svg></span>
+      <span class="qw-pname">Rand</span>
+      <span class="qw-ptotal">87</span>
+      <span class="qw-pdelta">+5</span>           (add .is-zero when 0 / none)
+    </button> -->
+  </section>
+
+  <!-- Quick Points panel -->
+  <section class="qw-points-panel" aria-label="Points this turn">
+    <div class="qw-panel-head">
+      <span class="qw-panel-rule" aria-hidden="true"></span>
+      <span class="qw-panel-title">Quick Points</span>
+      <span class="qw-panel-rule" aria-hidden="true"></span>
+    </div>
+
+    <div id="qw-turn-total" class="qw-turn-total" role="status" aria-live="polite">
+      <span id="qw-turn-player" class="qw-turn-player">Rand</span>
+      <span class="qw-turn-eq">this turn</span>
+      <span id="qw-turn-points" class="qw-turn-points">0</span>
+      <button type="button" id="qw-btn-clear" class="qw-clear-btn" onclick="window.QwirkleUI && window.QwirkleUI.clearTurn()" aria-label="Clear this turn">Clear</button>
+    </div>
+
+    <div id="qw-chip-grid" class="qw-chip-grid">
+      <button type="button" class="qw-chip qw-c-red" data-pts="1" onclick="QwirkleUI.addPoints(1)">1</button>
+      <button type="button" class="qw-chip qw-c-orange" data-pts="2" onclick="QwirkleUI.addPoints(2)">2</button>
+      <button type="button" class="qw-chip qw-c-yellow" data-pts="3" onclick="QwirkleUI.addPoints(3)">3</button>
+      <button type="button" class="qw-chip qw-c-green" data-pts="4" onclick="QwirkleUI.addPoints(4)">4</button>
+      <button type="button" class="qw-chip qw-c-blue" data-pts="5" onclick="QwirkleUI.addPoints(5)">5</button>
+      <button type="button" class="qw-chip qw-c-purple" data-pts="6" onclick="QwirkleUI.addPoints(6)">6</button>
+      <button type="button" class="qw-chip qw-c-red" data-pts="7" onclick="QwirkleUI.addPoints(7)">7</button>
+      <button type="button" class="qw-chip qw-c-orange" data-pts="8" onclick="QwirkleUI.addPoints(8)">8</button>
+      <button type="button" class="qw-chip qw-c-yellow" data-pts="9" onclick="QwirkleUI.addPoints(9)">9</button>
+      <button type="button" class="qw-chip qw-c-green" data-pts="10" onclick="QwirkleUI.addPoints(10)">10</button>
+      <button type="button" class="qw-chip qw-c-blue" data-pts="11" onclick="QwirkleUI.addPoints(11)">11</button>
+      <button type="button" class="qw-chip qw-c-purple" data-pts="12" onclick="QwirkleUI.addPoints(12)">12</button>
+    </div>
+
+    <!-- Custom number entry -->
+    <div class="qw-custom-row">
+      <label for="qw-custom-input" class="qw-custom-lbl">Custom</label>
+      <input type="number" id="qw-custom-input" class="qw-custom-input" inputmode="numeric" pattern="[0-9]*" min="0" max="99" placeholder="Enter points">
+      <button type="button" id="qw-custom-add" class="qw-custom-add" onclick="window.QwirkleUI && window.QwirkleUI.addCustom()">Add</button>
+    </div>
+
+    <div class="qw-bonus-row">
+      <button type="button" id="qw-btn-qwirkle" class="qw-bonus qw-bonus-rainbow" aria-pressed="false" onclick="window.QwirkleUI && window.QwirkleUI.toggleQwirkle()">Qwirkle +6</button>
+      <button type="button" id="qw-btn-wentout" class="qw-bonus qw-bonus-purple" aria-pressed="false" onclick="window.QwirkleUI && window.QwirkleUI.toggleWentOut()">Went Out +6</button>
+    </div>
+  </section>
+
+  <!-- Sticky Add Turn CTA -->
+  <div class="qw-cta-wrap">
+    <button type="button" id="qw-btn-add" class="qw-cta-btn" onclick="window.QwirkleUI && window.QwirkleUI.addTurn()">Add Turn</button>
+  </div>
+
+  <!-- Turn History drawer -->
+  <details id="qw-history-drawer" class="qw-history-drawer">
+    <summary class="qw-history-summary">
+      <span>Turn History</span>
+      <span id="qw-history-count" class="qw-history-count">0 turns</span>
+    </summary>
+    <div id="qw-history-list" class="qw-history-list">
+      <div class="qw-history-empty">No turns recorded yet.</div>
+    </div>
+  </details>
+</div>

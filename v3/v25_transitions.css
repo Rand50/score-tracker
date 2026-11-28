@@ -1,0 +1,24 @@
+/* TallyIt v25 polish - smooth page transitions (neutral).
+   Every selector starts with .v25-fx- or #v25-fx-. No theme-* selectors, no @media, no emojis.
+   Per-game background colours live in v25_transitions_themes.css (body.theme-<game> { --v25-bg }). */
+
+/* destination backdrop: when the Setup step is showing, the dark body is tinted toward the game's table colour,
+   so the light themed panel never butts up against pure black. Class is toggled on <body> by v25_transitions.js. */
+.v25-fx-tinted {
+  background-color: var(--v25-fx-edge, #0c0d10) !important;
+  background-image: linear-gradient(180deg, #0c0d10 0, #0c0d10 56px, var(--v25-fx-edge, #0c0d10) 220px) !important;
+  background-repeat: no-repeat !important;
+}
+
+/* curtain: destination surface painted in the swap frame (never an opaque black frame), faded out; the child carries a faint trace of the outgoing surface */
+#v25-fx-veil {
+  position: fixed; inset: 0; z-index: 9000; pointer-events: none; opacity: 0;
+  background-repeat: no-repeat; background-size: cover; background-position: center top;
+  animation: v25-fx-veil var(--v25-fx-ms, 280ms) cubic-bezier(.3, .1, .3, 1) both;
+  will-change: opacity;
+}
+.v25-fx-ghost { position: absolute; inset: 0; opacity: .22; background-repeat: no-repeat; background-size: cover; background-position: center top; }
+@keyframes v25-fx-veil { from { opacity: .82; } to { opacity: 0; } }
+
+/* prefers-reduced-motion (class set from JS matchMedia): instant swap, still no flash */
+.v25-fx-reduced #v25-fx-veil { display: none !important; }

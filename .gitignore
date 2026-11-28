@@ -1,0 +1,28 @@
+# dependencies
+node_modules/
+
+# secrets
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.pyc
+
+# build scratch
+v3/tmp/
+.build/
+*.log
+
+# Playwright screenshots and device-sweep dumps
+shot_*.png
+qa/
+pwtest/*dev/
+
+# one-level captures written next to the harness (not pwtest/site fixtures)
+pwtest/*.png
+
+# editor / OS
+.DS_Store
+.cache/

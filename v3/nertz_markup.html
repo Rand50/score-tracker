@@ -1,0 +1,142 @@
+<!-- ==========================================================================
+     Nertz — Midnight Parlor & Gold Foil Markup (#nz-shell)
+     Streamlined round-by-round addition/subtraction + "Got Nertz!" highlight
+     Mount inside <section id="view-active" class="view"> in v3/shell.html
+     Only visible when body.theme-nertz is active.
+     ========================================================================== -->
+<div id="nz-shell">
+  <!-- Shared ornate SVG defs (fanned cards + deck-back filigree) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="nz-gold-grad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#fbf0c4"/>
+        <stop offset="50%" stop-color="#e4be67"/>
+        <stop offset="100%" stop-color="#b0822b"/>
+      </linearGradient>
+      <symbol id="nz-deck-filigree" viewBox="0 0 48 48">
+        <rect x="3" y="3" width="42" height="42" rx="4" fill="none" stroke="url(#nz-gold-grad)" stroke-width="1.2" opacity=".9"/>
+        <rect x="6" y="6" width="36" height="36" rx="2.5" fill="none" stroke="#e6c677" stroke-width=".6" stroke-dasharray="2 2" opacity=".55"/>
+        <path d="M24 9c2.5 5 5 8 10 10-5 2-7.5 5-10 10-2.5-5-5-8-10-10 5-2 7.5-5 10-10z" fill="none" stroke="#e6c677" stroke-width="1" opacity=".65"/>
+        <circle cx="9.5" cy="9.5" r="1.4" fill="#e6c677" opacity=".8"/>
+        <circle cx="38.5" cy="9.5" r="1.4" fill="#e6c677" opacity=".8"/>
+        <circle cx="9.5" cy="38.5" r="1.4" fill="#e6c677" opacity=".8"/>
+        <circle cx="38.5" cy="38.5" r="1.4" fill="#e6c677" opacity=".8"/>
+      </symbol>
+    </defs>
+  </svg>
+
+  <div class="nz-frame">
+    <!-- HEADER -->
+    <header class="nz-head">
+      <div class="nz-fan-wrap" aria-hidden="true">
+        <svg class="nz-fan-svg" viewBox="0 0 220 52">
+          <g stroke="url(#nz-gold-grad)" stroke-width="1.4" fill="#0d2242">
+            <rect x="38" y="14" width="38" height="48" rx="4" transform="rotate(-24 57 38)"/>
+            <rect x="64" y="8" width="38" height="48" rx="4" transform="rotate(-12 83 32)"/>
+            <rect x="91" y="5" width="38" height="48" rx="4"/>
+            <rect x="118" y="8" width="38" height="48" rx="4" transform="rotate(12 137 32)"/>
+            <rect x="144" y="14" width="38" height="48" rx="4" transform="rotate(24 163 38)"/>
+          </g>
+          <g fill="none" stroke="#e6c677" stroke-opacity=".45" stroke-width=".8">
+            <rect x="95" y="9" width="30" height="40" rx="2"/>
+            <rect x="122" y="12" width="30" height="40" rx="2" transform="rotate(12 137 32)"/>
+            <rect x="68" y="12" width="30" height="40" rx="2" transform="rotate(-12 83 32)"/>
+          </g>
+          <path d="M110 20c-2 6-10 11-10 17 0 4 3 6.5 6.5 6.5 1.8 0 3-.8 3.5-1.8-.3 2.5-1.5 4.3-3.5 5.3h7c-2-1-3.2-2.8-3.5-5.3.5 1 1.7 1.8 3.5 1.8 3.5 0 6.5-2.5 6.5-6.5 0-6-8-11-10-17z" fill="url(#nz-gold-grad)" stroke="#071222" stroke-width="1"/>
+        </svg>
+      </div>
+
+      <div class="nz-title-row">
+        <span class="nz-spade" aria-hidden="true">♠</span>
+        <h1 class="nz-title" id="nz-title">NERTZ</h1>
+        <span class="nz-spade" aria-hidden="true">♠</span>
+      </div>
+
+      <div class="nz-rule" aria-hidden="true"><i></i></div>
+
+      <div class="nz-sub-row">
+        <button type="button" class="nz-target-pill" id="nz-target-btn" onclick="nzOpenSheet && nzOpenSheet('target')" aria-label="Change target score">
+          FIRST TO <span id="nz-target-val">100</span>
+        </button>
+        <span class="nz-dot-sep" aria-hidden="true">•</span>
+        <span class="nz-round-label" id="nz-round-label">ROUND 1</span>
+      </div>
+
+      <!-- Solo vs. Partners / Teams Mode Toggle (unlimited teams) -->
+      <div class="nz-mode-bar">
+        <div class="nz-mode-pill" role="tablist" aria-label="Nertz play mode">
+          <button type="button" class="nz-mode-btn active" id="nz-mode-solo" role="tab" aria-selected="true" onclick="nzSetMode && nzSetMode('solo')">Solo</button>
+          <button type="button" class="nz-mode-btn" id="nz-mode-teams" role="tab" aria-selected="false" onclick="nzSetMode && nzSetMode('teams')">Teams</button>
+        </div>
+      </div>
+
+      <!-- Teams bar: visible in Teams mode for adding/editing unlimited teams -->
+      <div class="nz-teams-bar hidden" id="nz-teams-bar" hidden>
+        <span id="nz-teams-summary">Partners / Teams mode</span>
+        <button type="button" class="nz-mini-gold" id="nz-manage-teams" onclick="nzOpenSheet && nzOpenSheet('teams')">+ Manage Teams</button>
+      </div>
+    </header>
+
+    <!-- PLAYER / TEAM ROSTER (Ivory Playing-Card Rows; .is-nertz-caller highlights caller) -->
+    <div id="nz-roster" class="nz-roster" role="listbox" aria-label="Players or teams"></div>
+
+    <!-- STREAMLINED ROUND SCORING PANEL (Addition / Subtraction + Got Nertz! Highlight) -->
+    <section id="nz-scorer" class="nz-scorer" aria-label="Round scoring">
+      <div class="nz-scorer-head">
+        <span class="nz-scorer-who" id="nz-scorer-who">ROUND SCORING • —</span>
+      </div>
+
+      <div id="nz-delta-wrap" class="nz-delta-wrap">
+        <!-- Prominent - / + sign toggle + large tabular score input -->
+        <div class="nz-delta-row">
+          <div class="nz-sign-toggle" role="group" aria-label="Add or subtract points">
+            <button type="button" class="nz-sign-btn is-minus" id="nz-sign-minus" aria-pressed="false" aria-label="Subtract points" onclick="nzSetSign && nzSetSign(-1)">−</button>
+            <button type="button" class="nz-sign-btn is-plus active" id="nz-sign-plus" aria-pressed="true" aria-label="Add points" onclick="nzSetSign && nzSetSign(1)">+</button>
+          </div>
+          <input type="text" inputmode="numeric" pattern="-?[0-9]*" class="nz-net-input" id="nz-net-input" value="" placeholder="0" aria-label="Round points to add or subtract" oninput="nzSyncPreview && nzSyncPreview()" onfocus="this.select()">
+        </div>
+
+        <!-- Quick +/- steppers for one-tap mobile entry -->
+        <div class="nz-quick-row" aria-label="Quick point adjustments">
+          <button type="button" class="nz-net-step is-neg" onclick="nzStepNet && nzStepNet(-10)">−10</button>
+          <button type="button" class="nz-net-step is-neg" onclick="nzStepNet && nzStepNet(-5)">−5</button>
+          <button type="button" class="nz-net-step is-neg" onclick="nzStepNet && nzStepNet(-1)">−1</button>
+          <button type="button" class="nz-net-step" onclick="nzStepNet && nzStepNet(1)">+1</button>
+          <button type="button" class="nz-net-step" onclick="nzStepNet && nzStepNet(5)">+5</button>
+          <button type="button" class="nz-net-step" onclick="nzStepNet && nzStepNet(10)">+10</button>
+        </div>
+
+        <!-- Tactile gold-foil "Got Nertz!" highlight toggle -->
+        <button type="button" class="nz-got-nertz" id="nz-got-nertz-btn" aria-pressed="false" onclick="nzToggleGotNertz && nzToggleGotNertz()">
+          <span class="nz-got-nertz-ic" aria-hidden="true">♠</span>
+          <span>Got Nertz!</span>
+        </button>
+      </div>
+
+      <!-- Live Signed Preview + Gold Foil Confirm -->
+      <div class="nz-preview-wrap">
+        <div class="nz-preview-label">ROUND SCORE (LIVE PREVIEW)</div>
+        <div class="nz-preview-val" id="nz-preview" aria-live="polite">+0</div>
+        <button type="button" class="nz-confirm" id="nz-confirm" onclick="nzConfirmRound && nzConfirmRound()">
+          <span aria-hidden="true">♠</span>
+          <span>CONFIRM</span>
+          <span aria-hidden="true">♠</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- FOOTER ACTIONS -->
+    <div class="nz-actions">
+      <button type="button" class="nz-act-btn" id="nz-undo" onclick="nzUndo && nzUndo()">↺ Undo</button>
+      <button type="button" class="nz-act-btn" id="nz-rounds-toggle" onclick="nzToggleHistory && nzToggleHistory()">Rounds</button>
+      <button type="button" class="nz-act-btn" id="nz-add-btn" onclick="nzOpenSheet && nzOpenSheet('add')">+ Add</button>
+    </div>
+    <button type="button" class="nz-finish" id="nz-finish" onclick="openEndGameModal()">Finish &amp; Save Game</button>
+
+    <!-- EXPANDABLE ROUND HISTORY DRAWER -->
+    <div id="nz-history-drawer" class="nz-history-drawer hidden" hidden aria-label="Round history"></div>
+  </div>
+
+  <!-- MODAL SHEET (Team Builder / Target Score / Add Player) -->
+  <div id="nz-sheet" class="nz-sheet hidden" hidden role="dialog" aria-modal="true" onclick="if(event.target===this && window.nzCloseSheet)nzCloseSheet()"></div>
+</div>

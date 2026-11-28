@@ -1,0 +1,808 @@
+/* ==========================================================================
+   Rummikub Theme — Option 1: Classic Blue & Ivory Rack (v2: 6p + Mode + Calc)
+   Strictly scoped under body.theme-rummikub (verified by build.py check_scope).
+   Zero basic emojis; crisp inline SVG icons only; mobile no-tap-zoom.
+   ========================================================================== */
+
+body.theme-rummikub {
+  --rk-blue-hi: #0f3f88;
+  --rk-blue: #0b2f69;
+  --rk-blue-lo: #061c42;
+  --rk-ivory: #faf6ec;
+  --rk-ivory2: #efe7d5;
+  --rk-ivory-line: #dfd5be;
+  --rk-ink: #0f1f3d;
+  --rk-muted: #55637c;
+  --rk-red: #c62828;
+  --rk-red-hi: #dc3535;
+  --rk-cobalt: #13469e;
+  --rk-cobalt-hi: #1b5ac4;
+  --rk-orange: #df6d10;
+  --rk-black: #1b1e24;
+  --rk-teal: #0f766e;
+  --rk-purple: #6d28d9;
+  --rk-gold: #eab308;
+  --rk-font: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', 'Segoe UI', Roboto, system-ui, sans-serif;
+
+  background-color: var(--rk-blue);
+  background-image:
+    radial-gradient(ellipse at 50% 0%, rgba(44, 114, 214, 0.36), transparent 58%),
+    radial-gradient(ellipse at 50% 100%, rgba(4, 16, 40, 0.55), transparent 62%),
+    linear-gradient(180deg, var(--rk-blue-hi) 0%, var(--rk-blue) 45%, var(--rk-blue-lo) 100%);
+  /* v24.2: no background-attachment: fixed (iOS WebKit rasterizes a fixed-background page as one big layer and can resample it) */
+  color: #ffffff;
+  font-family: var(--rk-font);
+  padding-bottom: calc(90px + env(safe-area-inset-bottom, 0px));
+}
+
+body.theme-rummikub .app-header,
+body.theme-rummikub #generic-board,
+body.theme-rummikub #catan-board,
+body.theme-rummikub #flip7-board,
+body.theme-rummikub #carc-board,
+body.theme-rummikub #nz-shell {
+  display: none;
+}
+
+body.theme-rummikub #rk-shell {
+  display: block;
+}
+
+body.theme-rummikub #view-active {
+  max-width: 470px;
+  margin: 0 auto;
+  padding: calc(10px + var(--tt-sat-c)) 12px 1rem;
+}
+
+body.theme-rummikub #rk-shell button,
+body.theme-rummikub #rk-shell [role="button"],
+body.theme-rummikub #rk-shell [role="option"],
+body.theme-rummikub #rk-shell [role="tab"],
+body.theme-rummikub .bottom-nav button {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  cursor: pointer;
+}
+
+body.theme-rummikub #rk-shell input {
+  font-size: 16px !important;
+  touch-action: manipulation;
+}
+
+body.theme-rummikub .rk-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.78rem;
+}
+
+/* ---------- Header: RUMMIKUB Wordmark + 4 Ivory Tiles + Round Pill + Mode Toggle ---------- */
+body.theme-rummikub .rk-head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.52rem;
+}
+
+body.theme-rummikub .rk-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+body.theme-rummikub .rk-wordmark {
+  margin: 0;
+  font-size: 1.68rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  color: #ffffff;
+  /* v24.2 crisp: hard 1px offset instead of a 6px blurred halo (the halo read as soft text at 3x DPR) */
+  text-shadow: 0 1px 0 rgba(3, 12, 32, 0.55);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+}
+
+/* Segmented Scoring Mode Pill (Points Up vs Classic +/-) */
+body.theme-rummikub .rk-mode-pill {
+  display: inline-grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 3px;
+  border-radius: 999px;
+  background: rgba(4, 18, 46, 0.72);
+  border: 1px solid rgba(162, 198, 255, 0.28);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.35);
+}
+
+body.theme-rummikub .rk-mode-btn {
+  border: none;
+  background: transparent;
+  color: rgba(226, 238, 255, 0.72);
+  padding: 0.3rem 0.62rem;
+  border-radius: 999px;
+  font: 700 0.72rem var(--rk-font);
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  transition: background .15s ease, color .15s ease, box-shadow .15s ease;
+}
+
+body.theme-rummikub .rk-mode-btn.active {
+  background: var(--rk-ivory);
+  color: var(--rk-ink);
+  box-shadow: 0 1px 0 rgba(3, 12, 32, 0.35);
+}
+
+body.theme-rummikub .rk-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem;
+}
+
+body.theme-rummikub .rk-tiles-strip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px; /* v24.2: whole px so each tile and its digit land on the device-pixel grid */
+}
+
+body.theme-rummikub .rk-tile {
+  width: 36px;
+  height: 40px;
+  border-radius: 8px;
+  background: linear-gradient(180deg, #fffdf8 0%, var(--rk-ivory2) 100%);
+  /* v24.2 crisp: solid border + hard rack edge; no 8px blurred shadow bleeding around the digits */
+  border: 1px solid #ffffff;
+  box-shadow: 0 2px 0 #c7bc9f, 0 3px 0 rgba(3, 12, 32, 0.28);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+}
+
+body.theme-rummikub .rk-tile.t-red { color: var(--rk-red); }
+body.theme-rummikub .rk-tile.t-blue { color: var(--rk-cobalt); }
+body.theme-rummikub .rk-tile.t-orange { color: var(--rk-orange); }
+body.theme-rummikub .rk-tile.t-black { color: var(--rk-black); }
+
+body.theme-rummikub .rk-round-pill {
+  padding: 0.42rem 0.85rem;
+  border-radius: 999px;
+  background: rgba(5, 23, 56, 0.72);
+  border: 1px solid rgba(162, 198, 255, 0.32);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 3px 8px rgba(3, 12, 32, 0.32);
+  color: #f4f8ff;
+  font-size: 0.84rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* ---------- Player Roster (2..6 Players cleanly on 390x844 mobile) ---------- */
+body.theme-rummikub .rk-roster {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(104px, 1fr));
+  gap: 0.52rem;
+  padding-top: 0.3rem;
+}
+
+body.theme-rummikub .rk-roster[data-count="2"],
+body.theme-rummikub .rk-roster[data-count="4"] {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+body.theme-rummikub .rk-roster[data-count="3"],
+body.theme-rummikub .rk-roster[data-count="5"],
+body.theme-rummikub .rk-roster[data-count="6"] {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+body.theme-rummikub .rk-card {
+  position: relative;
+  background: linear-gradient(180deg, #fffdf8 0%, var(--rk-ivory) 65%, var(--rk-ivory2) 100%);
+  color: var(--rk-ink);
+  border: 2px solid rgba(255, 255, 255, 0.65);
+  border-radius: 14px;
+  padding: 0.65rem 0.6rem 0.6rem;
+  box-shadow: 0 3.5px 0 #c6baa0, 0 7px 16px rgba(3, 12, 32, 0.36);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 108px;
+  text-align: left;
+  transition: transform .12s ease, border-color .15s ease, box-shadow .15s ease;
+}
+
+/* Compact density for 4, 5, and 6 players so all 6 fit above the scorer cleanly */
+body.theme-rummikub .rk-roster.is-compact .rk-card,
+body.theme-rummikub .rk-roster[data-count="4"] .rk-card,
+body.theme-rummikub .rk-roster[data-count="5"] .rk-card,
+body.theme-rummikub .rk-roster[data-count="6"] .rk-card {
+  min-height: 84px;
+  padding: 0.48rem 0.5rem 0.45rem;
+  border-radius: 12px;
+}
+
+body.theme-rummikub .rk-card:active {
+  transform: translateY(1px);
+}
+
+body.theme-rummikub .rk-card.selected {
+  border-color: #fbbf24;
+  box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.32), 0 3.5px 0 #b8984c, 0 9px 20px rgba(3, 12, 32, 0.46);
+  transform: translateY(-2px);
+}
+
+/* v16: leader crown sits inline at the right of the name row (no overlap with the card above in the 3×2 grid) */
+body.theme-rummikub .rk-crown {
+  flex: none;
+  width: 20px;
+  height: 17px;
+  filter: drop-shadow(0 1px 1.5px rgba(0, 0, 0, 0.28));
+  pointer-events: none;
+}
+
+body.theme-rummikub .rk-roster[data-count="5"] .rk-crown,
+body.theme-rummikub .rk-roster[data-count="6"] .rk-crown {
+  width: 17px;
+  height: 14px;
+}
+
+body.theme-rummikub .rk-card.leader {
+  border-color: rgba(245, 197, 66, 0.85);
+}
+
+body.theme-rummikub .rk-card.leader.selected {
+  border-color: #fbbf24;
+}
+
+body.theme-rummikub .rk-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.25rem;
+}
+
+body.theme-rummikub .rk-name {
+  font-size: 0.88rem;
+  font-weight: 750;
+  color: var(--rk-ink);
+  letter-spacing: -0.015em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+body.theme-rummikub .rk-roster[data-count="5"] .rk-name,
+body.theme-rummikub .rk-roster[data-count="6"] .rk-name {
+  font-size: 0.8rem;
+}
+
+body.theme-rummikub .rk-score {
+  margin: 0.18rem 0 0.25rem;
+  font-size: 1.88rem;
+  font-weight: 850;
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  color: var(--rk-ink);
+}
+
+body.theme-rummikub .rk-roster.is-compact .rk-score,
+body.theme-rummikub .rk-roster[data-count="4"] .rk-score,
+body.theme-rummikub .rk-roster[data-count="5"] .rk-score,
+body.theme-rummikub .rk-roster[data-count="6"] .rk-score {
+  font-size: 1.52rem;
+  margin: 0.12rem 0 0.18rem;
+}
+
+body.theme-rummikub .rk-score.is-pos { color: var(--rk-cobalt); }
+body.theme-rummikub .rk-score.is-neg { color: var(--rk-red); }
+body.theme-rummikub .rk-score.is-zero { color: #475569; }
+
+body.theme-rummikub .rk-card-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.28rem;
+  margin-top: auto;
+}
+
+body.theme-rummikub .rk-draft-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.12rem 0.36rem;
+  border-radius: 6px;
+  font-size: 0.68rem;
+  font-weight: 750;
+  font-variant-numeric: tabular-nums;
+  background: rgba(19, 70, 158, 0.12);
+  color: var(--rk-cobalt);
+}
+
+body.theme-rummikub .rk-draft-pill.is-neg {
+  background: rgba(198, 40, 40, 0.12);
+  color: var(--rk-red);
+}
+
+body.theme-rummikub .rk-badge {
+  margin-left: auto;
+  width: 22px;
+  height: 23px;
+  border-radius: 5px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.74rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: #ffffff;
+  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.22);
+}
+
+body.theme-rummikub .rk-badge.rk-c-red { background: var(--rk-red); }
+body.theme-rummikub .rk-badge.rk-c-blue { background: var(--rk-cobalt); }
+body.theme-rummikub .rk-badge.rk-c-orange { background: var(--rk-orange); }
+body.theme-rummikub .rk-badge.rk-c-black { background: var(--rk-black); }
+body.theme-rummikub .rk-badge.rk-c-teal { background: var(--rk-teal); }
+body.theme-rummikub .rk-badge.rk-c-purple,
+body.theme-rummikub .rk-badge.rk-c-plum { background: var(--rk-purple); }
+
+/* ---------- Round Scoring Panel (Cream-Ivory Card, NO "Who Went Out?") ---------- */
+body.theme-rummikub .rk-scorer {
+  background: linear-gradient(180deg, #fffdf8 0%, var(--rk-ivory) 100%);
+  color: var(--rk-ink);
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 17px;
+  padding: 0.92rem 0.95rem 0.98rem;
+  box-shadow: 0 5px 0 #c6baa0, 0 12px 26px rgba(3, 12, 32, 0.44);
+  display: flex;
+  flex-direction: column;
+  gap: 0.72rem;
+}
+
+body.theme-rummikub .rk-scorer-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--rk-ivory-line);
+}
+
+body.theme-rummikub .rk-scorer-who {
+  font-size: 0.94rem;
+  font-weight: 750;
+  letter-spacing: -0.015em;
+  color: var(--rk-ink);
+}
+
+body.theme-rummikub .rk-preview {
+  font-size: 0.82rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--rk-muted);
+}
+
+body.theme-rummikub .rk-preview.is-neg { color: var(--rk-red); }
+body.theme-rummikub .rk-preview.is-pos { color: var(--rk-cobalt); }
+
+/* Sign Toggle + Large Tabular Score Input */
+body.theme-rummikub .rk-input-row {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.52rem;
+  align-items: stretch;
+}
+
+/* Points Up mode: hide -/+ sign toggle & collapse input row cleanly */
+body.theme-rummikub #rk-shell[data-mode="up"] .rk-sign-toggle {
+  display: none;
+}
+
+body.theme-rummikub #rk-shell[data-mode="up"] .rk-input-row {
+  grid-template-columns: 1fr;
+}
+
+body.theme-rummikub .rk-sign-toggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: var(--rk-ivory2);
+  border: 1px solid var(--rk-ivory-line);
+  border-radius: 12px;
+  padding: 3px;
+  gap: 3px;
+}
+
+body.theme-rummikub .rk-sign-btn {
+  width: 44px;
+  min-height: 48px;
+  border: none;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--rk-muted);
+  font-size: 1.4rem;
+  font-weight: 800;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .14s ease, color .14s ease, box-shadow .14s ease;
+}
+
+body.theme-rummikub #rk-sign-minus.active {
+  background: var(--rk-red);
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(198, 40, 40, 0.35);
+}
+
+body.theme-rummikub #rk-sign-plus.active {
+  background: var(--rk-cobalt);
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(19, 70, 158, 0.35);
+}
+
+body.theme-rummikub #rk-delta-input {
+  width: 100%;
+  min-height: 54px;
+  padding: 0.4rem 0.85rem;
+  border-radius: 12px;
+  border: 1.5px solid #cfc4ab;
+  background: #ffffff;
+  color: var(--rk-ink);
+  font-family: var(--rk-font);
+  font-size: 28px !important;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  outline: none;
+  box-shadow: inset 0 1px 3px rgba(15, 31, 61, 0.08);
+}
+
+body.theme-rummikub #rk-delta-input:focus {
+  border-color: var(--rk-cobalt);
+  box-shadow: 0 0 0 3px rgba(19, 70, 158, 0.16);
+}
+
+body.theme-rummikub #rk-delta-input.is-neg { color: var(--rk-red); }
+body.theme-rummikub #rk-delta-input.is-pos { color: var(--rk-cobalt); }
+
+/* Quick Steppers (-10, -5, -1, +1, +5, +10) */
+body.theme-rummikub .rk-steppers {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.34rem;
+}
+
+body.theme-rummikub .rk-step-btn {
+  padding: 0.52rem 0.2rem;
+  border-radius: 10px;
+  border: 1px solid #d5cab2;
+  background: #ffffff;
+  color: var(--rk-ink);
+  font: 750 0.84rem var(--rk-font);
+  font-variant-numeric: tabular-nums;
+  box-shadow: 0 2px 0 #d5cab2;
+  transition: transform .08s ease, background .12s ease;
+}
+
+body.theme-rummikub .rk-step-btn:active {
+  transform: translateY(1px);
+  box-shadow: none;
+}
+
+body.theme-rummikub .rk-step-btn.neg { color: var(--rk-red); }
+body.theme-rummikub .rk-step-btn.pos { color: var(--rk-cobalt); }
+
+/* Quick Chips Row (Joker + Calculator Toggle) */
+body.theme-rummikub .rk-chips-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+body.theme-rummikub .rk-joker-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.42rem;
+  padding: 0.52rem 0.88rem;
+  border-radius: 10px;
+  border: 1px solid #961b1b;
+  background: linear-gradient(180deg, var(--rk-red-hi) 0%, var(--rk-red) 100%);
+  color: #ffffff;
+  font: 750 0.86rem var(--rk-font);
+  font-variant-numeric: tabular-nums;
+  box-shadow: 0 2.5px 0 #8a1818, 0 4px 10px rgba(198, 40, 40, 0.25);
+  transition: transform .08s ease, filter .12s ease;
+}
+
+body.theme-rummikub .rk-joker-btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 0 #8a1818;
+}
+
+body.theme-rummikub .rk-joker-btn svg {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+}
+
+body.theme-rummikub .rk-calc-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.38rem;
+  padding: 0.52rem 0.82rem;
+  border-radius: 10px;
+  border: 1px solid #cfc4ab;
+  background: #ffffff;
+  color: var(--rk-ink);
+  font: 700 0.84rem var(--rk-font);
+  box-shadow: 0 2px 0 #d5cab2;
+  transition: background .14s ease, color .14s ease, border-color .14s ease, transform .08s ease;
+}
+
+body.theme-rummikub .rk-calc-toggle:active { transform: translateY(1px); box-shadow: none; }
+
+body.theme-rummikub .rk-calc-toggle.active {
+  background: var(--rk-cobalt);
+  border-color: #0b2d69;
+  color: #ffffff;
+  box-shadow: 0 2px 0 #092252;
+}
+
+body.theme-rummikub .rk-calc-toggle svg {
+  width: 15px;
+  height: 15px;
+  flex: 0 0 auto;
+}
+
+/* ---------- Collapsible Built-in Simple Calculator (#rk-calc-panel) ---------- */
+body.theme-rummikub .rk-calc-panel {
+  background: var(--rk-ivory2);
+  border: 1px solid var(--rk-ivory-line);
+  border-radius: 13px;
+  padding: 0.62rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+body.theme-rummikub .rk-calc-panel.hidden,
+body.theme-rummikub .rk-calc-panel[hidden] {
+  display: none !important;
+}
+
+body.theme-rummikub .rk-calc-display {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  min-height: 38px;
+  padding: 0.42rem 0.68rem;
+  border-radius: 9px;
+  background: #ffffff;
+  border: 1px solid #d5cab2;
+  font-variant-numeric: tabular-nums;
+}
+
+body.theme-rummikub #rk-calc-expr {
+  font-size: 0.92rem;
+  font-weight: 650;
+  color: var(--rk-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+body.theme-rummikub #rk-calc-res {
+  font-size: 1.08rem;
+  font-weight: 800;
+  color: var(--rk-ink);
+  white-space: nowrap;
+}
+
+body.theme-rummikub .rk-calc-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.34rem;
+}
+
+body.theme-rummikub .rk-calc-key {
+  min-height: 40px;
+  border-radius: 9px;
+  border: 1px solid #d5cab2;
+  background: #ffffff;
+  color: var(--rk-ink);
+  font: 750 1rem var(--rk-font);
+  font-variant-numeric: tabular-nums;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 0 #d5cab2;
+  transition: transform .06s ease, background .1s ease;
+}
+
+body.theme-rummikub .rk-calc-key:active {
+  transform: translateY(1px);
+  box-shadow: none;
+}
+
+body.theme-rummikub .rk-calc-key.op {
+  background: #eef3fc;
+  border-color: #c2d4f0;
+  color: var(--rk-cobalt);
+  box-shadow: 0 2px 0 #c2d4f0;
+}
+
+body.theme-rummikub .rk-calc-key.clear {
+  background: #fdf0f0;
+  border-color: #ecc5c5;
+  color: var(--rk-red);
+  box-shadow: 0 2px 0 #ecc5c5;
+}
+
+body.theme-rummikub .rk-calc-key.use {
+  background: var(--rk-cobalt);
+  border-color: #0b2d69;
+  color: #ffffff;
+  font-size: 0.86rem;
+  box-shadow: 0 2px 0 #092252;
+}
+
+body.theme-rummikub .rk-calc-key svg {
+  width: 17px;
+  height: 17px;
+}
+
+/* Primary Confirm CTA */
+body.theme-rummikub .rk-confirm-btn {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  border: 1px solid #0b2d69;
+  background: linear-gradient(180deg, var(--rk-cobalt-hi) 0%, var(--rk-cobalt) 100%);
+  color: #ffffff;
+  font: 750 0.98rem var(--rk-font);
+  letter-spacing: -0.01em;
+  box-shadow: 0 3px 0 #092252, 0 6px 14px rgba(11, 47, 105, 0.34);
+  transition: transform .08s ease, filter .14s ease;
+}
+
+body.theme-rummikub .rk-confirm-btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 0 #092252;
+}
+
+/* ---------- Footer Controls, Finish CTA & History Drawer ---------- */
+body.theme-rummikub .rk-footer-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.48rem;
+}
+
+body.theme-rummikub .rk-sec-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.36rem;
+  padding: 0.6rem 0.45rem;
+  border-radius: 11px;
+  border: 1px solid rgba(173, 206, 255, 0.24);
+  background: rgba(6, 25, 62, 0.65);
+  color: #eaf2ff;
+  font: 650 0.82rem var(--rk-font);
+  transition: background .14s ease, transform .08s ease;
+}
+
+body.theme-rummikub .rk-sec-btn:active:not(:disabled) { transform: scale(0.98); }
+body.theme-rummikub .rk-sec-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+body.theme-rummikub .rk-sec-btn svg { width: 15px; height: 15px; opacity: 0.9; }
+
+body.theme-rummikub .rk-finish-btn {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  background: linear-gradient(180deg, #fffdf8 0%, var(--rk-ivory2) 100%);
+  color: var(--rk-ink);
+  font: 750 0.94rem var(--rk-font);
+  box-shadow: 0 3px 0 #b8ac90, 0 6px 14px rgba(3, 12, 32, 0.34);
+  transition: transform .08s ease;
+}
+
+body.theme-rummikub .rk-finish-btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 0 #b8ac90;
+}
+
+body.theme-rummikub .rk-history-drawer {
+  background: var(--rk-ivory);
+  color: var(--rk-ink);
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  border-radius: 14px;
+  padding: 0.85rem 0.95rem;
+  box-shadow: 0 8px 20px rgba(3, 12, 32, 0.38);
+}
+
+body.theme-rummikub .rk-history-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.55rem;
+  padding-bottom: 0.45rem;
+  border-bottom: 1px solid var(--rk-ivory-line);
+}
+
+body.theme-rummikub .rk-history-head h3 {
+  margin: 0;
+  font-size: 0.86rem;
+  font-weight: 750;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--rk-ink);
+}
+
+body.theme-rummikub .rk-history-close {
+  background: none;
+  border: none;
+  color: var(--rk-muted);
+  font: 600 0.8rem var(--rk-font);
+  padding: 0.15rem 0.35rem;
+}
+
+body.theme-rummikub .rk-history-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.48rem 0;
+  border-bottom: 1px solid var(--rk-ivory-line);
+  font-size: 0.84rem;
+  font-variant-numeric: tabular-nums;
+}
+
+body.theme-rummikub .rk-history-row:last-child { border-bottom: none; }
+
+body.theme-rummikub .rk-history-empty {
+  margin: 0;
+  padding: 0.55rem 0;
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--rk-muted);
+}
+
+/* ---------- Classic Blue & Ivory Bottom Nav ---------- */
+body.theme-rummikub .bottom-nav {
+  background: #faf6ec;
+  border-top: 1px solid #d5cab2;
+  /* v24.2: opaque bar, so no backdrop blur layer is needed */
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+body.theme-rummikub .bottom-nav button {
+  color: #5e6d85;
+}
+
+body.theme-rummikub .bottom-nav button.active {
+  color: var(--rk-cobalt);
+  font-weight: 700;
+}
+
+body.theme-rummikub .bottom-nav button.active::before {
+  background: var(--rk-cobalt);
+}
+
+/* v24.2: Rummikub follows the 4-tab Play nav (Play, Tracker, Friends, History); Home tab no longer exists */
+body.theme-rummikub .bottom-nav #nav-new,
+body.theme-rummikub .bottom-nav #nav-active { display: flex; }
+body.theme-rummikub .bottom-nav #nav-social { display: flex; }

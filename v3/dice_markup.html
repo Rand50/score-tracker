@@ -1,0 +1,173 @@
+<!-- =========================================================================
+     Score Tracker — Reusable 3D Dice Roller & Roll Tracker Markup (v15)
+     Zero emojis; uniform 1.75px inline SVG icons + true CSS 3D preserve-3d dice.
+
+     Part A: Trigger Button (#dice-open-btn) — place inside any dice game's
+             tracker toolbar (e.g., Catan's controls row or generic active header).
+     Part B: Slide-Up Sheet Modal (#dice-modal) — place once inside #app-shell.
+     ========================================================================= -->
+
+<!-- PART A: TRIGGER BUTTON (mount inside Catan controls / any dice game toolbar) -->
+<!--
+<button type="button" id="dice-open-btn" class="dice-open-btn" onclick="openDiceModal()" aria-label="Open Dice Roller and Roll Tracker">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <rect x="3.5" y="3.5" width="17" height="17" rx="3.5"/>
+    <circle cx="8.5" cy="8.5" r="1.2" fill="currentColor" stroke="none"/>
+    <circle cx="15.5" cy="8.5" r="1.2" fill="currentColor" stroke="none"/>
+    <circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/>
+    <circle cx="8.5" cy="15.5" r="1.2" fill="currentColor" stroke="none"/>
+    <circle cx="15.5" cy="15.5" r="1.2" fill="currentColor" stroke="none"/>
+  </svg>
+  <span>Dice</span>
+  <span id="dice-open-badge" class="dice-open-badge hidden" hidden>0</span>
+</button>
+-->
+
+<!-- PART B: REUSABLE SLIDE-UP SHEET MODAL (mount once inside #app-shell) -->
+<div id="dice-modal" class="hidden" hidden role="dialog" aria-modal="true" aria-labelledby="dice-modal-title" onclick="if(event.target===this && window.closeDiceModal) closeDiceModal()">
+  <div class="dice-sheet">
+    <div class="dice-handle" aria-hidden="true"></div>
+
+    <!-- Header -->
+    <div class="dice-head">
+      <div class="dice-head-left">
+        <h3 id="dice-modal-title" class="dice-title">Dice &amp; Rolls</h3>
+        <span id="dice-total-rolls" class="dice-total-pill">0 rolls</span>
+      </div>
+      <button type="button" id="dice-close-btn" class="dice-close-btn" aria-label="Close Dice Roller" onclick="window.closeDiceModal && closeDiceModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- 3D Dice Stage + Readout + Roll CTA -->
+    <div class="dice-stage-card">
+      <div id="dice-stage" class="dice-stage" role="button" tabindex="0" aria-label="Tap to roll dice" onclick="window.rollVirtualDice && rollVirtualDice()">
+        <!-- Die 1 -->
+        <div class="die-wrap" id="die-wrap-1">
+          <div class="die-scene">
+            <div class="die-cube" id="die-1" data-face="1">
+              <div class="die-face f1"><span class="pip mc"></span></div>
+              <div class="die-face f2"><span class="pip tl"></span><span class="pip br"></span></div>
+              <div class="die-face f3"><span class="pip tl"></span><span class="pip mc"></span><span class="pip br"></span></div>
+              <div class="die-face f4"><span class="pip tl"></span><span class="pip tr"></span><span class="pip bl"></span><span class="pip br"></span></div>
+              <div class="die-face f5"><span class="pip tl"></span><span class="pip tr"></span><span class="pip mc"></span><span class="pip bl"></span><span class="pip br"></span></div>
+              <div class="die-face f6"><span class="pip tl"></span><span class="pip tr"></span><span class="pip ml"></span><span class="pip mr"></span><span class="pip bl"></span><span class="pip br"></span></div>
+            </div>
+          </div>
+          <div class="die-shadow" aria-hidden="true"></div>
+        </div>
+
+        <!-- Die 2 -->
+        <div class="die-wrap" id="die-wrap-2">
+          <div class="die-scene">
+            <div class="die-cube" id="die-2" data-face="6">
+              <div class="die-face f1"><span class="pip mc"></span></div>
+              <div class="die-face f2"><span class="pip tl"></span><span class="pip br"></span></div>
+              <div class="die-face f3"><span class="pip tl"></span><span class="pip mc"></span><span class="pip br"></span></div>
+              <div class="die-face f4"><span class="pip tl"></span><span class="pip tr"></span><span class="pip bl"></span><span class="pip br"></span></div>
+              <div class="die-face f5"><span class="pip tl"></span><span class="pip tr"></span><span class="pip mc"></span><span class="pip bl"></span><span class="pip br"></span></div>
+              <div class="die-face f6"><span class="pip tl"></span><span class="pip tr"></span><span class="pip ml"></span><span class="pip mr"></span><span class="pip bl"></span><span class="pip br"></span></div>
+            </div>
+          </div>
+          <div class="die-shadow" aria-hidden="true"></div>
+        </div>
+      </div>
+
+      <div class="dice-readout" aria-live="polite">
+        <span id="dice-result-total" class="dice-result-total">—</span>
+        <span id="dice-result-split" class="dice-result-split">Tap dice to roll</span>
+        <span id="dice-robber-tag" class="dice-robber-tag hidden" hidden>Robber</span>
+      </div>
+
+      <button type="button" id="dice-roll-btn" class="dice-roll-btn" onclick="window.rollVirtualDice && rollVirtualDice()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3.5" y="3.5" width="17" height="17" rx="3.5"/>
+          <circle cx="8.5" cy="8.5" r="1.2" fill="currentColor" stroke="none"/>
+          <circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/>
+          <circle cx="15.5" cy="15.5" r="1.2" fill="currentColor" stroke="none"/>
+        </svg>
+        <span>Roll Dice</span>
+      </button>
+    </div>
+
+    <!-- Physical Dice Quick-Log (2..12) -->
+    <div>
+      <div class="dice-sec-head">
+        <span class="dice-sec-label">Physical Dice</span>
+        <span class="dice-sec-hint">Tap to log</span>
+      </div>
+      <div id="dice-phys-grid" class="dice-phys-grid" role="group" aria-label="Log physical dice roll">
+        <button type="button" class="dice-phys-btn" data-sum="2" onclick="window.logPhysicalRoll && logPhysicalRoll(2)"><span>2</span><span class="dice-dots" aria-hidden="true"><i></i></span></button>
+        <button type="button" class="dice-phys-btn" data-sum="3" onclick="window.logPhysicalRoll && logPhysicalRoll(3)"><span>3</span><span class="dice-dots" aria-hidden="true"><i></i><i></i></span></button>
+        <button type="button" class="dice-phys-btn" data-sum="4" onclick="window.logPhysicalRoll && logPhysicalRoll(4)"><span>4</span><span class="dice-dots" aria-hidden="true"><i></i><i></i><i></i></span></button>
+        <button type="button" class="dice-phys-btn" data-sum="5" onclick="window.logPhysicalRoll && logPhysicalRoll(5)"><span>5</span><span class="dice-dots" aria-hidden="true"><i></i><i></i><i></i><i></i></span></button>
+        <button type="button" class="dice-phys-btn" data-sum="6" onclick="window.logPhysicalRoll && logPhysicalRoll(6)"><span>6</span><span class="dice-dots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span></button>
+        <button type="button" class="dice-phys-btn" data-sum="7" onclick="window.logPhysicalRoll && logPhysicalRoll(7)"><span>7</span><span class="dice-dots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span></button>
+        <button type="button" class="dice-phys-btn" data-sum="8" onclick="window.logPhysicalRoll && logPhysicalRoll(8)"><span>8</span><span class="dice-dots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span></button>
+        <button type="button" class="dice-phys-btn" data-sum="9" onclick="window.logPhysicalRoll && logPhysicalRoll(9)"><span>9</span><span class="dice-dots" aria-hidden="true"><i></i><i></i><i></i><i></i></span></button>
+        <button type="button" class="dice-phys-btn" data-sum="10" onclick="window.logPhysicalRoll && logPhysicalRoll(10)"><span>10</span><span class="dice-dots" aria-hidden="true"><i></i><i></i><i></i></span></button>
+        <button type="button" class="dice-phys-btn" data-sum="11" onclick="window.logPhysicalRoll && logPhysicalRoll(11)"><span>11</span><span class="dice-dots" aria-hidden="true"><i></i><i></i></span></button>
+        <button type="button" class="dice-phys-btn" data-sum="12" onclick="window.logPhysicalRoll && logPhysicalRoll(12)"><span>12</span><span class="dice-dots" aria-hidden="true"><i></i></span></button>
+      </div>
+    </div>
+
+    <!-- Roll Distribution Bar Chart (2..12) -->
+    <div>
+      <div class="dice-sec-head">
+        <span class="dice-sec-label">Roll Distribution</span>
+        <span id="dice-hot-summary" class="dice-sec-hint">Expected vs. actual</span>
+      </div>
+      <div class="dice-chart-card">
+        <div id="dice-chart-bars" class="dice-chart" aria-label="Roll distribution chart for totals 2 through 12">
+          <div class="dice-col" data-sum="2"><span class="dice-col-count"></span><div class="dice-col-track"><div class="dice-col-bar"></div><div class="dice-col-expected"></div></div><span class="dice-col-label">2</span></div>
+          <div class="dice-col" data-sum="3"><span class="dice-col-count"></span><div class="dice-col-track"><div class="dice-col-bar"></div><div class="dice-col-expected"></div></div><span class="dice-col-label">3</span></div>
+          <div class="dice-col" data-sum="4"><span class="dice-col-count"></span><div class="dice-col-track"><div class="dice-col-bar"></div><div class="dice-col-expected"></div></div><span class="dice-col-label">4</span></div>
+          <div class="dice-col" data-sum="5"><span class="dice-col-count"></span><div class="dice-col-track"><div class="dice-col-bar"></div><div class="dice-col-expected"></div></div><span class="dice-col-label">5</span></div>
+          <div class="dice-col" data-sum="6"><span class="dice-col-count"></span><div class="dice-col-track"><div class="dice-col-bar"></div><div class="dice-col-expected"></div></div><span class="dice-col-label">6</span></div>
+          <div class="dice-col" data-sum="7"><span class="dice-col-count"></span><div class="dice-col-track"><div class="dice-col-bar"></div><div class="dice-col-expected"></div></div><span class="dice-col-label">7</span></div>
+          <div class="dice-col" data-sum="8"><span class="dice-col-count"></span><div class="dice-col-track"><div class="dice-col-bar"></div><div class="dice-col-expected"></div></div><span class="dice-col-label">8</span></div>
+          <div class="dice-col" data-sum="9"><span class="dice-col-count"></span><div class="dice-col-track"><div class="dice-col-bar"></div><div class="dice-col-expected"></div></div><span class="dice-col-label">9</span></div>
+          <div class="dice-col" data-sum="10"><span class="dice-col-count"></span><div class="dice-col-track"><div class="dice-col-bar"></div><div class="dice-col-expected"></div></div><span class="dice-col-label">10</span></div>
+          <div class="dice-col" data-sum="11"><span class="dice-col-count"></span><div class="dice-col-track"><div class="dice-col-bar"></div><div class="dice-col-expected"></div></div><span class="dice-col-label">11</span></div>
+          <div class="dice-col" data-sum="12"><span class="dice-col-count"></span><div class="dice-col-track"><div class="dice-col-bar"></div><div class="dice-col-expected"></div></div><span class="dice-col-label">12</span></div>
+        </div>
+        <div class="dice-chart-legend">
+          <span class="dice-legend-item"><span class="dice-legend-tick"></span>Expected</span>
+          <span class="dice-legend-item"><span class="dice-legend-hot"></span>Hottest</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Rolls Strip -->
+    <div>
+      <div class="dice-sec-head">
+        <span class="dice-sec-label">Recent Rolls</span>
+        <span class="dice-sec-hint">Newest first</span>
+      </div>
+      <div id="dice-recent" class="dice-recent-strip" aria-live="polite">
+        <span class="dice-recent-empty">No rolls logged yet</span>
+      </div>
+    </div>
+
+    <!-- Undo & Reset Controls -->
+    <div class="dice-footer">
+      <button type="button" id="dice-undo-btn" class="dice-foot-btn" disabled onclick="window.undoDiceRoll && undoDiceRoll()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="9 14 4 9 9 4"/>
+          <path d="M20 20v-7a4 4 0 0 0-4-4H4"/>
+        </svg>
+        <span>Undo Roll</span>
+      </button>
+      <button type="button" id="dice-reset-btn" class="dice-foot-btn danger" disabled onclick="window.resetDiceRolls && resetDiceRolls()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M3 12a9 9 0 1 0 3-6.7L3 8"/>
+          <polyline points="3 3 3 8 8 8"/>
+        </svg>
+        <span>Reset Rolls</span>
+      </button>
+    </div>
+  </div>
+</div>

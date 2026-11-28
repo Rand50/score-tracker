@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0c0d10">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="score-tracker-build" content="__BUILD__">
+<meta name="apple-mobile-web-app-title" content="TallyIt">
+<title>TallyIt — Score Tracker</title>
+<link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png">
+<link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Cinzel:wght@600;700;800&family=Marcellus&family=EB+Garamond:wght@500;600;700;800&family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+<!-- ===================== NEUTRAL (GAME-AGNOSTIC) THEME ===================== -->
+<style id="neutral-theme">
+:root {
+  --bg: #0b1220; --surface: #151c2c; --surface2: #1e293b; --text: #f1f5f9; --muted: #94a3b8;
+  --accent: #22d3ee; --accent-dim: #0891b2; --success: #34d399; --danger: #f43f5e;
+  --border: rgba(255,255,255,0.08); --radius: 16px; --shadow: 0 10px 30px rgba(0,0,0,0.4);
+  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+.hidden, [hidden] { display: none !important; }
+html, body { margin: 0; padding: 0; }
+body { font-family: var(--font); background: var(--bg); color: var(--text); min-height: 100vh; }
+body:not(:has(#app-shell[hidden])) { padding-bottom: 84px; }
+
+/* ---------- Login (neutral navy) ---------- */
+#login-view { position: relative; z-index: 1; min-height: 100vh; min-height: 100dvh; padding: 1.5rem 1rem; align-items: center; justify-content: center;
+  background: radial-gradient(circle at 50% 20%, rgba(34,211,238,0.14), transparent 60%), linear-gradient(180deg, #0f172a 0%, var(--bg) 60%, #070c16 100%); }
+#login-view:not([hidden]):not(.auth-hidden) { display: flex; }
+#login-view[hidden], #login-view.auth-hidden, #app-shell[hidden], #app-shell.auth-hidden, .auth-hidden { display: none !important; }
+.auth-card { width: 100%; max-width: 390px; background: var(--surface); border: 1px solid rgba(148,163,184,0.18); border-radius: 18px; padding: 1.9rem 1.5rem 1.5rem; box-shadow: 0 20px 45px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.04); }
+.auth-crest { width: 54px; height: 54px; margin: 0 auto 0.8rem; border-radius: 16px; display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(145deg, var(--accent), var(--accent-dim)); box-shadow: 0 6px 18px rgba(34,211,238,0.3); user-select: none; }
+.auth-title { margin: 0; text-align: center; font-size: 1.6rem; font-weight: 700; letter-spacing: -0.4px; color: var(--text); }
+.auth-subtitle { margin: 0.35rem 0 1.4rem; text-align: center; font-size: 0.74rem; font-weight: 600; letter-spacing: 1.8px; text-transform: uppercase; color: var(--muted); }
+.auth-btn { width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem; padding: 0.8rem 1rem; border-radius: 12px; font: 600 0.98rem var(--font); cursor: pointer; transition: transform .08s ease, filter .15s ease, opacity .15s ease; }
+.auth-btn:active:not(:disabled) { transform: translateY(1px); }
+.auth-btn:disabled { opacity: .6; cursor: not-allowed; }
+.auth-btn-google { background: #fff; color: #1f2937; border: 1px solid #e2e8f0; box-shadow: 0 2px 6px rgba(0,0,0,0.25); }
+.auth-btn-google:hover:not(:disabled) { filter: brightness(0.97); }
+.auth-btn-primary { margin-top: 0.7rem; border: none; color: #0b1220; background: linear-gradient(135deg, var(--accent), var(--accent-dim)); box-shadow: 0 4px 14px rgba(34,211,238,0.25); }
+.auth-btn-primary:hover:not(:disabled) { filter: brightness(1.06); }
+.auth-divider { display: flex; align-items: center; gap: 0.75rem; margin: 1.15rem 0; color: var(--muted); font-size: 0.74rem; letter-spacing: 1.5px; text-transform: uppercase; }
+.auth-divider::before, .auth-divider::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, transparent, rgba(148,163,184,0.35), transparent); }
+.auth-label { display: block; font-size: 0.76rem; font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase; color: var(--muted); margin-bottom: 0.4rem; }
+#login-view .auth-input { width: 100%; padding: 0.75rem 0.85rem; border: 1px solid rgba(148,163,184,0.25); border-radius: 12px; background: var(--bg); color: var(--text); font: 0.98rem var(--font); outline: none; }
+#login-view .auth-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(34,211,238,0.18); }
+#login-msg { min-height: 1.25rem; margin: 0.9rem 0 0; text-align: center; font-size: 0.85rem; line-height: 1.35; color: var(--muted); }
+#login-msg[data-tone="error"] { color: var(--danger); }
+#login-msg[data-tone="success"] { color: var(--success); }
+
+/* ---------- App shell (neutral navy) ---------- */
+#app-shell { position: relative; z-index: 1; }
+.app-header { padding: 1.1rem 1.1rem 0.6rem; display: flex; justify-content: space-between; align-items: center; max-width: 900px; margin: 0 auto; }
+.app-header h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.5px; }
+.view { display: none; padding: 0 1rem 1rem; max-width: 900px; margin: 0 auto; }
+.view.active { display: block; }
+.card { background: var(--surface); border-radius: var(--radius); padding: 1.2rem; margin-bottom: 1rem; border: 1px solid var(--border); box-shadow: var(--shadow); }
+.card h2 { margin: 0 0 .6rem; font-size: 1.25rem; }
+.card h3 { margin: 0 0 .5rem; font-size: 1rem; }
+.btn { background: var(--surface2); color: var(--text); border: 1px solid var(--border); padding: 0.7rem 1.2rem; border-radius: 12px; font: 600 0.98rem var(--font); cursor: pointer; transition: transform .1s, filter .15s; }
+.btn:active { transform: scale(0.98); }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+.btn.primary { background: linear-gradient(135deg, var(--accent), var(--accent-dim)); color: #0b1220; border: none; }
+.btn.success { background: var(--success); color: #0b1220; border: none; }
+.btn.danger { background: var(--danger); color: #fff; border: none; }
+.btn.sm { padding: 0.4rem 0.75rem; font-size: 0.85rem; }
+.btn.block { width: 100%; }
+input, select, textarea { background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 0.7rem; border-radius: 10px; width: 100%; font: 1rem var(--font); }
+input[type="checkbox"] { width: auto; accent-color: var(--accent); }
+label.small, .field-label { display: block; margin: 0.7rem 0 0.3rem; color: var(--muted); font-size: 0.85rem; }
+.small { color: var(--muted); font-size: .85rem; }
+.flex { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; }
+.space-between { justify-content: space-between; }
+.hero { text-align: center; padding: 1.6rem 1rem; }
+.hero .emoji { font-size: 3rem; margin-bottom: .4rem; }
+.hero h2 { margin: 0 0 .35rem; }
+.hero p { margin: 0 0 1.1rem; }
+.hero .btn { width: 100%; max-width: 280px; padding: 0.95rem; }
+#sync-status { margin: .6rem 0 0; font-size: .78rem; color: var(--muted); }
+#sync-status[data-state="error"] { color: var(--danger); }
+.recent-item { padding: .6rem 0; border-bottom: 1px solid var(--border); }
+.recent-item:last-child { border-bottom: none; }
+
+/* Choose game */
+.game-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 0.7rem; margin: 0.8rem 0 0.4rem; }
+.game-card { position: relative; height: 150px; border-radius: 14px; overflow: hidden; cursor: pointer; background-color: var(--surface2); background-size: contain; background-repeat: no-repeat; background-position: center top; border: 2px solid transparent; transition: transform .15s, border-color .15s; }
+.game-card:hover { transform: translateY(-2px); }
+.game-card.selected { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(34,211,238,0.2); }
+.game-card .game-art { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; pointer-events: none; }
+.game-card .game-art.contain { object-fit: contain; inset: 0 0 30px 0; height: calc(100% - 30px); padding: 6px; filter: drop-shadow(0 4px 8px rgba(0,0,0,.5)); }
+.game-card .game-art-bg { position: absolute; inset: -12px; width: calc(100% + 24px); height: calc(100% + 24px); object-fit: cover; filter: blur(10px) brightness(.55) saturate(1.2); pointer-events: none; }
+.game-card .game-icon { position: absolute; inset: 0 0 34px 0; display: flex; align-items: center; justify-content: center; font-size: 2.6rem; color: var(--accent); }
+.game-card .overlay { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,.88)); padding: 1.1rem .5rem .55rem; color: #fff; font-weight: 600; font-size: .9rem; text-align: center; }
+.player-list { display: flex; flex-wrap: wrap; gap: .5rem; margin: .5rem 0; }
+.player-chip { background: var(--surface2); padding: .4rem .7rem; border-radius: 20px; display: inline-flex; align-items: center; gap: .45rem; font-size: .92rem; border: 1px solid var(--border); }
+.player-chip .chip-remove { background: none; border: none; color: var(--danger); font-size: 1.05rem; cursor: pointer; padding: 0 .1rem; line-height: 1; }
+
+/* Generic active game */
+.active-head { display: flex; justify-content: space-between; align-items: flex-start; gap: .5rem; }
+.active-head h2 { margin: 0; }
+.player-row { background: var(--surface2); border-radius: 14px; padding: 0.85rem 1rem; margin: 0.45rem 0; display: flex; justify-content: space-between; align-items: center; cursor: pointer; border: 1px solid transparent; }
+.player-row.selected { border-color: var(--accent); }
+.player-row.leader .p-score { color: var(--success); }
+.rank { width: 28px; font-weight: 700; color: var(--muted); }
+.p-score { font-size: 1.45rem; font-weight: 700; color: var(--accent); }
+#gen-pad { margin-top: .9rem; padding-top: .9rem; border-top: 1px solid var(--border); }
+.mode-toggle-n { display: grid; grid-template-columns: 1fr 1fr; gap: .4rem; margin: .5rem 0 .8rem; }
+.mode-toggle-n button.active { background: var(--accent); color: #0b1220; border-color: var(--accent); }
+.key { border-radius: 10px; padding: 0.8rem 0.3rem; text-align: center; font-weight: 700; font-size: 1.1rem; cursor: pointer; border: 1px solid #334155; color: #fff; user-select: none; }
+.key.active { outline: 3px solid var(--accent); outline-offset: 1px; }
+.key-grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-bottom: 8px; }
+.key-grid-6 { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; margin-bottom: 10px; }
+.form-row { display: flex; align-items: center; gap: .6rem; margin: .35rem 0; }
+.form-row > span { flex: 1; }
+.form-row input[type="number"] { width: 90px; flex: 0 0 90px; }
+.preview { margin: .6rem 0; font-weight: 600; color: var(--accent); }
+.action-bar { display: flex; gap: .5rem; margin-top: 1rem; }
+.action-bar .btn { flex: 1; }
+
+/* History */
+.history-item { padding: .85rem 0; border-bottom: 1px solid var(--border); }
+.history-item:last-child { border-bottom: none; }
+.history-item .winner { color: var(--success); font-size: .85rem; }
+
+/* Bottom nav (always neutral) */
+.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 50; display: flex; justify-content: space-around;
+  background: #0f172a;
+  border-top: 1px solid var(--border); padding: .55rem 0 calc(.55rem + env(safe-area-inset-bottom, 0px)); font-family: var(--font); }
+.bottom-nav button { background: none; border: none; color: var(--muted); font: 600 .72rem var(--font); display: flex; flex-direction: column; align-items: center; gap: .2rem; cursor: pointer; min-width: 64px; }
+.bottom-nav button .icon { font-size: 1.3rem; line-height: 1; }
+.bottom-nav button.active { color: var(--accent); }
+
+/* ---------- No tap-zoom / no tap-select (all themes) ---------- */
+html, body, button, a, input, select, textarea, label, [role="button"], [role="option"], [onclick] { touch-action: manipulation; }
+button, a, [role="button"], [role="option"], [onclick], .btn, .key, .game-card, .player-row, .player-chip, .bottom-nav button,
+.cg-row, .cg-act, .cg-wood-btn, .cg-wood-bar, .cg-reset, .auth-btn, #catan-minus, #catan-plus, .cc-meeple, .cc-finish, .cc-pill {
+  touch-action: manipulation; -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+input, select, textarea, #login-view .auth-input { font-size: 16px !important; }
+input, textarea { -webkit-user-select: text; user-select: text; }
+
+/* Catan board is only shown when theme-catan is on */
+#catan-board { display: none; }
+body.theme-catan #catan-board { display: block; }
+body.theme-catan #generic-board { display: none; }
+body.theme-catan .app-header { display: none; }
+/* v24.2: Tracker is always a tab (its empty state says Tap Play to start one) */
+/* Flip 7 board is only shown when theme-flip7 is on */
+#flip7-board { display: none; }
+/* Carcassonne tally is only shown when theme-carcassonne is on */
+#carc-board { display: none; }
+/* Nertz parlor table is only shown when theme-nertz is on */
+#nz-shell { display: none; }
+/* Rummikub rack table is only shown when theme-rummikub is on */
+#rk-shell { display: none; }
+/* 7 Wonders papyrus ledger is only shown when theme-seven-wonders is on */
+#sw-shell { display: none; }
+/* v23 Hearts Ivory & Crimson Ledger / Oh Hell Ivory & Emerald Ledger: only shown with body.theme-hearts / body.theme-ohhell */
+#ht-shell, #oh-shell { display: none; }
+/* v24 Qwirkle Bright Playful Tile Grid: only shown with body.theme-qwirkle */
+#qw-shell { display: none; }
+/* v25 Spoons Kitchen Table Linen: only shown with body.theme-spoons */
+#sp-shell { display: none; }
+/* v24.2: Friends shows on every game screen too (Play / Tracker / Friends / History) */
+#soc-create-group-modal { z-index: 80; }
+
+/* TallyIt v24.2 — Play is the landing page (Home removed).
+   Neutral obsidian/brass shell CSS. Scoped to #view-new / .v24-2-* only: no theme-* selectors, no bare elements,
+   no @media (fluid clamp sizing; fits 390px with no sideways overflow). Load AFTER home_redesign.css, v21_flow.css,
+   v22_features.css and v24_link_players.css. */
+
+#view-new { padding-top: clamp(.75rem, 3vw, 1.25rem); overflow-x: hidden; }
+
+/* Top stack: requested-game banner, "Were you in these games?" banner, Resume card + In Progress list */
+.v24-2-play-top {
+  display: flex; flex-direction: column; gap: .75rem;
+  margin: 0 0 1rem; min-width: 0;
+}
+.v24-2-play-top > * { min-width: 0; max-width: 100%; box-sizing: border-box; margin-top: 0; margin-bottom: 0; }
+/* Collapse entirely when every child is hidden (no stray gap above Choose Game) */
+.v24-2-play-top:not(:has(> :not([hidden]):not(.hidden))) { display: none; }
+/* Play top is a Choose-step thing only; Setup step stays focused on the chosen game */
+#view-new[data-v21-step="setup"] .v24-2-play-top { display: none; }
+
+/* In Progress section keeps v21 styling; add the brass hairline divider that separates it from Choose Game */
+.v24-2-play-top #v21-active-games-section {
+  padding-bottom: .9rem;
+  border-bottom: 1px solid rgba(212, 168, 83, .22);
+}
+.v24-2-play-top #v21-active-games-section[hidden],
+.v24-2-play-top #v21-active-games-section.hidden { display: none; }
+.v24-2-play-top #btn-resume-game { width: 100%; min-width: 0; }
+.v24-2-play-top .home-resume-title,
+.v24-2-play-top .v21-active-name,
+.v24-2-play-top .v21-active-meta { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.v24-2-play-top .v21-active-info { min-width: 0; flex: 1 1 auto; }
+
+/* Banners: same obsidian card + brass edge in both cases, full-width on phones */
+.v24-2-play-top #v22-built-banner,
+.v24-2-play-top #v24-suggest-banner { width: 100%; }
+.v24-2-play-top #v22-built-banner[hidden],
+.v24-2-play-top #v24-suggest-banner[hidden] { display: none; }
+
+/* Choose Game heading sits directly under the top stack */
+#view-new #v21-choose-step > h2 { margin-top: .25rem; }
+
+/* Bottom nav: 4 tabs now (Play, Tracker, Friends, History); the shell's flex + space-around already fits 390px */
+
+/* v24.2: v21 stepper ("1 Game / 2 Setup / 3 Score") and "Tap any game" hint removed from Play and Setup.
+   Markup is gone via v24_2_no_stepper.patch; these rules are a safety net if an older v21 block is mounted. */
+#view-new #v21-choose-header,
+#view-new .v21-stepper,
+#view-new .v21-choose-sub { display: none; }
+#view-new #v21-setup-header .v21-setup-head { margin-top: 0; }
+
+
+/* TallyIt v24.2 — inline SVG icons that replace the last emojis (trophy on Flip 7 Finish, people on setup group note).
+   Neutral: class-scoped only, no theme-* selectors, no bare elements, no @media. */
+.v24-2-ico { width: 1.05em; height: 1.05em; flex: 0 0 auto; vertical-align: -.16em; margin-right: .35em; stroke: currentColor; }
+.f7-finish .v24-2-ico { margin-right: 0; }
+.f7-sbtn .v24-2-ico { width: 1.1em; height: 1.1em; }
+.soc-active-group-note #setup-active-group-label { display: inline-flex; align-items: center; gap: .35em; min-width: 0; }
+.soc-active-group-note #setup-active-group-label .v24-2-ico { margin-right: 0; }
+.soc-active-group-note #setup-active-group-label > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+</style>
+
+<!-- ===================== HOME & SHELL REDESIGN (obsidian ink / alabaster / brass; shell chrome only) ===================== -->
+<style id="home-redesign">
+__HOME_CSS__
+</style>
+
+<!-- ===================== SOCIAL LAYER (neutral navy/cyan: Friends, Groups, setup, history badges) ===================== -->
+<style id="social-theme">
+__SOCIAL_CSS__
+__FRIENDS_QR_CSS__
+</style>
+
+<!-- ===================== CATAN THEME (scoped to body.theme-catan) ===================== -->
+<style id="catan-theme">
+__CATAN_CSS__
+</style>
+
+<!-- ===================== FLIP 7 THEME (scoped to body.theme-flip7) ===================== -->
+<style id="flip7-theme">
+__FLIP7_CSS__
+</style>
+
+<!-- ===================== CARCASSONNE THEME (scoped to body.theme-carcassonne) ===================== -->
+<style id="carcassonne-theme">
+__CARC_CSS__
+</style>
+
+<!-- ===================== NERTZ THEME (scoped to body.theme-nertz) ===================== -->
+<style id="dice-theme">
+__DICE_CSS__
+/* v15 mount points for the shared Dice trigger */
+.dice-slot { display: none; }
+.dice-slot.has-dice { display: flex; }
+#gen-dice-slot { align-items: center; gap: .45rem; }
+.active-head-actions { display: flex; align-items: center; gap: .45rem; flex: 0 0 auto; }
+body.theme-catan #catan-dice-slot.has-dice { justify-content: center; margin: .1rem auto .55rem; }
+body.dice-open { overflow: hidden; }
+</style>
+
+<style id="nertz-theme">
+__NERTZ_CSS__
+</style>
+
+<!-- ===================== RUMMIKUB THEME (Classic Blue & Ivory Rack; strictly scoped to body.theme-rummikub) ===================== -->
+<style id="rummikub-theme">
+__RK_CSS__
+</style>
+
+<!-- ===================== 7 WONDERS THEME (Illuminated Papyrus Ledger; strictly scoped to body.theme-seven-wonders) ===================== -->
+<style id="seven-wonders-theme">
+__SW_CSS__
+</style>
+
+<!-- ===================== v23 HEARTS (Ivory & Crimson Ledger; strictly scoped to body.theme-hearts) ===================== -->
+<style id="hearts-theme">
+__HT_CSS__
+</style>
+
+<!-- ===================== v23 OH HELL (Ivory & Emerald Ledger; strictly scoped to body.theme-ohhell) ===================== -->
+<style id="ohhell-theme">
+__OH_CSS__
+</style>
+
+<!-- ===================== v24 QWIRKLE (Bright Playful Tile Grid; strictly scoped to body.theme-qwirkle) ===================== -->
+<style id="qwirkle-theme">
+__QW_CSS__
+</style>
+
+<!-- ===================== v25 SPOONS (Kitchen Table Linen; strictly scoped to body.theme-spoons) ===================== -->
+<style id="spoons-theme">
+__SP_CSS__
+</style>
+
+<!-- ===================== v24 LINK PLAYERS + CLAIM (neutral obsidian/brass; .v24-* only) ===================== -->
+<style id="v24-link-players">
+__V24_LINK_CSS__
+.history-item .v24-link-slot { margin-top: .45rem; }
+</style>
+<!-- v20: Request a Game, Variations & Popularity, Private Admin Stats, Full Screen (neutral obsidian + warm brass) -->
+<style id="v20-features">
+__V20_CSS__
+__V21_CSS__
+__V22_CSS__
+__V23_CSS__
+</style>
+</head>
+<body>
+<!-- Build: __BUILD__ -->
+
+<!-- Login: starts hidden until getSession() resolves -->
+<section id="login-view" class="auth-hidden" hidden aria-label="Sign in to Score Tracker">
+  <div class="auth-card">
+    <div class="auth-crest" aria-hidden="true">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="5" x2="6" y2="19"/><line x1="11" y1="5" x2="11" y2="19"/><line x1="16" y1="5" x2="16" y2="19"/><line x1="4" y1="17" x2="20" y2="7"/></svg>
+    </div>
+    <h1 class="auth-title">Score Tracker</h1>
+    <p class="auth-subtitle">Sign in to sync your games</p>
+    <button id="btn-google-signin" type="button" class="auth-btn auth-btn-google">
+      <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+        <path fill="#4285F4" d="M17.64 9.2c0-.64-.06-1.25-.16-1.84H9v3.48h4.84a4.14 4.14 0 0 1-1.8 2.72v2.26h2.92c1.7-1.57 2.68-3.88 2.68-6.62z"/>
+        <path fill="#34A853" d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.92-2.26c-.8.54-1.84.86-3.04.86-2.34 0-4.33-1.58-5.04-3.71H.96v2.33A9 9 0 0 0 9 18z"/>
+        <path fill="#FBBC05" d="M3.96 10.71A5.41 5.41 0 0 1 3.68 9c0-.59.1-1.17.28-1.71V4.96H.96A9 9 0 0 0 0 9c0 1.45.35 2.82.96 4.04l3-2.33z"/>
+        <path fill="#EA4335" d="M9 3.58c1.32 0 2.5.45 3.44 1.35l2.58-2.59C13.46.89 11.43 0 9 0A9 9 0 0 0 .96 4.96l3 2.33C4.67 5.16 6.66 3.58 9 3.58z"/>
+      </svg>
+      <span>Continue with Google</span>
+    </button>
+    <div class="auth-divider"><span>or</span></div>
+    <form id="magic-link-form" novalidate>
+      <label class="auth-label" for="email">Email magic link</label>
+      <input id="email" class="auth-input" type="email" autocomplete="email" inputmode="email" placeholder="you@example.com" required>
+      <button id="btn-email-signin" type="submit" class="auth-btn auth-btn-primary">Send magic link</button>
+    </form>
+    <p id="login-msg" role="status" aria-live="polite"></p>
+  </div>
+</section>
+
+<div id="app-shell" class="hidden auth-hidden" hidden>
+  <header class="app-header">
+    <div class="app-brand">
+      <span class="app-brand-mark" aria-hidden="true">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="6" y1="5" x2="6" y2="19"/>
+          <line x1="11" y1="5" x2="11" y2="19"/>
+          <line x1="16" y1="5" x2="16" y2="19"/>
+          <line x1="4" y1="17" x2="20" y2="7"/>
+        </svg>
+      </span>
+      <h1>TallyIt</h1>
+      <span id="sync-status" role="status" aria-live="polite" title="Sync status" aria-label="Sync status"></span>
+    </div>
+    <div class="app-header-actions">
+__V20_FS_TRIGGER__
+      <div class="v20-hmenu-wrap">
+        <button type="button" id="btn-header-menu" class="v20-hmenu-btn" aria-label="Account menu" title="Menu" aria-haspopup="menu" aria-expanded="false" aria-controls="v20-header-menu" onclick="window.toggleHeaderMenu && toggleHeaderMenu()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="5.5" r="1.15" fill="currentColor"/>
+            <circle cx="12" cy="12" r="1.15" fill="currentColor"/>
+            <circle cx="12" cy="18.5" r="1.15" fill="currentColor"/>
+          </svg>
+        </button>
+        <div id="v20-header-menu" class="v20-hmenu hidden" hidden role="menu" aria-label="Account menu">
+          <div class="v20-hmenu-status">
+            <span id="v20-hmenu-dot" class="v20-hmenu-dot" data-state="ok" aria-hidden="true"></span>
+            <span class="v20-hmenu-status-text">
+              <span id="v20-hmenu-sync" class="v20-hmenu-sync">Signed in</span>
+              <span id="v20-hmenu-email" class="v20-hmenu-email"></span>
+            </span>
+          </div>
+__V20_ADMIN_TRIGGER__
+          <button type="button" id="btn-menu-fullscreen" class="v20-hmenu-item" role="menuitem" onclick="window.closeHeaderMenu && closeHeaderMenu(); window.toggleFullscreen && toggleFullscreen()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+            <span id="btn-menu-fullscreen-label">Full Screen</span>
+          </button>
+          <button type="button" id="btn-signout" class="v20-hmenu-item v20-hmenu-signout" role="menuitem" onclick="window.closeHeaderMenu && closeHeaderMenu(); signOut()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 17l5-5-5-5"/><line x1="15" y1="12" x2="3.5" y2="12"/><path d="M14.5 4.5h4a1.5 1.5 0 0 1 1.5 1.5v12a1.5 1.5 0 0 1-1.5 1.5h-4"/></svg>
+            <span>Sign out</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- CHOOSE GAME -->
+  <section id="view-new" class="view" data-v21-step="choose">
+<div id="v24-2-play-top" class="v24-2-play-top" aria-label="Your games">
+__V22_BUILT_BANNER__
+__V24_SUGGEST_BANNER__
+__V21_ACTIVE_GAMES__
+</div>
+  <div id="setup-screen" class="v23-setup-screen">
+    <div class="card v23-setup-card">
+      <div id="v21-choose-step">
+__V21_CHOOSE_HEADER__
+      <h2>Choose Game</h2>
+__V22_GAME_SEARCH__
+      <div class="game-grid" id="game-grid"></div>
+__V20_REQ_TRIGGER__
+      </div>
+      <div id="v21-setup-step" class="hidden" hidden>
+__V21_SETUP_HEADER__
+      <div id="v23-setup-hero" class="v23-setup-hero">
+        <img id="v23-hero-art" class="v23-hero-art" src="" alt="" aria-hidden="true" draggable="false" decoding="async">
+        <div class="v23-hero-meta">
+          <span id="v23-hero-badge" class="v23-hero-badge">Game Setup</span>
+          <div id="v23-hero-sub" class="small"></div>
+        </div>
+      </div>
+      <label class="small" for="version-select">Version / Scoring rules</label>
+      <select id="version-select"></select>
+__V20_VAR_BAR__
+__V22_HOUSE_RULES__
+      <div id="setup-players-section">
+        <h3 style="margin-top:1.1rem">Players</h3>
+
+        <!-- Signed-in user pre-selected as a (You) chip + selected friends/guests -->
+        <div class="player-list" id="player-chips"></div>
+        <div id="setup-active-group-note" class="soc-active-group-note hidden" hidden>
+          <span id="setup-active-group-label"></span>
+          <button type="button" class="soc-setup-link" onclick="clearSetupGroup && clearSetupGroup()">Clear group</button>
+        </div>
+
+        <!-- One-tap Group Presets -->
+        <div id="setup-groups-wrap" class="soc-setup-block hidden" hidden>
+          <div class="soc-setup-label">
+            <span>Load a Group</span>
+            <button type="button" class="soc-setup-link" onclick="showView('social'); SocialUI.switchSocialTab('groups')">Manage</button>
+          </div>
+          <div class="soc-strip" id="setup-group-presets" role="list" aria-label="Group presets"></div>
+        </div>
+
+        <!-- Quick-pick from Accepted Friends -->
+        <div id="setup-friends-wrap" class="soc-setup-block hidden" hidden>
+          <div class="soc-setup-label">
+            <span>Quick-add Friends</span>
+            <button type="button" class="soc-setup-link" onclick="showView('social'); SocialUI.switchSocialTab('friends')">All friends</button>
+          </div>
+          <div class="soc-strip" id="setup-friend-picks" role="list" aria-label="Quick add friends"></div>
+        </div>
+
+        <!-- Casual guest name input -->
+        <div class="soc-setup-block">
+          <div class="soc-setup-label"><span>Add Casual Guest</span></div>
+          <div class="flex" style="flex-wrap:nowrap">
+            <input type="text" id="new-player-name" placeholder="Type guest name..." autocomplete="off" style="flex:1">
+            <button class="btn" type="button" id="btn-add-player" onclick="addPlayer()" aria-label="Add guest player">+</button>
+          </div>
+        </div>
+
+      </div>
+      </div>
+    </div>
+__V21_STICKY_CTA__
+  </div>
+  </section>
+
+  <!-- ACTIVE GAME -->
+  <section id="view-active" class="view">
+    <!-- Neutral board for every game except Catan -->
+    <div id="generic-board" class="card">
+      <div class="active-head">
+        <div><h2 id="gen-title"></h2><div id="gen-sub" class="small"></div></div>
+        <div class="active-head-actions">
+          <div id="gen-dice-slot" class="dice-slot"></div>
+          <button class="btn sm" type="button" id="gen-leave" title="Finish or leave game" aria-label="Finish or leave game" onclick="openEndGameModal()">✕</button>
+        </div>
+      </div>
+      <div id="gen-leaderboard" style="margin-top:.7rem"></div>
+      <p class="small gen-hint" style="margin:.3rem 0 0;text-align:center">Tap a player to score</p>
+      <div id="gen-pad" class="hidden"></div>
+      <div class="action-bar">
+        <button class="btn hidden" id="gen-undo" type="button" hidden onclick="undoLastRound()">Undo</button>
+        <button class="btn success" id="gen-save" type="button" onclick="openEndGameModal()">Finish Game</button>
+        <button class="btn primary gen-start" id="gen-start" type="button" onclick="showView('new')">Start a game</button>
+      </div>
+    </div>
+
+    <!-- Flip 7 board: only visible with body.theme-flip7 -->
+    <div id="flip7-board">
+      <header class="f7-top">
+        <div class="f7-top-l">
+          <button type="button" class="f7-circ" id="f7-undo" aria-label="Undo last score" onclick="f7Undo()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></button>
+          <button type="button" class="f7-circ" id="f7-options" aria-label="Game options" onclick="f7OpenSheet('options')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
+        </div>
+        <div class="f7-top-r">
+          <button type="button" class="f7-pill" id="f7-target" onclick="f7OpenSheet('options')" aria-label="Target score">200 <small>PTS</small></button>
+          <button type="button" class="f7-circ" id="f7-add-player" aria-label="Add player" onclick="f7OpenSheet('add')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+        </div>
+      </header>
+      <div class="f7-sub">
+        <span id="f7-date">—</span>
+        <button type="button" class="f7-sort" id="f7-sort" onclick="f7ToggleSort()"><span>⇅</span>Top Score</button>
+      </div>
+      <div id="f7-board" class="f7-board" role="listbox" aria-label="Players"></div>
+      <p class="f7-hint" id="f7-hint">Tap a player to score their round</p>
+      <button type="button" class="f7-finish hidden" id="f7-finish" hidden onclick="openEndGameModal()"><svg class="v24-2-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4h8v5a4 4 0 0 1-8 0V4z"/><path d="M8 6H5a3 3 0 0 0 3 4"/><path d="M16 6h3a3 3 0 0 1-3 4"/><path d="M12 13v4"/><path d="M8.5 20h7"/><path d="M10 17h4v3h-4z"/></svg><span>Finish &amp; Save Game</span></button>
+      <div id="f7-drawer" class="f7-drawer hidden" hidden></div>
+      <div id="f7-sheet" class="f7-sheet hidden" hidden onclick="if(event.target===this)f7CloseSheet()"></div>
+    </div>
+
+
+    <!-- Carcassonne final-score tally: only visible with body.theme-carcassonne (Option 1: Sunlit Meadow & Castle Wall) -->
+    <div id="carc-board">
+      <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+        <defs>
+          <path id="cc-mp" d="M50 6C60.5 6 67.5 13.8 67.5 23.5c0 6-2.8 11.2-7.2 14.4l27.6 9.6c7.6 2.7 8.6 12.3 1.6 16.2L68 70.5l12.3 21.8c2 3.6-.4 6.7-4.4 6.7H58.6L50 83.5 41.4 99H24.1c-4 0-6.4-3.1-4.4-6.7L32 70.5 10.5 63.7c-7-3.9-6-13.5 1.6-16.2l27.6-9.6c-4.4-3.2-7.2-8.4-7.2-14.4C32.5 13.8 39.5 6 50 6z"/>
+          <linearGradient id="cc-shade" x1="0" y1="0" x2=".35" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".34"/><stop offset=".42" stop-color="#fff" stop-opacity="0"/><stop offset=".7" stop-color="#000" stop-opacity=".06"/><stop offset="1" stop-color="#000" stop-opacity=".34"/></linearGradient>
+          <radialGradient id="cc-hi" cx=".38" cy=".16" r=".32"><stop offset="0" stop-color="#fff" stop-opacity=".4"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+          <pattern id="cc-grain" patternUnits="userSpaceOnUse" width="100" height="9"><path d="M0 4.5C20 2 32 7 52 4.2S84 2.5 100 5" fill="none" stroke="#000" stroke-opacity=".14" stroke-width=".9"/><path d="M0 8C24 7 40 9.5 60 7.6S88 7 100 8.4" fill="none" stroke="#fff" stroke-opacity=".08" stroke-width=".7"/></pattern>
+          <linearGradient id="cc-gold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fbe7a0"/><stop offset=".5" stop-color="#e2b042"/><stop offset="1" stop-color="#a8741a"/></linearGradient>
+          <symbol id="cc-crown-s" viewBox="0 0 24 24"><path d="M3 17.5h18l-1.5-9.5-4.7 4L12 5l-2.8 7-4.7-4z" fill="url(#cc-gold)" stroke="#6e4a12" stroke-width="1.1" stroke-linejoin="round"/><rect x="3" y="17.6" width="18" height="2.8" rx=".9" fill="#b07a1c" stroke="#6e4a12" stroke-width=".8"/><circle cx="12" cy="4.6" r="1.3" fill="#fbe7a0" stroke="#6e4a12" stroke-width=".7"/></symbol>
+          <symbol id="cc-olive" viewBox="0 0 64 26"><path d="M62 21C46 20 26 15 4 4" fill="none" stroke="#5f6b2e" stroke-width="1.6" stroke-linecap="round"/>
+            <g fill="#6f7d36" stroke="#4c5622" stroke-width=".6"><ellipse cx="14" cy="5" rx="5.4" ry="2" transform="rotate(-18 14 5)"/><ellipse cx="17" cy="13.5" rx="5.4" ry="2" transform="rotate(32 17 13.5)"/><ellipse cx="27" cy="9.4" rx="5.6" ry="2.1" transform="rotate(-12 27 9.4)"/><ellipse cx="30" cy="18" rx="5.6" ry="2.1" transform="rotate(30 30 18)"/><ellipse cx="41" cy="13.6" rx="5.6" ry="2.1" transform="rotate(-8 41 13.6)"/><ellipse cx="44" cy="22" rx="5" ry="1.9" transform="rotate(24 44 22)"/><ellipse cx="54" cy="17" rx="5" ry="1.9" transform="rotate(-6 54 17)"/></g>
+            <g fill="#3f4a1c"><circle cx="22" cy="12.8" r="1.7"/><circle cx="36" cy="15.6" r="1.6"/></g></symbol>
+        </defs>
+      </svg>
+
+      <header class="cc-parch cc-banner">
+        <h1 class="cc-title" id="cc-title">Carcassonne</h1>
+        <div class="cc-sub-row">
+          <svg class="cc-olive cc-olive-l" viewBox="0 0 64 26" aria-hidden="true"><use href="#cc-olive"/></svg>
+          <p class="cc-sub" id="cc-sub">Final Score Tally</p>
+          <svg class="cc-olive cc-olive-r" viewBox="0 0 64 26" aria-hidden="true"><use href="#cc-olive"/></svg>
+        </div>
+      </header>
+
+      <section class="cc-parch cc-tally" aria-label="Final scores">
+        <div id="cc-list" role="list"></div>
+        <div id="cc-add" class="cc-add hidden" hidden>
+          <input type="text" id="cc-add-name" placeholder="Player name" autocomplete="off" enterkeyhint="done" maxlength="24" onkeydown="if(event.key==='Enter'){event.preventDefault();ccAddPlayer();}if(event.key==='Escape')ccHideAdd();">
+          <button type="button" class="cc-pill cc-add-go" id="cc-add-go" onclick="ccAddPlayer()">Add</button>
+          <button type="button" class="cc-pill cc-add-x" id="cc-add-cancel" aria-label="Cancel adding player" onclick="ccHideAdd()">✕</button>
+        </div>
+      </section>
+
+      <div class="cc-mini">
+        <button type="button" class="cc-pill" id="cc-add-player" onclick="ccShowAdd()">+ Player</button>
+        <button type="button" class="cc-pill" id="cc-reset" onclick="ccReset()">Reset</button>
+      </div>
+      <button type="button" class="cc-finish" id="cc-finish" onclick="openEndGameModal()"><span>Finish and Save Game</span></button>
+    </div>
+
+    <!-- Nertz Midnight Parlor & Gold Foil table: only visible with body.theme-nertz (Solo + unlimited Partners/Teams) -->
+__NERTZ_MARKUP__
+
+    <!-- Rummikub Classic Blue & Ivory Rack: only visible with body.theme-rummikub (2–6 players, Points Up / Classic +/−, tile calculator) -->
+__RK_MARKUP__
+
+    <!-- 7 Wonders Illuminated Papyrus Ledger: only visible with body.theme-seven-wonders (3–7 players, category-by-category, auto Science, coin tiebreaker) -->
+__SW_MARKUP__
+
+    <!-- v23 Hearts Ivory & Crimson Ledger: only visible with body.theme-hearts (pass cycle, Q of Spades +13, Shoot the Moon, optional J of Diamonds) -->
+__HT_MARKUP__
+
+    <!-- v23 Oh Hell Ivory & Emerald Ledger: only visible with body.theme-ohhell (bid/tricks, trump, Screw the Dealer, exact bonus) -->
+__OH_MARKUP__
+
+    <!-- v24 Qwirkle Bright Playful Tile Grid: only visible with body.theme-qwirkle (quick points, Qwirkle +6, Went Out +6, bag counter, undo) -->
+__QW_MARKUP__
+
+    <!-- v25 Spoons Kitchen Table Linen: only visible with body.theme-spoons (tap a player to knock them out, Undo, Round History, Finish & Save) -->
+__SP_MARKUP__
+
+    <!-- Catan board: only visible with body.theme-catan (layout from the approved rendering) -->
+    <div id="catan-board">
+      <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+        <defs>
+          <linearGradient id="cg-star-fill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fbe7a0"/><stop offset=".45" stop-color="#e8b84a"/><stop offset="1" stop-color="#b07a1c"/></linearGradient>
+          <linearGradient id="cg-star-hi" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff6cf" stop-opacity=".95"/><stop offset="1" stop-color="#fff6cf" stop-opacity="0"/></linearGradient>
+          <symbol id="cg-star" viewBox="0 0 24 24"><path d="M12 1.6l3.1 6.6 7.2.9-5.3 5 1.4 7.1L12 17.7l-6.4 3.5 1.4-7.1-5.3-5 7.2-.9z" fill="url(#cg-star-fill)" stroke="#7a5214" stroke-width="1.1" stroke-linejoin="round"/><path d="M12 4.4l2.2 4.7 5.1.6L12 12z" fill="url(#cg-star-hi)"/><path d="M12 12l-6.6-2.3 5.1-.6L12 4.4z" fill="#fff3c4" opacity=".35"/></symbol>
+          <symbol id="cg-crown" viewBox="0 0 24 24"><path d="M3 18h18l-1.6-10-4.6 4.2L12 5 9.2 12.2 4.6 8z" fill="url(#cg-star-fill)" stroke="#7a5214" stroke-width="1.1" stroke-linejoin="round"/><rect x="3" y="18.2" width="18" height="2.6" rx=".8" fill="#b07a1c" stroke="#7a5214" stroke-width=".8"/></symbol>
+        </defs>
+      </svg>
+
+      <header class="cg-frame cg-header">
+        <div class="cg-parch cg-header-card">
+          <h1 class="cg-title" id="catan-title">Score Tracker</h1>
+          <div class="cg-divider" aria-hidden="true"><span></span><i></i><span></span></div>
+          <p class="cg-sub" id="catan-sub">FIRST TO 10 VICTORY POINTS</p>
+        </div>
+      </header>
+
+      <div id="catan-dice-slot" class="dice-slot"></div>
+
+      <section class="cg-frame cg-board" aria-label="Victory points leaderboard">
+        <div class="cg-ribbon"><span>Victory Points</span></div>
+        <div class="cg-parch cg-leader-card">
+          <div id="leaderboard" role="listbox" aria-label="Players"></div>
+        </div>
+      </section>
+
+      <section class="cg-frame cg-adjust" id="pad" aria-label="Adjust victory points">
+        <div class="cg-parch cg-adjust-card">
+          <div class="cg-adjust-title">Adjust Victory Points</div>
+          <div class="cg-adjust-row">
+            <span class="cg-orn" aria-hidden="true"></span>
+            <button type="button" class="cg-wood-btn" id="catan-minus" onclick="catanStep(-1)" aria-label="Subtract 1 VP">−</button>
+            <div id="adj-val" class="cg-adj-val" aria-live="polite">0</div>
+            <button type="button" class="cg-wood-btn" id="catan-plus" onclick="catanStep(1)" aria-label="Add 1 VP">+</button>
+            <span class="cg-orn cg-orn-r" aria-hidden="true"></span>
+          </div>
+          <div class="cg-selected" id="pad-player-banner">Selected: —</div>
+        </div>
+      </section>
+
+      <section class="cg-frame cg-actions" aria-label="Score a category">
+        <div id="score-form" class="cg-action-list"></div>
+      </section>
+
+      <section class="cg-frame cg-footer">
+        <button type="button" class="cg-reset" id="btn-reset-scores" onclick="resetCatanScores()"><span class="cg-reset-ic" aria-hidden="true">↻</span>Reset Scores</button>
+        <div class="cg-footer-row">
+          <button type="button" class="cg-wood-bar" id="btn-undo" onclick="undoLastRound()">Undo</button>
+          <button type="button" class="cg-wood-bar cg-gold" id="btn-save-catan" onclick="openEndGameModal()">Finish Game</button>
+        </div>
+      </section>
+      <div id="cg-toast" class="cg-toast" role="status" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <!-- HISTORY -->
+  <section id="view-history" class="view">
+    <div class="card">
+      <h2>History</h2>
+      <div id="history-filter-bar" class="soc-filter-strip" role="tablist" aria-label="Filter history by group">
+        <button type="button" class="soc-filter-pill active" data-group-id="all" onclick="setHistoryFilter && setHistoryFilter('all')">All My Games</button>
+      </div>
+__V22_PLAYER_SEARCH_HISTORY__
+      <div id="history-list"></div>
+    </div>
+  </section>
+
+  <!-- v20 PRIVATE ADMIN STATS (randw50@gmail.com only) -->
+__V20_ADMIN_SCREEN__
+
+  <!-- FRIENDS & GROUPS (v17: clarity states + Friend QR) -->
+__FRIENDS_VIEW__
+
+  <!-- Create Group Modal Sheet -->
+  <div id="soc-create-group-modal" class="soc-modal-backdrop hidden" hidden role="dialog" aria-modal="true" aria-labelledby="soc-modal-title" onclick="if(event.target===this)SocialUI.closeCreateGroupModal()">
+    <div class="soc-modal">
+      <div class="soc-modal-head">
+        <h3 id="soc-modal-title">Create Group</h3>
+        <button type="button" class="soc-modal-close" aria-label="Close" onclick="SocialUI.closeCreateGroupModal()">✕</button>
+      </div>
+
+      <label class="field-label" for="soc-group-name">Group Name</label>
+      <input type="text" id="soc-group-name" placeholder="e.g. Friday Game Night" maxlength="40" autocomplete="off">
+
+      <label class="field-label" style="margin-top:0.9rem">Pick Friends (You are included automatically)</label>
+      <div id="soc-group-friend-picks" class="soc-check-grid"></div>
+
+      <label class="field-label" for="soc-group-guest-input">Optional Guest Names</label>
+      <div class="flex" style="flex-wrap:nowrap">
+        <input type="text" id="soc-group-guest-input" placeholder="Add regular guest..." autocomplete="off" style="flex:1" onkeydown="if(event.key==='Enter'){addGroupModalGuest && addGroupModalGuest();}">
+        <button type="button" class="btn sm" onclick="addGroupModalGuest && addGroupModalGuest()">+</button>
+      </div>
+      <div id="soc-group-guest-chips" class="player-list" style="margin-top:0.5rem"></div>
+
+      <p id="soc-group-modal-msg" class="soc-status-msg" role="status" aria-live="polite"></p>
+
+      <div class="action-bar" style="margin-top:0.9rem">
+        <button type="button" class="btn" onclick="SocialUI.closeCreateGroupModal()">Cancel</button>
+        <button type="button" class="btn primary" id="btn-confirm-create-group" onclick="createGroupFromModal && createGroupFromModal()">Create Group</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- v17 Friend QR modals: My QR Code + Scan Friend QR -->
+__FRIENDS_MODALS__
+
+  <!-- v20 modals: Request a Game, Compare Variations, iOS full-screen tip -->
+__V20_REQ_MODAL__
+__V20_VAR_MODAL__
+__V20_IOS_POPOVER__
+__V21_END_GAME_MODAL__
+
+  <!-- v24 Link players (creator) + claim sheet (claimer) -->
+__V24_LINK_SHEET__
+__V24_CLAIM_SHEET__
+
+<nav class="bottom-nav" aria-label="Main navigation">
+  <button type="button" id="nav-new" onclick="showView('new')">
+    <span class="icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3.5" y="3.5" width="17" height="17" rx="4"/>
+        <line x1="12" y1="8.25" x2="12" y2="15.75"/>
+        <line x1="8.25" y1="12" x2="15.75" y2="12"/>
+      </svg>
+    </span>
+    <span>Play</span>
+  </button>
+
+  <button type="button" id="nav-active" onclick="showView('active')">
+    <span class="icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/>
+        <rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/>
+        <rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/>
+        <rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/>
+      </svg>
+    </span>
+    <span>Tracker</span>
+  </button>
+
+  <button type="button" id="nav-social" onclick="showView('social')">
+    <span class="icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="9" cy="8.5" r="3.25"/>
+        <path d="M3.5 19.5c0-3 2.5-5 5.5-5s5.5 2 5.5 5"/>
+        <circle cx="16.5" cy="9.5" r="2.5"/>
+        <path d="M16.5 14.5c2.2 0 4 1.5 4 4.5"/>
+      </svg>
+    </span>
+    <span>Friends</span>
+    <span id="nav-social-dot" class="soc-nav-dot hidden" hidden aria-hidden="true"></span>
+  </button>
+
+  <button type="button" id="nav-history" onclick="showView('history')">
+    <span class="icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="8.5"/>
+        <polyline points="12 7.5 12 12 15 13.75"/>
+      </svg>
+    </span>
+    <span>History</span>
+  </button>
+</nav>
+</div>
+
+<!-- v15 Dice trigger (moved by the engine into #catan-dice-slot / #gen-dice-slot) + slide-up sheet -->
+<div id="dice-mount" hidden>
+__DICE_TRIGGER__
+</div>
+__DICE_MODAL__
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<!-- Social layer: SocialScoring (players, payloads, leaderboards), SocialAPI (Supabase + local fallback), SocialUI (templates) -->
+<script id="social-scoring">
+__SOCIAL_SCORING__
+</script>
+<script id="social-auth">
+__SOCIAL_AUTH__
+</script>
+<script id="social-ui-helpers">
+__SOCIAL_UI__
+</script>
+
+<!-- Nertz scoring logic (window.NertzLogic): signed round add/subtract + Got Nertz caller, Solo + Teams, undo, target, finish payloads -->
+<script id="nertz-logic">
+__NERTZ_LOGIC__
+</script>
+
+<!-- Rummikub scoring logic (window.RummikubLogic): Points Up / Classic +/− modes, Joker ±30, safe tile calculator, finish payloads -->
+<script id="rummikub-logic">
+__RK_LOGIC__
+</script>
+
+<!-- 7 Wonders scoring logic (window.SevenWondersLogic): 7 categories + expansions, optimal Science with Wilds, coins→VP, coin tiebreaker, undo, finish payloads -->
+<script id="seven-wonders-logic">
+__SW_LOGIC__
+</script>
+
+<!-- v23 Hearts scoring (window.TallyItHearts): pass cycle, 26-pt validation, Q of Spades, Shoot the Moon, J of Diamonds, undo -->
+<script id="hearts-scoring">
+__HT_LOGIC__
+</script>
+
+<!-- v23 Oh Hell scoring (window.TallyItOhHell): round schedule, rotating dealer, trump, Screw the Dealer, exact bonus, undo -->
+<script id="ohhell-scoring">
+__OH_LOGIC__
+</script>
+
+<!-- v24 Qwirkle scoring (window.TallyItQwirkle): +6 per Qwirkle, Went Out +6 ends game, bag counter, undo, stats -->
+<script id="qwirkle-scoring">
+__QW_LOGIC__
+</script>
+
+<!-- v25 Spoons scoring (window.TallyItSpoons): knock-outs per round, last player wins, undo, finishAndSave -->
+<script id="spoons-scoring">
+__SP_LOGIC__
+</script>
+<!-- v25 Spoons UI (window.SpoonsUI): renders #sp-shell from window.TallyItSpoons -->
+<script id="spoons-ui">
+__SP_JS__
+</script>
+<!-- v24 local/guest-history linking + leaderboard recompute (window.TallyItPlayerLink) -->
+<script id="player-linking">
+__PLAYER_LINK__
+</script>
+<!-- v24 player-linking backend (window.TallyItV24Backend) + Link/Claim UI (window.V24Link). Loaded before the engine and auth:
+     the ?claim= deep link is captured (and stripped from the URL) here, before any OAuth redirect -->
+<script id="v24-backend">
+__V24_BACKEND__
+</script>
+<script id="v24-link-ui">
+__V24_LINK_JS__
+</script>
+<script id="v24-claim-capture">
+try { if (window.TallyItV24Backend) window.TallyItV24Backend.capturePendingClaimFromUrl(); } catch (_) {}
+</script>
+
+<!-- Reusable dice roller + roll tracker logic (window.DiceLogic) -->
+<script id="dice-logic">
+__DICE_LOGIC__
+</script>
+
+<!-- v17 offline QR SVG encoder (window.ScoreQR) -->
+<script id="score-qr">
+__QR_SVG__
+</script>
+<!-- v22: offline QR decoder (window.TallyItQR: BarcodeDetector or bundled MIT jsQR) for camera + image scanning on iOS Safari -->
+<script id="score-qr-decoder">
+__QR_DECODER__
+</script>
+
+<!-- v21: multi-game sessions (window.TallyItSessions) — loaded before the engine -->
+<script id="v21-sessions">
+__V21_SESSIONS__
+</script>
+
+<!-- App engine: defines window.onAuthReady / window.onAuthSignedOut before auth init -->
+<script id="score-engine">
+__ENGINE__
+</script>
+
+<!-- v20: backend client (window.TallyItBackend), variations catalog (window.TallyItVariations), controller (window.TallyItV20) -->
+<script id="v20-backend">
+__V20_BACKEND__
+</script>
+<script id="v20-variations">
+__V20_VARIATIONS__
+</script>
+<script id="v20-controller">
+__V20_CONTROLLER__
+</script>
+<!-- v21: universal End / Leave Game sheet (window.TallyItV21) -->
+<script id="v21-controller">
+__V21_CONTROLLER__
+</script>
+<!-- v22: House Rules + search helpers (window.TallyItHouseRules), backend (window.TallyItV22Backend), glue (window.TallyItV22) -->
+<script id="v22-house-rules">
+__V22_HOUSE_RULES_JS__
+</script>
+<script id="v22-backend">
+__V22_BACKEND__
+</script>
+<script id="v22-glue">
+__V22_GLUE__
+</script>
+
+<!-- Auth -->
+__AUTH_SCRIPT__
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(() => {}); });
+}
+</script>
+</body>
+</html>

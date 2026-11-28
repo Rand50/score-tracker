@@ -1,0 +1,176 @@
+<!-- =========================================================================
+     TallyIt v22 UI Features Markup
+     Zero emojis; crisp 1.75px inline SVGs; mobile-first 390x844.
+     Delimited into mountable V22_* blocks for build.py / shell.html.
+     ========================================================================= -->
+
+<!-- ==================== BLOCK 1: GAME SEARCH BAR + EMPTY STATE =============
+     Mount at top of Choose Game step inside #view-new above #game-grid -->
+<!-- V22_GAME_SEARCH_START -->
+<div id="v22-game-search-wrap" class="v22-search-wrap">
+  <svg class="v22-search-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <circle cx="11" cy="11" r="7.5"/>
+    <line x1="20.5" y1="20.5" x2="16.35" y2="16.35"/>
+  </svg>
+  <input type="search" id="v22-game-search" class="v22-search-input" placeholder="Search games..." autocomplete="off" aria-label="Search games" oninput="window.v22FilterGames && v22FilterGames(this.value)">
+  <button type="button" id="btn-v22-game-search-clear" class="v22-search-clear hidden" hidden aria-label="Clear game search" onclick="window.v22ClearGameSearch && v22ClearGameSearch()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
+</div>
+
+<div id="v22-game-search-empty" class="v22-search-empty hidden" hidden role="status" aria-live="polite">
+  <p class="v22-search-empty-title">No games match "<span id="v22-game-search-query"></span>"</p>
+  <p class="v22-search-empty-sub">Want us to add it to TallyIt?</p>
+  <button type="button" id="btn-v22-request-from-search" class="v22-req-shortcut-btn" onclick="window.v22RequestSearchedGame && v22RequestSearchedGame()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="9"/>
+      <line x1="12" y1="8" x2="12" y2="16"/>
+      <line x1="8" y1="12" x2="16" y2="12"/>
+    </svg>
+    <span>Request this game</span>
+  </button>
+</div>
+<!-- V22_GAME_SEARCH_END -->
+
+
+<!-- ==================== BLOCK 2: PLAYER SEARCH (FRIENDS) ===================
+     Mount above #soc-friends-list inside #view-social -->
+<!-- V22_PLAYER_SEARCH_FRIENDS_START -->
+<div id="v22-friends-search-wrap" class="v22-search-wrap">
+  <svg class="v22-search-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <circle cx="11" cy="11" r="7.5"/>
+    <line x1="20.5" y1="20.5" x2="16.35" y2="16.35"/>
+  </svg>
+  <input type="search" id="v22-friends-search" class="v22-search-input" placeholder="Search friends or players..." autocomplete="off" aria-label="Search friends" oninput="window.v22FilterFriends && v22FilterFriends(this.value)">
+  <button type="button" id="btn-v22-friends-search-clear" class="v22-search-clear hidden" hidden aria-label="Clear friends search" onclick="window.v22ClearFriendsSearch && v22ClearFriendsSearch()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
+</div>
+<!-- V22_PLAYER_SEARCH_FRIENDS_END -->
+
+
+<!-- ==================== BLOCK 3: PLAYER SEARCH (HISTORY) ===================
+     Mount above history list inside #view-history -->
+<!-- V22_PLAYER_SEARCH_HISTORY_START -->
+<div id="v22-history-search-wrap" class="v22-search-wrap">
+  <svg class="v22-search-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <circle cx="11" cy="11" r="7.5"/>
+    <line x1="20.5" y1="20.5" x2="16.35" y2="16.35"/>
+  </svg>
+  <input type="search" id="v22-history-search" class="v22-search-input" placeholder="Filter history by player or game..." autocomplete="off" aria-label="Filter history by player" oninput="window.v22FilterHistory && v22FilterHistory(this.value)">
+  <button type="button" id="btn-v22-history-search-clear" class="v22-search-clear hidden" hidden aria-label="Clear history search" onclick="window.v22ClearHistorySearch && v22ClearHistorySearch()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
+</div>
+<!-- V22_PLAYER_SEARCH_HISTORY_END -->
+
+
+<!-- ==================== BLOCK 4: "REQUESTED GAME IS BUILT!" BANNER =========
+     Mount at top of #view-home .home-stack -->
+<!-- V22_BUILT_BANNER_START -->
+<section id="v22-built-banner" class="v22-built-banner hidden" hidden aria-label="Requested game available">
+  <div class="v22-built-top">
+    <div class="v22-built-lead">
+      <span class="v22-built-ico" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="12 2.5 14.9 8.6 21.5 9.4 16.6 14 17.9 20.5 12 17.3 6.1 20.5 7.4 14 2.5 9.4 9.1 8.6 12 2.5"/>
+        </svg>
+      </span>
+      <div>
+        <div class="v22-built-eyebrow">Your Requested Game Is Built</div>
+        <h3 id="v22-built-banner-title" class="v22-built-title">Ready to play!</h3>
+      </div>
+    </div>
+    <button type="button" id="btn-v22-built-dismiss" class="v22-built-dismiss" aria-label="Dismiss notification" onclick="window.v22DismissBuiltBanner && v22DismissBuiltBanner()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="v22-built-actions">
+    <button type="button" id="btn-v22-built-play" class="v22-built-play-btn" onclick="window.v22PlayBuiltGame && v22PlayBuiltGame()">
+      <span>Play Now</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <line x1="5" y1="12" x2="19" y2="12"/>
+        <polyline points="12 5 19 12 12 19"/>
+      </svg>
+    </button>
+  </div>
+</section>
+<!-- V22_BUILT_BANNER_END -->
+
+
+<!-- ==================== BLOCK 5: OPTIONAL GUEST EMAIL FIELD ================
+     Mount inside #req-game-form in #req-game-modal (shown for guests) -->
+<!-- V22_REQ_EMAIL_FIELD_START -->
+<div id="v22-req-email-wrap" class="v22-guest-email-field hidden" hidden>
+  <label class="v20-label" for="req-game-email">
+    <span>Email for notification</span>
+    <span class="v20-label-opt">Optional</span>
+  </label>
+  <input type="email" id="req-game-email" class="v20-input" placeholder="you@example.com" maxlength="160" autocomplete="email">
+  <p class="v20-help">Only used to let you know when your requested game is built.</p>
+</div>
+<!-- V22_REQ_EMAIL_FIELD_END -->
+
+
+<!-- ==================== BLOCK 6: CUSTOMIZE RULES (HOUSE RULES) DRAWER ======
+     Mount right below #v20-variation-bar inside #view-new Setup -->
+<!-- V22_HOUSE_RULES_START -->
+<div id="v22-house-rules-wrap" class="v22-hr-wrap">
+  <button type="button" id="btn-v22-house-rules" class="v22-hr-toggle" aria-expanded="false" aria-controls="v22-hr-drawer" onclick="window.v22ToggleHouseRules && v22ToggleHouseRules()">
+    <span class="v22-hr-toggle-left">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <line x1="4" y1="6" x2="20" y2="6"/>
+        <circle cx="9" cy="6" r="2"/>
+        <line x1="4" y1="12" x2="20" y2="12"/>
+        <circle cx="15" cy="12" r="2"/>
+        <line x1="4" y1="18" x2="20" y2="18"/>
+        <circle cx="10" cy="18" r="2"/>
+      </svg>
+      <span>Customize Rules</span>
+      <span id="v22-hr-badge" class="v22-hr-badge" hidden></span>
+    </span>
+    <svg class="v22-hr-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <polyline points="6 9 12 15 18 9"/>
+    </svg>
+  </button>
+
+  <div id="v22-hr-drawer" class="v22-hr-drawer hidden" hidden>
+    <!-- Dynamic 3-4 game-specific knobs populated by JS -->
+    <div id="v22-hr-knobs" class="v22-hr-knobs"></div>
+
+    <!-- Auto-generated live differences preview -->
+    <div id="v22-hr-diff-preview" class="v22-hr-diff-box">
+      <h4 class="v22-hr-diff-title">What's Different</h4>
+      <ul id="v22-hr-diff-list" class="v22-hr-diff-list"></ul>
+      <p id="v22-hr-diff-none" class="v22-hr-diff-none">Using standard rules for this variation.</p>
+    </div>
+
+    <!-- Compact Name & Publish as Variation sub-form -->
+    <div id="v22-hr-publish-box" class="v22-hr-publish">
+      <h4 class="v22-hr-publish-title">Name &amp; Publish as Variation</h4>
+      <input type="text" id="v22-hr-name" class="v22-hr-input" placeholder="Variation name (e.g. Fast Family Rules)" maxlength="60" autocomplete="off">
+      <input type="text" id="v22-hr-tagline" class="v22-hr-input" placeholder="Short tagline (optional)" maxlength="110" autocomplete="off">
+      <p id="v22-hr-msg" class="v22-hr-msg" role="status" aria-live="polite" hidden></p>
+      <div class="v22-hr-actions">
+        <button type="button" id="btn-v22-hr-save" class="v22-hr-btn-local" onclick="window.v22SaveHouseRulesLocal && v22SaveHouseRulesLocal()">Save Locally</button>
+        <button type="button" id="btn-v22-hr-publish" class="v22-hr-btn-pub" onclick="window.v22PublishHouseRules && v22PublishHouseRules()">Publish to Variations</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- V22_HOUSE_RULES_END -->
+
+
+<!-- ==================== BLOCK 7: ADMIN COMMUNITY VARIATIONS MODERATION =====
+     Mount inside #admin-screen below Game Requests Inbox -->
+<!-- V22_ADMIN_COMMUNITY_VARS_START -->
+<article id="v22-admin-community-card" class="v22-admin-card">
+  <div class="v22-admin-card-head">
+    <h3 class="v22-admin-card-title">Community Variations</h3>
+    <span id="v22-admin-comm-count" class="v22-admin-card-meta">0 published</span>
+  </div>
+  <div id="v22-admin-comm-list" class="v22-mod-list">
+    <div class="v22-empty-note">No community variations published yet.</div>
+  </div>
+</article>
+<!-- V22_ADMIN_COMMUNITY_VARS_END -->

@@ -1,0 +1,50 @@
+name: Playwright
+
+# Optional app suite. Not part of pull-request CI. Trigger it by hand.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test3:
+    name: test3.js
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Build the page in the runner checkout
+        run: python3 v3/build.py
+
+      - name: Install harness dependencies
+        working-directory: pwtest
+        run: npm ci
+
+      - name: Locate Chrome
+        id: chrome
+        run: |
+          set -euo pipefail
+          found=""
+          for c in /usr/bin/google-chrome /usr/bin/google-chrome-stable /usr/bin/chromium /usr/bin/chromium-browser; do
+            if [ -x "$c" ]; then found="$c"; break; fi
+          done
+          if [ -z "$found" ]; then
+            sudo apt-get update
+            sudo apt-get install -y google-chrome-stable || sudo apt-get install -y chromium-browser || sudo apt-get install -y chromium
+            for c in /usr/bin/google-chrome /usr/bin/google-chrome-stable /usr/bin/chromium /usr/bin/chromium-browser; do
+              if [ -x "$c" ]; then found="$c"; break; fi
+            done
+          fi
+          test -n "$found"
+          echo "path=$found" >> "$GITHUB_OUTPUT"
+
+      - name: Run the app suite
+        working-directory: pwtest
+        env:
+          ROOT: ${{ github.workspace }}
+          CHROME_PATH: ${{ steps.chrome.outputs.path }}
+        run: node test3.js
