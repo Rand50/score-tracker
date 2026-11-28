@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0c0d10">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="score-tracker-build" content="v24.2-play-home-2026-11-27">
+<meta name="score-tracker-build" content="v25-admin-drilldown-2026-11-27">
 <meta name="apple-mobile-web-app-title" content="TallyIt">
 <title>TallyIt — Score Tracker</title>
 <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png">
@@ -8903,8 +8903,6 @@ body.theme-qwirkle .bottom-nav #nav-social { display: flex !important; }
 
 .v20-status-select[data-status="new"]       { border-color: var(--v20-brass-border); color: var(--v20-brass); }
 .v20-status-select[data-status="planned"]   { border-color: rgba(147, 197, 253, 0.4); color: #93c5fd; }
-.v20-status-select[data-status="added"]     { border-color: rgba(74, 222, 128, 0.4); color: var(--v20-success); }
-.v20-status-select[data-status="dismissed"] { border-color: var(--v20-border); color: var(--v20-muted); }
 
 .v20-empty-note {
   padding: 14px 8px;
@@ -11107,9 +11105,530 @@ html.v21-sheet-open, html.v21-sheet-open body { overscroll-behavior: contain; }
 }
 
 </style>
+<style id="v25-admin-drilldown-css">
+
+
+.v25-admin-overlay {
+  --v25-bg: var(--v20-bg, #0c0d10);
+  --v25-surface: var(--v20-surface, #14161b);
+  --v25-surface-2: var(--v20-surface-2, #1c1f26);
+  --v25-surface-3: var(--v20-surface-3, #232730);
+  --v25-border: var(--v20-border, rgba(255, 255, 255, 0.09));
+  --v25-border-hi: var(--v20-border-hi, rgba(255, 255, 255, 0.16));
+  --v25-text: var(--v20-text, #f4f1ea);
+  --v25-muted: var(--v20-muted, #989fa9);
+  --v25-brass: var(--v20-brass, #d4a853);
+  --v25-brass-soft: var(--v20-brass-soft, rgba(212, 168, 83, 0.14));
+  --v25-brass-border: var(--v20-brass-border, rgba(212, 168, 83, 0.36));
+  --v25-success: var(--v20-success, #4ade80);
+  --v25-success-soft: var(--v20-success-soft, rgba(74, 222, 128, 0.13));
+  --v25-danger: var(--v20-danger, #f87171);
+  --v25-danger-soft: var(--v20-danger-soft, rgba(248, 113, 113, 0.13));
+  position: fixed;
+  inset: 0;
+  z-index: 400;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  box-sizing: border-box;
+  color: var(--v25-text);
+  font-family: inherit;
+  -webkit-text-size-adjust: 100%;
+}
+.v25-admin-overlay[hidden] { display: none !important; }
+.v25-admin-overlay *, .v25-admin-overlay *::before, .v25-admin-overlay *::after { box-sizing: border-box; }
+
+.v25-admin-scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(5, 6, 8, 0.72);
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+}
+
+
+.v25-admin-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  background: var(--v25-bg);
+  outline: none;
+}
+.v25-admin-panel[data-mode="panel"] {
+  width: min(900px, calc(100% - 48px));
+  height: min(760px, calc(100% - 64px));
+  align-self: center;
+  border: 1px solid var(--v25-border-hi);
+  border-radius: 18px;
+  background: var(--v25-surface);
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.65);
+}
+
+
+.v25-admin-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 0 0 auto;
+  padding: calc(env(safe-area-inset-top, 0px) + 12px) 14px 12px;
+  border-bottom: 1px solid var(--v25-border);
+  background: var(--v25-surface);
+}
+.v25-admin-panel[data-mode="panel"] .v25-admin-head { padding-top: 14px; padding-left: 18px; padding-right: 18px; }
+.v25-admin-headtext { flex: 1 1 auto; min-width: 0; }
+.v25-admin-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--v25-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.v25-admin-sub {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: var(--v25-muted);
+  font-variant-numeric: tabular-nums;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.v25-admin-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border-radius: 11px;
+  border: 1px solid var(--v25-border-hi);
+  background: var(--v25-surface-2);
+  color: var(--v25-text);
+  font: inherit;
+  cursor: pointer;
+}
+.v25-admin-icon-btn[hidden] { display: none; }
+.v25-admin-icon-btn svg { width: 18px; height: 18px; flex: 0 0 auto; }
+.v25-admin-icon-btn:hover, .v25-admin-icon-btn:active { border-color: var(--v25-brass-border); color: var(--v25-brass); }
+.v25-admin-icon-btn:focus-visible, .v25-admin-row:focus-visible, .v25-admin-sortbtn:focus-visible, .v25-admin-btn:focus-visible,
+.v25-admin-tab:focus-visible, .v25-admin-select:focus-visible, .v25-admin-input:focus-visible, .v25-admin-box:focus-visible {
+  outline: 2px solid var(--v25-brass);
+  outline-offset: 2px;
+}
+.v25-admin-spin { animation: v25-admin-spin 0.9s linear infinite; }
+@keyframes v25-admin-spin { to { transform: rotate(360deg); } }
+
+
+.v25-admin-tabs {
+  display: flex;
+  gap: 6px;
+  flex: 0 0 auto;
+  padding: 10px 14px 0;
+  background: var(--v25-surface);
+}
+.v25-admin-tabs[hidden] { display: none; }
+.v25-admin-tab {
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 9px 10px;
+  border-radius: 10px;
+  border: 1px solid var(--v25-border);
+  background: var(--v25-surface-2);
+  color: var(--v25-muted);
+  font-weight: 600; font-size: 13px; line-height: 1.2;
+  font-family: inherit;
+  cursor: pointer;
+}
+.v25-admin-tab[aria-selected="true"] { color: var(--v25-brass); border-color: var(--v25-brass-border); background: var(--v25-brass-soft); }
+
+
+.v25-admin-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--v25-border);
+  background: var(--v25-surface);
+}
+.v25-admin-panel[data-mode="panel"] .v25-admin-toolbar { padding-left: 18px; padding-right: 18px; }
+.v25-admin-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 1 1 100%;
+  min-width: 0;
+}
+.v25-admin-search-ico {
+  position: absolute;
+  left: 12px;
+  width: 16px;
+  height: 16px;
+  color: var(--v25-muted);
+  pointer-events: none;
+}
+.v25-admin-input {
+  width: 100%;
+  min-width: 0;
+  height: 42px;
+  padding: 0 40px 0 36px;
+  border-radius: 11px;
+  border: 1px solid var(--v25-border-hi);
+  background: var(--v25-bg);
+  color: var(--v25-text);
+  font-weight: 400; font-size: 16px; line-height: 1;
+  font-family: inherit;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.v25-admin-input::placeholder { color: var(--v25-muted); }
+.v25-admin-input::-webkit-search-cancel-button { -webkit-appearance: none; display: none; }
+.v25-admin-clear {
+  position: absolute;
+  right: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--v25-muted);
+  cursor: pointer;
+}
+.v25-admin-clear[hidden] { display: none; }
+.v25-admin-clear svg { width: 15px; height: 15px; }
+.v25-admin-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; flex: 1 1 100%; min-width: 0; }
+.v25-admin-controls:empty { display: none; }
+.v25-admin-field { display: inline-flex; align-items: center; gap: 6px; flex: 1 1 130px; min-width: 0; }
+.v25-admin-field[hidden] { display: none; }
+.v25-admin-field-label { flex: 0 0 auto; font-size: 11px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--v25-muted); }
+.v25-admin-select {
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+  height: 38px;
+  padding: 0 28px 0 10px;
+  border-radius: 10px;
+  border: 1px solid var(--v25-border-hi);
+  background-color: var(--v25-surface-2);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23989fa9' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 14px;
+  color: var(--v25-text);
+  font-weight: 500; font-size: 14px; line-height: 1;
+  font-family: inherit;
+  -webkit-appearance: none;
+  appearance: none;
+  text-overflow: ellipsis;
+}
+.v25-admin-dir { width: 38px; height: 38px; flex: 0 0 auto; }
+.v25-admin-dir svg { transition: transform 0.15s ease; }
+.v25-admin-dir[data-dir="asc"] svg { transform: rotate(180deg); }
+.v25-admin-sortfield { flex: 1 1 160px; }
+.v25-admin-panel[data-layout="table"] .v25-admin-sortfield { display: none; }
+.v25-admin-panel[data-layout="table"] .v25-admin-search { flex: 1 1 260px; }
+.v25-admin-panel[data-layout="table"] .v25-admin-controls { flex: 0 1 auto; }
+
+
+.v25-admin-body { position: relative; flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; background: var(--v25-bg); }
+.v25-admin-panel[data-mode="panel"] .v25-admin-body { background: var(--v25-surface); }
+.v25-admin-listview { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; }
+.v25-admin-listview[hidden], .v25-admin-detail[hidden] { display: none; }
+.v25-admin-scroll { flex: 1 1 auto; min-height: 0; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
+
+
+.v25-admin-thead {
+  display: none;
+  align-items: center;
+  gap: 12px;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 8px 40px 8px 18px;
+  border-bottom: 1px solid var(--v25-border);
+  background: var(--v25-surface);
+  grid-template-columns: var(--v25-cols, 1fr);
+}
+.v25-admin-panel[data-layout="table"] .v25-admin-thead { display: grid; }
+.v25-admin-sortbtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  padding: 6px 0;
+  border: 0;
+  background: transparent;
+  color: var(--v25-muted);
+  font-weight: 600; font-size: 11px; line-height: 1.2;
+  font-family: inherit;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-align: left;
+  cursor: pointer;
+}
+.v25-admin-sortbtn span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.v25-admin-sortbtn svg { width: 12px; height: 12px; flex: 0 0 auto; opacity: 0; }
+.v25-admin-sortbtn[aria-sort="ascending"] svg, .v25-admin-sortbtn[aria-sort="descending"] svg { opacity: 1; }
+.v25-admin-sortbtn[aria-sort="ascending"] svg { transform: rotate(180deg); }
+.v25-admin-sortbtn[aria-sort="ascending"], .v25-admin-sortbtn[aria-sort="descending"] { color: var(--v25-brass); }
+.v25-admin-sortbtn[data-align="right"] { justify-content: flex-end; text-align: right; }
+.v25-admin-sortbtn[data-sortable="false"] { cursor: default; }
+
+
+.v25-admin-rows { margin: 0; padding: 8px 12px 14px; list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.v25-admin-panel[data-layout="table"] .v25-admin-rows { padding: 0 8px 12px; gap: 0; }
+.v25-admin-rows[data-busy="true"] { opacity: 0.55; transition: opacity 0.12s ease; }
+.v25-admin-item { margin: 0; padding: 0; list-style: none; min-width: 0; }
+.v25-admin-row {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 12px 40px 12px 14px;
+  position: relative;
+  text-align: left;
+  border-radius: 13px;
+  border: 1px solid var(--v25-border);
+  background: var(--v25-surface);
+  color: var(--v25-text);
+  font: inherit;
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.v25-admin-row:hover, .v25-admin-row:active { border-color: var(--v25-brass-border); background: var(--v25-surface-2); }
+.v25-admin-row-chev { position: absolute; right: 12px; top: 50%; width: 16px; height: 16px; margin-top: -8px; color: var(--v25-muted); }
+.v25-admin-cell { display: block; min-width: 0; }
+.v25-admin-cell-val { display: block; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.v25-admin-cell-label { display: none; }
+
+
+.v25-admin-panel[data-layout="stack"] .v25-admin-row-grid { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 14px; }
+.v25-admin-panel[data-layout="stack"] .v25-admin-cell[data-role="primary"] { flex: 1 1 100%; font-size: 15px; font-weight: 650; color: var(--v25-text); }
+.v25-admin-panel[data-layout="stack"] .v25-admin-cell[data-role="secondary"] { flex: 1 1 100%; font-size: 12.5px; color: var(--v25-muted); margin-bottom: 4px; }
+.v25-admin-panel[data-layout="stack"] .v25-admin-cell[data-role="meta"] { flex: 0 1 auto; display: inline-flex; align-items: baseline; gap: 5px; font-size: 12.5px; color: var(--v25-text); max-width: 100%; }
+.v25-admin-panel[data-layout="stack"] .v25-admin-cell[data-role="meta"] .v25-admin-cell-label { display: inline; font-size: 11px; color: var(--v25-muted); text-transform: uppercase; letter-spacing: 0.04em; }
+
+
+.v25-admin-panel[data-layout="table"] .v25-admin-item { border-bottom: 1px solid var(--v25-border); }
+.v25-admin-panel[data-layout="table"] .v25-admin-row {
+  padding: 11px 10px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+}
+.v25-admin-panel[data-layout="table"] .v25-admin-row:hover { background: var(--v25-surface-2); }
+.v25-admin-panel[data-layout="table"] .v25-admin-row-grid { display: grid; align-items: center; gap: 12px; grid-template-columns: var(--v25-cols, 1fr); padding-right: 22px; }
+.v25-admin-panel[data-layout="table"] .v25-admin-row-chev { right: 10px; }
+.v25-admin-panel[data-layout="table"] .v25-admin-cell { font-size: 13.5px; color: var(--v25-text); }
+.v25-admin-panel[data-layout="table"] .v25-admin-cell[data-role="primary"] { font-weight: 650; }
+.v25-admin-panel[data-layout="table"] .v25-admin-cell[data-role="secondary"] { color: var(--v25-muted); }
+.v25-admin-cell[data-align="right"] { text-align: right; }
+
+
+.v25-admin-badge {
+  display: inline-block;
+  max-width: 100%;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--v25-border-hi);
+  background: var(--v25-surface-2);
+  color: var(--v25-muted);
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 1.5;
+  text-transform: capitalize;
+}
+.v25-admin-badge[data-tone="ok"] { color: var(--v25-success); border-color: rgba(74, 222, 128, 0.4); background: var(--v25-success-soft); }
+.v25-admin-badge[data-tone="warn"] { color: var(--v25-brass); border-color: var(--v25-brass-border); background: var(--v25-brass-soft); }
+.v25-admin-badge[data-tone="bad"] { color: var(--v25-danger); border-color: rgba(248, 113, 113, 0.35); background: var(--v25-danger-soft); }
+.v25-admin-badge[data-tone="info"] { color: #93c5fd; border-color: rgba(147, 197, 253, 0.4); background: rgba(147, 197, 253, 0.1); }
+
+
+.v25-admin-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 44px 24px;
+  text-align: center;
+  color: var(--v25-muted);
+  font-size: 14px;
+}
+.v25-admin-state[hidden] { display: none; }
+.v25-admin-state svg { width: 28px; height: 28px; color: var(--v25-muted); }
+.v25-admin-state strong { color: var(--v25-text); font-size: 15px; font-weight: 650; }
+.v25-admin-state p { margin: 0; max-width: 34ch; line-height: 1.45; }
+.v25-admin-state[data-kind="error"] svg, .v25-admin-state[data-kind="error"] strong { color: var(--v25-danger); }
+.v25-admin-skel { display: flex; flex-direction: column; gap: 8px; padding: 8px 12px; }
+.v25-admin-skel[hidden] { display: none; }
+.v25-admin-skel-row { height: 74px; border-radius: 13px; background: linear-gradient(90deg, var(--v25-surface) 0%, var(--v25-surface-2) 50%, var(--v25-surface) 100%); background-size: 200% 100%; animation: v25-admin-shimmer 1.2s ease-in-out infinite; }
+@keyframes v25-admin-shimmer { from { background-position: 100% 0; } to { background-position: -100% 0; } }
+
+
+.v25-admin-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 38px;
+  padding: 0 14px;
+  border-radius: 10px;
+  border: 1px solid var(--v25-border-hi);
+  background: var(--v25-surface-2);
+  color: var(--v25-text);
+  font-weight: 600; font-size: 13.5px; line-height: 1;
+  font-family: inherit;
+  cursor: pointer;
+}
+.v25-admin-btn svg { width: 15px; height: 15px; flex: 0 0 auto; }
+.v25-admin-btn:hover, .v25-admin-btn:active { border-color: var(--v25-brass-border); color: var(--v25-brass); }
+.v25-admin-btn:disabled { opacity: 0.4; cursor: not-allowed; border-color: var(--v25-border-hi); color: var(--v25-text); }
+
+
+.v25-admin-pager {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex: 0 0 auto;
+  padding: 10px 14px calc(env(safe-area-inset-bottom, 0px) + 10px);
+  border-top: 1px solid var(--v25-border);
+  background: var(--v25-surface);
+}
+.v25-admin-panel[data-mode="panel"] .v25-admin-pager { padding: 10px 18px; border-radius: 0 0 18px 18px; }
+.v25-admin-pager[hidden] { display: none; }
+.v25-admin-range { flex: 1 1 auto; min-width: 0; text-align: center; font-size: 13px; color: var(--v25-muted); font-variant-numeric: tabular-nums; }
+
+
+.v25-admin-detail { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; }
+.v25-admin-detail-body { padding: 14px 14px calc(env(safe-area-inset-bottom, 0px) + 18px); }
+.v25-admin-panel[data-mode="panel"] .v25-admin-detail-body { padding: 18px; }
+.v25-admin-detail-hero { margin: 0 0 14px; }
+.v25-admin-detail-name { margin: 0; font-size: 20px; font-weight: 700; line-height: 1.2; overflow-wrap: anywhere; }
+.v25-admin-detail-sub { margin: 4px 0 0; font-size: 13px; color: var(--v25-muted); overflow-wrap: anywhere; }
+.v25-admin-dl {
+  margin: 0 0 14px;
+  padding: 4px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--v25-border);
+  background: var(--v25-surface);
+}
+.v25-admin-dl-row { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.6fr); gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--v25-border); }
+.v25-admin-dl-row:last-child { border-bottom: 0; }
+.v25-admin-dt { margin: 0; font-size: 11.5px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--v25-muted); overflow-wrap: anywhere; }
+.v25-admin-dd { margin: 0; min-width: 0; font-size: 14px; color: var(--v25-text); overflow-wrap: anywhere; -webkit-user-select: text; user-select: text; font-variant-numeric: tabular-nums; }
+.v25-admin-dd a { color: var(--v25-brass); }
+.v25-admin-dd-null { color: var(--v25-muted); }
+.v25-admin-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.v25-admin-sublist { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.v25-admin-subitem { padding: 8px 10px; border-radius: 10px; background: var(--v25-surface-2); border: 1px solid var(--v25-border); font-size: 13px; }
+.v25-admin-subitem small { display: block; margin-top: 2px; font-size: 12px; color: var(--v25-muted); }
+.v25-admin-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.v25-admin-section-label { margin: 18px 0 8px; font-size: 11.5px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--v25-muted); }
+
+
+.v25-admin-box { position: relative; cursor: pointer; transition: border-color 0.15s ease, background 0.15s ease; }
+.v25-admin-box:hover, .v25-admin-box:active { border-color: var(--v25-brass-border, rgba(212, 168, 83, 0.36)); }
+.v25-admin-box-chev {
+  position: absolute;
+  top: 12px;
+  right: 10px;
+  width: 14px;
+  height: 14px;
+  color: var(--v20-muted, #989fa9);
+  pointer-events: none;
+}
+.v25-admin-box:hover .v25-admin-box-chev { color: var(--v20-brass, #d4a853); }
+.v25-admin-box .v20-kpi-label { padding-right: 16px; }
+.v25-admin-box .v20-admin-card-head { padding-right: 18px; }
+.v25-admin-viewall {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 8px;
+  padding: 4px 8px;
+  border-radius: 8px;
+  border: 1px solid var(--v20-border-hi, rgba(255, 255, 255, 0.16));
+  background: transparent;
+  color: var(--v20-brass, #d4a853);
+  font-weight: 600; font-size: 11.5px; line-height: 1;
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.v25-admin-viewall svg { width: 12px; height: 12px; }
+.v25-admin-viewall:focus-visible { outline: 2px solid var(--v20-brass, #d4a853); outline-offset: 2px; }
+.v25-admin-card-tools { display: inline-flex; align-items: baseline; gap: 4px; flex: 0 0 auto; }
+
+
+.v25-admin-crumbs {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: 0 0 auto;
+  min-width: 0;
+  overflow: hidden;
+  padding: 8px 14px 0;
+  background: var(--v25-surface);
+  font-size: 12.5px;
+}
+.v25-admin-panel[data-mode="panel"] .v25-admin-crumbs { padding-left: 18px; padding-right: 18px; }
+.v25-admin-crumbs[hidden] { display: none; }
+.v25-admin-crumb {
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: 11em;
+  padding: 4px 6px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--v25-muted);
+  font-size: inherit;
+  font-family: inherit;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.v25-admin-crumb[data-crumb] { cursor: pointer; }
+.v25-admin-crumb[data-crumb]:hover { color: var(--v25-brass); }
+.v25-admin-crumb[data-crumb]:focus-visible { outline: 2px solid var(--v25-brass); outline-offset: 1px; }
+.v25-admin-crumb[aria-current="page"] { color: var(--v25-text); flex: 1 1 auto; max-width: none; }
+.v25-admin-crumb-sep { flex: 0 0 auto; width: 12px; height: 12px; color: var(--v25-muted); }
+
+
+.v25-admin-state[data-kind="info"] svg, .v25-admin-state[data-kind="loading"] svg { color: var(--v25-brass); }
+#v25-admin-detail-state { padding: 14px 14px 0; flex-direction: row; justify-content: flex-start; align-items: flex-start; text-align: left; }
+#v25-admin-detail-state svg { width: 20px; height: 20px; flex: 0 0 auto; }
+#v25-admin-detail-state p { max-width: none; }
+.v25-admin-mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.92em; }
+.v25-admin-chip { max-width: 100%; }
+.v25-admin-chip span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.v25-admin-panel[data-layout="stack"] .v25-admin-cell[data-role="primary"] { order: -2; }
+.v25-admin-panel[data-layout="stack"] .v25-admin-cell[data-role="secondary"] { order: -1; }
+.v25-admin-sortbtn[data-sortable="false"] svg { display: none; }
+.v25-admin-sub { cursor: pointer; text-decoration: underline; text-decoration-color: transparent; text-underline-offset: 2px; transition: text-decoration-color 0.15s ease; }
+.v25-admin-sub:hover { text-decoration-color: currentColor; }
+
+</style>
 </head>
 <body>
-<!-- Build: v24.2-play-home-2026-11-27 -->
+<!-- Build: v25-admin-drilldown-2026-11-27 -->
 
 <!-- Login: starts hidden until getSession() resolves -->
 <section id="login-view" class="auth-hidden" hidden aria-label="Sign in to Score Tracker">
@@ -13517,6 +14036,94 @@ html.v21-sheet-open, html.v21-sheet-open body { overscroll-behavior: contain; }
   </div>
 </div>
 
+<div id="v25-admin-drill" class="v25-admin-overlay" hidden>
+  <div class="v25-admin-scrim" data-v25-close="1"></div>
+  <section class="v25-admin-panel" role="dialog" aria-modal="true" aria-labelledby="v25-admin-title" tabindex="-1" data-mode="sheet" data-layout="stack" data-view="list">
+    <header class="v25-admin-head">
+      <button type="button" id="v25-admin-back" class="v25-admin-icon-btn" aria-label="Back" hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <div class="v25-admin-headtext">
+        <h2 id="v25-admin-title" class="v25-admin-title">Admin</h2>
+        <p id="v25-admin-count" class="v25-admin-sub" role="status" aria-live="polite"></p>
+      </div>
+      <button type="button" id="v25-admin-refresh" class="v25-admin-icon-btn" aria-label="Refresh list">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+      </button>
+      <button type="button" id="v25-admin-close" class="v25-admin-icon-btn" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </header>
+
+    <nav id="v25-admin-crumbs" class="v25-admin-crumbs" aria-label="Drill-down path" hidden></nav>
+
+    <div id="v25-admin-tabs" class="v25-admin-tabs" role="tablist" aria-label="Lists" hidden></div>
+
+    <div class="v25-admin-body">
+      <div id="v25-admin-listview" class="v25-admin-listview">
+        <div class="v25-admin-toolbar">
+          <div class="v25-admin-search">
+            <svg class="v25-admin-search-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input id="v25-admin-search" class="v25-admin-input" type="search" inputmode="search" enterkeyhint="search" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Search" aria-label="Search">
+            <button type="button" id="v25-admin-clear" class="v25-admin-clear" aria-label="Clear search" hidden>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+          <div id="v25-admin-controls" class="v25-admin-controls"></div>
+          <div class="v25-admin-field v25-admin-sortfield">
+            <label class="v25-admin-field-label" for="v25-admin-sort">Sort</label>
+            <select id="v25-admin-sort" class="v25-admin-select" aria-label="Sort by"></select>
+            <button type="button" id="v25-admin-dir" class="v25-admin-icon-btn v25-admin-dir" data-dir="desc" aria-label="Sort direction: descending">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div id="v25-admin-scroll" class="v25-admin-scroll">
+          <div id="v25-admin-thead" class="v25-admin-thead" role="group" aria-label="Sort columns"></div>
+          <div id="v25-admin-skel" class="v25-admin-skel" aria-hidden="true" hidden>
+            <div class="v25-admin-skel-row"></div><div class="v25-admin-skel-row"></div><div class="v25-admin-skel-row"></div><div class="v25-admin-skel-row"></div><div class="v25-admin-skel-row"></div>
+          </div>
+          <div id="v25-admin-empty" class="v25-admin-state" data-kind="empty" hidden>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <strong id="v25-admin-empty-title">Nothing here</strong>
+            <p id="v25-admin-empty-text">No results.</p>
+          </div>
+          <div id="v25-admin-notice" class="v25-admin-state" data-kind="info" role="status" hidden>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            <strong id="v25-admin-notice-title">Not available</strong>
+            <p id="v25-admin-notice-text"></p>
+            <button type="button" id="v25-admin-notice-retry" class="v25-admin-btn" hidden>Check again</button>
+          </div>
+          <div id="v25-admin-error" class="v25-admin-state" data-kind="error" role="alert" hidden>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <strong>Could not load this list</strong>
+            <p id="v25-admin-error-text">Something went wrong.</p>
+            <button type="button" id="v25-admin-retry" class="v25-admin-btn">Try again</button>
+          </div>
+          <ul id="v25-admin-rows" class="v25-admin-rows" aria-label="Results"></ul>
+        </div>
+
+        <footer id="v25-admin-pager" class="v25-admin-pager" hidden>
+          <button type="button" id="v25-admin-prev" class="v25-admin-btn" aria-label="Previous page">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>Prev
+          </button>
+          <span id="v25-admin-range" class="v25-admin-range" aria-live="polite"></span>
+          <button type="button" id="v25-admin-next" class="v25-admin-btn" aria-label="Next page">Next
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </footer>
+      </div>
+
+      <div id="v25-admin-detail" class="v25-admin-detail" hidden>
+        <div id="v25-admin-detail-scroll" class="v25-admin-scroll">
+          <div id="v25-admin-detail-state" class="v25-admin-state" hidden></div>
+          <div id="v25-admin-detail-body" class="v25-admin-detail-body"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <!-- Social layer: SocialScoring (players, payloads, leaderboards), SocialAPI (Supabase + local fallback), SocialUI (templates) -->
@@ -29681,6 +30288,929 @@ try { if (window.TallyItV24Backend) window.TallyItV24Backend.capturePendingClaim
 
 </script>
 
+<script id="v25-admin-backend">
+/**
+ * TallyIt — v25 Admin Drill-down Backend (window.TallyItV25Admin)
+ * Drop-in module. Uses window.sb (Supabase v2 client). Requires supabase_v25_admin_drilldown.sql.
+ * NEVER throws. Every call resolves to one of:
+ *   { ok:true, rows:[...], total, limit, offset, has_more, box? }
+ *   { ok:false, forbidden:true, error:'forbidden' }              (caller is not the admin, SQLSTATE 42501)
+ *   { ok:false, unavailable:true, error }                        (v25 migration not applied yet; re-probed every 30s)
+ *   { ok:false, code, error }                                    (anything else, incl. not_signed_in / network)
+ *
+ * List helpers (all take opts { search, limit (1..200, default 50), offset, sort, dir:'asc'|'desc' } plus box filters):
+ *   listUsers({signup, active})            signup/active: 'all'|'7d'|'30d'
+ *   listPlays({window, gameKey, variationKey, date})   window 'all'|'7d'|'30d'; date 'YYYY-MM-DD' (UTC day)
+ *   listGameRequests({status})             all|new|reviewing|planned|built|declined (aliases added, dismissed)
+ *   listFriendships({status})              accepted (default)|pending|declined|all
+ *   listGroups()
+ *   listGameBreakdown()                    Most Played Games
+ *   listVariationBreakdown({gameKey})      Most Popular Variations
+ *   listDailyPlays({days})                 Daily Plays chart, 1..365 (default 30)
+ *   listSharedGames({window, gameType}) / getSharedGame(gameId)
+ *   listCommunityVariations({visibility})  all|visible|hidden
+ * Generic:
+ *   drilldown(boxKey, opts)   resolves BOX[boxKey] (method + default filters) and runs it; opts.filters override defaults
+ *   dispatch(boxKey, opts)    same via the server-side admin_drilldown() dispatcher
+ *   BOX / listBoxes() / getBox(key) / boxForKpi(elementId) / expectedTotal(boxKey, stats)
+ */
+(function (global) {
+  'use strict';
+
+  const MIGRATION_RETRY_MS = 30 * 1000;
+  const DEFAULT_LIMIT = 50, MAX_LIMIT = 200;
+
+  let migrationReady = null;
+  let migrationCheckedAt = 0;
+
+  function getClient() { return global.sb || null; }
+
+  async function getAuthUser() {
+    if (global.ScoreAuth && typeof global.ScoreAuth.getUser === 'function') {
+      try { const u = await global.ScoreAuth.getUser(); if (u && u.id) return u; } catch (_) {}
+    }
+    const client = getClient();
+    if (!client || !client.auth || typeof client.auth.getSession !== 'function') return null;
+    try {
+      const { data: { session } } = await client.auth.getSession();
+      return session && session.user ? session.user : null;
+    } catch (_) { return null; }
+  }
+
+  function isMissingMigrationError(err) {
+    if (!err) return false;
+    const code = String(err.code || '').toUpperCase();
+    const msg = String(err.message || err.details || err.hint || '').toLowerCase();
+    if (code === '42P01' || code === '42883' || code === '42703' || code === 'PGRST202' || code === 'PGRST205') return true;
+    return msg.includes('does not exist') || msg.includes('could not find the table') || msg.includes('could not find the function');
+  }
+
+  function isForbiddenError(err) {
+    if (!err) return false;
+    const code = String(err.code || '');
+    const msg = String(err.message || '').toLowerCase();
+    return code === '42501' || msg === 'forbidden' || msg.includes('permission denied');
+  }
+
+  function markMigrationMissing() { migrationReady = false; migrationCheckedAt = Date.now(); }
+
+  function shouldSkipSupabase(client) {
+    if (!client) return true;
+    if (migrationReady !== false) return false;
+    if (Date.now() - migrationCheckedAt > MIGRATION_RETRY_MS) { migrationReady = null; return false; }
+    return true;
+  }
+
+  const UNAVAILABLE = 'Admin drill-down is not available yet (v25 migration pending). Try again in a bit.';
+  function unavailable() { return { ok: false, unavailable: true, error: UNAVAILABLE }; }
+  function forbidden() { return { ok: false, forbidden: true, error: 'forbidden' }; }
+
+  // ---------------------------------------------------------------- arg cleaning (server clamps too)
+  function cleanInt(v, lo, hi, dflt) {
+    const n = Math.floor(Number(v));
+    if (!isFinite(n)) return dflt;
+    return Math.min(Math.max(n, lo), hi);
+  }
+  function cleanSearch(v) {
+    const s = String(v == null ? '' : v).trim().slice(0, 100);
+    return s || null;
+  }
+  function cleanSort(v) { const s = String(v == null ? '' : v).trim().toLowerCase(); return /^[a-z0-9_]{1,40}$/.test(s) ? s : null; }
+  function cleanDir(v) { const s = String(v == null ? '' : v).trim().toLowerCase(); return s === 'asc' || s === 'desc' ? s : null; }
+  function cleanToken(v, dflt) { const s = String(v == null ? '' : v).trim().toLowerCase().slice(0, 24); return /^[a-z0-9_-]+$/.test(s) ? s : (dflt === undefined ? null : dflt); }
+  function cleanKey(v) { const s = String(v == null ? '' : v).trim().slice(0, 120); return s || null; }
+  function cleanDate(v) {
+    if (v instanceof Date && !isNaN(v)) return v.toISOString().slice(0, 10);
+    const s = String(v == null ? '' : v).trim();
+    return /^\d{4}-\d{2}-\d{2}$/.test(s) ? s : null;
+  }
+  function cleanUuid(v) {
+    const s = String(v == null ? '' : v).trim();
+    return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s) ? s : null;
+  }
+  function put(args, key, val) { if (val !== null && val !== undefined) args[key] = val; }
+
+  function pageArgs(opts) {
+    const o = opts || {};
+    const a = {};
+    put(a, 'p_search', cleanSearch(o.search));
+    a.p_limit = cleanInt(o.limit, 1, MAX_LIMIT, DEFAULT_LIMIT);
+    a.p_offset = cleanInt(o.offset, 0, 1e9, 0);
+    put(a, 'p_sort', cleanSort(o.sort));
+    put(a, 'p_dir', cleanDir(o.dir));
+    return a;
+  }
+
+  // ---------------------------------------------------------------- RPC core
+  async function callRpc(name, args) {
+    try {
+      const client = getClient();
+      if (shouldSkipSupabase(client)) return unavailable();
+      const user = await getAuthUser();
+      if (!user) return { ok: false, code: 'not_signed_in', error: 'Sign in first.' };
+      let res;
+      try { res = await client.rpc(name, args || {}); }
+      catch (e) {
+        if (isForbiddenError(e)) return forbidden();
+        return { ok: false, error: (e && e.message) || 'Network error. Try again.' };
+      }
+      const { data, error } = res || {};
+      if (error) {
+        if (isForbiddenError(error)) return forbidden();
+        if (isMissingMigrationError(error)) { markMigrationMissing(); return unavailable(); }
+        return { ok: false, code: error.code || null, error: error.message || 'Something went wrong.' };
+      }
+      migrationReady = true;
+      if (!data || typeof data !== 'object') return { ok: false, error: 'Unexpected reply.' };
+      return data;
+    } catch (e) {
+      return { ok: false, error: (e && e.message) || 'Something went wrong.' };
+    }
+  }
+
+  async function callList(name, args) {
+    const r = await callRpc(name, args);
+    if (!r || r.ok !== true) return r && r.ok === false ? r : { ok: false, error: 'Unexpected reply.' };
+    return {
+      ok: true,
+      rows: Array.isArray(r.rows) ? r.rows : [],
+      total: Number(r.total) || 0,
+      limit: Number(r.limit) || (args && args.p_limit) || DEFAULT_LIMIT,
+      offset: Number(r.offset) || 0,
+      has_more: r.has_more === true
+    };
+  }
+
+  // ---------------------------------------------------------------- list helpers
+  const WINDOWS = ['all', '7d', '30d'];
+  function cleanWindow(v, dflt) { const t = cleanToken(v, dflt); return WINDOWS.includes(t) ? t : dflt; }
+
+  function listUsers(o) {
+    o = o || {}; const a = pageArgs(o);
+    put(a, 'p_signup', o.signup == null ? null : cleanWindow(o.signup, 'all'));
+    put(a, 'p_active', o.active == null ? null : cleanWindow(o.active, 'all'));
+    return callList('admin_list_users', a);
+  }
+  function listPlays(o) {
+    o = o || {}; const a = pageArgs(o);
+    put(a, 'p_window', o.window == null ? null : cleanWindow(o.window, 'all'));
+    put(a, 'p_game_key', cleanKey(o.gameKey));
+    put(a, 'p_variation_key', cleanKey(o.variationKey));
+    put(a, 'p_date', cleanDate(o.date));
+    return callList('admin_list_plays', a);
+  }
+  function listGameRequests(o) {
+    o = o || {}; const a = pageArgs(o);
+    put(a, 'p_status', o.status == null ? null : cleanToken(o.status, 'all'));
+    return callList('admin_list_game_requests', a);
+  }
+  function listFriendships(o) {
+    o = o || {}; const a = pageArgs(o);
+    put(a, 'p_status', o.status == null ? null : cleanToken(o.status, 'accepted'));
+    return callList('admin_list_friendships', a);
+  }
+  function listGroups(o) { return callList('admin_list_groups', pageArgs(o)); }
+  function listGameBreakdown(o) { return callList('admin_list_game_breakdown', pageArgs(o)); }
+  function listVariationBreakdown(o) {
+    o = o || {}; const a = pageArgs(o);
+    put(a, 'p_game_key', cleanKey(o.gameKey));
+    return callList('admin_list_variation_breakdown', a);
+  }
+  function listDailyPlays(o) {
+    o = o || {}; const a = pageArgs(o);
+    if (o.days != null) a.p_days = cleanInt(o.days, 1, 365, 30);
+    return callList('admin_list_daily_plays', a);
+  }
+  function listSharedGames(o) {
+    o = o || {}; const a = pageArgs(o);
+    put(a, 'p_window', o.window == null ? null : cleanWindow(o.window, 'all'));
+    put(a, 'p_game_type', cleanKey(o.gameType));
+    return callList('admin_list_shared_games', a);
+  }
+  function listCommunityVariations(o) {
+    o = o || {}; const a = pageArgs(o);
+    put(a, 'p_visibility', o.visibility == null ? null : cleanToken(o.visibility, 'all'));
+    return callList('admin_list_community_variations', a);
+  }
+  async function getSharedGame(gameId) {
+    const id = cleanUuid(gameId);
+    if (!id) return { ok: false, code: 'bad_request', error: 'Invalid game id.' };
+    const r = await callRpc('admin_get_shared_game', { p_game_id: id });
+    if (r && r.ok === true) return { ok: true, game: r.game || null, participants: Array.isArray(r.participants) ? r.participants : [] };
+    return r && r.ok === false ? r : { ok: false, error: 'Unexpected reply.' };
+  }
+
+  // ---------------------------------------------------------------- BOX registry (UI contract)
+  const col = (key, label, type, extra) => Object.assign({ key, label, type: type || 'text' }, extra || {});
+  const C = {
+    users: [col('display_name', 'Name', 'text', { sortable: true }), col('email', 'Email', 'text', { sortable: true }), col('signed_up_at', 'Signed up', 'datetime', { sortable: true }),
+      col('last_active_at', 'Last active', 'datetime', { sortable: true }), col('games_played', 'Games played', 'number', { sortable: true }), col('friend_count', 'Friends', 'number', { sortable: true }),
+      col('plays', 'Plays logged', 'number', { sortable: true, hidden: true }), col('shared_games', 'Shared games', 'number', { sortable: true, hidden: true }),
+      col('last_sign_in_at', 'Last sign-in', 'datetime', { sortable: true, hidden: true }), col('friend_code', 'Friend code', 'text', { hidden: true }), col('id', 'User id', 'uuid', { hidden: true })],
+    plays: [col('created_at', 'When', 'datetime', { sortable: true }), col('game_key', 'Game', 'text', { sortable: true }), col('variation_key', 'Variation', 'text', { sortable: true }),
+      col('player_count', 'Players', 'number', { sortable: true }), col('user_name', 'Player', 'text', { sortable: true }), col('user_email', 'Email', 'text', { hidden: true }), col('id', 'Id', 'uuid', { hidden: true })],
+    requests: [col('created_at', 'Requested', 'datetime', { sortable: true }), col('game_name', 'Game', 'text', { sortable: true }), col('status', 'Status', 'text', { sortable: true }),
+      col('requester_name', 'Name', 'text', { sortable: true }), col('requester_email', 'Email', 'text', { sortable: true }), col('website_url', 'Link', 'url'), col('updated_at', 'Updated', 'datetime', { sortable: true, hidden: true }),
+      col('dismissed_at', 'Dismissed', 'datetime', { hidden: true }), col('id', 'Id', 'uuid', { hidden: true })],
+    friendships: [col('requester_name', 'From', 'text', { sortable: true }), col('requester_email', 'From email', 'text'), col('addressee_name', 'To', 'text', { sortable: true }), col('addressee_email', 'To email', 'text'),
+      col('status', 'Status', 'text', { sortable: true }), col('created_at', 'Since', 'datetime', { sortable: true }), col('updated_at', 'Updated', 'datetime', { sortable: true, hidden: true }), col('id', 'Id', 'uuid', { hidden: true })],
+    groups: [col('name', 'Group', 'text', { sortable: true }), col('owner_name', 'Owner', 'text', { sortable: true }), col('owner_email', 'Owner email', 'text', { hidden: true }), col('member_count', 'Members', 'number', { sortable: true }),
+      col('games_count', 'Games', 'number', { sortable: true }), col('guest_names', 'Guests', 'json'), col('created_at', 'Created', 'datetime', { sortable: true }), col('id', 'Id', 'uuid', { hidden: true })],
+    gameBreakdown: [col('game_key', 'Game', 'text', { sortable: true }), col('play_count', 'Plays', 'number', { sortable: true }), col('plays_7d', '7d', 'number', { sortable: true }), col('plays_30d', '30d', 'number', { sortable: true }),
+      col('avg_players', 'Avg players', 'number', { sortable: true }), col('unique_players', 'Signed-in players', 'number', { sortable: true, hidden: true }), col('last_played_at', 'Last played', 'datetime', { sortable: true }), col('first_played_at', 'First played', 'datetime', { sortable: true, hidden: true })],
+    variationBreakdown: [col('game_key', 'Game', 'text', { sortable: true }), col('variation_key', 'Variation', 'text', { sortable: true }), col('play_count', 'Plays', 'number', { sortable: true }), col('plays_7d', '7d', 'number', { sortable: true }),
+      col('plays_30d', '30d', 'number', { sortable: true }), col('avg_players', 'Avg players', 'number', { sortable: true, hidden: true }), col('last_played_at', 'Last played', 'datetime', { sortable: true })],
+    daily: [col('date', 'Day (UTC)', 'date', { sortable: true }), col('play_count', 'Plays', 'number', { sortable: true }), col('unique_players', 'Signed-in players', 'number', { sortable: true })],
+    shared: [col('created_at', 'Saved', 'datetime', { sortable: true }), col('game_type', 'Game', 'text', { sortable: true }), col('creator_name', 'Created by', 'text', { sortable: true }), col('winner', 'Winner', 'text', { sortable: true }),
+      col('participant_count', 'Players', 'number', { sortable: true }), col('linked_count', 'Linked', 'number', { sortable: true }), col('group_name', 'Group', 'text'), col('creator_email', 'Creator email', 'text', { hidden: true }),
+      col('ended_at', 'Ended', 'datetime', { sortable: true, hidden: true }), col('id', 'Game id', 'uuid', { hidden: true })],
+    community: [col('created_at', 'Published', 'datetime', { sortable: true }), col('name', 'Variation', 'text', { sortable: true }), col('game_key', 'Game', 'text', { sortable: true }), col('author_name', 'Author', 'text', { sortable: true }),
+      col('differences_count', 'Rules', 'number', { sortable: true }), col('is_hidden', 'Hidden', 'bool', { sortable: true }), col('tagline', 'Tagline', 'text', { hidden: true }), col('author_email', 'Author email', 'text', { hidden: true }),
+      col('differences', 'Differences', 'json', { hidden: true }), col('id', 'Id', 'uuid', { hidden: true })]
+  };
+
+  // statKey = get_admin_stats().totals field the list total reconciles with (null = no existing counter / computed)
+  function box(key, label, method, columns, extra) {
+    return Object.freeze(Object.assign({ key, label, method, columns, filters: {}, statKey: null, kpiId: null, rpc: null, detail: null, tabs: null, shown: true }, extra || {}));
+  }
+  const BOX = Object.freeze({
+    games_total: box('games_total', 'All-Time Games', 'listPlays', C.plays, { rpc: 'admin_list_plays', kpiId: 'kpi-games-total', statKey: 'total_plays', filters: { window: 'all' }, defaultSort: 'created_at', defaultDir: 'desc' }),
+    games_7d: box('games_7d', 'Last 7 Days', 'listPlays', C.plays, { rpc: 'admin_list_plays', kpiId: 'kpi-games-7d', statKey: 'plays_7d', filters: { window: '7d' }, defaultSort: 'created_at', defaultDir: 'desc' }),
+    games_30d: box('games_30d', 'Last 30 Days', 'listPlays', C.plays, { rpc: 'admin_list_plays', kpiId: 'kpi-games-30d', statKey: 'plays_30d', filters: { window: '30d' }, defaultSort: 'created_at', defaultDir: 'desc' }),
+    users_total: box('users_total', 'Registered Users', 'listUsers', C.users, { rpc: 'admin_list_users', kpiId: 'kpi-users-total', statKey: 'users_total', filters: {}, defaultSort: 'signed_up_at', defaultDir: 'desc' }),
+    users_7d: box('users_7d', 'New Users (7d)', 'listUsers', C.users, { rpc: 'admin_list_users', statKey: 'users_7d', filters: { signup: '7d' }, shown: false, defaultSort: 'signed_up_at', defaultDir: 'desc' }),
+    users_30d: box('users_30d', 'New Users (30d)', 'listUsers', C.users, { rpc: 'admin_list_users', statKey: 'users_30d', filters: { signup: '30d' }, shown: false, defaultSort: 'signed_up_at', defaultDir: 'desc' }),
+    active_users_7d: box('active_users_7d', 'Active Users (7d)', 'listUsers', C.users, { rpc: 'admin_list_users', filters: { active: '7d' }, shown: false, defaultSort: 'last_active_at', defaultDir: 'desc' }),
+    active_users_30d: box('active_users_30d', 'Active Users (30d)', 'listUsers', C.users, { rpc: 'admin_list_users', filters: { active: '30d' }, shown: false, defaultSort: 'last_active_at', defaultDir: 'desc' }),
+    requests_total: box('requests_total', 'Game Requests', 'listGameRequests', C.requests, { rpc: 'admin_list_game_requests', kpiId: 'kpi-requests-total', statKey: 'game_requests_total', filters: { status: 'all' }, defaultSort: 'created_at', defaultDir: 'desc' }),
+    requests_new: box('requests_new', 'New Game Requests', 'listGameRequests', C.requests, { rpc: 'admin_list_game_requests', kpiId: 'kpi-requests-new', statKey: 'game_requests_new', filters: { status: 'new' }, defaultSort: 'created_at', defaultDir: 'desc' }),
+    social_total: box('social_total', 'Friends & Groups', 'listFriendships', C.friendships, { rpc: 'admin_list_friendships', kpiId: 'kpi-social-total', statKey: null, statKeys: ['friendships_accepted', 'groups_total'], filters: { status: 'accepted' }, tabs: ['friendships', 'groups'], defaultSort: 'created_at', defaultDir: 'desc' }),
+    friendships: box('friendships', 'Friendships', 'listFriendships', C.friendships, { rpc: 'admin_list_friendships', statKey: 'friendships_accepted', filters: { status: 'accepted' }, defaultSort: 'created_at', defaultDir: 'desc' }),
+    friendships_pending: box('friendships_pending', 'Pending Friend Requests', 'listFriendships', C.friendships, { rpc: 'admin_list_friendships', statKey: 'friendships_pending', filters: { status: 'pending' }, shown: false, defaultSort: 'created_at', defaultDir: 'desc' }),
+    groups: box('groups', 'Groups', 'listGroups', C.groups, { rpc: 'admin_list_groups', statKey: 'groups_total', defaultSort: 'created_at', defaultDir: 'desc' }),
+    top_games: box('top_games', 'Most Played Games', 'listGameBreakdown', C.gameBreakdown, { rpc: 'admin_list_game_breakdown', kpiId: 'admin-top-games', statKey: null, defaultSort: 'play_count', defaultDir: 'desc', detail: { box: 'games_total', filterFrom: { game_key: 'gameKey' } } }),
+    top_variations: box('top_variations', 'Most Popular Variations', 'listVariationBreakdown', C.variationBreakdown, { rpc: 'admin_list_variation_breakdown', kpiId: 'admin-top-variations', statKey: null, defaultSort: 'play_count', defaultDir: 'desc', detail: { box: 'games_total', filterFrom: { game_key: 'gameKey', variation_key: 'variationKey' } } }),
+    daily_plays: box('daily_plays', 'Daily Plays (30d)', 'listDailyPlays', C.daily, { rpc: 'admin_list_daily_plays', kpiId: 'admin-daily-chart', statKey: null, filters: { days: 30 }, defaultSort: 'date', defaultDir: 'desc', detail: { box: 'games_total', filterFrom: { date: 'date' } } }),
+    shared_games_total: box('shared_games_total', 'Shared Games', 'listSharedGames', C.shared, { rpc: 'admin_list_shared_games', statKey: 'shared_games_total', filters: { window: 'all' }, shown: false, defaultSort: 'created_at', defaultDir: 'desc', detail: { method: 'getSharedGame', idField: 'id' } }),
+    shared_games_7d: box('shared_games_7d', 'Shared Games (7d)', 'listSharedGames', C.shared, { rpc: 'admin_list_shared_games', statKey: 'shared_games_7d', filters: { window: '7d' }, shown: false, defaultSort: 'created_at', defaultDir: 'desc', detail: { method: 'getSharedGame', idField: 'id' } }),
+    shared_games_30d: box('shared_games_30d', 'Shared Games (30d)', 'listSharedGames', C.shared, { rpc: 'admin_list_shared_games', statKey: 'shared_games_30d', filters: { window: '30d' }, shown: false, defaultSort: 'created_at', defaultDir: 'desc', detail: { method: 'getSharedGame', idField: 'id' } }),
+    community_total: box('community_total', 'Community Variations', 'listCommunityVariations', C.community, { rpc: 'admin_list_community_variations', kpiId: 'v22-admin-community-card', statKey: 'community_variations_total', filters: { visibility: 'all' }, defaultSort: 'created_at', defaultDir: 'desc' }),
+    community_visible: box('community_visible', 'Visible Community Variations', 'listCommunityVariations', C.community, { rpc: 'admin_list_community_variations', statKey: 'community_variations_visible', filters: { visibility: 'visible' }, shown: false, defaultSort: 'created_at', defaultDir: 'desc' }),
+    community_hidden: box('community_hidden', 'Hidden Community Variations', 'listCommunityVariations', C.community, { rpc: 'admin_list_community_variations', filters: { visibility: 'hidden' }, shown: false, defaultSort: 'created_at', defaultDir: 'desc' })
+  });
+
+  const METHODS = { listUsers, listPlays, listGameRequests, listFriendships, listGroups, listGameBreakdown, listVariationBreakdown, listDailyPlays, listSharedGames, listCommunityVariations, getSharedGame };
+
+  function listBoxes(opts) { const all = Object.keys(BOX).map((k) => BOX[k]); return opts && opts.shownOnly ? all.filter((b) => b.shown) : all; }
+  function getBox(key) { return BOX[String(key || '').toLowerCase()] || null; }
+  function boxForKpi(elementId) { const id = String(elementId || ''); return listBoxes().find((b) => b.kpiId === id) || null; }
+
+  // Expected total from a get_admin_stats() payload (for "N records" labels / reconciliation); null if unknown
+  function expectedTotal(boxKey, stats) {
+    const b = getBox(boxKey); if (!b || !stats) return null;
+    const t = stats.totals || {};
+    if (b.statKey && t[b.statKey] != null) return Number(t[b.statKey]);
+    if (b.statKeys) { let n = 0; for (const k of b.statKeys) { if (t[k] == null) return null; n += Number(t[k]); } return n; }
+    if (b.key === 'top_games' && Array.isArray(stats.by_game)) return stats.by_game.length;
+    if (b.key === 'top_variations' && Array.isArray(stats.by_variation)) return stats.by_variation.length;
+    if (b.key === 'daily_plays' && Array.isArray(stats.daily_plays_30d)) return stats.daily_plays_30d.length;
+    if (b.key === 'community_hidden' && t.community_variations_total != null && t.community_variations_visible != null) return Number(t.community_variations_total) - Number(t.community_variations_visible);
+    return null;
+  }
+
+  async function drilldown(boxKey, opts) {
+    try {
+      const b = getBox(boxKey);
+      if (!b) return { ok: false, code: 'unknown_box', error: 'Unknown admin box.' };
+      const o = Object.assign({}, b.filters, opts || {}, (opts && opts.filters) || {});
+      if (o.sort == null && b.defaultSort) o.sort = b.defaultSort;
+      if (o.dir == null && b.defaultDir) o.dir = b.defaultDir;
+      const r = await METHODS[b.method](o);
+      return r && r.ok ? Object.assign({ box: b.key }, r) : r;
+    } catch (e) { return { ok: false, error: (e && e.message) || 'Something went wrong.' }; }
+  }
+
+  // Same thing through the server dispatcher admin_drilldown(p_box, ...)
+  async function dispatch(boxKey, opts) {
+    try {
+      const o = opts || {};
+      const key = String(boxKey || '').trim().toLowerCase();
+      if (!/^[a-z0-9_]{1,40}$/.test(key)) return { ok: false, code: 'unknown_box', error: 'Unknown admin box.' };
+      const a = pageArgs(o); a.p_box = key;
+      const f = {};
+      const src = Object.assign({}, o.filters || {});
+      ['window', 'signup', 'active', 'status', 'visibility', 'game_key', 'variation_key', 'game_type', 'date', 'days'].forEach((k) => { if (src[k] != null && src[k] !== '') f[k] = String(src[k]).slice(0, 120); });
+      if (Object.keys(f).length) a.p_filters = f;
+      const r = await callList('admin_drilldown', a);
+      return r && r.ok ? Object.assign({ box: key }, r) : r;
+    } catch (e) { return { ok: false, error: (e && e.message) || 'Something went wrong.' }; }
+  }
+
+  // Row -> filters for the next drill level (e.g. a Most Played Games row -> that game's plays)
+  function detailFor(boxKey, row) {
+    const b = getBox(boxKey); if (!b || !b.detail || !row) return null;
+    if (b.detail.method === 'getSharedGame') return { method: 'getSharedGame', id: row[b.detail.idField] || null };
+    const filters = {};
+    Object.keys(b.detail.filterFrom || {}).forEach((src) => { if (row[src] != null) filters[b.detail.filterFrom[src]] = row[src]; });
+    return { method: 'drilldown', box: b.detail.box, opts: { filters } };
+  }
+
+  function clearCache() {}
+  function isMigrationReady() { return migrationReady; }
+
+  global.TallyItV25Admin = Object.assign({
+    BOX, listBoxes, getBox, boxForKpi, expectedTotal, detailFor,
+    drilldown, dispatch, clearCache, isMigrationReady,
+    _isMissingMigrationError: isMissingMigrationError, _isForbiddenError: isForbiddenError
+  }, METHODS);
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+<script id="v25-admin-drilldown">
+/* =========================================================================
+   TallyIt v25 - Admin drill-down (window.TallyItV25AdminDrilldown)
+
+   Makes every stat box on the admin page (#admin-screen) clickable and
+   keyboard-accessible (role=button, tabindex=0, Enter / Space). Activating a
+   box opens a full-screen sheet (phones) or a centered panel (tablet / desktop):
+   title + count, debounced search, sort, paging (25 per page, "x-y of N"),
+   loading / empty / notice / error states, row -> detail view, and stacked
+   drill levels with a Back button and a breadcrumb (Most Played Games ->
+   Catan -> that game's plays). Esc / Back steps out one level, Tab is trapped
+   inside, focus returns to the opener on close. Read-only.
+
+   ---------------------------------------------------------------------------
+   DATA SOURCE: Auth's window.TallyItV25Admin (v25_admin_backend.js). Nothing is
+   hard-coded: boxes, columns, sortable flags, hidden flags, default sort,
+   tabs and next-level drill all come from its BOX registry.
+   ---------------------------------------------------------------------------
+     TallyItV25Admin.boxForKpi(elementId)  -> box   (which boxes are clickable)
+     TallyItV25Admin.getBox(key) / listBoxes()
+         box = { key, label, method, columns:[{key,label,type,sortable,hidden}],
+                 filters, tabs, defaultSort, defaultDir, detail, kpiId }
+         column.type: text | number | datetime | date | url | uuid | bool | json
+     TallyItV25Admin.drilldown(boxKey, { search, limit, offset, sort, dir, filters })
+         -> { ok:true, rows, total, limit, offset, has_more }
+          | { ok:false, forbidden:true }       quiet "Admin access required" notice
+          | { ok:false, unavailable:true }     quiet "SQL not run yet" notice + Check again
+          | { ok:false, error }                error state with Try again
+         filters = camelCase keys the backend accepts: window, signup, active,
+         status, visibility, gameKey, variationKey, gameType, date, days
+     TallyItV25Admin.detailFor(boxKey, row)  -> next drill level for a row:
+         { method:'drilldown', box, opts:{ filters } }   (top game / variation / chart day -> its plays)
+       | { method:'getSharedGame', id }                  (shared game -> detail + participants)
+       | null                                            (row detail only)
+     TallyItV25Admin.getSharedGame(id) -> { ok, game, participants[] }
+
+   Rows are rendered from the registry columns: visible columns in the list,
+   hidden columns (ids, emails, extra counts) in the detail view.
+
+   ---------------------------------------------------------------------------
+   ADAPTER SEAM (optional): TallyItV25AdminDrilldown.setAdapter(partial)
+   The default adapter is exactly the API above. Override any subset:
+     getBox(key), listBoxes(), boxForKpi(id), detailFor(key,row),
+     list(boxKey, { search, sort, dir, limit, offset, filters }) -> Promise<{ok,rows,total,has_more}>,
+     getSharedGame(id) -> Promise<{ok, game, participants}>
+   (the harness instead stubs window.TallyItV25Admin / its Supabase RPCs).
+
+   Public API: setAdapter, getAdapter, open(boxKey, { filters, title }), close(),
+     isOpen(), decorate()
+   Zero emojis. Icons are inline SVG, stroke-width 1.75.
+   ========================================================================= */
+(function (global) {
+  'use strict';
+  if (global.TallyItV25AdminDrilldown) return;
+  var doc = global.document;
+  var PAGE_SIZE = 25;
+  var DEBOUNCE_MS = 300;
+
+  // ------------------------------------------------------------------ helpers
+  function $(id) { return doc.getElementById(id); }
+  function esc(v) { return String(v == null ? '' : v).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function isNil(v) { return v === null || v === undefined || v === ''; }
+  function num(v) { var n = Number(v); return isFinite(n) ? n : 0; }
+  function fmtNum(v) { return isNil(v) ? '\u2014' : Number(v).toLocaleString(); }
+  function toDate(v) { if (isNil(v)) return null; var d = typeof v === 'number' ? new Date(v) : new Date(String(v).length === 10 ? v + 'T12:00:00' : v); return isNaN(d.getTime()) ? null : d; }
+  function fmtDate(v) { var d = toDate(v); return d ? d.toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' }) : '\u2014'; }
+  function fmtDateTime(v) { var d = toDate(v); return d ? d.toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' }) + ', ' + d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }) : '\u2014'; }
+  function fmtRel(v) {
+    var d = toDate(v); if (!d) return 'Never';
+    var s = Math.max(0, (Date.now() - d.getTime()) / 1000);
+    if (s < 3600) return Math.max(1, Math.round(s / 60)) + 'm ago';
+    if (s < 86400) return Math.round(s / 3600) + 'h ago';
+    if (s < 86400 * 30) return Math.round(s / 86400) + 'd ago';
+    return fmtDate(d);
+  }
+  function humanize(k) { return String(k == null ? '' : k).replace(/[_\-]+/g, ' ').replace(/\s+/g, ' ').trim().replace(/\b\w/g, function (c) { return c.toUpperCase(); }); }
+  var GAME_NAMES = { flip7: 'Flip 7', '7wonders': '7 Wonders', 'seven-wonders': '7 Wonders', seven_wonders: '7 Wonders', carcassonne: 'Carcassonne', catan: 'Catan', ohhell: 'Oh Hell', hearts: 'Hearts', nertz: 'Nertz', rummikub: 'Rummikub', qwirkle: 'Qwirkle', other: 'Custom', custom: 'Custom' };
+  function gameName(k) { if (isNil(k)) return '\u2014'; var key = String(k).toLowerCase(); return GAME_NAMES[key] || humanize(k); }
+  function svg(path, cls) { return '<svg' + (cls ? ' class="' + cls + '"' : '') + ' viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + path + '</svg>'; }
+  var ICON_CHEV = '<polyline points="9 18 15 12 9 6"/>';
+  var ICON_SORT = '<line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/>';
+  var ICON_SPIN = '<path d="M21 12a9 9 0 1 1-6.22-8.56"/>';
+  var ICON_X = '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>';
+  var ICON_WARN = '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>';
+  function pick(o, keys) { for (var i = 0; i < keys.length; i++) { var v = o[keys[i]]; if (v !== undefined && v !== null) return v; } return undefined; }
+  var STATUS_TONE = { new: 'warn', reviewing: 'info', planned: 'info', built: 'ok', declined: '', pending: 'warn', accepted: 'ok' };
+  function fmtShort(v) {
+    var d = toDate(v); if (!d) return '\u2014';
+    if (d.getFullYear() === new Date().getFullYear()) return d.toLocaleDateString([], { month: 'short', day: 'numeric' }) + ', ' + d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+    return fmtDate(d);
+  }
+
+  // ------------------------------------------------------------------ adapter (default = Auth's TallyItV25Admin)
+  var PAGE_SIZE = 25;
+  var DEBOUNCE_MS = 300;
+  var UNAVAILABLE_MSG = 'The admin data service is not available yet.';
+  function api() { return global.TallyItV25Admin || null; }
+  var defaultAdapter = {
+    name: 'TallyItV25Admin',
+    getBox: function (k) { var A = api(); return A && A.getBox ? A.getBox(k) : null; },
+    listBoxes: function () { var A = api(); return A && A.listBoxes ? A.listBoxes() : []; },
+    boxForKpi: function (id) { var A = api(); return A && A.boxForKpi ? A.boxForKpi(id) : null; },
+    detailFor: function (k, row) { var A = api(); return A && A.detailFor ? A.detailFor(k, row) : null; },
+    list: function (boxKey, o) {
+      var A = api();
+      if (!A || typeof A.drilldown !== 'function') return Promise.resolve({ ok: false, unavailable: true, error: UNAVAILABLE_MSG });
+      return Promise.resolve(A.drilldown(boxKey, { search: o.search, limit: o.limit, offset: o.offset, sort: o.sort, dir: o.dir, filters: o.filters }));
+    },
+    getSharedGame: function (id) {
+      var A = api();
+      if (!A || typeof A.getSharedGame !== 'function') return Promise.resolve({ ok: false, unavailable: true, error: UNAVAILABLE_MSG });
+      return Promise.resolve(A.getSharedGame(id));
+    }
+  };
+  var adapter = defaultAdapter;
+  function setAdapter(partial) { adapter = Object.assign({}, defaultAdapter, partial || {}); return adapter; }
+  function getAdapter() { return adapter; }
+  function safe(fn, dflt) { try { var v = fn(); return v === undefined ? dflt : v; } catch (_) { return dflt; } }
+  function callList(boxKey, o) {
+    var p; try { p = Promise.resolve(adapter.list(boxKey, o)); } catch (e) { p = Promise.reject(e); }
+    return p.then(function (r) { return r && typeof r === 'object' ? r : { ok: false, error: 'Unexpected reply.' }; }, function (e) { return { ok: false, error: (e && e.message) || 'Something went wrong.' }; });
+  }
+
+  // ------------------------------------------------------------------ UI copy per backend method (the rest comes from the registry)
+  var WIN = [['all', 'All time'], ['7d', 'Last 7 days'], ['30d', 'Last 30 days']];
+  var ANY = [['all', 'Any time'], ['7d', 'Last 7 days'], ['30d', 'Last 30 days']];
+  var METHOD_UI = {
+    listUsers: { noun: 'user', nouns: 'users', placeholder: 'Search name, email or friend code', filters: [{ key: 'signup', label: 'Signed up', options: ANY }, { key: 'active', label: 'Active', options: ANY }] },
+    listPlays: { noun: 'game', nouns: 'games', placeholder: 'Search game, variation or player', rel: 'games played', filters: [{ key: 'window', label: 'Period', options: WIN }] },
+    listGameRequests: { noun: 'request', nouns: 'requests', placeholder: 'Search game, link or requester', filters: [{ key: 'status', label: 'Status', options: [['all', 'All'], ['new', 'New'], ['reviewing', 'Reviewing'], ['planned', 'Planned'], ['built', 'Built'], ['declined', 'Declined']] }] },
+    listFriendships: { noun: 'friendship', nouns: 'friendships', placeholder: 'Search by name or email', filters: [{ key: 'status', label: 'Status', options: [['accepted', 'Accepted'], ['pending', 'Pending'], ['declined', 'Declined'], ['all', 'All']] }] },
+    listGroups: { noun: 'group', nouns: 'groups', placeholder: 'Search groups or owners' },
+    listGameBreakdown: { noun: 'game', nouns: 'games', placeholder: 'Search games' },
+    listVariationBreakdown: { noun: 'variation', nouns: 'variations', placeholder: 'Search variations' },
+    listDailyPlays: { noun: 'day', nouns: 'days', placeholder: 'Search' },
+    listSharedGames: { noun: 'shared game', nouns: 'shared games', placeholder: 'Search game, creator or winner', filters: [{ key: 'window', label: 'Period', options: WIN }] },
+    listCommunityVariations: { noun: 'variation', nouns: 'variations', placeholder: 'Search name, game or author', filters: [{ key: 'visibility', label: 'Show', options: [['all', 'All'], ['visible', 'Visible'], ['hidden', 'Hidden']] }] }
+  };
+  function ui(box) { return METHOD_UI[box && box.method] || { noun: 'record', nouns: 'records', placeholder: 'Search' }; }
+  var FILTER_LABELS = { gameKey: 'Game', gameType: 'Game', variationKey: 'Variation', date: 'Day', status: 'Status' };
+  function filterValue(k, v) { return k === 'gameKey' || k === 'gameType' ? gameName(v) : k === 'variationKey' ? humanize(v) : k === 'date' ? fmtDate(v) : humanize(v); }
+  function chipFor(filters) { return Object.keys(filters || {}).map(function (k) { return (FILTER_LABELS[k] || humanize(k)) + ': ' + filterValue(k, filters[k]); }).join(' / '); }
+  function titleFor(box, filtered) {
+    if (box.method === 'listPlays') return filtered ? 'Games Played' : (/game/i.test(box.label) ? box.label : 'Games, ' + box.label);
+    return box.label;
+  }
+  var WIDTH_BY_TYPE = { datetime: '1.25fr', date: '1fr', number: '0.9fr', text: '1.2fr', url: '1fr', bool: '0.8fr', json: '1fr', uuid: '1fr' };
+  function visibleCols(box) { return (box.columns || []).filter(function (c) { return !c.hidden; }); }
+  function colWidth(c) { return /email/.test(c.key) ? '1.6fr' : c.key === 'status' ? '0.9fr' : (WIDTH_BY_TYPE[c.type] || '1fr'); }
+  // primary = first text column (not status), secondary = the next text column; everything else is meta
+  function roles(box) {
+    var cols = visibleCols(box), map = {}, prim = null, sec = null;
+    cols.forEach(function (c) { if (c.type === 'text' && c.key !== 'status') { if (!prim) prim = c.key; else if (!sec) sec = c.key; } });
+    if (!prim && cols.length) prim = cols[0].key;
+    cols.forEach(function (c) { map[c.key] = c.key === prim ? 'primary' : c.key === sec ? 'secondary' : 'meta'; });
+    return map;
+  }
+
+  // ------------------------------------------------------------------ cell rendering
+  function badge(text, tone) { return '<span class="v25-admin-badge"' + (tone ? ' data-tone="' + tone + '"' : '') + '>' + esc(text) + '</span>'; }
+  var RECENT_KEYS = { last_active_at: 1, last_sign_in_at: 1, last_played_at: 1 };
+  function cellHTML(col, row, detail) {
+    var k = col.key, t = col.type, v = row[k];
+    if (isNil(v) || (t === 'json' && Array.isArray(v) && !v.length && !detail)) {
+      if (k === 'last_active_at') return 'Never';
+      return detail ? '<span class="v25-admin-dd-null">\u2014</span>' : '\u2014';
+    }
+    if (t === 'bool') return k === 'is_hidden' ? (v ? badge('Hidden', 'bad') : badge('Visible', 'ok')) : (v ? 'Yes' : 'No');
+    if (t === 'number') return esc(fmtNum(v));
+    if (t === 'datetime') {
+      if (RECENT_KEYS[k]) return detail ? esc(fmtDateTime(v) + ' (' + fmtRel(v) + ')') : '<span title="' + esc(fmtDateTime(v)) + '">' + esc(fmtRel(v)) + '</span>';
+      return esc(detail ? fmtDateTime(v) : fmtShort(v));
+    }
+    if (t === 'date') return esc(fmtDate(v));
+    if (t === 'url') {
+      var s = String(v), host = s; try { host = new URL(s).hostname.replace(/^www\./, ''); } catch (_) {}
+      return /^https?:\/\//i.test(s) ? '<a href="' + esc(s) + '" target="_blank" rel="noopener noreferrer">' + esc(detail ? s : host) + '</a>' : esc(s);
+    }
+    if (t === 'json') return detail ? generic(v) : esc(Array.isArray(v) ? v.join(', ') : typeof v === 'object' ? Object.keys(v).length + ' items' : v);
+    if (t === 'uuid') return '<span class="v25-admin-mono">' + esc(v) + '</span>';
+    if (k === 'game_key' || k === 'game_type') return esc(gameName(v));
+    if (k === 'variation_key') return esc(humanize(v));
+    if (k === 'status') return badge(String(v), STATUS_TONE[String(v)] || '');
+    return esc(v);
+  }
+  function generic(v) {
+    if (isNil(v)) return '<span class="v25-admin-dd-null">\u2014</span>';
+    if (Array.isArray(v)) {
+      if (!v.length) return '<span class="v25-admin-dd-null">None</span>';
+      if (v.every(function (x) { return x === null || typeof x !== 'object'; })) return '<div class="v25-admin-chips">' + v.map(function (x) { return badge(x, ''); }).join('') + '</div>';
+      return '<ul class="v25-admin-sublist">' + v.map(function (x) {
+        if (x === null || typeof x !== 'object') return '<li class="v25-admin-subitem">' + esc(x) + '</li>';
+        var tk = ['title', 'name', 'display_name', 'game', 'email', 'id'].filter(function (k) { return !isNil(x[k]); })[0];
+        var rest = Object.keys(x).filter(function (k) { return k !== tk && k !== 'id' && x[k] !== null && typeof x[k] !== 'object' && x[k] !== ''; }).slice(0, 5).map(function (k) { return humanize(k) + ': ' + (typeof x[k] === 'boolean' ? (x[k] ? 'Yes' : 'No') : /^\d{4}-\d{2}-\d{2}T/.test(String(x[k])) ? fmtDateTime(x[k]) : x[k]); });
+        return '<li class="v25-admin-subitem">' + esc(tk ? x[tk] : JSON.stringify(x)) + (rest.length ? '<small>' + esc(rest.join(' \u00b7 ')) + '</small>' : '') + '</li>';
+      }).join('') + '</ul>';
+    }
+    if (typeof v === 'object') return '<ul class="v25-admin-sublist">' + Object.keys(v).map(function (k) { return '<li class="v25-admin-subitem"><small>' + esc(humanize(k)) + '</small>' + esc(v[k] !== null && typeof v[k] === 'object' ? JSON.stringify(v[k]) : v[k]) + '</li>'; }).join('') + '</ul>';
+    if (typeof v === 'boolean') return v ? 'Yes' : 'No';
+    if (typeof v === 'number') return esc(fmtNum(v));
+    if (/^\d{4}-\d{2}-\d{2}T/.test(String(v))) return esc(fmtDateTime(v));
+    return esc(v);
+  }
+
+  // ------------------------------------------------------------------ controller
+  var S = { open: false, cur: null, stack: [], opener: null, seq: 0, dseq: 0, timer: null, prevOverflow: '', pushed: false, closingFromPop: false, ro: null };
+  var els = {};
+  var bound = false;
+  var NAMES = ['title', 'count', 'back', 'close', 'refresh', 'crumbs', 'tabs', 'search', 'clear', 'controls', 'sort', 'dir', 'thead', 'skel', 'empty', 'empty-title', 'empty-text', 'notice', 'notice-title', 'notice-text', 'notice-retry', 'error', 'error-text', 'retry', 'rows', 'pager', 'prev', 'next', 'range', 'listview', 'detail', 'detail-body', 'detail-state', 'scroll', 'detail-scroll'];
+  function grab() {
+    if (els.root && els.root.isConnected) return true;
+    els.root = $('v25-admin-drill'); if (!els.root) return false;
+    els.panel = els.root.querySelector('.v25-admin-panel');
+    NAMES.forEach(function (n) { els[n] = $('v25-admin-' + n); });
+    bound = false; bindSheet(); return true;
+  }
+  function boxOf(c) { return c._box || (c._box = adapter.getBox(c.boxKey)); }
+  function newLevel(boxKey, o) {
+    var box = adapter.getBox(boxKey); if (!box) return null; o = o || {};
+    var filtered = !!(o.filters && Object.keys(o.filters).length);
+    return { boxKey: boxKey, _box: box, title: o.title || titleFor(box, filtered && !o.title && o.drill), filters: Object.assign({}, o.filters || {}), chip: o.chip || '', tabs: o.tabs !== undefined ? o.tabs : (box.tabs || null),
+      search: '', sort: box.defaultSort || null, dir: box.defaultDir || 'desc', offset: 0, total: null, hasMore: false, rows: [], view: 'list', detailRow: null, detailId: null, detailMerged: null, scrollTop: 0, error: null };
+  }
+  function effFilters(c) { return Object.assign({}, boxOf(c).filters || {}, c.filters); }
+  function lockScroll(on) { var b = doc.body; if (on) { S.prevOverflow = b.style.overflow; b.style.overflow = 'hidden'; } else { b.style.overflow = S.prevOverflow || ''; } }
+  function open(boxKey, o) {
+    if (!grab()) return;
+    var lvl = newLevel(boxKey, o); if (!lvl) return;
+    if (!S.open) {
+      var ae = doc.activeElement;
+      S.opener = ae && ae !== doc.body ? ae : null;
+      S.stack = []; S.open = true; els.root.hidden = false; lockScroll(true);
+      try { global.history.pushState({ v25drill: 1 }, ''); S.pushed = true; } catch (_) { S.pushed = false; }
+      doc.addEventListener('keydown', onKey, true);
+      global.addEventListener('popstate', onPop);
+      global.addEventListener('resize', measure);
+      if (global.ResizeObserver) { S.ro = new global.ResizeObserver(measure); S.ro.observe(els.panel); }
+    }
+    S.cur = lvl;
+    startLevel(); focusPanel();
+  }
+  function startLevel() { measure(); showList(true); buildChrome(); load({ first: true }); }
+  function focusPanel() { try { els.panel.focus({ preventScroll: true }); } catch (_) {} }
+  function close(fromPop) {
+    if (!S.open) return;
+    S.open = false; els.root.hidden = true; lockScroll(false);
+    clearTimeout(S.timer); S.seq++; S.dseq++;
+    doc.removeEventListener('keydown', onKey, true);
+    global.removeEventListener('popstate', onPop); global.removeEventListener('resize', measure);
+    if (S.ro) { S.ro.disconnect(); S.ro = null; }
+    if (S.pushed && !fromPop) { S.closingFromPop = true; try { global.history.back(); } catch (_) {} setTimeout(function () { S.closingFromPop = false; }, 50); }
+    S.pushed = false;
+    var o = S.opener; S.opener = null; S.cur = null; S.stack = [];
+    if (o && o.isConnected) { try { o.focus({ preventScroll: true }); } catch (_) {} }
+  }
+  function onPop() { if (S.closingFromPop || !S.open) return; S.pushed = false; if (!stepBack(true)) close(true); }
+  function cssEsc(s) { return String(s).replace(/["\\]/g, '\\$&'); }
+  function restoreLevel(c) {
+    S.cur = c; buildChrome();
+    if (c.total != null && c.rows.length) { renderRows(); updateCount(); } else load({ first: true });
+    if (c.view === 'detail' && c.detailRow) { showDetailView(c); if (c.detailMerged) renderDetail(c, c.detailMerged, 'none'); els.back.focus({ preventScroll: true }); }
+    else { showList(false); var r = c.detailId != null ? els.rows.querySelector('[data-id="' + cssEsc(c.detailId) + '"]') : null; if (r) r.focus({ preventScroll: true }); else focusPanel(); }
+  }
+  // one step out: detail -> list, stacked level -> previous level; false when nothing is left (caller closes)
+  function stepBack(fromPop) {
+    if (!S.cur) return false;
+    var stepped = false;
+    if (S.cur.view === 'detail') {
+      S.dseq++; showList(false); stepped = true;
+      var row = S.cur.detailId != null ? els.rows.querySelector('[data-id="' + cssEsc(S.cur.detailId) + '"]') : null;
+      if (row) row.focus({ preventScroll: true }); else focusPanel();
+    } else if (S.stack.length) {
+      restoreLevel(S.stack.pop()); stepped = true;
+    }
+    if (stepped && fromPop) { try { global.history.pushState({ v25drill: 1 }, ''); S.pushed = true; } catch (_) {} }
+    syncBack();
+    return stepped;
+  }
+  function popTo(i) { while (S.stack.length > i + 1) S.stack.pop(); if (S.stack.length > i) { var c = S.stack.pop(); c.view = 'list'; restoreLevel(c); } }
+  function syncBack() { if (els.back) els.back.hidden = !(S.cur && (S.cur.view === 'detail' || S.stack.length)); }
+  function measure() {
+    if (!S.open || !els.panel || !S.cur) return;
+    var mode = global.innerWidth >= 700 && global.innerHeight >= 520 ? 'panel' : 'sheet';
+    if (els.panel.getAttribute('data-mode') !== mode) els.panel.setAttribute('data-mode', mode);
+    var n = visibleCols(boxOf(S.cur)).length;
+    var layout = els.panel.clientWidth >= Math.max(620, n * 115) ? 'table' : 'stack';
+    if (els.panel.getAttribute('data-layout') !== layout) els.panel.setAttribute('data-layout', layout);
+  }
+  function onKey(e) {
+    if (!S.open) return;
+    if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); if (!stepBack(false)) close(); return; }
+    if (e.key !== 'Tab') return;
+    var f = [].slice.call(els.panel.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')).filter(function (x) { return !x.disabled && x.getClientRects().length > 0; });
+    if (!f.length) { e.preventDefault(); focusPanel(); return; }
+    var first = f[0], last = f[f.length - 1], a = doc.activeElement;
+    if (!els.panel.contains(a)) { e.preventDefault(); first.focus(); return; }
+    if (e.shiftKey && (a === first || a === els.panel)) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && a === last) { e.preventDefault(); first.focus(); }
+  }
+
+  // ---- chrome: title, breadcrumb, tabs, search box, filters, sort select, column headers
+  function sortableCols(box) { return visibleCols(box).filter(function (c) { return c.sortable; }); }
+  function buildChrome() {
+    var c = S.cur, box = boxOf(c), u = ui(box);
+    els.title.textContent = c.title; els.count.textContent = '';
+    els.search.value = c.search; els.search.placeholder = u.placeholder; els.clear.hidden = !c.search;
+    els.panel.setAttribute('data-box', c.boxKey);
+    // breadcrumb (only while drilled)
+    if (S.stack.length) {
+      var trail = S.stack.map(function (l, i) { return '<button type="button" class="v25-admin-crumb" data-crumb="' + i + '">' + esc(l.chip || l.title) + '</button>'; });
+      trail.push('<span class="v25-admin-crumb" aria-current="page">' + esc(c.chip || c.title) + '</span>');
+      els.crumbs.hidden = false; els.crumbs.innerHTML = trail.join(svg(ICON_CHEV, 'v25-admin-crumb-sep'));
+    } else { els.crumbs.hidden = true; els.crumbs.innerHTML = ''; }
+    if (c.tabs && c.tabs.length > 1) {
+      els.tabs.hidden = false;
+      els.tabs.innerHTML = c.tabs.map(function (k) { var b = adapter.getBox(k); return '<button type="button" role="tab" class="v25-admin-tab" data-tab="' + esc(k) + '" aria-selected="' + (k === c.boxKey ? 'true' : 'false') + '">' + esc(b ? b.label : k) + '</button>'; }).join('');
+    } else { els.tabs.hidden = true; els.tabs.innerHTML = ''; }
+    var eff = effFilters(c);
+    var html = (u.filters || []).map(function (f) {
+      var cur = eff[f.key] != null ? String(eff[f.key]) : f.options[0][0];
+      return '<div class="v25-admin-field"><label class="v25-admin-field-label" for="v25-admin-f-' + f.key + '">' + esc(f.label) + '</label><select id="v25-admin-f-' + f.key + '" class="v25-admin-select" data-filter="' + f.key + '">' +
+        f.options.map(function (o) { return '<option value="' + esc(o[0]) + '"' + (cur === o[0] ? ' selected' : '') + '>' + esc(o[1]) + '</option>'; }).join('') + '</select></div>';
+    }).join('');
+    if (c.chip) html += '<button type="button" class="v25-admin-btn v25-admin-chip" data-clear-chip="1" aria-label="Remove filter: ' + esc(c.chip) + '"><span>' + esc(c.chip) + '</span>' + svg(ICON_X) + '</button>';
+    els.controls.innerHTML = html;
+    var sc = sortableCols(box);
+    els.sort.innerHTML = sc.map(function (col) { return '<option value="' + esc(col.key) + '">' + esc(col.label) + '</option>'; }).join('');
+    els.panel.style.setProperty('--v25-cols', visibleCols(box).map(function (col) { return 'minmax(0, ' + colWidth(col) + ')'; }).join(' '));
+    els.thead.innerHTML = visibleCols(box).map(function (col) {
+      return '<button type="button" class="v25-admin-sortbtn" data-sort="' + esc(col.key) + '" data-sortable="' + (col.sortable ? 'true' : 'false') + '"' + (col.sortable ? '' : ' tabindex="-1" aria-disabled="true"') + ' data-align="' + (col.type === 'number' ? 'right' : 'left') + '" aria-sort="none"><span>' + esc(col.label) + '</span>' + svg(ICON_SORT) + '</button>';
+    }).join('');
+    syncDir(); syncBack();
+  }
+  function syncDir() {
+    var c = S.cur; els.dir.setAttribute('data-dir', c.dir);
+    els.dir.setAttribute('aria-label', 'Sort direction: ' + (c.dir === 'asc' ? 'ascending' : 'descending') + '. Activate to reverse.');
+    if (c.sort) els.sort.value = c.sort;
+    [].forEach.call(els.thead.querySelectorAll('.v25-admin-sortbtn'), function (b) { var on = b.getAttribute('data-sort') === c.sort; b.setAttribute('aria-sort', on ? (c.dir === 'asc' ? 'ascending' : 'descending') : 'none'); });
+  }
+  function showList(restore) {
+    S.cur.view = 'list';
+    els.listview.hidden = false; els.detail.hidden = true; els.panel.setAttribute('data-view', 'list');
+    els.title.textContent = S.cur.title; updateCount();
+    els.scroll.scrollTop = restore ? 0 : (S.cur.scrollTop || 0);
+    syncBack();
+  }
+
+  // ---- list loading
+  function setState(which, info) {
+    els.skel.hidden = which !== 'loading'; els.empty.hidden = which !== 'empty'; els.error.hidden = which !== 'error'; els.notice.hidden = which !== 'notice';
+    if (which === 'error') els['error-text'].textContent = info || 'Something went wrong.';
+    if (which === 'empty') { els['empty-title'].textContent = info.title; els['empty-text'].textContent = info.text; }
+    if (which === 'notice') { els['notice-title'].textContent = info.title; els['notice-text'].textContent = info.text; els['notice-retry'].hidden = !info.retry; }
+  }
+  function updateCount() {
+    var c = S.cur; if (!c) return; var u = ui(boxOf(c));
+    if (c.total == null) { els.count.textContent = c.error || c.notice ? '' : 'Loading...'; return; }
+    els.count.textContent = fmtNum(c.total) + ' ' + (c.total === 1 ? u.noun : u.nouns) + (c.search ? ' matching "' + c.search + '"' : '');
+  }
+  function spin(on) { var s = els.refresh.querySelector('svg'); if (s) s.classList.toggle('v25-admin-spin', on); }
+  function showFailure(c, res) {
+    c.error = null; c.notice = null; c.rows = []; c.total = null; els.rows.innerHTML = ''; els.pager.hidden = true; els.count.textContent = '';
+    if (res.forbidden) { c.notice = 1; setState('notice', { title: 'Admin access required', text: 'This list is only available to the TallyIt admin account.', retry: false }); }
+    else if (res.unavailable) { c.notice = 1; setState('notice', { title: 'Not available yet', text: 'The v25 admin SQL has not been run in Supabase yet, so this list cannot load. Run it, then check again.', retry: true }); }
+    else { c.error = res.error || 'Could not load this list.'; setState('error', c.error); }
+  }
+  function load(o) {
+    o = o || {};
+    var c = S.cur, seq = ++S.seq;
+    c.error = null; c.notice = null;
+    if (o.first) { els.rows.innerHTML = ''; els.pager.hidden = true; c.total = null; c.rows = []; setState('loading'); updateCount(); }
+    else els.rows.setAttribute('data-busy', 'true');
+    spin(true);
+    callList(c.boxKey, { search: c.search.trim() || undefined, sort: c.sort || undefined, dir: c.dir, limit: PAGE_SIZE, offset: c.offset, filters: effFilters(c) }).then(function (res) {
+      if (seq !== S.seq || !S.open) return;
+      if (!res.ok) { showFailure(c, res); return; }
+      var rows = Array.isArray(res.rows) ? res.rows : [], total = res.total != null ? num(res.total) : rows.length;
+      if (!rows.length && total > 0 && c.offset > 0) { c.offset = Math.max(0, (Math.ceil(total / PAGE_SIZE) - 1) * PAGE_SIZE); load({}); return; }
+      c.rows = rows; c.total = total; c.hasMore = res.has_more === true || (c.offset + rows.length) < total;
+      renderRows(); updateCount();
+    }).then(function () { if (seq === S.seq && S.open) { els.rows.removeAttribute('data-busy'); spin(false); } });
+  }
+  function rowKey(c, r, i) { return !isNil(r.id) ? r.id : (r.game_key != null ? r.game_key + (r.variation_key != null ? '||' + r.variation_key : '') : r.date != null ? r.date : 'r' + i); }
+  function renderRows() {
+    var c = S.cur, box = boxOf(c), u = ui(box), rows = c.rows, cols = visibleCols(box), rl = roles(box);
+    if (!rows.length) {
+      els.rows.innerHTML = ''; els.pager.hidden = true;
+      setState('empty', c.search ? { title: 'No matches', text: 'Nothing matches "' + c.search + '". Try a different search.' } : { title: 'No ' + u.nouns + ' yet', text: 'Nothing to show for this view.' });
+      return;
+    }
+    setState('none');
+    els.rows.innerHTML = rows.map(function (r, i) {
+      var cells = cols.map(function (col) {
+        return '<span class="v25-admin-cell" data-role="' + rl[col.key] + '" data-type="' + col.type + '"' + (col.type === 'number' ? ' data-align="right"' : '') + '><span class="v25-admin-cell-label">' + esc(col.label) + '</span><span class="v25-admin-cell-val">' + cellHTML(col, r, false) + '</span></span>';
+      }).join('');
+      return '<li class="v25-admin-item"><button type="button" class="v25-admin-row" data-i="' + i + '" data-id="' + esc(rowKey(c, r, i)) + '"><span class="v25-admin-row-grid">' + cells + '</span>' + svg(ICON_CHEV, 'v25-admin-row-chev') + '</button></li>';
+    }).join('');
+    var start = c.offset + 1, end = c.offset + rows.length;
+    els.pager.hidden = false;
+    els.range.textContent = fmtNum(start) + '\u2013' + fmtNum(end) + ' of ' + fmtNum(c.total);
+    els.prev.disabled = c.offset <= 0; els.next.disabled = !c.hasMore;
+    els.scroll.scrollTop = 0;
+  }
+
+  // ---- detail
+  function primaryText(box, row) {
+    var rl = roles(box), k = Object.keys(rl).filter(function (x) { return rl[x] === 'primary'; })[0];
+    var col = visibleCols(box).filter(function (c) { return c.key === k; })[0];
+    return col ? stripTags(cellHTML(col, row, false)) : '';
+  }
+  function stripTags(h) { var t = doc.createElement('div'); t.innerHTML = h; return t.textContent; }
+  function secondaryHTML(box, row) {
+    var rl = roles(box), k = Object.keys(rl).filter(function (x) { return rl[x] === 'secondary'; })[0];
+    var col = visibleCols(box).filter(function (c) { return c.key === k; })[0];
+    return col && !isNil(row[col.key]) ? cellHTML(col, row, false) : '';
+  }
+  function showDetailView(c) {
+    var box = boxOf(c), u = ui(box);
+    els.listview.hidden = true; els.detail.hidden = false; els.panel.setAttribute('data-view', 'detail');
+    els.title.textContent = primaryText(box, c.detailRow) || c.title;
+    els.count.textContent = u.noun.charAt(0).toUpperCase() + u.noun.slice(1) + ' details';
+    syncBack();
+  }
+  function openDetail(i) {
+    var c = S.cur, box = boxOf(c), row = c.rows[i]; if (!row) return;
+    c.scrollTop = els.scroll.scrollTop; c.view = 'detail'; c.detailRow = row; c.detailId = rowKey(c, row, i); c.detailMerged = null;
+    c.detailTarget = safe(function () { return adapter.detailFor(c.boxKey, row); }, null);
+    showDetailView(c); els['detail-scroll'].scrollTop = 0; els.back.focus({ preventScroll: true });
+    var t = c.detailTarget, seq = ++S.dseq;
+    if (t && t.method === 'getSharedGame' && t.id) {
+      renderDetail(c, row, 'loading');
+      var p; try { p = Promise.resolve(adapter.getSharedGame(t.id)); } catch (e) { p = Promise.reject(e); }
+      p.then(function (res) {
+        if (seq !== S.dseq || !S.open) return;
+        if (res && res.ok) renderDetail(c, Object.assign({}, row, res.game || {}, { participants: res.participants || [] }), 'none');
+        else renderDetail(c, row, 'note', res && res.forbidden ? 'Admin access required for the full record.' : res && res.unavailable ? 'Full record is not available yet (v25 SQL pending).' : (res && res.error) || 'Could not load the full record.');
+      }, function (e) { if (seq === S.dseq && S.open) renderDetail(c, row, 'note', (e && e.message) || 'Could not load the full record.'); });
+    } else renderDetail(c, row, 'none');
+  }
+  function dlRow(label, valueHtml) { return '<div class="v25-admin-dl-row"><dt class="v25-admin-dt">' + esc(label) + '</dt><dd class="v25-admin-dd">' + valueHtml + '</dd></div>'; }
+  function renderDetail(c, row, state, msg) {
+    var box = boxOf(c), st = els['detail-state'];
+    st.hidden = state === 'none';
+    if (state === 'loading') { st.setAttribute('data-kind', 'loading'); st.innerHTML = svg(ICON_SPIN, 'v25-admin-spin') + '<p>Loading full record...</p>'; }
+    else if (state === 'note') { st.setAttribute('data-kind', 'info'); st.innerHTML = svg(ICON_WARN) + '<p>' + esc(msg) + '</p>'; }
+    var sec = secondaryHTML(box, row);
+    var html = '<div class="v25-admin-detail-hero"><h3 class="v25-admin-detail-name">' + esc(primaryText(box, row) || box.label) + '</h3>' + (sec ? '<p class="v25-admin-detail-sub">' + sec + '</p>' : '') + '</div>';
+    var cols = (box.columns || []), shown = {}, rowsHtml = '';
+    cols.filter(function (x) { return !x.hidden; }).concat(cols.filter(function (x) { return x.hidden; })).forEach(function (col) {
+      shown[col.key] = 1; if (row[col.key] === undefined) return;
+      if (col.type === 'json' && col.key !== 'guest_names') return;
+      rowsHtml += dlRow(col.label, cellHTML(col, row, true));
+    });
+    var extras = Object.keys(row).filter(function (k) { return !shown[k] && k.charAt(0) !== '_'; });
+    extras.filter(function (k) { return row[k] === null || typeof row[k] !== 'object'; }).forEach(function (k) { rowsHtml += dlRow(humanize(k), generic(row[k])); });
+    html += '<dl class="v25-admin-dl">' + rowsHtml + '</dl>';
+    cols.filter(function (x) { return x.type === 'json' && x.key !== 'guest_names' && row[x.key] !== undefined; }).forEach(function (x) { html += '<h4 class="v25-admin-section-label">' + esc(x.label) + '</h4>' + generic(row[x.key]); });
+    extras.filter(function (k) { return row[k] !== null && typeof row[k] === 'object'; }).forEach(function (k) { html += '<h4 class="v25-admin-section-label">' + esc(humanize(k)) + '</h4>' + generic(row[k]); });
+    var t = c.detailTarget;
+    if (t && t.method === 'drilldown' && t.box && adapter.getBox(t.box)) {
+      var tb = adapter.getBox(t.box), rel = ui(tb).rel || ui(tb).nouns;
+      html += '<h4 class="v25-admin-section-label">Next level</h4><div class="v25-admin-actions"><button type="button" class="v25-admin-btn" data-related="1">View ' + esc(rel) + svg(ICON_CHEV) + '</button></div>';
+    }
+    els['detail-body'].innerHTML = html;
+    c.detailMerged = row;
+  }
+  function openRelated() {
+    var c = S.cur, t = c.detailTarget; if (!t || t.method !== 'drilldown') return;
+    var filters = (t.opts && t.opts.filters) || {};
+    var next = newLevel(t.box, { filters: filters, chip: chipFor(filters), drill: true, tabs: null }); if (!next) return;
+    S.stack.push(c); S.cur = next; startLevel(); focusPanel();
+  }
+
+  // ---- sheet wiring (bound once per DOM node)
+  function isTextCol(key) { var col = visibleCols(boxOf(S.cur)).filter(function (x) { return x.key === key; })[0]; return !col || col.type === 'text'; }
+  function applySearch() { if (!S.open || !S.cur) return; var v = els.search.value.trim(); if (v === S.cur.search) return; S.cur.search = v; S.cur.offset = 0; load({ first: true }); }
+  function switchTab(k) {
+    if (!S.cur || k === S.cur.boxKey) return;
+    var next = newLevel(k, { tabs: S.cur.tabs, title: S.cur.title }); if (!next) return;
+    S.cur = next; startLevel();
+    var b = els.tabs.querySelector('[data-tab="' + cssEsc(k) + '"]'); if (b) b.focus({ preventScroll: true });
+  }
+  function setSort(key) {
+    var c = S.cur; if (c.sort === key) c.dir = c.dir === 'asc' ? 'desc' : 'asc'; else { c.sort = key; c.dir = isTextCol(key) ? 'asc' : 'desc'; }
+    c.offset = 0; syncDir(); load({});
+  }
+  function bindSheet() {
+    if (bound) return; bound = true;
+    els.root.addEventListener('click', function (e) {
+      var t = e.target;
+      if (t.closest('[data-v25-close]') || t.closest('#v25-admin-close')) { close(); return; }
+      if (t.closest('#v25-admin-back')) { if (!stepBack(false)) close(); return; }
+      var cr = t.closest('[data-crumb]'); if (cr) { popTo(Number(cr.getAttribute('data-crumb'))); return; }
+      var row = t.closest('.v25-admin-row'); if (row) { openDetail(Number(row.getAttribute('data-i'))); return; }
+      var tab = t.closest('[data-tab]'); if (tab) { switchTab(tab.getAttribute('data-tab')); return; }
+      var sb = t.closest('.v25-admin-sortbtn'); if (sb) { if (sb.getAttribute('data-sortable') === 'true') setSort(sb.getAttribute('data-sort')); return; }
+      if (t.closest('#v25-admin-dir')) { S.cur.dir = S.cur.dir === 'asc' ? 'desc' : 'asc'; S.cur.offset = 0; syncDir(); load({}); return; }
+      if (t.closest('#v25-admin-clear')) { els.search.value = ''; S.cur.search = ''; els.clear.hidden = true; S.cur.offset = 0; clearTimeout(S.timer); load({ first: true }); els.search.focus(); return; }
+      if (t.closest('#v25-admin-prev')) { if (S.cur.offset > 0) { S.cur.offset = Math.max(0, S.cur.offset - PAGE_SIZE); load({}); } return; }
+      if (t.closest('#v25-admin-next')) { if (S.cur.hasMore) { S.cur.offset += PAGE_SIZE; load({}); } return; }
+      if (t.closest('#v25-admin-retry') || t.closest('#v25-admin-notice-retry') || t.closest('#v25-admin-refresh')) { load({ first: S.cur.rows.length === 0 }); return; }
+      if (t.closest('[data-clear-chip]')) { var u = ui(boxOf(S.cur)), keep = {}; (u.filters || []).forEach(function (f) { if (S.cur.filters[f.key] != null) keep[f.key] = S.cur.filters[f.key]; }); S.cur.filters = keep; S.cur.chip = ''; S.cur.offset = 0; buildChrome(); load({ first: true }); return; }
+      if (t.closest('[data-related]')) openRelated();
+    });
+    els.root.addEventListener('change', function (e) {
+      var t = e.target;
+      if (t.id === 'v25-admin-sort') { if (t.value !== S.cur.sort) setSort(t.value); return; }
+      if (t.getAttribute('data-filter')) { S.cur.filters[t.getAttribute('data-filter')] = t.value; S.cur.offset = 0; load({ first: true }); }
+    });
+    els.search.addEventListener('input', function () { els.clear.hidden = !els.search.value; clearTimeout(S.timer); S.timer = setTimeout(applySearch, DEBOUNCE_MS); });
+    els.search.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); clearTimeout(S.timer); applySearch(); els.search.blur(); } });
+  }
+
+  // ------------------------------------------------------------------ admin page: boxes -> buttons (mapping from boxForKpi / registry kpiId)
+  var CHEV = svg(ICON_CHEV, 'v25-admin-box-chev');
+  var INTERACTIVE_SEL = '.v20-req-filters, .v20-inbox-list, .v22-mod-list, button, a, select, input';
+  function addViewAll(card, boxKey, label) {
+    var head = card.querySelector('[class$="-card-head"]'); if (!head) return;
+    var meta = head.querySelector('[class$="-card-meta"]');
+    var tools = doc.createElement('span'); tools.className = 'v25-admin-card-tools';
+    if (meta) { head.replaceChild(tools, meta); tools.appendChild(meta); } else head.appendChild(tools);
+    var btn = doc.createElement('button'); btn.type = 'button'; btn.className = 'v25-admin-viewall'; btn.setAttribute('data-v25-box', boxKey); btn.setAttribute('aria-haspopup', 'dialog');
+    btn.setAttribute('aria-label', 'View all: ' + label); btn.innerHTML = 'View all' + svg(ICON_CHEV);
+    tools.appendChild(btn);
+  }
+  function decorate() {
+    var list = safe(function () { return adapter.listBoxes(); }, []);
+    list.forEach(function (b) {
+      if (!b || !b.kpiId) return;
+      var el = $(b.kpiId); if (!el) return;
+      var card = el.closest('.v20-kpi-card, .v20-admin-card, .v22-admin-card') || el;
+      if (card.getAttribute('data-v25-done') === '1') {
+        if (card.getAttribute('data-v25-anchor') !== b.kpiId && !el.hasAttribute('data-v25-sub')) { el.setAttribute('data-v25-sub', b.key); el.classList.add('v25-admin-sub'); }
+        return;
+      }
+      card.setAttribute('data-v25-done', '1'); card.setAttribute('data-v25-anchor', b.kpiId);
+      if (card.querySelector(INTERACTIVE_SEL)) addViewAll(card, b.key, b.label);
+      else {
+        card.setAttribute('data-v25-box', b.key); card.classList.add('v25-admin-box');
+        card.setAttribute('role', 'button'); card.setAttribute('tabindex', '0'); card.setAttribute('aria-haspopup', 'dialog');
+        card.insertAdjacentHTML('beforeend', CHEV);
+      }
+    });
+    // the Game Requests Inbox has no KPI id of its own: give it a "View all" for the full requests list
+    var inbox = $('admin-requests-list'), rb = adapter.getBox('requests_total');
+    var icard = inbox && inbox.closest('.v20-admin-card');
+    if (icard && rb && icard.getAttribute('data-v25-done') !== '1') { icard.setAttribute('data-v25-done', '1'); addViewAll(icard, rb.key, rb.label); }
+  }
+  function openBox(key, opener) {
+    var b = adapter.getBox(key); if (!b) return;
+    if (b.tabs && b.tabs.length > 1) open(b.tabs[0], { title: b.label, tabs: b.tabs });
+    else open(key, { title: titleFor(b, false) });
+    if (opener) S.opener = opener;
+  }
+  doc.addEventListener('click', function (e) {
+    if (S.open || !e.target.closest) return;
+    var vb = e.target.closest('.v25-admin-viewall');
+    if (vb) { openBox(vb.getAttribute('data-v25-box'), vb); return; }
+    var box = e.target.closest('.v25-admin-box[data-v25-box]'); if (!box) return;
+    var inner = e.target.closest('a, button, select, input, textarea');
+    if (inner && inner !== box && box.contains(inner)) return;
+    var sub = e.target.closest('[data-v25-sub]');
+    openBox(sub && box.contains(sub) ? sub.getAttribute('data-v25-sub') : box.getAttribute('data-v25-box'), box);
+  });
+  doc.addEventListener('keydown', function (e) {
+    if (S.open) return;
+    var box = e.target && e.target.classList && e.target.classList.contains('v25-admin-box') ? e.target : null;
+    if (!box || box.getAttribute('role') !== 'button') return;
+    if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') { e.preventDefault(); openBox(box.getAttribute('data-v25-box'), box); }
+  });
+
+  global.TallyItV25AdminDrilldown = {
+    version: 'v25.1', setAdapter: setAdapter, getAdapter: getAdapter,
+    open: function (key, o) { return open(key, o); }, close: function () { close(); }, isOpen: function () { return S.open; }, decorate: decorate, _state: function () { return S; }
+  };
+
+  function init() {
+    decorate();
+    var scr = $('admin-screen');
+    if (scr && global.MutationObserver) { var raf = 0; new global.MutationObserver(function () { if (raf) return; raf = global.requestAnimationFrame(function () { raf = 0; decorate(); }); }).observe(scr, { childList: true, subtree: true }); }
+  }
+  if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', init); else init();
+})(window);
+
+</script>
 <!-- Auth -->
 <script id="score-auth-script">
 (function () {
