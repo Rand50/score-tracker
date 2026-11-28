@@ -64,6 +64,7 @@ Always rebuild from `v3/` sources. Do not hand-edit `game_tracker.html`.
 node v3/tests/spoons_tests.js
 node v3/tests/v24_tests.js
 node v3/tests/v26_record_tools_tests.js
+node v3/tests/catan_board_tests.js
 
 # Backend adapters
 node tests/v24_backend.test.js
