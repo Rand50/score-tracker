@@ -3,7 +3,11 @@ name: CI
 on:
   pull_request:
   push:
-    branches: [main]
+    # main is the deploy branch. cursor/** is included so a source-import
+    # branch runs these checks even before a pull request is open.
+    branches:
+      - main
+      - "cursor/**"
 
 permissions:
   contents: read
