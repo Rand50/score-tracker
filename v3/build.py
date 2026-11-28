@@ -549,3 +549,34 @@ if 'id="v262-controls-css"' not in html:
 assert 'viewport-fit=cover' in html
 (D/'game_tracker.html').write_text(html)
 print('v262 controls ok', len(html))
+
+# ---- v27 hybrid History list (mini scorecards in each game's palette, date groups, search + multi-select game strip,
+# Filter sheet/popover with date/player/group). Engine renderHistory() delegates to window.TallyItV27HistoryList when present;
+# Delete + Link players moved into the v26 detail sheet (owner-only). Inlined after the v26.2 block. ----
+_v27_css = re.sub(r'/\*.*?\*/', '', (V/'v27_history_list.css').read_text(), flags=re.S)
+_v27_th = re.sub(r'/\*.*?\*/', '', (V/'v27_history_list_themes.css').read_text(), flags=re.S)
+_v27_js = (V/'v27_history_list.js').read_text(); assert 'global.TallyItV27HistoryList' in _v27_js
+if re.search(r'theme-|@media|@container|@supports', _v27_css): raise SystemExit('v27_history_list.css must stay neutral: no theme-*, @media, @container or @supports')
+if re.search(r'@media|@container|@supports', _v27_th): raise SystemExit('v27_history_list_themes.css: no @media')
+def _v27_selectors(css):
+    depth, out = 0, []
+    for m in re.finditer(r'([^{}]*)([{}])', css):
+        sel, br = m.group(1).strip(), m.group(2)
+        if br == '{':
+            if depth == 0: out += [p.strip() for p in sel.split(',') if p.strip()]
+            depth += 1
+        else: depth -= 1
+    return out
+for _s in _v27_selectors(_v27_css):   # no bare element selectors: every compound starts with . # [ : or *
+    for _c in re.split(r'\s*[>+~]\s*|\s+', _s):
+        if _c and not re.match(r'[.#\[:*]', _c): raise SystemExit('v27_history_list.css: bare element selector: ' + _s)
+for _s in _v27_selectors(_v27_th):
+    if not (_s.startswith('.v27-hl-card[data-game="') or re.match(r'body\.theme-[a-z0-9-]+ \.v26-hist-sheet$', _s)):
+        raise SystemExit('v27_history_list_themes.css: unexpected selector ' + _s)
+for _n, _t in [('css', _v27_css), ('themes', _v27_th), ('js', _v27_js)]:
+    assert not _emoji.search(_t), 'emoji in v27 history list ' + _n
+if 'id="v27-history-list-css"' not in html:
+    html = html.replace('</head>', '<style id="v27-history-list-css">\n' + _v27_css + '\n' + _v27_th + '\n</style>\n</head>', 1)
+    html = html.replace('</body>', '<script id="v27-history-list">\n' + _v27_js + '\n</script>\n</body>', 1)
+(D/'game_tracker.html').write_text(html)
+print('v27 history list ok', len(html))

@@ -1,0 +1,26 @@
+/* TallyIt v27 - History list per-game palettes. No @media, no emoji.
+   1) Card palettes. The History list shows every game at once under the neutral shell (no body.theme-* is set
+      there), so each card carries data-game and only swaps --v27-* tokens copied from v26_history_detail_themes.css.
+      Custom ("other") keeps the neutral navy card from v27_history_list.css.
+   2) The detail sheet's owner-only "Delete game" color, scoped to body.theme-<game> like the other per-game CSS. */
+.v27-hl-card[data-game="flip7"] { --v27-cs: #f5f1e4; --v27-cs2: #ebe3cc; --v27-ct: #223266; --v27-cm: #5a6690; --v27-cb: rgba(34, 50, 102, 0.16); --v27-cw: #e0a800; --v27-cwi: #1f1300; }
+.v27-hl-card[data-game="7wonders"] { --v27-cs: #f8f0df; --v27-cs2: #e8d8b7; --v27-ct: #382515; --v27-cm: #84684c; --v27-cb: rgba(56, 37, 21, 0.16); --v27-cw: #b8841e; --v27-cwi: #1f1300; --v27-ch: Georgia, 'Times New Roman', serif; }
+.v27-hl-card[data-game="carcassonne"] { --v27-cs: #faf3e0; --v27-cs2: #efe4c6; --v27-ct: #23160a; --v27-cm: #6c5537; --v27-cb: rgba(35, 22, 10, 0.16); --v27-cw: #b8862a; --v27-cwi: #1f1300; }
+.v27-hl-card[data-game="catan"] { --v27-cs: #f4e6c4; --v27-cs2: #e6d2a3; --v27-ct: #3b2814; --v27-cm: #6a4d2a; --v27-cb: rgba(59, 40, 20, 0.2); --v27-cw: #c99a3e; --v27-cwi: #1f1300; --v27-ch: Georgia, 'Times New Roman', serif; }
+.v27-hl-card[data-game="ohhell"] { --v27-cs: #fcf9f3; --v27-cs2: #efe8da; --v27-ct: #1f1c18; --v27-cm: #555a53; --v27-cb: rgba(62, 77, 68, 0.2); --v27-cw: #9a7b1c; --v27-cwi: #ffffff; --v27-ch: Georgia, 'Times New Roman', serif; }
+.v27-hl-card[data-game="hearts"] { --v27-cs: #fcf9f3; --v27-cs2: #efe7da; --v27-ct: #1f1c18; --v27-cm: #5c554c; --v27-cb: rgba(79, 74, 68, 0.2); --v27-cw: #9a1b22; --v27-cwi: #ffffff; --v27-ch: Georgia, 'Times New Roman', serif; }
+.v27-hl-card[data-game="nertz"] { --v27-cs: #0c1d36; --v27-cs2: #12284a; --v27-ct: #faf3e1; --v27-cm: #b9ad8f; --v27-cb: rgba(230, 198, 119, 0.24); --v27-cw: #e6c677; --v27-cwi: #0f1b2d; --v27-ch: Georgia, 'Times New Roman', serif; }
+.v27-hl-card[data-game="rummikub"] { --v27-cs: #faf6ec; --v27-cs2: #efe7d5; --v27-ct: #0f1f3d; --v27-cm: #55637c; --v27-cb: rgba(15, 31, 61, 0.14); --v27-cw: #df6d10; --v27-cwi: #ffffff; }
+.v27-hl-card[data-game="qwirkle"] { --v27-cs: #ffffff; --v27-cs2: #fbf6ea; --v27-ct: #0e1a3a; --v27-cm: #5b6480; --v27-cb: rgba(14, 26, 58, 0.12); --v27-cw: #f47a13; --v27-cwi: #ffffff; }
+.v27-hl-card[data-game="spoons"] { --v27-cs: #fff9ee; --v27-cs2: #f3e6cf; --v27-ct: #4a2c14; --v27-cm: #7a5a3e; --v27-cb: rgba(110, 69, 32, 0.2); --v27-cw: #b57d43; --v27-cwi: #ffffff; --v27-ch: Georgia, 'Times New Roman', serif; }
+
+body.theme-flip7 .v26-hist-sheet { --v27-del: #b3261e; }
+body.theme-seven-wonders .v26-hist-sheet { --v27-del: #a62b22; }
+body.theme-carcassonne .v26-hist-sheet { --v27-del: #a8321f; }
+body.theme-catan .v26-hist-sheet { --v27-del: #9b2c1f; }
+body.theme-ohhell .v26-hist-sheet { --v27-del: #9a1b22; }
+body.theme-hearts .v26-hist-sheet { --v27-del: #9a1b22; }
+body.theme-nertz .v26-hist-sheet { --v27-del: #ff8a80; }
+body.theme-rummikub .v26-hist-sheet { --v27-del: #c62828; }
+body.theme-qwirkle .v26-hist-sheet { --v27-del: #c4161c; }
+body.theme-spoons .v26-hist-sheet { --v27-del: #b6322c; }

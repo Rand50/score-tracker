@@ -91,7 +91,11 @@
     saveLocal: (id, rec) => { const E = ENG(); return !!(E && E.applyLocalEdit && E.applyLocalEdit(id, rec)); },
     refresh: () => { const E = ENG(); if (E && E.refresh) E.refresh(); },
     refreshSocial: () => { const E = ENG(); if (E && E.refreshSocial) { try { E.refreshSocial(); } catch (_) {} } },
-    games: () => { const E = ENG(); return (E && E.games && E.games()) || (global.ScoreTracker && global.ScoreTracker.GAMES) || []; }
+    games: () => { const E = ENG(); return (E && E.games && E.games()) || (global.ScoreTracker && global.ScoreTracker.GAMES) || []; },
+    // v27: owner-only Delete + Link players moved here from the History rows (engine's existing deleteHistoryEntry + confirm)
+    canDelete: (e) => { const E = ENG(); try { return !!(E && E.canDelete && e && E.canDelete(e)); } catch (_) { return false; } },
+    remove: async (gid, sid) => { const E = ENG(); if (!E || !E.deleteEntry) return false; try { return !!(await E.deleteEntry(gid, sid)); } catch (_) { return false; } },
+    linkButton: (e) => { const E = ENG(); try { return (E && E.linkButton && e && E.linkButton(e)) || ''; } catch (_) { return ''; } }
   };
 
   // Build one record from Auth's detail row (+ the local copy for anything the payload lacks).
@@ -367,7 +371,50 @@
     return headerCard(model, d) + winnerBanner(model)
       + (notes.length ? `<div class="v26-hist-note" role="note">${IC.info}<span>${notes.map(esc).join(' ')}</span></div>` : '')
       + standings(model) + main
-      + (!d.canEdit ? `<p class="v26-hist-ro">${IC.lock}<span>Read-only${d.record && (d.record.createdByName) ? '. Only ' + esc(d.record.createdByName) + ' can edit this game.' : '. Only the player who recorded this game can edit it.'}</span></p>` : '');
+      + (!d.canEdit ? `<p class="v26-hist-ro">${IC.lock}<span>Read-only${d.record && (d.record.createdByName) ? '. Only ' + esc(d.record.createdByName) + ' can edit this game.' : '. Only the player who recorded this game can edit it.'}</span></p>` : '')
+      + footerArea(d);
+  }
+  // v27: muted dice-roll line in the detail footer when meta.diceStats has rolls (list cards no longer show this)
+  function diceStatsOf(d) {
+    const rec = d && d.record, e = entryFor(d);
+    const st = (rec && rec.meta && rec.meta.diceStats) || (e && e.meta && e.meta.diceStats) || null;
+    return (st && Number(st.totalRolls) > 0) ? st : null;
+  }
+  function diceLine(d) {
+    const st = diceStatsOf(d); if (!st) return '';
+    const n = Number(st.totalRolls);
+    return `<p class="v26-hist-dice">${n} dice ${n === 1 ? 'roll' : 'rolls'}</p>`;
+  }
+  function footerArea(d) {
+    const dice = diceLine(d), owner = ownerActions(d);
+    if (!dice && !owner) return '';
+    return `<div class="v26-hist-foot">${dice}${owner}</div>`;
+  }
+  // v27: the History list entry behind this sheet (by list id, shared id or local id)
+  function entryFor(d) {
+    const ids = [S && S.id, d && d.sharedId, d && d.localId].filter(Boolean).map(String);
+    return ADAPTER.entries().find((g) => g && (ids.includes(String(g.id || '')) || (g.sharedGameId && ids.includes(String(g.sharedGameId))))) || null;
+  }
+  // v27: quiet owner-only actions at the end of the scorecard. Non-owners (group members, friends) never get them.
+  function ownerActions(d) {
+    const e = entryFor(d);
+    if (!e || !ADAPTER.canDelete(e)) return '';
+    const link = ADAPTER.linkButton(e);
+    return `<div class="v26-hist-owner">${link || ''}<button type="button" class="v26-hist-del" data-act="delete"${S && S.deleting ? ' disabled aria-busy="true"' : ''}>${IC.trash}<span>${S && S.deleting ? 'Deleting...' : 'Delete game'}</span></button></div>`;
+  }
+  async function removeGame() {
+    if (!S || !S.data || S.deleting) return;
+    const e = entryFor(S.data); if (!e || !ADAPTER.canDelete(e)) return;
+    const sid = e.sharedGameId || (e.source === 'shared' ? e.id : '');
+    const id = S.id; S.deleting = true;
+    // engine's deleteHistoryEntry shows the existing "Delete this game from history?" confirm and drops the entry
+    // synchronously when accepted (the cloud delete finishes in the background), so close as soon as it is gone
+    const p = ADAPTER.remove(String(e.id || ''), String(sid || ''));
+    if (S && S.id === id && !entryFor(S.data)) { S.deleting = false; close(); return; }
+    const ok = await p;
+    if (!S || S.id !== id) return;
+    S.deleting = false;
+    if (ok) close(); else render();
   }
 
   // ---------------- edit ----------------
@@ -588,6 +635,7 @@
     const a = b.getAttribute('data-act');
     if (a === 'close') close();
     else if (a === 'edit') startEdit();
+    else if (a === 'delete') removeGame();
     else if (a === 'cancel') { S.mode = 'view'; S.result = null; S.draft = null; S.conflict = false; S.msg = ''; render(); }
     else if (a === 'review') review();
     else if (a === 'backedit') { S.mode = 'edit'; S.msg = ''; render(); }
