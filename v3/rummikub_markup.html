@@ -1,0 +1,163 @@
+<!-- =========================================================================
+     Rummikub — Classic Blue & Ivory Rack Markup (#rk-shell)
+     Up to 6 players + Points Up / Classic +/- mode toggle + Built-in Calculator.
+     Mount inside <section id="view-active" class="view"> in v3/shell.html.
+     Only visible when body.theme-rummikub is active.
+     NO "Who Went Out?" selector; zero emojis; crisp inline SVG icons only.
+     ========================================================================= -->
+<div id="rk-shell" data-mode="classic">
+  <div class="rk-stack">
+    <!-- HEADER -->
+    <header class="rk-head">
+      <div class="rk-top-bar">
+        <h1 class="rk-wordmark">RUMMIKUB</h1>
+        <div class="rk-mode-pill" role="tablist" aria-label="Rummikub scoring mode">
+          <button type="button" id="rk-mode-up" class="rk-mode-btn" role="tab" aria-selected="false" onclick="window.rkSetMode && rkSetMode('up')">Points Up</button>
+          <button type="button" id="rk-mode-classic" class="rk-mode-btn active" role="tab" aria-selected="true" onclick="window.rkSetMode && rkSetMode('classic')">Classic +/−</button>
+        </div>
+      </div>
+
+      <div class="rk-header-row">
+        <div class="rk-tiles-strip" aria-hidden="true">
+          <span class="rk-tile t-red">7</span>
+          <span class="rk-tile t-blue">8</span>
+          <span class="rk-tile t-orange">9</span>
+          <span class="rk-tile t-black">10</span>
+        </div>
+        <span id="rk-round-pill" class="rk-round-pill">Round 1</span>
+      </div>
+    </header>
+
+    <!-- PLAYER ROSTER (2..6 players, compact grid for 4-6p) -->
+    <div id="rk-roster" class="rk-roster" data-count="3" role="listbox" aria-label="Rummikub players"></div>
+
+    <!-- ROUND SCORING PANEL (Streamlined: NO "Who Went Out?") -->
+    <section id="rk-scorer" class="rk-scorer" aria-label="Round scoring">
+      <div class="rk-scorer-head">
+        <span id="rk-scorer-who" class="rk-scorer-who">Round 1</span>
+        <span id="rk-preview" class="rk-preview" aria-live="polite">0</span>
+      </div>
+
+      <div class="rk-input-row">
+        <div class="rk-sign-toggle" role="group" aria-label="Score sign">
+          <button type="button" id="rk-sign-minus" class="rk-sign-btn active" onclick="window.rkSetSign && rkSetSign(-1)" aria-label="Subtract points">−</button>
+          <button type="button" id="rk-sign-plus" class="rk-sign-btn" onclick="window.rkSetSign && rkSetSign(1)" aria-label="Add points">+</button>
+        </div>
+        <input id="rk-delta-input" type="text" inputmode="numeric" pattern="[0-9]*" value="0" class="is-neg" aria-label="Round points" oninput="window.rkOnDeltaInput && rkOnDeltaInput(this.value)">
+      </div>
+
+      <div class="rk-steppers" role="group" aria-label="Quick score steppers">
+        <button type="button" class="rk-step-btn neg" onclick="window.rkStep && rkStep(-10)">−10</button>
+        <button type="button" class="rk-step-btn neg" onclick="window.rkStep && rkStep(-5)">−5</button>
+        <button type="button" class="rk-step-btn neg" onclick="window.rkStep && rkStep(-1)">−1</button>
+        <button type="button" class="rk-step-btn pos" onclick="window.rkStep && rkStep(1)">+1</button>
+        <button type="button" class="rk-step-btn pos" onclick="window.rkStep && rkStep(5)">+5</button>
+        <button type="button" class="rk-step-btn pos" onclick="window.rkStep && rkStep(10)">+10</button>
+      </div>
+
+      <!-- Joker Chip + Built-in Calculator Toggle -->
+      <div class="rk-chips-row">
+        <button type="button" id="rk-joker-btn" class="rk-joker-btn" onclick="window.rkApplyJoker && rkApplyJoker()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M4 17h16"/>
+            <path d="M5 17l-1.5-8 5 4 3.5-7 3.5 7 5-4L19 17"/>
+            <circle cx="3.5" cy="7.5" r="1.2" fill="currentColor" stroke="none"/>
+            <circle cx="12" cy="4.5" r="1.2" fill="currentColor" stroke="none"/>
+            <circle cx="20.5" cy="7.5" r="1.2" fill="currentColor" stroke="none"/>
+          </svg>
+          <span id="rk-joker-label">Joker −30</span>
+        </button>
+
+        <button type="button" id="rk-calc-toggle" class="rk-calc-toggle" aria-expanded="false" aria-controls="rk-calc-panel" onclick="window.rkToggleCalc && rkToggleCalc()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="4" y="3" width="16" height="18" rx="2.5"/>
+            <line x1="8" y1="7.5" x2="16" y2="7.5"/>
+            <circle cx="8.5" cy="12" r="1" fill="currentColor" stroke="none"/>
+            <circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/>
+            <circle cx="15.5" cy="12" r="1" fill="currentColor" stroke="none"/>
+            <circle cx="8.5" cy="16" r="1" fill="currentColor" stroke="none"/>
+            <circle cx="12" cy="16" r="1" fill="currentColor" stroke="none"/>
+            <circle cx="15.5" cy="16" r="1" fill="currentColor" stroke="none"/>
+          </svg>
+          <span>Calculator</span>
+        </button>
+      </div>
+
+      <!-- Collapsible Simple Tile Calculator -->
+      <div id="rk-calc-panel" class="rk-calc-panel hidden" hidden aria-label="Tile sum calculator">
+        <div class="rk-calc-display">
+          <span id="rk-calc-expr">0</span>
+          <span id="rk-calc-res"></span>
+        </div>
+        <div class="rk-calc-grid">
+          <button type="button" class="rk-calc-key" onclick="window.rkCalcKey && rkCalcKey('7')">7</button>
+          <button type="button" class="rk-calc-key" onclick="window.rkCalcKey && rkCalcKey('8')">8</button>
+          <button type="button" class="rk-calc-key" onclick="window.rkCalcKey && rkCalcKey('9')">9</button>
+          <button type="button" class="rk-calc-key op" aria-label="Backspace" onclick="window.rkCalcKey && rkCalcKey('BS')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 6H9l-6 6 6 6h12a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1z"/>
+              <line x1="12" y1="10" x2="17" y2="15"/>
+              <line x1="17" y1="10" x2="12" y2="15"/>
+            </svg>
+          </button>
+
+          <button type="button" class="rk-calc-key" onclick="window.rkCalcKey && rkCalcKey('4')">4</button>
+          <button type="button" class="rk-calc-key" onclick="window.rkCalcKey && rkCalcKey('5')">5</button>
+          <button type="button" class="rk-calc-key" onclick="window.rkCalcKey && rkCalcKey('6')">6</button>
+          <button type="button" class="rk-calc-key op" onclick="window.rkCalcKey && rkCalcKey('+')">+</button>
+
+          <button type="button" class="rk-calc-key" onclick="window.rkCalcKey && rkCalcKey('1')">1</button>
+          <button type="button" class="rk-calc-key" onclick="window.rkCalcKey && rkCalcKey('2')">2</button>
+          <button type="button" class="rk-calc-key" onclick="window.rkCalcKey && rkCalcKey('3')">3</button>
+          <button type="button" class="rk-calc-key op" onclick="window.rkCalcKey && rkCalcKey('-')">−</button>
+
+          <button type="button" class="rk-calc-key clear" onclick="window.rkCalcKey && rkCalcKey('C')">C</button>
+          <button type="button" class="rk-calc-key" onclick="window.rkCalcKey && rkCalcKey('0')">0</button>
+          <button type="button" class="rk-calc-key op" onclick="window.rkCalcKey && rkCalcKey('=')">=</button>
+          <button type="button" id="rk-calc-use" class="rk-calc-key use" onclick="window.rkCalcApply && rkCalcApply()">Use</button>
+        </div>
+      </div>
+
+      <button type="button" id="rk-confirm" class="rk-confirm-btn" onclick="window.rkConfirmRound && rkConfirmRound()">Confirm</button>
+    </section>
+
+    <!-- FOOTER ACTIONS -->
+    <div class="rk-footer-row">
+      <button type="button" id="rk-undo" class="rk-sec-btn" onclick="window.rkUndo && rkUndo()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="9 14 4 9 9 4"/>
+          <path d="M20 20v-7a4 4 0 0 0-4-4H4"/>
+        </svg>
+        <span>Undo</span>
+      </button>
+      <button type="button" id="rk-rounds-btn" class="rk-sec-btn" onclick="window.rkToggleHistory && rkToggleHistory()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="8.5"/>
+          <polyline points="12 7.5 12 12 15 13.75"/>
+        </svg>
+        <span>Rounds</span>
+      </button>
+      <button type="button" id="rk-add-player" class="rk-sec-btn" onclick="window.rkAddPlayer && rkAddPlayer()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="12" y1="5" x2="12" y2="19"/>
+          <line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        <span>Player</span>
+      </button>
+    </div>
+
+    <!-- EXPANDABLE ROUND HISTORY DRAWER -->
+    <div id="rk-history-drawer" class="rk-history-drawer hidden" hidden>
+      <div class="rk-history-head">
+        <h3>Round History</h3>
+        <button type="button" class="rk-history-close" onclick="window.rkToggleHistory && rkToggleHistory(false)">Close</button>
+      </div>
+      <div id="rk-history-list">
+        <p class="rk-history-empty">No rounds recorded yet.</p>
+      </div>
+    </div>
+
+    <!-- FINISH & SAVE GAME -->
+    <button type="button" id="rk-finish" class="rk-finish-btn" onclick="window.openEndGameModal && openEndGameModal()">Finish &amp; Save Game</button>
+  </div>
+</div>

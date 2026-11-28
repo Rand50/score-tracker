@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="420" height="520" viewBox="0 0 420 520">
+  <defs>
+    <linearGradient id="ohBg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0f3d2e"/>
+      <stop offset="55%" stop-color="#08241b"/>
+      <stop offset="100%" stop-color="#04120e"/>
+    </linearGradient>
+    <radialGradient id="ohGlow" cx="50%" cy="38%" r="55%">
+      <stop offset="0%" stop-color="#34d399" stop-opacity=".26"/>
+      <stop offset="100%" stop-color="#34d399" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="ohGold" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fef08a"/>
+      <stop offset="50%" stop-color="#e0b24b"/>
+      <stop offset="100%" stop-color="#9a6b1a"/>
+    </linearGradient>
+    <linearGradient id="ohIvory" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fffdf6"/>
+      <stop offset="100%" stop-color="#ecdec0"/>
+    </linearGradient>
+    <filter id="ohSh" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#000" flood-opacity=".6"/>
+    </filter>
+  </defs>
+  <rect width="420" height="520" fill="url(#ohBg)"/>
+  <rect width="420" height="520" fill="url(#ohGlow)"/>
+  <rect x="16" y="16" width="388" height="488" rx="18" fill="none" stroke="url(#ohGold)" stroke-width="2" opacity=".7"/>
+  <rect x="24" y="24" width="372" height="472" rx="13" fill="none" stroke="#fef08a" stroke-width="1" opacity=".25"/>
+
+  <!-- Left card: Jack of Clubs -->
+  <g filter="url(#ohSh)" transform="translate(132 252) rotate(-20)">
+    <rect x="-68" y="-104" width="136" height="208" rx="13" fill="url(#ohIvory)" stroke="url(#ohGold)" stroke-width="2.8"/>
+    <text x="-50" y="-66" fill="#0f172a" font-family="Georgia, serif" font-weight="700" font-size="28">J</text>
+    <text x="-50" y="-42" fill="#0f172a" font-family="Georgia, serif" font-size="22">♣</text>
+    <text x="0" y="26" text-anchor="middle" fill="#0f172a" font-family="Georgia, serif" font-size="68">♣</text>
+  </g>
+
+  <!-- Right card: King of Diamonds -->
+  <g filter="url(#ohSh)" transform="translate(288 252) rotate(20)">
+    <rect x="-68" y="-104" width="136" height="208" rx="13" fill="url(#ohIvory)" stroke="url(#ohGold)" stroke-width="2.8"/>
+    <text x="-50" y="-66" fill="#b91c1c" font-family="Georgia, serif" font-weight="700" font-size="28">K</text>
+    <text x="-49" y="-42" fill="#b91c1c" font-family="Georgia, serif" font-size="22">♦</text>
+    <path d="M0 -34 L30 6 L0 46 L-30 6 Z" fill="#b91c1c" stroke="url(#ohGold)" stroke-width="2"/>
+  </g>
+
+  <!-- Center Trump Card: Ace of Spades with Gold Trump Seal -->
+  <g filter="url(#ohSh)" transform="translate(210 226)">
+    <rect x="-74" y="-112" width="148" height="224" rx="14" fill="url(#ohIvory)" stroke="url(#ohGold)" stroke-width="3"/>
+    <rect x="-64" y="-102" width="128" height="204" rx="9" fill="none" stroke="#c9a14a" stroke-width="1.2" opacity=".55"/>
+    <text x="-52" y="-70" fill="#0f172a" font-family="Georgia, serif" font-weight="700" font-size="30">A</text>
+    <text x="-50" y="-46" fill="#0f172a" font-family="Georgia, serif" font-size="22">♠</text>
+    <path d="M0 -44 C-6 -18 -34 2 -34 24 C-34 39 -23 48 -11 48 C-4 48 0 44 0 39 C0 44 4 48 11 48 C23 48 34 39 34 24 C34 2 6 -18 0 -44 Z" fill="#0f172a"/>
+    <path d="M0 34 C-2 48 -9 58 -18 64 L18 64 C9 58 2 48 0 34 Z" fill="#0f172a"/>
+    <!-- Gold Trump Star Seal -->
+    <circle cx="0" cy="14" r="14" fill="url(#ohGold)" stroke="#08241b" stroke-width="2"/>
+    <path d="M0 5 L2.8 11 L9.2 11.8 L4.4 16.2 L5.7 22.5 L0 19.3 L-5.7 22.5 L-4.4 16.2 L-9.2 11.8 L-2.8 11 Z" fill="#08241b"/>
+  </g>
+
+  <path d="M120 56 H196 M224 56 H300" stroke="url(#ohGold)" stroke-width="1.5" opacity=".7"/>
+  <rect x="206" y="52" width="8" height="8" fill="url(#ohGold)" transform="rotate(45 210 56)"/>
+</svg>

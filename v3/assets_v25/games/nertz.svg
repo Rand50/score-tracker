@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="420" height="520" viewBox="0 0 420 520">
+  <defs>
+    <linearGradient id="nzBg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#102545"/>
+      <stop offset="55%" stop-color="#081426"/>
+      <stop offset="100%" stop-color="#050c18"/>
+    </linearGradient>
+    <radialGradient id="nzGlow" cx="50%" cy="38%" r="54%">
+      <stop offset="0%" stop-color="#e6c677" stop-opacity=".28"/>
+      <stop offset="100%" stop-color="#e6c677" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="nzGold" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fbf0c4"/>
+      <stop offset="50%" stop-color="#e4be67"/>
+      <stop offset="100%" stop-color="#a87c24"/>
+    </linearGradient>
+    <linearGradient id="nzIvory" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fffdf5"/>
+      <stop offset="100%" stop-color="#e9dab7"/>
+    </linearGradient>
+    <linearGradient id="nzCrimson" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#9b1f22"/>
+      <stop offset="100%" stop-color="#580e10"/>
+    </linearGradient>
+    <linearGradient id="nzNavy" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1c3f75"/>
+      <stop offset="100%" stop-color="#0c1f3d"/>
+    </linearGradient>
+  </defs>
+  <rect width="420" height="520" fill="url(#nzBg)"/>
+  <rect width="420" height="520" fill="url(#nzGlow)"/>
+  <rect x="16" y="16" width="388" height="488" rx="18" fill="none" stroke="url(#nzGold)" stroke-width="2" opacity=".7"/>
+  <rect x="24" y="24" width="372" height="472" rx="13" fill="none" stroke="#e6c677" stroke-width="1" opacity=".28"/>
+
+  <!-- Left fanned deck back (Navy & Gold) -->
+  <g transform="translate(135 245) rotate(-18)" fill="#000" fill-opacity="0.099"><rect x="-67.8" y="-93.8" width="135.6" height="207.6" rx="9.8"/><rect x="-70.0" y="-96.0" width="139.9" height="211.9" rx="12.0"/><rect x="-72.1" y="-98.1" width="144.2" height="216.2" rx="14.1"/><rect x="-74.2" y="-100.2" width="148.5" height="220.5" rx="16.2"/><rect x="-76.4" y="-102.4" width="152.8" height="224.8" rx="18.4"/><rect x="-78.5" y="-104.5" width="157.1" height="229.1" rx="20.5"/><rect x="-80.7" y="-106.7" width="161.4" height="233.4" rx="22.7"/></g>
+  <g transform="translate(135 245) rotate(-18)">
+    <rect x="-72" y="-108" width="144" height="216" rx="14" fill="url(#nzNavy)" stroke="url(#nzGold)" stroke-width="3"/>
+    <rect x="-60" y="-96" width="120" height="192" rx="8" fill="none" stroke="#e6c677" stroke-width="1.4" opacity=".8"/>
+    <rect x="-52" y="-88" width="104" height="176" rx="5" fill="none" stroke="#e6c677" stroke-width="1" stroke-dasharray="4 4" opacity=".45"/>
+    <path d="M0 -42 C14 -16 26 -6 46 0 C26 6 14 16 0 42 C-14 16 -26 6 -46 0 C-26 -6 -14 -16 0 -42 Z" fill="none" stroke="url(#nzGold)" stroke-width="2.2"/>
+    <circle cx="0" cy="0" r="10" fill="url(#nzGold)" opacity=".9"/>
+  </g>
+
+  <!-- Right fanned deck back (Crimson & Gold) -->
+  <g transform="translate(285 245) rotate(18)" fill="#000" fill-opacity="0.099"><rect x="-67.8" y="-93.8" width="135.6" height="207.6" rx="9.8"/><rect x="-70.0" y="-96.0" width="139.9" height="211.9" rx="12.0"/><rect x="-72.1" y="-98.1" width="144.2" height="216.2" rx="14.1"/><rect x="-74.2" y="-100.2" width="148.5" height="220.5" rx="16.2"/><rect x="-76.4" y="-102.4" width="152.8" height="224.8" rx="18.4"/><rect x="-78.5" y="-104.5" width="157.1" height="229.1" rx="20.5"/><rect x="-80.7" y="-106.7" width="161.4" height="233.4" rx="22.7"/></g>
+  <g transform="translate(285 245) rotate(18)">
+    <rect x="-72" y="-108" width="144" height="216" rx="14" fill="url(#nzCrimson)" stroke="url(#nzGold)" stroke-width="3"/>
+    <rect x="-60" y="-96" width="120" height="192" rx="8" fill="none" stroke="#e6c677" stroke-width="1.4" opacity=".8"/>
+    <rect x="-52" y="-88" width="104" height="176" rx="5" fill="none" stroke="#e6c677" stroke-width="1" stroke-dasharray="4 4" opacity=".45"/>
+    <path d="M0 -42 C14 -16 26 -6 46 0 C26 6 14 16 0 42 C-14 16 -26 6 -46 0 C-26 -6 -14 -16 0 -42 Z" fill="none" stroke="url(#nzGold)" stroke-width="2.2"/>
+    <circle cx="0" cy="0" r="10" fill="url(#nzGold)" opacity=".9"/>
+  </g>
+
+  <!-- Center Ace of Spades card -->
+  <g transform="translate(210 225)" fill="#000" fill-opacity="0.099"><rect x="-71.8" y="-99.8" width="143.6" height="219.6" rx="9.8"/><rect x="-74.0" y="-102.0" width="147.9" height="223.9" rx="12.0"/><rect x="-76.1" y="-104.1" width="152.2" height="228.2" rx="14.1"/><rect x="-78.2" y="-106.2" width="156.5" height="232.5" rx="16.2"/><rect x="-80.4" y="-108.4" width="160.8" height="236.8" rx="18.4"/><rect x="-82.5" y="-110.5" width="165.1" height="241.1" rx="20.5"/><rect x="-84.7" y="-112.7" width="169.4" height="245.4" rx="22.7"/></g>
+  <g transform="translate(210 225)">
+    <rect x="-76" y="-114" width="152" height="228" rx="14" fill="url(#nzIvory)" stroke="url(#nzGold)" stroke-width="3"/>
+    <rect x="-66" y="-104" width="132" height="208" rx="9" fill="none" stroke="#c9a14a" stroke-width="1.2" opacity=".55"/>
+    <g fill="#0f1b2d"><path transform="translate(-54.00 -72.00) scale(0.01465 -0.01465)" d="M-16 0V121H106L668 1493H907L1470 121H1612V0H913V121H1059L936 426H375L250 121H428V0ZM424 547H887L657 1118Z"/></g>
+    <g fill="#0f1b2d"><path transform="translate(-53.00 -48.00) scale(0.01074 -0.01074)" d="M920 1492Q1014 1325 1230 1049Q1467 771 1473 714Q1512 629 1512 549V509Q1512 342 1350 246Q1297 224 1233 224Q1079 224 984 445H942V433Q942 150 1025 0H810V6Q895 157 895 442L892 445H854L807 357Q722 224 595 224Q408 224 332 433L323 506V552Q323 735 510 938Q825 1324 914 1489L917 1492Z"/></g>
+    <g fill="#0f1b2d"><path transform="translate(35.00 92.00) scale(0.01465 -0.01465)" d="M-16 0V121H106L668 1493H907L1470 121H1612V0H913V121H1059L936 426H375L250 121H428V0ZM424 547H887L657 1118Z"/></g>
+    <!-- Ornate center spade -->
+    <path d="M0 -48 C-6 -20 -38 2 -38 26 C-38 42 -26 52 -13 52 C-5 52 0 48 0 42 C0 48 5 52 13 52 C26 52 38 42 38 26 C38 2 6 -20 0 -48 Z" fill="#0f1b2d" stroke="url(#nzGold)" stroke-width="2.4"/>
+    <path d="M0 36 C-2 52 -10 62 -20 68 L20 68 C10 62 2 52 0 36 Z" fill="#0f1b2d" stroke="url(#nzGold)" stroke-width="2"/>
+    <circle cx="0" cy="14" r="7" fill="url(#nzGold)"/>
+  </g>
+
+  <!-- Top gold diamond accent -->
+  <path d="M120 56 H196 M224 56 H300" stroke="url(#nzGold)" stroke-width="1.5" opacity=".7"/>
+  <rect x="206" y="52" width="8" height="8" fill="url(#nzGold)" transform="rotate(45 210 56)"/>
+</svg>

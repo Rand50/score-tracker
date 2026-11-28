@@ -1,0 +1,16 @@
+<div id="v262-ctl" class="v262-ctl" role="toolbar" aria-label="Game controls" hidden>
+  <div class="v262-ctl-in">
+    <button type="button" id="v262-leave" class="v262-btn v262-leave" aria-label="Leave game and go to Play" onclick="window.TallyItV262 && TallyItV262.leave()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+      <span>Leave</span>
+    </button>
+    <button type="button" id="v262-log" class="v262-btn v262-log" aria-label="Log game to History" onclick="window.TallyItV262 && TallyItV262.log()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+      <span>Log</span>
+    </button>
+    <button type="button" id="v262-delete" class="v262-btn v262-delete" aria-label="Delete this game without saving" onclick="window.TallyItV262 && TallyItV262.askDelete()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+      <span>Delete</span>
+    </button>
+  </div>
+</div>

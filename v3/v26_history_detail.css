@@ -1,0 +1,201 @@
+/* =========================================================================
+   TallyIt v26 - History past-game detail sheet (neutral).
+   Every selector starts with .v26-hist-* / #v26-hist-*; no theme-* selectors,
+   no bare element selectors, no @media. Per-game looks live in
+   v26_history_detail_themes.css (body.theme-<game> scoped) and only swap
+   the --v26-* tokens below. Mobile-first at 390px; wide tables scroll inside
+   .v26-hist-scroll with a sticky player column; the page never scrolls sideways.
+   ========================================================================= */
+.v26-hist-sheet {
+  --v26-bg: var(--bg, #0b1220);
+  --v26-bg2: var(--bg, #0b1220);
+  --v26-surface: var(--surface, #151c2c);
+  --v26-surface2: var(--surface2, #1e293b);
+  --v26-text: var(--text, #f1f5f9);
+  --v26-muted: var(--muted, #94a3b8);
+  --v26-border: var(--border, rgba(255, 255, 255, 0.08));
+  --v26-accent: var(--accent, #22d3ee);
+  --v26-accent-ink: #04212a;
+  --v26-win: #fbbf24;
+  --v26-win-soft: rgba(251, 191, 36, 0.13);
+  --v26-danger: var(--danger, #f43f5e);
+  --v26-neg: #fb7185;
+  --v26-bar: #0b1220;
+  --v26-input: #0f172a;
+  --v26-font: var(--font, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif);
+  --v26-head-font: var(--v26-font);
+  position: fixed;
+  inset: 0;
+  z-index: 450;
+  display: flex;
+  justify-content: center;
+  background: var(--v26-bg);
+  background-image: linear-gradient(180deg, var(--v26-bg2) 0, var(--v26-bg) 260px);
+  color: var(--v26-text);
+  font-family: var(--v26-font);
+  -webkit-text-size-adjust: 100%;
+  overflow: hidden;
+}
+.v26-hist-sheet[hidden] { display: none !important; }
+.v26-hist-sheet *, .v26-hist-sheet *::before, .v26-hist-sheet *::after { box-sizing: border-box; }
+.v26-hist-sheet.v26-hist-enter { animation: v26-hist-fade 260ms ease-out both; }
+.v26-hist-sheet.v26-hist-reduced { animation: none; }
+@keyframes v26-hist-fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+.v26-hist-panel { display: flex; flex-direction: column; width: 100%; height: 100%; min-width: 0; }
+.v26-hist-bar {
+  flex: 0 0 auto;
+  display: flex; align-items: center; gap: 8px;
+  padding: calc(var(--tt-sat) + 12px) max(12px, calc((100% - 760px) / 2 + 12px)) 10px;
+  background: var(--v26-bar);
+  border-bottom: 1px solid var(--v26-border);
+}
+.v26-hist-title { flex: 1 1 auto; min-width: 0; margin: 0; font: 700 1.06rem/1.25 var(--v26-head-font); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; outline: none; }
+.v26-hist-bar-right { flex: 0 0 auto; display: flex; gap: 8px; }
+.v26-hist-body { flex: 1 1 auto; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
+.v26-hist-col { width: 100%; max-width: 760px; margin: 0 auto; padding: 14px 14px calc(28px + env(safe-area-inset-bottom)); min-width: 0; }
+.v26-hist-foot { flex: 0 0 auto; background: var(--v26-bar); border-top: 1px solid var(--v26-border); }
+.v26-hist-foot .v26-hist-col { padding-top: 10px; padding-bottom: max(10px, env(safe-area-inset-bottom)); }
+.v26-hist-foot-row { display: flex; gap: 10px; justify-content: flex-end; }
+.v26-hist-foot-row .v26-hist-btn { flex: 1 1 0; max-width: 260px; }
+
+/* ---------- buttons + icons ---------- */
+.v26-hist-ic { width: 20px; height: 20px; flex: 0 0 auto; display: block; }
+.v26-hist-ic-sm { width: 15px; height: 15px; }
+.v26-hist-iconbtn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 40px; height: 40px; min-width: 40px; padding: 0; border-radius: 12px;
+  border: 1px solid var(--v26-border); background: var(--v26-surface); color: var(--v26-text);
+  cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
+.v26-hist-iconbtn:disabled { opacity: 0.35; cursor: default; }
+.v26-hist-iconbtn.v26-hist-sm { width: 36px; height: 36px; min-width: 36px; border-radius: 10px; }
+.v26-hist-iconbtn.v26-hist-xs { width: 28px; height: 28px; min-width: 28px; border-radius: 8px; margin: 4px auto 0; background: transparent; color: var(--v26-muted); }
+.v26-hist-iconbtn.v26-hist-xs .v26-hist-ic { width: 16px; height: 16px; }
+.v26-hist-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  min-height: 44px; padding: 0 16px; border-radius: 12px; border: 1px solid var(--v26-border);
+  background: var(--v26-surface); color: var(--v26-text); font: 700 0.95rem/1 var(--v26-font);
+  cursor: pointer; -webkit-tap-highlight-color: transparent; white-space: nowrap;
+}
+.v26-hist-btn:disabled { opacity: 0.55; cursor: default; }
+.v26-hist-btn-primary { background: var(--v26-accent); border-color: transparent; color: var(--v26-accent-ink); }
+.v26-hist-btn-edit { min-height: 40px; padding: 0 14px; background: var(--v26-accent); border-color: transparent; color: var(--v26-accent-ink); }
+.v26-hist-btn-ghost { background: transparent; }
+.v26-hist-sec .v26-hist-btn-ghost { margin-top: 10px; }
+.v26-hist-iconbtn:focus-visible, .v26-hist-btn:focus-visible, .v26-hist-in:focus-visible, .v26-hist-scroll:focus-visible { outline: 2px solid var(--v26-accent); outline-offset: 2px; }
+
+/* ---------- header card ---------- */
+.v26-hist-head { display: flex; gap: 12px; align-items: center; padding: 14px; border-radius: 16px; background: var(--v26-surface); border: 1px solid var(--v26-border); }
+.v26-hist-art { width: 56px; height: 56px; flex: 0 0 56px; border-radius: 14px; object-fit: cover; background: var(--v26-surface2); }
+.v26-hist-art-ph { display: flex; align-items: center; justify-content: center; font: 800 1.4rem/1 var(--v26-head-font); color: var(--v26-muted); }
+.v26-hist-head-txt { min-width: 0; flex: 1 1 auto; }
+.v26-hist-game { font: 800 1.2rem/1.2 var(--v26-head-font); overflow-wrap: anywhere; }
+.v26-hist-sub { margin-top: 3px; color: var(--v26-muted); font-size: 0.86rem; line-height: 1.35; overflow-wrap: anywhere; }
+.v26-hist-edited { display: inline-flex; align-items: center; gap: 5px; margin-top: 6px; padding: 3px 9px; border-radius: 999px; background: var(--v26-surface2); color: var(--v26-text); font-size: 0.78rem; font-weight: 700; max-width: 100%; }
+.v26-hist-edited span { overflow-wrap: anywhere; }
+.v26-hist-edited.is-fresh { box-shadow: 0 0 0 2px var(--v26-accent); }
+
+/* ---------- winner + notes ---------- */
+.v26-hist-winner { display: flex; align-items: center; gap: 12px; margin-top: 12px; padding: 12px 14px; border-radius: 14px; background: linear-gradient(var(--v26-win-soft), var(--v26-win-soft)), var(--v26-surface); border: 1px solid var(--v26-win); color: var(--v26-text); }
+.v26-hist-winner > .v26-hist-ic { width: 26px; height: 26px; color: var(--v26-win); }
+.v26-hist-winner-k { font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--v26-muted); }
+.v26-hist-winner-v { font: 800 1.08rem/1.25 var(--v26-head-font); overflow-wrap: anywhere; }
+.v26-hist-winner-none { justify-content: center; color: var(--v26-muted); border-style: dashed; }
+.v26-hist-note { display: flex; gap: 8px; align-items: flex-start; margin-top: 12px; padding: 10px 12px; border-radius: 12px; background: var(--v26-surface); border: 1px dashed var(--v26-border); color: var(--v26-muted); font-size: 0.85rem; line-height: 1.4; }
+.v26-hist-note .v26-hist-ic { margin-top: 2px; }
+.v26-hist-err { margin: 0 0 12px; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--v26-danger); color: var(--v26-text); background: rgba(244, 63, 94, 0.1); font-size: 0.88rem; line-height: 1.4; }
+.v26-hist-quiet { padding: 40px 12px; text-align: center; color: var(--v26-muted); font-size: 0.95rem; }
+.v26-hist-ro { display: flex; align-items: center; justify-content: center; gap: 6px; margin: 18px 0 0; color: var(--v26-muted); font-size: 0.82rem; text-align: center; }
+.v26-hist-legend { margin: 8px 2px 0; color: var(--v26-muted); font-size: 0.8rem; line-height: 1.4; }
+
+/* ---------- sections ---------- */
+.v26-hist-sec { margin-top: 18px; min-width: 0; }
+.v26-hist-sec-h { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin: 0 2px 8px; }
+.v26-hist-sec-h h3 { margin: 0; font: 800 0.98rem/1.2 var(--v26-head-font); }
+.v26-hist-hint { color: var(--v26-muted); font-size: 0.78rem; text-align: right; }
+
+/* ---------- standings ---------- */
+.v26-hist-standings { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.v26-hist-st { display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 8px 12px; border-radius: 12px; background: var(--v26-surface); border: 1px solid var(--v26-border); }
+.v26-hist-st.is-winner { border-color: var(--v26-win); }
+.v26-hist-place { flex: 0 0 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--v26-surface2); font-weight: 800; font-size: 0.9rem; }
+.v26-hist-st.is-winner .v26-hist-place { background: var(--v26-win); color: #1f1300; }
+.v26-hist-st.is-winner .v26-hist-place .v26-hist-ic { width: 17px; height: 17px; }
+.v26-hist-st-name { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; }
+.v26-hist-pname { font-weight: 700; overflow-wrap: anywhere; }
+.v26-hist-members { color: var(--v26-muted); font-size: 0.78rem; overflow-wrap: anywhere; font-weight: 500; }
+.v26-hist-st-right { flex: 0 0 auto; display: flex; flex-direction: column; align-items: flex-end; }
+.v26-hist-score { font: 800 1.2rem/1.1 var(--v26-head-font); font-variant-numeric: tabular-nums; }
+.v26-hist-ord { color: var(--v26-muted); font-size: 0.72rem; }
+.v26-hist-out { color: var(--v26-muted); font-size: 0.82rem; font-weight: 700; white-space: nowrap; }
+.v26-hist-alive { color: var(--v26-win); font-weight: 800; font-size: 0.9rem; }
+
+/* ---------- tables: scroll inside their own box, sticky player column ---------- */
+.v26-hist-scroll { position: relative; max-width: 100%; overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; border-radius: 12px; border: 1px solid var(--v26-border); background: var(--v26-surface); overscroll-behavior-x: contain; }
+.v26-hist-table { border-collapse: separate; border-spacing: 0; min-width: 100%; font-size: 0.88rem; font-variant-numeric: tabular-nums; }
+.v26-hist-table th, .v26-hist-table td { padding: 8px 8px; text-align: center; border-bottom: 1px solid var(--v26-border); white-space: nowrap; vertical-align: middle; }
+.v26-hist-table tbody tr:last-child th, .v26-hist-table tbody tr:last-child td { border-bottom: 0; }
+.v26-hist-table thead th { font-size: 0.74rem; font-weight: 700; color: var(--v26-muted); background: var(--v26-surface2); }
+.v26-hist-table .v26-hist-sticky { position: sticky; left: 0; z-index: 2; text-align: left; background: var(--v26-surface); min-width: 96px; max-width: 132px; white-space: normal; box-shadow: 1px 0 0 var(--v26-border); }
+.v26-hist-table thead .v26-hist-sticky { background: var(--v26-surface2); z-index: 3; }
+.v26-hist-table tr.is-winner .v26-hist-sticky .v26-hist-pname { color: var(--v26-win); }
+.v26-hist-table .v26-hist-sticky .v26-hist-pname { display: block; font-size: 0.86rem; line-height: 1.2; }
+.v26-hist-table .v26-hist-sticky .v26-hist-members { display: block; font-size: 0.7rem; }
+.v26-hist-th { display: block; font-weight: 800; color: var(--v26-text); font-size: 0.78rem; }
+.v26-hist-th-cat { white-space: normal; min-width: 52px; line-height: 1.15; }
+.v26-hist-thsub { display: block; font-size: 0.66rem; font-weight: 500; max-width: 88px; overflow: hidden; text-overflow: ellipsis; margin: 0 auto; }
+.v26-hist-table td { min-width: 44px; }
+.v26-hist-pts { display: block; font-weight: 700; }
+.v26-hist-pts.is-neg { color: var(--v26-neg); }
+.v26-hist-pts.is-hit { color: var(--v26-accent); }
+.v26-hist-cellsub { display: block; font-size: 0.68rem; color: var(--v26-muted); }
+.v26-hist-nil { color: var(--v26-muted); opacity: 0.6; }
+.v26-hist-total { font-weight: 800; background: var(--v26-surface2); }
+.v26-hist-table thead .v26-hist-total { color: var(--v26-text); }
+.v26-hist-table .is-muted { opacity: 0.55; font-style: italic; }
+.v26-hist-table-sum td { min-width: 72px; }
+.v26-hist-table-sum tr.is-changed td, .v26-hist-table-sum tr.is-changed th { background: var(--v26-win-soft); }
+.v26-hist-was { color: var(--v26-muted); text-decoration: line-through; font-weight: 500; margin-right: 2px; }
+
+/* ---------- eliminations ---------- */
+.v26-hist-elim, .v26-hist-order { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.v26-hist-elim li, .v26-hist-order li { display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 8px 12px; border-radius: 12px; background: var(--v26-surface); border: 1px solid var(--v26-border); }
+.v26-hist-elim li.is-winner, .v26-hist-order li.is-winner { border-color: var(--v26-win); }
+.v26-hist-elim li.is-winner .v26-hist-ic { color: var(--v26-win); }
+.v26-hist-elim-r, .v26-hist-order-r { flex: 0 0 auto; min-width: 104px; color: var(--v26-muted); font-size: 0.8rem; font-weight: 700; }
+.v26-hist-elim-n, .v26-hist-order-n { flex: 1 1 auto; min-width: 0; font-weight: 700; overflow-wrap: anywhere; }
+.v26-hist-order-btns { flex: 0 0 auto; display: flex; gap: 6px; }
+.v26-hist-order li.is-winner .v26-hist-order-r { color: var(--v26-win); }
+
+/* ---------- inputs ---------- */
+.v26-hist-in {
+  width: 64px; min-height: 40px; padding: 6px 6px; border-radius: 10px; border: 1px solid var(--v26-border);
+  background: var(--v26-input); color: var(--v26-text); font: 700 16px/1.1 var(--v26-font); text-align: center;
+  font-variant-numeric: tabular-nums; -moz-appearance: textfield; appearance: textfield;
+}
+.v26-hist-in::-webkit-outer-spin-button, .v26-hist-in::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.v26-hist-in-name { width: 100%; min-width: 0; text-align: left; font-weight: 600; }
+.v26-hist-table-edit td { padding: 6px 5px; }
+.v26-hist-table-edit .v26-hist-sticky { min-width: 112px; padding: 6px 6px; }
+.v26-hist-ecell { min-width: 0; }
+.v26-hist-mini { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 0.64rem; color: var(--v26-muted); font-weight: 700; }
+.v26-hist-mini + .v26-hist-mini { margin-top: 4px; }
+.v26-hist-mini .v26-hist-in { width: 56px; min-height: 36px; }
+.v26-hist-chk { display: flex; align-items: center; justify-content: center; gap: 4px; margin-top: 4px; font-size: 0.7rem; color: var(--v26-muted); font-weight: 700; min-height: 28px; }
+.v26-hist-chk input { width: 18px; height: 18px; margin: 0; accent-color: var(--v26-accent); }
+.v26-hist-lockname { display: inline-flex; align-items: center; gap: 5px; min-width: 0; }
+.v26-hist-lockname .v26-hist-ic { width: 14px; height: 14px; color: var(--v26-muted); }
+.v26-hist-names { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+.v26-hist-names .v26-hist-lockname { min-height: 40px; padding: 0 10px; border-radius: 10px; border: 1px solid var(--v26-border); background: var(--v26-surface); }
+
+/* ---------- History list rows (decorated by v26_history_detail.js) ---------- */
+.v26-hist-row { cursor: pointer; -webkit-tap-highlight-color: transparent; transition: border-color 150ms ease, background-color 150ms ease; }
+.v26-hist-row:focus-visible { outline: 2px solid var(--accent, #22d3ee); outline-offset: 2px; }
+.v26-hist-rowfoot { display: flex; align-items: center; justify-content: flex-end; gap: 8px; margin-top: 6px; }
+.v26-hist-more { display: inline-flex; align-items: center; gap: 2px; color: var(--accent, #22d3ee); font-size: 0.8rem; font-weight: 700; }
+.v26-hist-edchip { padding: 2px 8px; border-radius: 999px; background: rgba(255, 255, 255, 0.08); color: var(--muted, #94a3b8); font-size: 0.72rem; font-weight: 700; }
+.v26-hist-edchip[hidden] { display: none; }
+.v26-hist-ic-xs { width: 12px; height: 12px; }
+.v26-hist-link { display: inline-flex; align-items: center; gap: 3px; margin-left: 6px; padding: 1px 6px; border-radius: 999px; background: var(--v26-surface2); color: var(--v26-muted); font-size: 0.66rem; font-weight: 700; vertical-align: 2px; white-space: nowrap; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+.v26-hist-member { display: inline-flex; align-items: center; flex-wrap: wrap; margin-right: 8px; }

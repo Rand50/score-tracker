@@ -1,0 +1,8 @@
+/* TallyIt v24.2 — inline SVG icons that replace the last emojis (trophy on Flip 7 Finish, people on setup group note).
+   Neutral: class-scoped only, no theme-* selectors, no bare elements, no @media. */
+.v24-2-ico { width: 1.05em; height: 1.05em; flex: 0 0 auto; vertical-align: -.16em; margin-right: .35em; stroke: currentColor; }
+.f7-finish .v24-2-ico { margin-right: 0; }
+.f7-sbtn .v24-2-ico { width: 1.1em; height: 1.1em; }
+.soc-active-group-note #setup-active-group-label { display: inline-flex; align-items: center; gap: .35em; min-width: 0; }
+.soc-active-group-note #setup-active-group-label .v24-2-ico { margin-right: 0; }
+.soc-active-group-note #setup-active-group-label > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }

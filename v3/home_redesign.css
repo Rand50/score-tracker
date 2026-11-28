@@ -1,0 +1,540 @@
+/* ==========================================================================
+   Score Tracker — Home Screen & Global Shell Redesign (v12)
+   Restrained obsidian-ink / warm-alabaster editorial aesthetic.
+   Zero basic emojis; uniform 1.75px custom SVG icons.
+   Scoped so body.theme-catan / theme-flip7 / theme-carcassonne / theme-nertz
+   remain completely untouched.
+   ========================================================================== */
+
+:root {
+  --bg: #0c0d10;
+  --surface: #14161b;
+  --surface2: #1c1f26;
+  --surface-hover: #232730;
+  --text: #f4f4f6;
+  --muted: #8b909c;
+  --muted-2: #5d626e;
+  --accent: #f4f1ea;          /* Warm alabaster primary CTA */
+  --accent-ink: #0c0d10;
+  --accent-brass: #d4a853;    /* Subtle warm brass active/live accent */
+  --accent-dim: #b58d3d;
+  --success: #34d399;
+  --danger: #e55353;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.14);
+  --radius: 14px;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 8px 24px rgba(0, 0, 0, 0.28);
+  --font: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', 'Segoe UI', Roboto, system-ui, sans-serif;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ---------- Refined Top Header ---------- */
+.app-header {
+  padding: calc(1.1rem + var(--tt-sat-c)) 1.15rem 0.75rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  max-width: 760px;
+  margin: 0 auto;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.app-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-width: 0;
+}
+
+.app-brand-mark {
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  background: var(--surface2);
+  border: 1px solid var(--border-strong);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-brass);
+  flex: 0 0 auto;
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.app-header-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.app-signout-btn {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  padding: 0.38rem 0.72rem;
+  border-radius: 999px;
+  font: 500 0.78rem var(--font);
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  transition: color .15s ease, border-color .15s ease, background .15s ease;
+}
+
+.app-signout-btn:hover,
+.app-signout-btn:active {
+  color: var(--text);
+  border-color: var(--border-strong);
+  background: var(--surface2);
+}
+
+/* ---------- Subtle Sync Status Pill ---------- */
+#sync-status {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.38rem;
+  padding: 0.26rem 0.6rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  color: var(--muted);
+  line-height: 1.1;
+  max-width: 170px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#sync-status:empty {
+  display: none;
+}
+
+#sync-status::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--success);
+  flex: 0 0 auto;
+}
+
+#sync-status[data-state="error"] {
+  color: #e6b86a;
+  background: rgba(212, 168, 83, 0.09);
+  border-color: rgba(212, 168, 83, 0.24);
+}
+
+#sync-status[data-state="error"]::before {
+  background: var(--accent-brass);
+}
+
+/* ---------- Shared Neutral Controls (restrained) ---------- */
+.view {
+  max-width: 760px;
+  padding: 1rem 1.15rem 1.25rem;
+}
+
+.card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 1.15rem;
+  margin-bottom: 0.9rem;
+  border: 1px solid var(--border);
+  box-shadow: none;
+}
+
+.btn {
+  background: var(--surface2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 0.72rem 1.1rem;
+  border-radius: 11px;
+  font: 600 0.92rem var(--font);
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  transition: transform .08s ease, background .15s ease, border-color .15s ease, opacity .15s ease;
+}
+
+.btn:active:not(:disabled) { transform: scale(0.985); }
+
+.btn.primary {
+  background: var(--accent);
+  color: var(--accent-ink);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.btn.primary:hover:not(:disabled) {
+  background: #ffffff;
+}
+
+/* ---------- Home View (#view-home) ---------- */
+#view-home {
+  padding-top: 1.25rem;
+}
+
+.home-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Editorial Action Block (no giant emoji, no AI boilerplate) */
+.home-hero {
+  background: linear-gradient(180deg, #171a21 0%, #13151a 100%);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.35rem 1.25rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.home-hero-top {
+  display: flex;
+  flex-direction: column;
+  gap: 0.28rem;
+}
+
+.home-eyebrow {
+  margin: 0;
+  font-size: 0.68rem;
+  font-weight: 650;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--accent-brass);
+}
+
+.home-title {
+  margin: 0;
+  font-size: 1.48rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.18;
+  color: var(--text);
+}
+
+.home-primary-cta {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  padding: 0.88rem 1.1rem;
+  border-radius: 11px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: var(--accent);
+  color: var(--accent-ink);
+  font: 650 0.95rem var(--font);
+  letter-spacing: -0.015em;
+  cursor: pointer;
+  transition: transform .08s ease, background .15s ease;
+}
+
+.home-primary-cta:hover {
+  background: #ffffff;
+}
+
+.home-primary-cta:active {
+  transform: scale(0.985);
+}
+
+.home-primary-cta svg {
+  width: 17px;
+  height: 17px;
+  flex: 0 0 auto;
+}
+
+/* Compact Quick-Pick Row */
+.home-quick-row {
+  display: flex;
+  align-items: center;
+  gap: 0.42rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-top: 0.1rem;
+}
+
+.home-quick-row::-webkit-scrollbar { display: none; }
+
+.home-quick-chip {
+  flex: 0 0 auto;
+  background: rgba(255, 255, 255, 0.035);
+  color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.36rem 0.72rem;
+  font: 500 0.78rem var(--font);
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  transition: color .15s ease, border-color .15s ease, background .15s ease;
+}
+
+.home-quick-chip:hover,
+.home-quick-chip:active {
+  color: var(--text);
+  border-color: var(--border-strong);
+  background: var(--surface2);
+}
+
+/* Conditional Active Game Resume Banner (#btn-resume-game) */
+.home-resume-card {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.85rem;
+  text-align: left;
+  padding: 0.95rem 1.05rem;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(212, 168, 83, 0.11) 0%, rgba(20, 22, 27, 0.96) 72%);
+  border: 1px solid rgba(212, 168, 83, 0.30);
+  color: var(--text);
+  cursor: pointer;
+  transition: border-color .15s ease, transform .08s ease, background .15s ease;
+}
+
+.home-resume-card:hover {
+  border-color: rgba(212, 168, 83, 0.5);
+}
+
+.home-resume-card:active {
+  transform: scale(0.99);
+}
+
+.home-resume-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.home-live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent-brass);
+  box-shadow: 0 0 0 4px rgba(212, 168, 83, 0.16);
+  flex: 0 0 auto;
+}
+
+.home-resume-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.home-resume-label {
+  font-size: 0.68rem;
+  font-weight: 650;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--accent-brass);
+}
+
+.home-resume-title {
+  font-size: 0.94rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.home-resume-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--accent);
+  flex: 0 0 auto;
+}
+
+.home-resume-cta svg {
+  width: 15px;
+  height: 15px;
+}
+
+/* Recent Games Section */
+.home-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.home-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0.15rem;
+}
+
+.home-section-title {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 650;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.home-section-link {
+  background: none;
+  border: none;
+  padding: 0.15rem 0.25rem;
+  color: var(--muted);
+  font: 500 0.78rem var(--font);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  transition: color .15s ease;
+}
+
+.home-section-link:hover {
+  color: var(--text);
+}
+
+.home-recent-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.25rem 1.05rem;
+}
+
+#recent-list .recent-item {
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.92rem;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+#recent-list .recent-item:last-child {
+  border-bottom: none;
+}
+
+#recent-list .recent-item strong {
+  font-weight: 620;
+  letter-spacing: -0.015em;
+  color: var(--text);
+}
+
+#recent-list .recent-item .small {
+  margin-top: 0.22rem;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+#recent-list > p.small {
+  margin: 0;
+  padding: 1.35rem 0.25rem;
+  text-align: center;
+  font-size: 0.84rem;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+/* ---------- Refined Bottom Nav Bar (Uniform 1.75px Inline SVG Icons) ---------- */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  display: flex;
+  justify-content: space-around;
+  align-items: stretch;
+  background: #0c0d10;
+  border-top: 1px solid var(--border);
+  padding: 0.42rem 0.25rem calc(0.45rem + env(safe-area-inset-bottom, 0px));
+  font-family: var(--font);
+}
+
+.bottom-nav button {
+  position: relative;
+  background: none;
+  border: none;
+  color: var(--muted);
+  font: 500 0.68rem var(--font);
+  letter-spacing: 0.01em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.26rem;
+  cursor: pointer;
+  min-width: 58px;
+  padding: 0.24rem 0.35rem;
+  transition: color .15s ease;
+}
+
+.bottom-nav button .icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  line-height: 1;
+}
+
+.bottom-nav button .icon svg {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+.bottom-nav button.active {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.bottom-nav button.active::before {
+  content: "";
+  position: absolute;
+  top: -0.42rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 22px;
+  height: 2px;
+  border-radius: 0 0 2px 2px;
+  background: var(--accent-brass);
+}
+
+/* v24.2: every screen uses the same Play / Tracker / Friends / History nav */
+
+/* v24.2 device pass: on tablet and desktop the full-width bar keeps its
+   background edge to edge, but the four tabs stay in a centered 640px
+   cluster instead of spreading across 1180-1440px. Phone (<=648px) is unchanged. */
+#app-shell > .bottom-nav {
+  padding-left: max(.25rem, calc(50% - 320px));
+  padding-right: max(.25rem, calc(50% - 320px));
+}
+
+/* v24.2: Tracker with no active game shows "Start a game" (goes to Play)
+   instead of Finish Game, the leave X and the tap-to-score hint. */
+#generic-board .gen-start { display: none; }
+#generic-board.is-empty .gen-start { display: inline-flex; align-items: center; justify-content: center; }
+#generic-board.is-empty #gen-save,
+#generic-board.is-empty #gen-leave,
+#generic-board.is-empty .gen-hint { display: none !important; }

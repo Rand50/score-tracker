@@ -1,0 +1,308 @@
+<!-- =========================================================================
+     TallyIt v20 UI Features Markup
+     Zero emojis; crisp 1.75px inline SVGs; mobile-first 390x844.
+     Split into clearly marked mountable blocks for build.py / shell.html.
+     ========================================================================= -->
+
+<!-- ==================== BLOCK 1: REQUEST A GAME TRIGGER ====================
+     Mount inside <section id="view-new"> right below <div class="game-grid" id="game-grid"></div> -->
+<!-- V20_REQUEST_GAME_TRIGGER_START -->
+<div id="v20-request-game-slot" class="v20-req-slot">
+  <button type="button" id="btn-open-request-game" class="v20-req-trigger" onclick="window.openRequestGameModal && openRequestGameModal()">
+    <span class="v20-req-trigger-left">
+      <span class="v20-req-ico" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="9"/>
+          <line x1="12" y1="8" x2="12" y2="16"/>
+          <line x1="8" y1="12" x2="16" y2="12"/>
+        </svg>
+      </span>
+      <span class="v20-req-copy">
+        <span class="v20-req-title">Request a Game</span>
+        <span class="v20-req-sub">Don't see your tabletop favorite? Suggest it in seconds</span>
+      </span>
+    </span>
+    <svg class="v20-req-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <polyline points="9 18 15 12 9 6"/>
+    </svg>
+  </button>
+</div>
+<!-- V20_REQUEST_GAME_TRIGGER_END -->
+
+
+<!-- ==================== BLOCK 2: VARIATION POPULARITY BAR ==================
+     Mount inside <section id="view-new"> right below <select id="version-select"></select> -->
+<!-- V20_VARIATION_BAR_START -->
+<div id="v20-variation-bar" class="v20-var-bar" hidden>
+  <span id="var-pop-pill" class="v20-var-pop-pill">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <polygon points="12 2.5 15 8.8 21.8 9.6 16.8 14.3 18.1 21 12 17.7 5.9 21 7.2 14.3 2.2 9.6 9 8.8 12 2.5"/>
+    </svg>
+    <span id="var-pop-text">Standard rules</span>
+  </span>
+  <button type="button" id="btn-compare-variations" class="v20-compare-btn" onclick="window.openVariationsModal && openVariationsModal()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <rect x="3" y="4" width="7" height="16" rx="1.5"/>
+      <rect x="14" y="4" width="7" height="16" rx="1.5"/>
+    </svg>
+    <span>Compare Variations</span>
+  </button>
+</div>
+<!-- V20_VARIATION_BAR_END -->
+
+
+<!-- ==================== BLOCK 3: SUBTLE ADMIN STATS BUTTON =================
+     Mount in Account/Settings or Social profile header. Hidden unless isAdmin === true -->
+<!-- V20_ADMIN_TRIGGER_START -->
+<button type="button" id="btn-open-admin" class="v20-admin-trigger hidden" hidden onclick="window.openAdminScreen && openAdminScreen()">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <line x1="18" y1="20" x2="18" y2="10"/>
+    <line x1="12" y1="20" x2="12" y2="4"/>
+    <line x1="6" y1="20" x2="6" y2="14"/>
+  </svg>
+  <span>Admin Stats</span>
+</button>
+<!-- V20_ADMIN_TRIGGER_END -->
+
+
+<!-- ==================== BLOCK 4: REQUEST A GAME MODAL ======================
+     Mount inside #app alongside other modals -->
+<!-- V20_REQUEST_GAME_MODAL_START -->
+<div id="req-game-modal" class="v20-modal-backdrop hidden" hidden role="dialog" aria-modal="true" aria-labelledby="req-game-modal-title" onclick="if(event.target===this && window.closeRequestGameModal) closeRequestGameModal()">
+  <div class="v20-modal-sheet">
+    <header class="v20-modal-head">
+      <div>
+        <h3 id="req-game-modal-title" class="v20-modal-title">Request a Game</h3>
+        <p class="v20-modal-sub">Tell us what your table plays next.</p>
+      </div>
+      <button type="button" class="v20-modal-close" aria-label="Close" onclick="window.closeRequestGameModal && closeRequestGameModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </header>
+
+    <div class="v20-modal-body">
+      <form id="req-game-form" onsubmit="event.preventDefault(); window.submitGameRequest && submitGameRequest();">
+        <div class="v20-field">
+          <label class="v20-label" for="req-game-name">
+            <span>Name of Game</span>
+            <span class="v20-label-opt">Required</span>
+          </label>
+          <input type="text" id="req-game-name" class="v20-input" placeholder="e.g. Azul, Wingspan, Splendor" maxlength="100" required autocomplete="off">
+        </div>
+
+        <div class="v20-field">
+          <label class="v20-label" for="req-game-url">
+            <span>Website link</span>
+            <span class="v20-label-opt">Optional</span>
+          </label>
+          <input type="url" id="req-game-url" class="v20-input" placeholder="https://boardgamegeek.com/..." maxlength="300" autocomplete="off">
+          <p class="v20-help">Add a BoardGameGeek or publisher link so we build the exact edition.</p>
+        </div>
+
+        <p id="req-game-error" class="v20-error" role="alert" hidden></p>
+
+        <button type="submit" id="btn-submit-game-request" class="v20-btn-primary">Submit Request</button>
+      </form>
+
+      <div id="req-game-success" class="v20-confirm-box" hidden>
+        <div class="v20-confirm-ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+        </div>
+        <h4 class="v20-confirm-title">Request Received</h4>
+        <p class="v20-confirm-desc">
+          We added <strong id="req-game-success-name">your game</strong> to the TallyIt build queue.
+        </p>
+        <div class="v20-confirm-actions">
+          <button type="button" class="v20-btn-secondary" onclick="window.resetRequestGameForm && resetRequestGameForm()">Request Another</button>
+          <button type="button" class="v20-btn-primary" onclick="window.closeRequestGameModal && closeRequestGameModal()">Done</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- V20_REQUEST_GAME_MODAL_END -->
+
+
+<!-- ==================== BLOCK 5: COMPARE VARIATIONS MODAL ==================
+     Mount inside #app alongside other modals -->
+<!-- V20_VARIATIONS_MODAL_START -->
+<div id="var-compare-modal" class="v20-modal-backdrop hidden" hidden role="dialog" aria-modal="true" aria-labelledby="var-compare-title" onclick="if(event.target===this && window.closeVariationsModal) closeVariationsModal()">
+  <div class="v20-modal-sheet">
+    <header class="v20-modal-head">
+      <div>
+        <h3 id="var-compare-title" class="v20-modal-title">Compare Variations</h3>
+        <p id="var-compare-sub" class="v20-modal-sub">Tap any variation to select it for this game.</p>
+      </div>
+      <button type="button" class="v20-modal-close" aria-label="Close" onclick="window.closeVariationsModal && closeVariationsModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </header>
+    <div class="v20-modal-body">
+      <div id="var-compare-list" class="v20-var-list" role="radiogroup" aria-label="Game variations"></div>
+    </div>
+  </div>
+</div>
+<!-- V20_VARIATIONS_MODAL_END -->
+
+
+<!-- ==================== BLOCK 6: PRIVATE ADMIN STATS PAGE ==================
+     Mount inside #app as a sibling of other <section class="view"> screens -->
+<!-- V20_ADMIN_SCREEN_START -->
+<section id="admin-screen" class="view v20-admin-view hidden" hidden aria-label="Admin Stats">
+  <header class="v20-admin-head">
+    <div class="v20-admin-head-left">
+      <button type="button" id="btn-admin-back" class="v20-admin-icon-btn" aria-label="Back" onclick="window.closeAdminScreen ? closeAdminScreen() : (window.showView && showView('new'))">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <div>
+        <h2 class="v20-admin-title">Admin Stats</h2>
+        <p id="admin-last-updated" class="v20-admin-sub">Private TallyIt telemetry</p>
+      </div>
+    </div>
+    <button type="button" id="btn-admin-refresh" class="v20-admin-icon-btn" aria-label="Refresh stats" onclick="window.loadAdminStats && loadAdminStats(true)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="23 4 23 10 17 10"/>
+        <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+      </svg>
+    </button>
+  </header>
+
+  <div id="admin-status-banner" class="v20-admin-banner" hidden role="status"></div>
+
+  <!-- KPI Summary Grid -->
+  <div id="admin-kpi-grid" class="v20-kpi-grid">
+    <div class="v20-kpi-card is-accent">
+      <div class="v20-kpi-label">All-Time Games</div>
+      <div id="kpi-games-total" class="v20-kpi-val">—</div>
+      <div class="v20-kpi-foot">Completed plays</div>
+    </div>
+    <div class="v20-kpi-card">
+      <div class="v20-kpi-label">Last 7 Days</div>
+      <div id="kpi-games-7d" class="v20-kpi-val">—</div>
+      <div class="v20-kpi-foot">Weekly velocity</div>
+    </div>
+    <div class="v20-kpi-card">
+      <div class="v20-kpi-label">Last 30 Days</div>
+      <div id="kpi-games-30d" class="v20-kpi-val">—</div>
+      <div class="v20-kpi-foot">Monthly plays</div>
+    </div>
+    <div class="v20-kpi-card">
+      <div class="v20-kpi-label">Registered Users</div>
+      <div id="kpi-users-total" class="v20-kpi-val">—</div>
+      <div class="v20-kpi-foot">Active accounts</div>
+    </div>
+    <div class="v20-kpi-card">
+      <div class="v20-kpi-label">Game Requests</div>
+      <div id="kpi-requests-total" class="v20-kpi-val">—</div>
+      <div id="kpi-requests-new" class="v20-kpi-foot">0 new</div>
+    </div>
+    <div class="v20-kpi-card">
+      <div class="v20-kpi-label">Friends &amp; Groups</div>
+      <div id="kpi-social-total" class="v20-kpi-val">—</div>
+      <div id="kpi-social-sub" class="v20-kpi-foot">0 friends · 0 groups</div>
+    </div>
+  </div>
+
+  <!-- 30-Day Daily Plays Bar Chart -->
+  <article class="v20-admin-card" id="admin-daily-chart-card">
+    <div class="v20-admin-card-head">
+      <h3 class="v20-admin-card-title">Daily Plays (30d)</h3>
+      <span id="admin-chart-peak" class="v20-admin-card-meta">Peak: 0/day</span>
+    </div>
+    <div class="v20-chart-wrap">
+      <div id="admin-daily-chart" class="v20-chart-bars" role="img" aria-label="30-day daily plays bar chart"></div>
+      <div class="v20-chart-axis">
+        <span id="admin-chart-start">30d ago</span>
+        <span>15d ago</span>
+        <span>Today</span>
+      </div>
+    </div>
+  </article>
+
+  <!-- Most Played Games Breakdown -->
+  <article class="v20-admin-card">
+    <div class="v20-admin-card-head">
+      <h3 class="v20-admin-card-title">Most Played Games</h3>
+      <span id="admin-top-games-meta" class="v20-admin-card-meta">Share of plays</span>
+    </div>
+    <div id="admin-top-games" class="v20-breakdown-list">
+      <div class="v20-empty-note">Loading game breakdown...</div>
+    </div>
+  </article>
+
+  <!-- Most Popular Variations Breakdown -->
+  <article class="v20-admin-card">
+    <div class="v20-admin-card-head">
+      <h3 class="v20-admin-card-title">Most Popular Variations</h3>
+      <span id="admin-top-vars-meta" class="v20-admin-card-meta">By rule set</span>
+    </div>
+    <div id="admin-top-variations" class="v20-breakdown-list">
+      <div class="v20-empty-note">Loading variations breakdown...</div>
+    </div>
+  </article>
+
+  <!-- Game Requests Inbox -->
+  <article class="v20-admin-card">
+    <div class="v20-admin-card-head">
+      <h3 class="v20-admin-card-title">Game Requests Inbox</h3>
+      <span id="admin-inbox-count" class="v20-admin-card-meta">0 items</span>
+    </div>
+    <div id="admin-req-filters" class="v20-req-filters" role="tablist" aria-label="Filter game requests">
+      <button type="button" class="v20-filter-pill is-active" data-filter="all" onclick="window.setAdminRequestFilter && setAdminRequestFilter('all')">All</button>
+      <button type="button" class="v20-filter-pill" data-filter="new" onclick="window.setAdminRequestFilter && setAdminRequestFilter('new')">New</button>
+      <button type="button" class="v20-filter-pill" data-filter="reviewing" onclick="window.setAdminRequestFilter && setAdminRequestFilter('reviewing')">Reviewing</button>
+      <button type="button" class="v20-filter-pill" data-filter="planned" onclick="window.setAdminRequestFilter && setAdminRequestFilter('planned')">Planned</button>
+      <button type="button" class="v20-filter-pill" data-filter="built" onclick="window.setAdminRequestFilter && setAdminRequestFilter('built')">Built</button>
+      <button type="button" class="v20-filter-pill" data-filter="declined" onclick="window.setAdminRequestFilter && setAdminRequestFilter('declined')">Declined</button>
+    </div>
+    <div id="admin-requests-list" class="v20-inbox-list">
+      <div class="v20-empty-note">No game requests yet.</div>
+    </div>
+  </article>
+</section>
+<!-- V20_ADMIN_SCREEN_END -->
+
+
+<!-- ==================== BLOCK 7: FULL SCREEN TOGGLE + iOS HINT =============
+     Mount trigger in app header controls; popover mounts inside #app -->
+<!-- V20_FULLSCREEN_TRIGGER_START -->
+<span class="v20-fs-wrap">
+  <button type="button" id="btn-fullscreen-toggle" class="v20-fs-btn" aria-label="Toggle full screen" aria-pressed="false" title="Full Screen" onclick="window.toggleFullscreen && toggleFullscreen()">
+    <svg class="v20-fs-ico-expand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <polyline points="15 3 21 3 21 9"/>
+      <polyline points="9 21 3 21 3 15"/>
+      <line x1="21" y1="3" x2="14" y2="10"/>
+      <line x1="3" y1="21" x2="10" y2="14"/>
+    </svg>
+    <svg class="v20-fs-ico-compress" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <polyline points="4 14 10 14 10 20"/>
+      <polyline points="20 10 14 10 14 4"/>
+      <line x1="14" y1="10" x2="21" y2="3"/>
+      <line x1="3" y1="21" x2="10" y2="14"/>
+    </svg>
+  </button>
+</span>
+<!-- V20_FULLSCREEN_TRIGGER_END -->
+
+<!-- V20_IOS_FULLSCREEN_POPOVER_START -->
+<div id="v20-ios-fs-popover" class="v20-ios-popover hidden" hidden role="dialog" aria-label="Full screen on iOS">
+  <div class="v20-ios-popover-head">
+    <span class="v20-ios-popover-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+        <polyline points="16 6 12 2 8 6"/>
+        <line x1="12" y1="2" x2="12" y2="15"/>
+      </svg>
+      <span>Add to Home Screen for Full Screen</span>
+    </span>
+    <button type="button" id="btn-close-ios-fs-popover" class="v20-ios-popover-close" aria-label="Close" onclick="window.closeIosFullscreenHint ? closeIosFullscreenHint() : document.getElementById('v20-ios-fs-popover').setAttribute('hidden','')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <p class="v20-ios-popover-body">
+    In Safari, tap <strong>Share</strong> and choose <strong>Add to Home Screen</strong> to launch TallyIt in full screen without browser bars.
+  </p>
+</div>
+<!-- V20_IOS_FULLSCREEN_POPOVER_END -->

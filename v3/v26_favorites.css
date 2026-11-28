@@ -1,0 +1,132 @@
+/* TallyIt v26 Play-page Favorites. Neutral, scoped .v26-fav-* only. No theme-*, no bare elements, no @media. */
+
+.v26-fav-host {
+  display: flex !important;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 1rem;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.v26-fav-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.v26-fav-section[hidden],
+.v26-fav-section.v26-fav-hidden {
+  display: none !important;
+}
+
+.v26-fav-heading {
+  margin: 0;
+  padding: 0 2px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--v21-brass, #d4a853);
+  line-height: 1.3;
+}
+
+.v26-fav-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 0.7rem;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.v26-fav-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 4;
+  width: 44px;
+  height: 44px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0 12px 0 12px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.94);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-tap-highlight-color: transparent;
+  appearance: none;
+  box-sizing: border-box;
+}
+
+.v26-fav-btn::before {
+  content: "";
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 72%);
+  pointer-events: none;
+}
+
+.v26-fav-btn svg {
+  position: relative;
+  z-index: 1;
+  width: 22px;
+  height: 22px;
+  display: block;
+  fill: none;
+  stroke: currentColor;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.65));
+  transform-origin: 50% 55%;
+}
+
+.v26-fav-btn[aria-pressed="true"] {
+  color: #b42318;
+}
+
+.v26-fav-btn[aria-pressed="true"] svg {
+  fill: currentColor;
+}
+
+.v26-fav-btn:focus {
+  outline: none;
+}
+
+.v26-fav-btn:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: -6px;
+}
+
+.v26-fav-btn.v26-fav-pop svg {
+  animation: v26-fav-pop 280ms ease;
+}
+
+.v26-fav-reduced .v26-fav-btn.v26-fav-pop svg {
+  animation: none;
+}
+
+.v26-fav-status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@keyframes v26-fav-pop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.18); }
+  100% { transform: scale(1); }
+}

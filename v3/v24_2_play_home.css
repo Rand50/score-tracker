@@ -1,0 +1,48 @@
+/* TallyIt v24.2 — Play is the landing page (Home removed).
+   Neutral obsidian/brass shell CSS. Scoped to #view-new / .v24-2-* only: no theme-* selectors, no bare elements,
+   no @media (fluid clamp sizing; fits 390px with no sideways overflow). Load AFTER home_redesign.css, v21_flow.css,
+   v22_features.css and v24_link_players.css. */
+
+#view-new { padding-top: clamp(.75rem, 3vw, 1.25rem); overflow-x: hidden; }
+
+/* Top stack: requested-game banner, "Were you in these games?" banner, Resume card + In Progress list */
+.v24-2-play-top {
+  display: flex; flex-direction: column; gap: .75rem;
+  margin: 0 0 1rem; min-width: 0;
+}
+.v24-2-play-top > * { min-width: 0; max-width: 100%; box-sizing: border-box; margin-top: 0; margin-bottom: 0; }
+/* Collapse entirely when every child is hidden (no stray gap above Choose Game) */
+.v24-2-play-top:not(:has(> :not([hidden]):not(.hidden))) { display: none; }
+/* Play top is a Choose-step thing only; Setup step stays focused on the chosen game */
+#view-new[data-v21-step="setup"] .v24-2-play-top { display: none; }
+
+/* In Progress section keeps v21 styling; add the brass hairline divider that separates it from Choose Game */
+.v24-2-play-top #v21-active-games-section {
+  padding-bottom: .9rem;
+  border-bottom: 1px solid rgba(212, 168, 83, .22);
+}
+.v24-2-play-top #v21-active-games-section[hidden],
+.v24-2-play-top #v21-active-games-section.hidden { display: none; }
+.v24-2-play-top #btn-resume-game { width: 100%; min-width: 0; }
+.v24-2-play-top .home-resume-title,
+.v24-2-play-top .v21-active-name,
+.v24-2-play-top .v21-active-meta { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.v24-2-play-top .v21-active-info { min-width: 0; flex: 1 1 auto; }
+
+/* Banners: same obsidian card + brass edge in both cases, full-width on phones */
+.v24-2-play-top #v22-built-banner,
+.v24-2-play-top #v24-suggest-banner { width: 100%; }
+.v24-2-play-top #v22-built-banner[hidden],
+.v24-2-play-top #v24-suggest-banner[hidden] { display: none; }
+
+/* Choose Game heading sits directly under the top stack */
+#view-new #v21-choose-step > h2 { margin-top: .25rem; }
+
+/* Bottom nav: 4 tabs now (Play, Tracker, Friends, History); the shell's flex + space-around already fits 390px */
+
+/* v24.2: v21 stepper ("1 Game / 2 Setup / 3 Score") and "Tap any game" hint removed from Play and Setup.
+   Markup is gone via v24_2_no_stepper.patch; these rules are a safety net if an older v21 block is mounted. */
+#view-new #v21-choose-header,
+#view-new .v21-stepper,
+#view-new .v21-choose-sub { display: none; }
+#view-new #v21-setup-header .v21-setup-head { margin-top: 0; }

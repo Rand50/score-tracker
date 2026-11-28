@@ -1,0 +1,473 @@
+/* ==========================================================================
+   Score Tracker — Friends Clarity Pass & Friend QR Codes (v17)
+   Obsidian-ink / warm-alabaster / warm-brass neutral shell aesthetic.
+   Zero emojis; uniform 1.75px custom inline SVG icons; zero theme-* leaks.
+   ========================================================================== */
+
+/* ---------- Friends Header / Refresh & QR Action Bar ---------- */
+.soc-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.soc-top-title {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: #f4f4f6;
+}
+
+.soc-refresh-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.36rem 0.68rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #14161b;
+  color: #8b909c;
+  font: 550 0.76rem -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', system-ui, sans-serif;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: color .15s ease, border-color .15s ease, background .15s ease;
+}
+
+.soc-refresh-btn:hover,
+.soc-refresh-btn:active {
+  color: #f4f4f6;
+  border-color: rgba(255, 255, 255, 0.18);
+  background: #1c1f26;
+}
+
+.soc-refresh-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+.soc-refresh-btn.is-loading svg {
+  animation: socSpin 0.8s linear infinite;
+}
+
+@keyframes socSpin {
+  to { transform: rotate(360deg); }
+}
+
+/* Status Banners (Loading / Error) */
+.soc-state-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem;
+  padding: 0.65rem 0.85rem;
+  margin-bottom: 0.75rem;
+  border-radius: 12px;
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+
+.soc-state-banner.is-loading {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  color: #b4b9c4;
+}
+
+.soc-state-banner.is-error {
+  background: rgba(229, 83, 83, 0.10);
+  border: 1px solid rgba(229, 83, 83, 0.32);
+  color: #f5a0a0;
+}
+
+.soc-state-retry {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #f4f4f6;
+  border-radius: 8px;
+  padding: 0.28rem 0.6rem;
+  font: 600 0.74rem inherit;
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+
+/* QR Quick-Action Pair inside Profile Card */
+.soc-qr-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.soc-qr-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.68rem 0.8rem;
+  border-radius: 11px;
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  background: #1c1f26;
+  color: #f4f4f6;
+  font: 600 0.84rem -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', system-ui, sans-serif;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: transform .08s ease, background .15s ease, border-color .15s ease;
+}
+
+.soc-qr-btn:active { transform: scale(0.98); }
+.soc-qr-btn:hover { background: #232730; border-color: rgba(255, 255, 255, 0.18); }
+
+.soc-qr-btn.primary {
+  background: #f4f1ea;
+  color: #0c0d10;
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+.soc-qr-btn.primary:hover { background: #ffffff; }
+
+.soc-qr-btn svg {
+  width: 17px;
+  height: 17px;
+  flex: 0 0 auto;
+}
+
+.soc-qr-btn:not(.primary) svg {
+  color: #d4a853;
+}
+
+/* Prominent Incoming Requests Card */
+.soc-incoming-card {
+  border-color: rgba(212, 168, 83, 0.34) !important;
+  background: linear-gradient(180deg, rgba(212, 168, 83, 0.08) 0%, #14161b 60%) !important;
+}
+
+.soc-sec-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.6rem;
+}
+
+.soc-sec-head h3 {
+  margin: 0;
+  font-size: 0.94rem;
+  font-weight: 650;
+  letter-spacing: -0.015em;
+  color: #f4f4f6;
+}
+
+.soc-count-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 20px;
+  padding: 0 0.45rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.72rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: #9ca2ae;
+}
+
+.soc-count-pill.is-brass {
+  background: rgba(212, 168, 83, 0.18);
+  border-color: rgba(212, 168, 83, 0.45);
+  color: #f0cc7a;
+}
+
+.soc-empty-note {
+  margin: 0;
+  padding: 0.75rem 0.25rem;
+  text-align: center;
+  font-size: 0.82rem;
+  color: #8b909c;
+  line-height: 1.45;
+}
+
+/* Sent Requests Row */
+.soc-sent-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem;
+  padding: 0.62rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.soc-sent-row:last-child { border-bottom: none; }
+
+.soc-sent-tag {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.18rem 0.5rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #8b909c;
+}
+
+/* ---------- Shared QR / Scanner Modals (#soc-qr-modal, #soc-scan-modal) ---------- */
+.soc-qr-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 92;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0.75rem 0.65rem calc(0.75rem + env(safe-area-inset-bottom, 0px));
+  background: rgba(5, 6, 9, 0.78);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  touch-action: manipulation;
+}
+
+.soc-qr-backdrop.hidden,
+.soc-qr-backdrop[hidden] {
+  display: none !important;
+}
+
+.soc-qr-sheet {
+  width: 100%;
+  max-width: 420px;
+  max-height: 90dvh;
+  overflow-y: auto;
+  background: #14161b;
+  color: #f4f4f6;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 20px;
+  padding: 0.65rem 1.1rem 1.15rem;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.68);
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.soc-qr-handle {
+  width: 36px;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  margin: 0 auto 0.1rem;
+}
+
+.soc-qr-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.soc-qr-head h3 {
+  margin: 0;
+  font-size: 1.02rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.soc-qr-close {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #1c1f26;
+  color: #8b909c;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.soc-qr-close:hover { color: #f4f4f6; }
+.soc-qr-close svg { width: 16px; height: 16px; }
+
+/* My QR Code Card */
+.soc-qr-card-frame {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 1rem;
+  width: min(244px, 72vw);
+  aspect-ratio: 1 / 1;
+  margin: 0.15rem auto 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.38);
+}
+
+#soc-my-qr-svg {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#soc-my-qr-svg svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.soc-qr-identity {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.22rem;
+}
+
+.soc-qr-handle-text {
+  font-size: 1.02rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: #f4f4f6;
+}
+
+.soc-qr-code-sub {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: #d4a853;
+  font-variant-numeric: tabular-nums;
+}
+
+.soc-qr-hint {
+  margin: 0;
+  text-align: center;
+  font-size: 0.78rem;
+  color: #8b909c;
+}
+
+.soc-qr-btn-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.55rem;
+}
+
+.soc-qr-msg {
+  margin: 0;
+  min-height: 1.1rem;
+  text-align: center;
+  font-size: 0.78rem;
+  color: #d4a853;
+}
+
+/* Scan QR Viewport & Fallbacks */
+.soc-scan-viewport {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #0c0d10;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#soc-scan-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.soc-scan-reticle {
+  position: absolute;
+  width: 172px;
+  height: 172px;
+  pointer-events: none;
+  border-radius: 14px;
+  box-shadow: 0 0 0 999px rgba(12, 13, 16, 0.48);
+  border: 2px solid rgba(212, 168, 83, 0.85);
+}
+
+.soc-scan-line {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  top: 12px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #d4a853, transparent);
+  animation: socScanSweep 2.1s ease-in-out infinite;
+}
+
+@keyframes socScanSweep {
+  0%, 100% { transform: translateY(0); opacity: 0.55; }
+  50% { transform: translateY(144px); opacity: 1; }
+}
+
+.soc-scan-fallback {
+  padding: 0.7rem 0.85rem;
+  border-radius: 11px;
+  background: rgba(212, 168, 83, 0.08);
+  border: 1px solid rgba(212, 168, 83, 0.25);
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: #e6c982;
+}
+
+.soc-scan-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #6b707d;
+}
+
+.soc-scan-divider::before,
+.soc-scan-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.soc-scan-paste-row {
+  display: flex;
+  gap: 0.45rem;
+}
+
+.soc-scan-paste-row input {
+  flex: 1;
+  background: #0c0d10;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  padding: 0.62rem 0.75rem;
+  color: #f4f4f6;
+  font-size: 16px !important;
+}
+
+.soc-scan-upload-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  width: 100%;
+  padding: 0.62rem 0.85rem;
+  border-radius: 10px;
+  border: 1px dashed rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.03);
+  color: #c7ccd6;
+  font: 600 0.82rem -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', system-ui, sans-serif;
+  cursor: pointer;
+}
+
+.soc-scan-upload-label:hover {
+  border-color: rgba(212, 168, 83, 0.45);
+  color: #f4f4f6;
+}
+
+.soc-scan-upload-label svg { width: 16px; height: 16px; color: #d4a853; }

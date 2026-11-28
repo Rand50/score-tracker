@@ -1,0 +1,123 @@
+<!-- TallyIt v24 — Link Players After a Game + Claim Flow. Neutral obsidian/brass shell, scoped .v24-*, no emojis. -->
+
+<!-- V24_LINK_SHEET: opened from a History entry's "Link players" button (creator only) -->
+<div id="v24-link-sheet" class="v24-backdrop" hidden role="dialog" aria-modal="true" aria-labelledby="v24-link-title" onclick="if(event.target===this && window.V24Link) V24Link.closeLinkSheet()">
+  <div class="v24-sheet">
+    <header class="v24-sheet-head">
+      <div>
+        <h3 id="v24-link-title" class="v24-sheet-title">Link players</h3>
+        <p id="v24-link-game" class="v24-sheet-sub">Game on date</p>
+      </div>
+      <button type="button" class="v24-icon-btn" aria-label="Close" onclick="V24Link.closeLinkSheet()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+      </button>
+    </header>
+
+    <!-- Step 1: pick a player from this game -->
+    <section id="v24-step-players" class="v24-step">
+      <p class="v24-hint">Tap a guest to link them to a TallyIt account. Linked players get this game in their own History and stats.</p>
+      <div id="v24-player-list" class="v24-list" role="list"></div>
+    </section>
+
+    <!-- Step 2: assign the chosen guest -->
+    <section id="v24-step-assign" class="v24-step" hidden>
+      <button type="button" id="v24-assign-back" class="v24-back-link" onclick="V24Link.backToPlayers()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+        <span>All players</span>
+      </button>
+      <div class="v24-assign-head">
+        <span class="v24-avatar v24-avatar-guest" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6"/></svg></span>
+        <div>
+          <div id="v24-assign-name" class="v24-assign-name">Guest</div>
+          <div class="v24-assign-sub">Who was this?</div>
+        </div>
+      </div>
+
+      <div class="v24-section-label">Assign to a friend</div>
+      <div class="v24-search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><line x1="16" y1="16" x2="20.5" y2="20.5"/></svg>
+        <input type="search" id="v24-friend-search" class="v24-search-input" placeholder="Search friends" autocomplete="off" oninput="V24Link.filterFriends(this.value)">
+      </div>
+      <div id="v24-friend-list" class="v24-list v24-friend-list" role="list"></div>
+      <p id="v24-friend-empty" class="v24-empty" hidden>No friends match. Use a claim link instead.</p>
+
+      <div class="v24-divider"><span>or</span></div>
+
+      <div class="v24-section-label">Not on your Friends list?</div>
+      <button type="button" id="v24-btn-make-claim" class="v24-btn v24-btn-outline" onclick="V24Link.createClaim()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a4.5 4.5 0 0 0 6.4 0l3-3a4.5 4.5 0 0 0-6.4-6.4l-1.2 1.2"/><path d="M14 10a4.5 4.5 0 0 0-6.4 0l-3 3a4.5 4.5 0 0 0 6.4 6.4l1.2-1.2"/></svg>
+        <span>Create claim link or code</span>
+      </button>
+    </section>
+
+    <!-- Step 3: claim link created -->
+    <section id="v24-step-claim" class="v24-step" hidden>
+      <button type="button" class="v24-back-link" onclick="V24Link.backToPlayers()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+        <span>All players</span>
+      </button>
+      <p class="v24-hint">Send this to <strong id="v24-claim-for">the guest</strong>. When they sign in and confirm, this game moves into their History.</p>
+      <div class="v24-code-box">
+        <div class="v24-code-k">Claim code</div>
+        <div id="v24-claim-code" class="v24-code">------</div>
+      </div>
+      <div class="v24-link-row">
+        <input type="text" id="v24-claim-url" class="v24-link-input" readonly value="" aria-label="Claim link">
+        <button type="button" id="v24-btn-copy" class="v24-btn v24-btn-brass v24-btn-sm" onclick="V24Link.copyClaim()">Copy</button>
+      </div>
+      <button type="button" id="v24-btn-share" class="v24-btn v24-btn-outline" onclick="V24Link.shareClaim()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><polyline points="7.5 7.5 12 3 16.5 7.5"/><path d="M5 13v6a1.5 1.5 0 0 0 1.5 1.5h11A1.5 1.5 0 0 0 19 19v-6"/></svg>
+        <span>Share link</span>
+      </button>
+      <p id="v24-claim-expiry" class="v24-fine">Link expires in 30 days. It works once, for one person.</p>
+      <button type="button" id="v24-btn-revoke" class="v24-text-btn v24-danger" hidden onclick="V24Link.revokeClaim()">Revoke this link</button>
+    </section>
+
+    <div id="v24-link-status" class="v24-status" role="status" aria-live="polite" hidden></div>
+  </div>
+</div>
+
+<!-- V24_CLAIM_SHEET: opened when a signed-in user lands on ?claim=CODE, enters a code, or taps the suggestion banner -->
+<div id="v24-claim-sheet" class="v24-backdrop" hidden role="dialog" aria-modal="true" aria-labelledby="v24-claim-title" onclick="if(event.target===this && window.V24Link) V24Link.closeClaimSheet()">
+  <div class="v24-sheet">
+    <header class="v24-sheet-head">
+      <div>
+        <h3 id="v24-claim-title" class="v24-sheet-title">Were you in these games?</h3>
+        <p id="v24-claim-sub" class="v24-sheet-sub">Confirm the games you played so they show up in your History.</p>
+      </div>
+      <button type="button" class="v24-icon-btn" aria-label="Close" onclick="V24Link.closeClaimSheet()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+      </button>
+    </header>
+
+    <!-- Manual code entry (shown when no code in URL) -->
+    <div id="v24-code-entry" class="v24-code-entry">
+      <input type="text" id="v24-code-input" class="v24-code-input" inputmode="text" autocapitalize="off" autocorrect="off" spellcheck="false" autocomplete="off" maxlength="200" placeholder="Paste claim link or code">
+      <button type="button" id="v24-btn-lookup" class="v24-btn v24-btn-brass v24-btn-sm" onclick="V24Link.lookupCode()">Find</button>
+    </div>
+
+    <div id="v24-claim-list" class="v24-list" role="list"></div>
+    <p id="v24-claim-empty" class="v24-empty" hidden>No games waiting to be claimed.</p>
+
+    <div class="v24-sheet-actions">
+      <button type="button" id="v24-btn-claim-confirm" class="v24-btn v24-btn-brass" onclick="V24Link.confirmClaims()" disabled>Yes, that was me</button>
+      <button type="button" id="v24-btn-claim-skip" class="v24-text-btn" onclick="V24Link.closeClaimSheet()">Not now</button>
+    </div>
+    <div id="v24-claim-status" class="v24-status" role="status" aria-live="polite" hidden></div>
+  </div>
+</div>
+
+<!-- V24_SUGGEST_BANNER: insert at top of Home (and optionally History) -->
+<div id="v24-suggest-banner" class="v24-banner" hidden>
+  <span class="v24-banner-icon" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8.5" r="3.25"/><path d="M3.5 19.5c0-3 2.5-5 5.5-5s5.5 2 5.5 5"/><polyline points="15.5 11 17.5 13 21 9.5"/></svg>
+  </span>
+  <div class="v24-banner-text">
+    <div class="v24-banner-title">Were you in these games?</div>
+    <div id="v24-suggest-sub" class="v24-banner-sub">2 games list a player named you</div>
+  </div>
+  <button type="button" id="v24-btn-review" class="v24-btn v24-btn-brass v24-btn-sm" onclick="V24Link.openClaimSheet()">Review</button>
+  <button type="button" id="v24-btn-dismiss" class="v24-icon-btn" aria-label="Dismiss" onclick="V24Link.dismissSuggestions()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+  </button>
+</div>

@@ -1,0 +1,684 @@
+/* =========================================================================
+   TallyIt v23 — Game-Specific Setup Screen Themes
+   Strictly scoped under #setup-screen.setup-theme-<gameKey> and
+   #setup-screen[class*="setup-theme-"]. Zero leaks to Home, Choose Game,
+   History, Friends, Admin, or Active Game screens.
+   Covers all 9 live games: catan, 7wonders, flip7, carcassonne, rummikub,
+   nertz, hearts, ohhell, other, qwirkle (v24).
+   Zero emojis. Mobile-first 390x844, zero horizontal overflow.
+   ========================================================================= */
+
+/* ================= SHARED TOKEN-DRIVEN SETUP SHELL ================= */
+#setup-screen[class*="setup-theme-"] {
+  --st-bg: #0c0d10;
+  --st-bg-image: none;
+  --st-card: #14161b;
+  --st-card-border: rgba(255, 255, 255, 0.1);
+  --st-surface: #1c1f26;
+  --st-surface-border: rgba(255, 255, 255, 0.14);
+  --st-text: #f4f1ea;
+  --st-muted: #989fa9;
+  --st-accent: #d4a853;
+  --st-accent-soft: rgba(212, 168, 83, 0.15);
+  --st-accent-border: rgba(212, 168, 83, 0.4);
+  --st-cta-bg: linear-gradient(180deg, #e4bc6c 0%, #d4a853 100%);
+  --st-cta-text: #0c0d10;
+  --st-cta-shadow: 0 4px 16px rgba(212, 168, 83, 0.28);
+  --st-sticky-bg: rgba(12, 13, 16, 0.94);
+  --st-input-bg: #0c0d10;
+  --st-input-text: #f4f1ea;
+  --st-input-placeholder: #8a919c;
+  --st-chip-bg: #1c1f26;
+  --st-chip-text: #f4f1ea;
+  --st-font-display: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --st-font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  background-color: var(--st-bg);
+  background-image: var(--st-bg-image);
+  background-size: cover;
+  background-position: center top;
+  color: var(--st-text);
+  font-family: var(--st-font-body);
+  border-radius: 16px;
+  padding: 12px 12px 18px;
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+/* Main setup card container */
+#setup-screen[class*="setup-theme-"] .card,
+#setup-screen[class*="setup-theme-"] .v23-setup-card {
+  background: var(--st-card);
+  border: 1.5px solid var(--st-card-border);
+  color: var(--st-text);
+  border-radius: 14px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.24);
+  box-sizing: border-box;
+}
+
+/* Optional Game Hero Banner (with box art thumbnail / backdrop) */
+#setup-screen[class*="setup-theme-"] .v23-setup-hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 13px;
+  margin-bottom: 12px;
+  border-radius: 13px;
+  border: 1.5px solid var(--st-accent-border);
+  background: var(--st-surface);
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+#setup-screen[class*="setup-theme-"] .v23-hero-art {
+  width: 56px;
+  height: 56px;
+  border-radius: 10px;
+  object-fit: cover;
+  border: 1.5px solid var(--st-accent-border);
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.28);
+}
+
+#setup-screen[class*="setup-theme-"] .v23-hero-meta {
+  min-width: 0;
+  flex: 1;
+}
+
+#setup-screen[class*="setup-theme-"] .v23-hero-badge {
+  display: inline-block;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--st-accent);
+  margin-bottom: 2px;
+}
+
+/* Setup header & Change Game button */
+#setup-screen[class*="setup-theme-"] .v21-setup-head {
+  border-bottom-color: var(--st-surface-border);
+}
+
+#setup-screen[class*="setup-theme-"] .v21-setup-eyebrow {
+  color: var(--st-accent);
+}
+
+#setup-screen[class*="setup-theme-"] .v21-setup-game-name {
+  font-family: var(--st-font-display);
+  color: var(--st-text);
+}
+
+#setup-screen[class*="setup-theme-"] .v21-change-game-btn {
+  background: var(--st-surface);
+  border-color: var(--st-surface-border);
+  color: var(--st-text);
+}
+
+#setup-screen[class*="setup-theme-"] .v21-change-game-btn:active {
+  background: var(--st-accent-soft);
+  border-color: var(--st-accent-border);
+  color: var(--st-accent);
+}
+
+/* Labels, headings, selects & text inputs */
+#setup-screen[class*="setup-theme-"] h2,
+#setup-screen[class*="setup-theme-"] h3 {
+  font-family: var(--st-font-display);
+  color: var(--st-text);
+}
+
+#setup-screen[class*="setup-theme-"] label,
+#setup-screen[class*="setup-theme-"] .small,
+#setup-screen[class*="setup-theme-"] .soc-setup-label {
+  color: var(--st-muted);
+}
+
+#setup-screen[class*="setup-theme-"] .soc-setup-link {
+  color: var(--st-accent);
+}
+
+#setup-screen[class*="setup-theme-"] select,
+#setup-screen[class*="setup-theme-"] input[type="text"],
+#setup-screen[class*="setup-theme-"] input[type="number"],
+#setup-screen[class*="setup-theme-"] #version-select,
+#setup-screen[class*="setup-theme-"] #new-player-name {
+  background: var(--st-input-bg);
+  border: 1.5px solid var(--st-surface-border);
+  color: var(--st-input-text);
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+#setup-screen[class*="setup-theme-"] input::placeholder {
+  color: var(--st-input-placeholder);
+}
+
+#setup-screen[class*="setup-theme-"] select:focus,
+#setup-screen[class*="setup-theme-"] input:focus {
+  border-color: var(--st-accent);
+  outline: none;
+}
+
+/* v20 Variation Popularity Bar */
+#setup-screen[class*="setup-theme-"] #v20-variation-bar,
+#setup-screen[class*="setup-theme-"] .v20-var-bar {
+  background: var(--st-surface);
+  border-color: var(--st-surface-border);
+}
+
+#setup-screen[class*="setup-theme-"] #var-pop-pill,
+#setup-screen[class*="setup-theme-"] .v20-var-pop-pill {
+  color: var(--st-text);
+}
+
+#setup-screen[class*="setup-theme-"] .v20-var-pop-pill svg,
+#setup-screen[class*="setup-theme-"] .v20-var-pop-pill.is-top {
+  color: var(--st-accent);
+}
+
+#setup-screen[class*="setup-theme-"] #btn-compare-variations,
+#setup-screen[class*="setup-theme-"] .v20-compare-btn {
+  background: var(--st-accent-soft);
+  border-color: var(--st-accent-border);
+  color: var(--st-accent);
+}
+
+/* v22 Customize Rules (House Rules) Drawer */
+#setup-screen[class*="setup-theme-"] #btn-v22-house-rules,
+#setup-screen[class*="setup-theme-"] .v22-hr-toggle {
+  background: var(--st-surface);
+  border-color: var(--st-surface-border);
+  color: var(--st-text);
+}
+
+#setup-screen[class*="setup-theme-"] .v22-hr-toggle[aria-expanded="true"] {
+  border-color: var(--st-accent-border);
+  background: var(--st-accent-soft);
+}
+
+#setup-screen[class*="setup-theme-"] .v22-hr-toggle-left svg,
+#setup-screen[class*="setup-theme-"] .v22-hr-toggle[aria-expanded="true"] .v22-hr-chev {
+  color: var(--st-accent);
+}
+
+#setup-screen[class*="setup-theme-"] .v22-hr-badge {
+  background: var(--st-accent-soft);
+  border-color: var(--st-accent-border);
+  color: var(--st-accent);
+}
+
+#setup-screen[class*="setup-theme-"] #v22-hr-drawer,
+#setup-screen[class*="setup-theme-"] .v22-hr-drawer {
+  background: var(--st-card);
+  border-color: var(--st-accent-border);
+  color: var(--st-text);
+}
+
+#setup-screen[class*="setup-theme-"] .v22-hr-row-title,
+#setup-screen[class*="setup-theme-"] .v22-hr-publish-title {
+  color: var(--st-text);
+}
+
+#setup-screen[class*="setup-theme-"] .v22-hr-row-hint,
+#setup-screen[class*="setup-theme-"] .v22-hr-diff-none {
+  color: var(--st-muted);
+}
+
+#setup-screen[class*="setup-theme-"] .v22-hr-stepper,
+#setup-screen[class*="setup-theme-"] .v22-hr-seg {
+  background: var(--st-input-bg);
+  border-color: var(--st-surface-border);
+}
+
+#setup-screen[class*="setup-theme-"] .v22-hr-step-btn {
+  background: var(--st-surface);
+  color: var(--st-text);
+}
+
+#setup-screen[class*="setup-theme-"] .v22-hr-num {
+  color: var(--st-input-text);
+  border-color: var(--st-surface-border);
+}
+
+#setup-screen[class*="setup-theme-"] .v22-hr-seg-btn {
+  color: var(--st-muted);
+}
+
+#setup-screen[class*="setup-theme-"] .v22-hr-seg-btn.is-active {
+  background: var(--st-accent);
+  color: var(--st-cta-text);
+}
+
+#setup-screen[class*="setup-theme-"] .v22-hr-switch-track {
+  background: var(--st-input-bg);
+  border-color: var(--st-surface-border);
+}
+
+#setup-screen[class*="setup-theme-"] .v22-hr-switch input:checked + .v22-hr-switch-track {
+  background: var(--st-accent-soft);
+  border-color: var(--st-accent);
+}
+
+#setup-screen[class*="setup-theme-"] .v22-hr-switch input:checked + .v22-hr-switch-track::after {
+  background: var(--st-accent);
+}
+
+#setup-screen[class*="setup-theme-"] .v22-hr-diff-box {
+  background: var(--st-surface);
+  border-color: var(--st-surface-border);
+}
+
+#setup-screen[class*="setup-theme-"] .v22-hr-diff-title,
+#setup-screen[class*="setup-theme-"] .v22-hr-msg {
+  color: var(--st-accent);
+}
+
+#setup-screen[class*="setup-theme-"] .v22-hr-diff-list {
+  color: var(--st-text);
+}
+
+#setup-screen[class*="setup-theme-"] .v22-hr-publish {
+  border-top-color: var(--st-surface-border);
+}
+
+#setup-screen[class*="setup-theme-"] .v22-hr-input {
+  background: var(--st-input-bg);
+  border-color: var(--st-surface-border);
+  color: var(--st-input-text);
+}
+
+#setup-screen[class*="setup-theme-"] .v22-hr-btn-local {
+  background: var(--st-surface);
+  border-color: var(--st-surface-border);
+  color: var(--st-text);
+}
+
+#setup-screen[class*="setup-theme-"] .v22-hr-btn-pub {
+  background: var(--st-cta-bg);
+  color: var(--st-cta-text);
+}
+
+/* Player chips, group presets, friend quick-picks & add button */
+#setup-screen[class*="setup-theme-"] .player-chip {
+  background: var(--st-chip-bg);
+  border: 1px solid var(--st-surface-border);
+  color: var(--st-chip-text);
+}
+
+#setup-screen[class*="setup-theme-"] .player-chip.is-self {
+  border-color: var(--st-accent-border);
+  background: var(--st-accent-soft);
+}
+
+#setup-screen[class*="setup-theme-"] .soc-you-badge {
+  background: var(--st-accent);
+  color: var(--st-cta-text);
+}
+
+#setup-screen[class*="setup-theme-"] .chip-remove {
+  color: var(--st-muted);
+}
+
+#setup-screen[class*="setup-theme-"] .soc-preset-pill,
+#setup-screen[class*="setup-theme-"] .soc-friend-pick,
+#setup-screen[class*="setup-theme-"] #btn-add-player {
+  background: var(--st-surface);
+  border: 1px solid var(--st-surface-border);
+  color: var(--st-text);
+}
+
+#setup-screen[class*="setup-theme-"] .soc-preset-pill.active,
+#setup-screen[class*="setup-theme-"] .soc-friend-pick.included {
+  background: var(--st-accent-soft);
+  border-color: var(--st-accent);
+  color: var(--st-text);
+}
+
+/* Sticky Bottom Start Scoring CTA */
+#setup-screen[class*="setup-theme-"] #v21-sticky-cta,
+#setup-screen[class*="setup-theme-"] .v21-sticky-cta {
+  background: var(--st-sticky-bg);
+  border-top: 1.5px solid var(--st-accent-border);
+}
+
+#setup-screen[class*="setup-theme-"] .v21-cta-label {
+  color: var(--st-muted);
+}
+
+#setup-screen[class*="setup-theme-"] .v21-cta-meta {
+  color: var(--st-text);
+}
+
+#setup-screen[class*="setup-theme-"] #btn-v21-start-scoring,
+#setup-screen[class*="setup-theme-"] .v21-start-btn {
+  background: var(--st-cta-bg);
+  color: var(--st-cta-text);
+  box-shadow: var(--st-cta-shadow);
+}
+
+
+/* =========================================================================
+   PER-GAME SETUP THEMES (ALL 9 LIVE GAMES)
+   ========================================================================= */
+
+/* 1. CATAN — Wood Frame & Warm Aged Parchment */
+#setup-screen.setup-theme-catan {
+  --st-bg: #24160b;
+  --st-bg-image:
+    linear-gradient(180deg, rgba(36, 22, 11, 0.55), rgba(26, 15, 6, 0.72)),
+    url('./assets/catan/wood-bg.svg');
+  --st-card: radial-gradient(ellipse at 50% 40%, #f1e0b8 0%, #e4cc99 58%, #d2b278 100%);
+  --st-card-border: #6e4b17;
+  --st-surface: rgba(248, 236, 206, 0.78);
+  --st-surface-border: rgba(110, 75, 23, 0.36);
+  --st-text: #3b2814;
+  --st-muted: #6a4d2a;
+  --st-accent: #8a3418;
+  --st-accent-soft: rgba(138, 52, 24, 0.12);
+  --st-accent-border: rgba(138, 52, 24, 0.42);
+  --st-cta-bg: linear-gradient(180deg, #a84220 0%, #8a3418 55%, #6b250e 100%);
+  --st-cta-text: #fdf6e8;
+  --st-cta-shadow: 0 4px 14px rgba(107, 37, 14, 0.38);
+  --st-sticky-bg: rgba(43, 26, 13, 0.96);
+  --st-input-bg: #faf2df;
+  --st-input-text: #3b2814;
+  --st-input-placeholder: #8a6d49;
+  --st-chip-bg: #f6ead0;
+  --st-chip-text: #3b2814;
+  --st-font-display: 'Marcellus', 'Cinzel', Georgia, serif;
+  --st-font-body: 'Crimson Text', Georgia, serif;
+}
+
+#setup-screen.setup-theme-catan .v21-cta-label { color: #d9be8d; }
+#setup-screen.setup-theme-catan .v21-cta-meta { color: #faf2df; }
+
+/* 2. 7 WONDERS — Illuminated Papyrus Ledger */
+#setup-screen.setup-theme-7wonders {
+  --st-bg: #eadbc0;
+  --st-bg-image:
+    radial-gradient(ellipse at 18% 12%, rgba(255, 249, 236, 0.65) 0%, transparent 52%),
+    linear-gradient(180deg, #f3e9d3 0%, #ead8b8 100%);
+  --st-card: linear-gradient(180deg, #f8f0df 0%, #f2e6cd 60%, #eadbbf 100%);
+  --st-card-border: rgba(122, 82, 42, 0.48);
+  --st-surface: rgba(232, 216, 183, 0.56);
+  --st-surface-border: rgba(110, 76, 42, 0.34);
+  --st-text: #382515;
+  --st-muted: #70543a;
+  --st-accent: #9e4822;
+  --st-accent-soft: rgba(158, 72, 34, 0.12);
+  --st-accent-border: rgba(158, 72, 34, 0.44);
+  --st-cta-bg: linear-gradient(180deg, #b5572d 0%, #9e4822 52%, #7f3516 100%);
+  --st-cta-text: #fdf6ea;
+  --st-cta-shadow: 0 4px 14px rgba(127, 53, 22, 0.32);
+  --st-sticky-bg: rgba(243, 232, 209, 0.96);
+  --st-input-bg: #fbf5e8;
+  --st-input-text: #382515;
+  --st-input-placeholder: #8c7054;
+  --st-chip-bg: #f8f0df;
+  --st-chip-text: #382515;
+  --st-font-display: Georgia, "Palatino Linotype", Palatino, serif;
+  --st-font-body: Georgia, "Iowan Old Style", Palatino, serif;
+}
+
+/* 3. FLIP 7 — Coastal Teal & Warm Cream Cards */
+#setup-screen.setup-theme-flip7 {
+  --st-bg: #3aa9a6;
+  --st-bg-image: linear-gradient(170deg, #52c6c0 0%, #3aa9a6 100%);
+  --st-card: #f5f1e4;
+  --st-card-border: rgba(34, 50, 102, 0.24);
+  --st-surface: #ece6d5;
+  --st-surface-border: rgba(34, 50, 102, 0.2);
+  --st-text: #223266;
+  --st-muted: #4b5c8a;
+  --st-accent: #d9481f;
+  --st-accent-soft: rgba(255, 107, 53, 0.14);
+  --st-accent-border: rgba(217, 72, 31, 0.42);
+  --st-cta-bg: linear-gradient(180deg, #ff7a45 0%, #f95724 100%);
+  --st-cta-text: #ffffff;
+  --st-cta-shadow: 0 4px 14px rgba(217, 72, 31, 0.34);
+  --st-sticky-bg: rgba(245, 241, 228, 0.96);
+  --st-input-bg: #ffffff;
+  --st-input-text: #223266;
+  --st-input-placeholder: #6b7ba8;
+  --st-chip-bg: #ffffff;
+  --st-chip-text: #223266;
+  --st-font-display: 'Barlow Condensed', 'Arial Narrow', 'Helvetica Neue', Arial, sans-serif;
+  --st-font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* 4. CARCASSONNE — Sunlit Meadow & Stitched Parchment */
+#setup-screen.setup-theme-carcassonne {
+  --st-bg: #8fb86a;
+  --st-bg-image:
+    linear-gradient(180deg, rgba(143, 184, 106, 0.45), rgba(105, 145, 72, 0.55)),
+    url('./assets/carcassonne/meadow-bg.svg');
+  --st-card: linear-gradient(180deg, #f2e3bf 0%, #e7d2a3 100%);
+  --st-card-border: rgba(86, 58, 26, 0.5);
+  --st-surface: rgba(250, 243, 224, 0.72);
+  --st-surface-border: rgba(86, 58, 26, 0.32);
+  --st-text: #23160a;
+  --st-muted: #5a4022;
+  --st-accent: #3d6326;
+  --st-accent-soft: rgba(61, 99, 38, 0.13);
+  --st-accent-border: rgba(61, 99, 38, 0.44);
+  --st-cta-bg: linear-gradient(180deg, #4f7b33 0%, #375a21 100%);
+  --st-cta-text: #faf3e0;
+  --st-cta-shadow: 0 4px 14px rgba(35, 58, 20, 0.32);
+  --st-sticky-bg: rgba(235, 216, 174, 0.96);
+  --st-input-bg: #faf3e0;
+  --st-input-text: #23160a;
+  --st-input-placeholder: #7a5f3d;
+  --st-chip-bg: #faf3e0;
+  --st-chip-text: #23160a;
+  --st-font-display: 'Cinzel', 'EB Garamond', Georgia, serif;
+  --st-font-body: 'EB Garamond', Georgia, serif;
+}
+
+#setup-screen.setup-theme-carcassonne .card,
+#setup-screen.setup-theme-carcassonne .v23-setup-card {
+  border-style: dashed;
+}
+
+/* 5. RUMMIKUB — Classic Cobalt Blue & Ivory Rack */
+#setup-screen.setup-theme-rummikub {
+  --st-bg: #0b2f69;
+  --st-bg-image: radial-gradient(ellipse at 50% 0%, #154fa8 0%, #0b2f69 55%, #061c42 100%);
+  --st-card: linear-gradient(180deg, #faf6ec 0%, #f1ead8 100%);
+  --st-card-border: #d5c9ae;
+  --st-surface: #ece3cf;
+  --st-surface-border: #cfc2a4;
+  --st-text: #0f1f3d;
+  --st-muted: #52617a;
+  --st-accent: #13469e;
+  --st-accent-soft: rgba(19, 70, 158, 0.11);
+  --st-accent-border: rgba(19, 70, 158, 0.38);
+  --st-cta-bg: linear-gradient(180deg, #e03c31 0%, #c62828 100%);
+  --st-cta-text: #ffffff;
+  --st-cta-shadow: 0 4px 14px rgba(198, 40, 40, 0.34);
+  --st-sticky-bg: rgba(6, 28, 66, 0.96);
+  --st-input-bg: #ffffff;
+  --st-input-text: #0f1f3d;
+  --st-input-placeholder: #73829c;
+  --st-chip-bg: #ffffff;
+  --st-chip-text: #0f1f3d;
+  --st-font-display: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --st-font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+#setup-screen.setup-theme-rummikub .v21-cta-label { color: #9db7e0; }
+#setup-screen.setup-theme-rummikub .v21-cta-meta { color: #faf6ec; }
+
+/* 6. NERTZ — Midnight Parlor & Gold Foil */
+#setup-screen.setup-theme-nertz {
+  --st-bg: #071222;
+  --st-bg-image:
+    radial-gradient(ellipse at 50% 8%, rgba(30, 62, 112, 0.48), transparent 58%),
+    linear-gradient(180deg, #0c1d36 0%, #071222 100%);
+  --st-card: rgba(12, 26, 48, 0.92);
+  --st-card-border: rgba(214, 179, 101, 0.45);
+  --st-surface: rgba(18, 37, 68, 0.78);
+  --st-surface-border: rgba(214, 179, 101, 0.3);
+  --st-text: #faf3e1;
+  --st-muted: #b8c2d4;
+  --st-accent: #e6c677;
+  --st-accent-soft: rgba(230, 198, 119, 0.16);
+  --st-accent-border: rgba(230, 198, 119, 0.48);
+  --st-cta-bg: linear-gradient(180deg, #f5df9c 0%, #d6b365 100%);
+  --st-cta-text: #071222;
+  --st-cta-shadow: 0 4px 16px rgba(214, 179, 101, 0.3);
+  --st-sticky-bg: rgba(7, 18, 34, 0.96);
+  --st-input-bg: #071222;
+  --st-input-text: #faf3e1;
+  --st-input-placeholder: #8494b0;
+  --st-chip-bg: #122544;
+  --st-chip-text: #faf3e1;
+  --st-font-display: 'Cinzel', 'EB Garamond', Georgia, serif;
+  --st-font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* 7. HEARTS — Ivory & Crimson Ledger */
+#setup-screen.setup-theme-hearts {
+  --st-bg: #f5f0e6;
+  --st-bg-image:
+    radial-gradient(rgba(120, 102, 78, 0.06) 1px, transparent 0),
+    linear-gradient(180deg, #f8f4ec 0%, #efe9dc 100%);
+  --st-card: #faf7f0;
+  --st-card-border: rgba(154, 27, 34, 0.36);
+  --st-surface: #fcf9f3;
+  --st-surface-border: rgba(79, 74, 68, 0.34);
+  --st-text: #1f1c18;
+  --st-muted: #5c554c;
+  --st-accent: #9a1b22;
+  --st-accent-soft: rgba(154, 27, 34, 0.10);
+  --st-accent-border: rgba(154, 27, 34, 0.45);
+  --st-cta-bg: linear-gradient(180deg, #a31b24 0%, #7c1118 100%);
+  --st-cta-text: #fcf7ee;
+  --st-cta-shadow: 0 4px 16px rgba(124, 17, 24, 0.28);
+  --st-sticky-bg: rgba(245, 240, 230, 0.96);
+  --st-input-bg: #ffffff;
+  --st-input-text: #1f1c18;
+  --st-input-placeholder: #7a7166;
+  --st-chip-bg: #f2ece0;
+  --st-chip-text: #1f1c18;
+  --st-font-display: Georgia, "Times New Roman", serif;
+  --st-font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* 8. OH HELL — Ivory & Emerald Ledger */
+#setup-screen.setup-theme-ohhell {
+  --st-bg: #f5f0e6;
+  --st-bg-image:
+    radial-gradient(rgba(82, 108, 92, 0.06) 1px, transparent 0),
+    linear-gradient(180deg, #f8f4ec 0%, #efe9dc 100%);
+  --st-card: #faf7f0;
+  --st-card-border: rgba(17, 85, 57, 0.36);
+  --st-surface: #fcf9f3;
+  --st-surface-border: rgba(62, 77, 68, 0.34);
+  --st-text: #1f1c18;
+  --st-muted: #555a53;
+  --st-accent: #115539;
+  --st-accent-soft: rgba(17, 85, 57, 0.10);
+  --st-accent-border: rgba(17, 85, 57, 0.44);
+  --st-cta-bg: linear-gradient(180deg, #156242 0%, #0c432c 100%);
+  --st-cta-text: #fcf7ee;
+  --st-cta-shadow: 0 4px 16px rgba(12, 67, 44, 0.28);
+  --st-sticky-bg: rgba(245, 240, 230, 0.96);
+  --st-input-bg: #ffffff;
+  --st-input-text: #1f1c18;
+  --st-input-placeholder: #6e756c;
+  --st-chip-bg: #edf1ec;
+  --st-chip-text: #1f1c18;
+  --st-font-display: Georgia, "Times New Roman", serif;
+  --st-font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* 9. OTHER (CUSTOM GAME) — TallyIt Obsidian & Warm Brass */
+#setup-screen.setup-theme-other {
+  --st-bg: #0c0d10;
+  --st-bg-image: linear-gradient(180deg, #111318 0%, #0c0d10 100%);
+  --st-card: #14161b;
+  --st-card-border: rgba(255, 255, 255, 0.1);
+  --st-surface: #1c1f26;
+  --st-surface-border: rgba(255, 255, 255, 0.15);
+  --st-text: #f4f1ea;
+  --st-muted: #989fa9;
+  --st-accent: #d4a853;
+  --st-accent-soft: rgba(212, 168, 83, 0.14);
+  --st-accent-border: rgba(212, 168, 83, 0.38);
+  --st-cta-bg: linear-gradient(180deg, #e4bc6c 0%, #d4a853 100%);
+  --st-cta-text: #0c0d10;
+  --st-cta-shadow: 0 4px 16px rgba(212, 168, 83, 0.28);
+  --st-sticky-bg: rgba(12, 13, 16, 0.96);
+  --st-input-bg: #0c0d10;
+  --st-input-text: #f4f1ea;
+  --st-input-placeholder: #8a919c;
+  --st-chip-bg: #1c1f26;
+  --st-chip-text: #f4f1ea;
+  --st-font-display: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --st-font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* 10. QWIRKLE — Bright Playful Tile Grid (v24) */
+#setup-screen.setup-theme-qwirkle {
+  --st-bg: #fbf7ee;
+  --st-bg-image:
+    linear-gradient(rgba(28, 36, 64, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(28, 36, 64, 0.05) 1px, transparent 1px);
+  --st-card: #ffffff;
+  --st-card-border: rgba(14, 26, 58, 0.12);
+  --st-surface: #fbf6ea;
+  --st-surface-border: rgba(14, 26, 58, 0.14);
+  --st-text: #0e1a3a;
+  --st-muted: #5b6480;
+  --st-accent: #1e7bf0;
+  --st-accent-soft: rgba(30, 123, 240, 0.10);
+  --st-accent-border: rgba(30, 123, 240, 0.42);
+  --st-cta-bg: #0b1a3d;
+  --st-cta-text: #ffffff;
+  --st-cta-shadow: 0 6px 18px rgba(11, 26, 61, 0.28);
+  --st-sticky-bg: rgba(251, 247, 238, 0.96);
+  --st-input-bg: #ffffff;
+  --st-input-text: #0e1a3a;
+  --st-input-placeholder: #7d8499;
+  --st-chip-bg: #f1ede3;
+  --st-chip-text: #0e1a3a;
+  --st-font-display: "Nunito", "SF Pro Rounded", ui-rounded, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --st-font-body: "Nunito", ui-rounded, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+#setup-screen.setup-theme-qwirkle {
+  background-size: 28px 28px, 28px 28px;
+}
+
+/* 11. SPOONS — Kitchen Table Linen (v25): cream gingham, oak, barn red */
+#setup-screen.setup-theme-spoons {
+  --st-bg: #fbf3e4;
+  --st-bg-image:
+    linear-gradient(90deg, rgba(204, 96, 98, 0.20) 50%, transparent 50%),
+    linear-gradient(rgba(204, 96, 98, 0.20) 50%, transparent 50%);
+  --st-card: #fff9ee;
+  --st-card-border: rgba(176, 122, 67, 0.55);
+  --st-surface: #f8eed9;
+  --st-surface-border: rgba(176, 122, 67, 0.5);
+  --st-text: #4a2c14;
+  --st-muted: #7a5a3e;
+  --st-accent: #b6322c;
+  --st-accent-soft: rgba(182, 50, 44, 0.10);
+  --st-accent-border: rgba(182, 50, 44, 0.45);
+  --st-cta-bg: linear-gradient(180deg, #cc443c 0%, #b6322c 100%);
+  --st-cta-text: #ffffff;
+  --st-cta-shadow: 0 4px 0 #8c231f, 0 10px 16px rgba(140, 35, 31, 0.25);
+  --st-sticky-bg: rgba(251, 243, 228, 0.96);
+  --st-input-bg: #fffaf0;
+  --st-input-text: #4a2c14;
+  --st-input-placeholder: #9a7d62;
+  --st-chip-bg: #f1e3c6;
+  --st-chip-text: #4a2c14;
+  --st-font-display: "Georgia", "Iowan Old Style", "Palatino Linotype", "Book Antiqua", serif;
+  --st-font-body: "Nunito", ui-rounded, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+#setup-screen.setup-theme-spoons {
+  background-size: 64px 64px, 64px 64px;
+}

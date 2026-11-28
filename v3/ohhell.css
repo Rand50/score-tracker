@@ -1,0 +1,895 @@
+/* ============================================================================
+   TallyIt v23 — Oh Hell: Ivory & Emerald Ledger
+   100% scoped to body.theme-ohhell (zero leaks, zero @media, zero emojis).
+   Direct emerald mirror of Hearts Ivory & Crimson Ledger.
+   ============================================================================ */
+
+body.theme-ohhell {
+  --oh-bg: #F5F0E6;
+  --oh-paper: #FAF7F0;
+  --oh-card: #FCF9F3;
+  --oh-ink: #1F1C18;
+  --oh-muted: #555A53;
+  --oh-line: #3E4D44;
+  --oh-line-soft: rgba(62, 77, 68, 0.34);
+  --oh-emerald: #115539;
+  --oh-emerald-deep: #0B3E29;
+  --oh-emerald-soft: rgba(17, 85, 57, 0.10);
+  --oh-emerald-border: rgba(17, 85, 57, 0.44);
+  --oh-warn: #9A1B22;
+  --oh-warn-soft: rgba(154, 27, 34, 0.10);
+  --oh-serif: Georgia, "Times New Roman", "Palatino Linotype", serif;
+  --oh-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  background-color: var(--oh-bg);
+  background-image:
+    radial-gradient(rgba(82, 108, 92, 0.06) 1px, transparent 0),
+    linear-gradient(180deg, #F8F4EC 0%, #EFE9DC 100%);
+  background-size: 14px 14px, 100% 100%;
+  color: var(--oh-ink);
+  font-family: var(--oh-sans);
+  overflow-x: hidden;
+}
+
+/* Hide global app header & other game boards when Oh Hell is active */
+body.theme-ohhell .app-header,
+body.theme-ohhell #generic-board,
+body.theme-ohhell #catan-board,
+body.theme-ohhell #flip7-board,
+body.theme-ohhell #carc-board,
+body.theme-ohhell #nz-shell,
+body.theme-ohhell #rk-shell,
+body.theme-ohhell #sw-shell,
+body.theme-ohhell #ht-shell {
+  display: none !important;
+}
+
+body.theme-ohhell #oh-shell {
+  display: block;
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto;
+  padding: 10px 10px calc(86px + env(safe-area-inset-bottom, 0px));
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+body.theme-ohhell #oh-shell *,
+body.theme-ohhell #oh-shell *::before,
+body.theme-ohhell #oh-shell *::after {
+  box-sizing: border-box;
+}
+
+/* Outer Vintage Parlor Ledger Frame */
+body.theme-ohhell .oh-ledger-frame {
+  position: relative;
+  background: var(--oh-paper);
+  border: 1.5px solid var(--oh-emerald);
+  border-radius: 14px;
+  padding: 12px 12px 14px;
+  box-shadow:
+    inset 0 0 0 3px var(--oh-paper),
+    inset 0 0 0 4px rgba(62, 77, 68, 0.35),
+    0 8px 24px rgba(24, 42, 32, 0.08);
+  overflow: hidden;
+}
+
+/* Decorative corner suit pips */
+body.theme-ohhell .oh-corner-pips {
+  position: absolute;
+  top: 42px;
+  width: 32px;
+  height: 38px;
+  pointer-events: none;
+  opacity: 0.92;
+}
+
+body.theme-ohhell .oh-corner-tl {
+  left: 10px;
+}
+
+body.theme-ohhell .oh-corner-tr {
+  right: 10px;
+}
+
+body.theme-ohhell .oh-corner-pips svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Top Utility Bar (Home, Undo, End Game) */
+body.theme-ohhell .oh-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 4px;
+  position: relative;
+  z-index: 2;
+}
+
+body.theme-ohhell .oh-top-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+body.theme-ohhell .oh-top-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 34px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--oh-line-soft);
+  background: var(--oh-card);
+  color: var(--oh-ink);
+  font-family: var(--oh-sans);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body.theme-ohhell .oh-top-btn svg {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
+
+body.theme-ohhell .oh-top-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+body.theme-ohhell .oh-top-btn-end {
+  border-color: var(--oh-emerald-border);
+  color: var(--oh-emerald);
+  background: var(--oh-emerald-soft);
+}
+
+/* Header */
+body.theme-ohhell .oh-header {
+  text-align: center;
+  padding: 2px 36px 10px;
+  position: relative;
+  z-index: 1;
+}
+
+body.theme-ohhell .oh-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+body.theme-ohhell .oh-title {
+  margin: 0;
+  font-family: var(--oh-serif);
+  font-size: 33px;
+  -webkit-font-smoothing: antialiased;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  line-height: 1.08;
+  color: var(--oh-ink);
+}
+
+body.theme-ohhell .oh-title-pip {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+body.theme-ohhell .oh-ornament-rule {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 6px auto 7px;
+  max-width: 210px;
+}
+
+body.theme-ohhell .oh-rule-line {
+  flex: 1;
+  height: 1px;
+  background: var(--oh-line);
+  opacity: 0.65;
+}
+
+body.theme-ohhell .oh-rule-diamond {
+  width: 7px;
+  height: 7px;
+  background: var(--oh-emerald);
+  transform: rotate(45deg);
+  flex-shrink: 0;
+}
+
+body.theme-ohhell .oh-round-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+body.theme-ohhell .oh-rule-line-sm {
+  flex: 1;
+  max-width: 72px;
+  height: 1px;
+  background: var(--oh-line);
+  opacity: 0.45;
+}
+
+body.theme-ohhell .oh-rule-diamond-sm {
+  width: 5px;
+  height: 5px;
+  background: var(--oh-emerald);
+  transform: rotate(45deg);
+  flex-shrink: 0;
+}
+
+body.theme-ohhell .oh-round-label {
+  font-family: var(--oh-serif);
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: var(--oh-ink);
+  letter-spacing: 0.02em;
+}
+
+/* Meta Info Boxes (Cards Dealt + Trump Suit) */
+body.theme-ohhell .oh-meta-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+body.theme-ohhell .oh-meta-box {
+  background: var(--oh-card);
+  border: 1px solid var(--oh-line);
+  border-radius: 10px;
+  padding: 10px 8px;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-width: 0;
+  color: var(--oh-ink);
+}
+
+body.theme-ohhell .oh-meta-btn {
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body.theme-ohhell .oh-meta-btn:active {
+  background: var(--oh-emerald-soft);
+}
+
+body.theme-ohhell .oh-trump-icon {
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+body.theme-ohhell .oh-trump-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+body.theme-ohhell .oh-meta-label {
+  font-family: var(--oh-serif);
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: var(--oh-emerald-deep);
+  white-space: nowrap;
+}
+
+body.theme-ohhell .oh-meta-val {
+  font-family: var(--oh-serif);
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: var(--oh-ink);
+  white-space: nowrap;
+}
+
+/* Live Bids / Tricks Tally Strip */
+body.theme-ohhell .oh-status-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 9px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: rgba(17, 85, 57, 0.06);
+  border: 1px solid rgba(17, 85, 57, 0.24);
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--oh-muted);
+}
+
+body.theme-ohhell .oh-status-chip {
+  white-space: nowrap;
+}
+
+body.theme-ohhell .oh-status-total {
+  color: var(--oh-emerald);
+  font-weight: 700;
+}
+
+body.theme-ohhell .oh-status-bar.is-ready {
+  background: rgba(17, 85, 57, 0.12);
+  border-color: var(--oh-emerald);
+  color: var(--oh-emerald-deep);
+}
+
+body.theme-ohhell .oh-status-bar.is-error {
+  background: var(--oh-warn-soft);
+  border-color: var(--oh-warn);
+  color: var(--oh-warn);
+}
+
+body.theme-ohhell .oh-status-bar.is-error .oh-status-total {
+  color: var(--oh-warn);
+}
+
+/* Player Ledger Rows */
+body.theme-ohhell .oh-player-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+body.theme-ohhell .oh-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: stretch;
+  gap: 8px;
+  background: var(--oh-card);
+  border: 1.25px solid var(--oh-line);
+  border-radius: 10px;
+  padding: 9px 10px;
+  box-shadow: inset 0 0 0 2px var(--oh-card), inset 0 0 0 3px rgba(62, 77, 68, 0.14);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+body.theme-ohhell .oh-row.is-exact {
+  border-color: var(--oh-emerald);
+  background: #F4FAF6;
+}
+
+body.theme-ohhell .oh-row.is-screw-violation {
+  border-color: var(--oh-warn);
+  box-shadow: 0 0 0 2px rgba(154, 27, 34, 0.16);
+}
+
+body.theme-ohhell .oh-row-left {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+}
+
+body.theme-ohhell .oh-row-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+body.theme-ohhell .oh-suit-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  flex-shrink: 0;
+  gap: 2px;
+}
+
+body.theme-ohhell .oh-suit-badge svg {
+  width: 15px;
+  height: 15px;
+  display: block;
+}
+
+body.theme-ohhell .oh-suit-lines {
+  width: 14px;
+  height: 4px;
+  border-top: 1.2px solid var(--oh-line);
+  border-bottom: 1px solid var(--oh-line);
+  opacity: 0.7;
+}
+
+body.theme-ohhell .oh-name-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  flex: 1;
+}
+
+body.theme-ohhell .oh-player-name {
+  font-family: var(--oh-serif);
+  font-size: clamp(1.12rem, 4.4vw, 1.32rem);
+  font-weight: 500;
+  color: var(--oh-ink);
+  border-bottom: 1.5px solid var(--oh-emerald);
+  padding-bottom: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+body.theme-ohhell .oh-dealer-pill {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: var(--oh-emerald);
+  color: #FAF7F0;
+  flex-shrink: 0;
+}
+
+body.theme-ohhell .oh-exact-pill {
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: rgba(17, 85, 57, 0.14);
+  color: var(--oh-emerald-deep);
+  border: 1px solid var(--oh-emerald-border);
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+body.theme-ohhell .oh-miss-pill {
+  font-size: 0.64rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: rgba(154, 27, 34, 0.10);
+  color: var(--oh-warn);
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+/* Inline Bid & Tricks Won Steppers */
+body.theme-ohhell .oh-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+body.theme-ohhell .oh-stepper-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 4px;
+  border-radius: 8px;
+  border: 1px solid var(--oh-line-soft);
+  background: var(--oh-paper);
+}
+
+body.theme-ohhell .oh-stepper-lbl {
+  font-family: var(--oh-serif);
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--oh-muted);
+  padding: 0 3px;
+  user-select: none;
+}
+
+body.theme-ohhell .oh-step-btn {
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--oh-ink);
+  font-size: 0.98rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body.theme-ohhell .oh-step-btn:active {
+  background: var(--oh-emerald-soft);
+}
+
+body.theme-ohhell .oh-step-val {
+  min-width: 18px;
+  text-align: center;
+  font-family: var(--oh-serif);
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--oh-emerald-deep);
+}
+
+/* Right Side: Vertical Divider + Emerald POINTS Box */
+body.theme-ohhell .oh-row-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-left: 8px;
+  border-left: 1px solid var(--oh-line-soft);
+}
+
+body.theme-ohhell .oh-pts-box {
+  min-width: 68px;
+  padding: 6px 8px;
+  border-radius: 7px;
+  border: 1px solid var(--oh-line);
+  background: var(--oh-paper);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+body.theme-ohhell .oh-pts-num {
+  font-family: var(--oh-serif);
+  font-size: 1.55rem;
+  font-weight: 600;
+  line-height: 1.05;
+  color: var(--oh-emerald);
+}
+
+body.theme-ohhell .oh-pts-lbl {
+  font-family: var(--oh-sans);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--oh-emerald-deep);
+  margin-top: 2px;
+}
+
+/* Bottom Ace of Spades Accent + Stacked Rule Cards */
+body.theme-ohhell .oh-specials {
+  display: grid;
+  grid-template-columns: 70px 1fr;
+  gap: 10px;
+  align-items: stretch;
+  margin-bottom: 12px;
+}
+
+body.theme-ohhell .oh-card-emblem {
+  width: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+body.theme-ohhell .oh-card-emblem svg {
+  width: 70px;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 2px 5px rgba(24, 42, 32, 0.12));
+}
+
+body.theme-ohhell .oh-special-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+body.theme-ohhell .oh-special-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+body.theme-ohhell .oh-special-card {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 9px;
+  border: 1px solid var(--oh-line);
+  background: var(--oh-card);
+  text-align: left;
+  color: var(--oh-ink);
+}
+
+body.theme-ohhell .oh-special-card.is-warning {
+  border-color: var(--oh-warn);
+  background: var(--oh-warn-soft);
+}
+
+body.theme-ohhell .oh-bonus-card {
+  border-color: var(--oh-emerald-border);
+}
+
+body.theme-ohhell .oh-sp-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+body.theme-ohhell .oh-sp-text {
+  min-width: 0;
+  flex: 1;
+}
+
+body.theme-ohhell .oh-sp-title {
+  font-family: var(--oh-serif);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--oh-ink);
+  line-height: 1.2;
+}
+
+body.theme-ohhell .oh-sp-sub {
+  font-family: var(--oh-serif);
+  font-size: 0.78rem;
+  color: var(--oh-emerald);
+  line-height: 1.2;
+  margin-top: 1px;
+}
+
+body.theme-ohhell .oh-special-card.is-warning .oh-sp-sub {
+  color: var(--oh-warn);
+  font-weight: 700;
+}
+
+body.theme-ohhell .oh-bonus-heart {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+/* Pill Toggle Switch */
+body.theme-ohhell .oh-switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+body.theme-ohhell .oh-switch input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+body.theme-ohhell .oh-switch-track {
+  width: 46px;
+  height: 28px;
+  border-radius: 999px;
+  background: #DCD6CA;
+  border: 1px solid rgba(62, 77, 68, 0.35);
+  position: relative;
+  transition: background-color 0.18s ease, border-color 0.18s ease;
+}
+
+body.theme-ohhell .oh-switch-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  transition: transform 0.18s ease;
+}
+
+body.theme-ohhell .oh-switch input:checked + .oh-switch-track {
+  background: var(--oh-emerald);
+  border-color: var(--oh-emerald-deep);
+}
+
+body.theme-ohhell .oh-switch input:checked + .oh-switch-track .oh-switch-thumb {
+  transform: translateX(18px);
+}
+
+/* Validation Error Notice */
+body.theme-ohhell .oh-error-msg {
+  margin-bottom: 10px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: var(--oh-warn-soft);
+  border: 1px solid var(--oh-warn);
+  color: var(--oh-warn);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+body.theme-ohhell .oh-error-msg[hidden] {
+  display: none;
+}
+
+/* Primary Emerald CTA: Score Round */
+body.theme-ohhell .oh-cta-wrap {
+  position: sticky;
+  bottom: calc(68px + env(safe-area-inset-bottom, 0px));
+  z-index: 6;
+  padding: 4px 0 6px;
+  background: linear-gradient(180deg, rgba(250, 247, 240, 0) 0%, var(--oh-paper) 28%);
+}
+
+body.theme-ohhell .oh-cta-btn {
+  width: 100%;
+  min-height: 50px;
+  border: 1px solid #08301F;
+  border-radius: 10px;
+  background: linear-gradient(180deg, #156242 0%, #0C432C 100%);
+  color: #FCF7EE;
+  font-family: var(--oh-serif);
+  font-size: 1.24rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(12, 67, 44, 0.28);
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body.theme-ohhell .oh-cta-btn:active {
+  transform: translateY(1px);
+  filter: brightness(0.95);
+}
+
+body.theme-ohhell .oh-cta-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+body.theme-ohhell .oh-sparkle {
+  width: 13px;
+  height: 13px;
+  opacity: 0.9;
+}
+
+/* Collapsible Round History Drawer */
+body.theme-ohhell .oh-history-drawer {
+  margin-top: 8px;
+  border: 1px solid var(--oh-line-soft);
+  border-radius: 9px;
+  background: var(--oh-card);
+  overflow: hidden;
+}
+
+body.theme-ohhell .oh-history-summary {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 12px;
+  font-family: var(--oh-serif);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--oh-ink);
+  cursor: pointer;
+  user-select: none;
+}
+
+body.theme-ohhell .oh-history-summary::-webkit-details-marker {
+  display: none;
+}
+
+body.theme-ohhell .oh-history-count {
+  font-family: var(--oh-sans);
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--oh-emerald);
+}
+
+body.theme-ohhell .oh-history-list {
+  border-top: 1px solid var(--oh-line-soft);
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+body.theme-ohhell .oh-history-empty {
+  font-size: 0.8rem;
+  color: var(--oh-muted);
+  text-align: center;
+  padding: 6px 0;
+}
+
+body.theme-ohhell .oh-history-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 0.78rem;
+  padding: 5px 7px;
+  border-radius: 6px;
+  background: var(--oh-paper);
+  border: 1px solid rgba(62, 77, 68, 0.16);
+}
+
+/* Bottom Vintage Ornament Footer */
+body.theme-ohhell .oh-bottom-ornament {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 10px;
+  padding: 4px 2px 0;
+}
+
+body.theme-ohhell .oh-foot-line {
+  flex: 1;
+  height: 1px;
+  background: var(--oh-line-soft);
+}
+
+body.theme-ohhell .oh-foot-pip {
+  width: 15px;
+  height: 15px;
+}
+
+body.theme-ohhell .oh-foot-pip-center {
+  width: 17px;
+  height: 17px;
+}
+
+/* Bottom Nav — Ivory & Emerald Ledger Bar */
+body.theme-ohhell .bottom-nav {
+  background: rgba(250, 247, 240, 0.96);
+  border-top: 1.5px solid var(--oh-emerald-border);
+  box-shadow: 0 -4px 16px rgba(24, 42, 32, 0.08);
+}
+
+body.theme-ohhell .bottom-nav button {
+  color: var(--oh-muted);
+  font-family: var(--oh-serif);
+}
+
+body.theme-ohhell .bottom-nav button.active {
+  color: var(--oh-emerald);
+}
+
+/* v24.2: Play/Tracker/Friends/History everywhere */
+body.theme-ohhell .bottom-nav #nav-new {
+  display: flex;
+}
+
+body.theme-ohhell .bottom-nav #nav-active {
+  display: flex;
+}
+
+body.theme-ohhell .bottom-nav #nav-social {
+  display: flex !important;
+}
