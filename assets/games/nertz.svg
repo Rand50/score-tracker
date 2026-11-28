@@ -26,9 +26,6 @@
       <stop offset="0%" stop-color="#1c3f75"/>
       <stop offset="100%" stop-color="#0c1f3d"/>
     </linearGradient>
-    <filter id="nzSh" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#000" flood-opacity=".6"/>
-    </filter>
   </defs>
   <rect width="420" height="520" fill="url(#nzBg)"/>
   <rect width="420" height="520" fill="url(#nzGlow)"/>
@@ -36,7 +33,8 @@
   <rect x="24" y="24" width="372" height="472" rx="13" fill="none" stroke="#e6c677" stroke-width="1" opacity=".28"/>
 
   <!-- Left fanned deck back (Navy & Gold) -->
-  <g filter="url(#nzSh)" transform="translate(135 245) rotate(-18)">
+  <g transform="translate(135 245) rotate(-18)" fill="#000" fill-opacity="0.099"><rect x="-67.8" y="-93.8" width="135.6" height="207.6" rx="9.8"/><rect x="-70.0" y="-96.0" width="139.9" height="211.9" rx="12.0"/><rect x="-72.1" y="-98.1" width="144.2" height="216.2" rx="14.1"/><rect x="-74.2" y="-100.2" width="148.5" height="220.5" rx="16.2"/><rect x="-76.4" y="-102.4" width="152.8" height="224.8" rx="18.4"/><rect x="-78.5" y="-104.5" width="157.1" height="229.1" rx="20.5"/><rect x="-80.7" y="-106.7" width="161.4" height="233.4" rx="22.7"/></g>
+  <g transform="translate(135 245) rotate(-18)">
     <rect x="-72" y="-108" width="144" height="216" rx="14" fill="url(#nzNavy)" stroke="url(#nzGold)" stroke-width="3"/>
     <rect x="-60" y="-96" width="120" height="192" rx="8" fill="none" stroke="#e6c677" stroke-width="1.4" opacity=".8"/>
     <rect x="-52" y="-88" width="104" height="176" rx="5" fill="none" stroke="#e6c677" stroke-width="1" stroke-dasharray="4 4" opacity=".45"/>
@@ -45,7 +43,8 @@
   </g>
 
   <!-- Right fanned deck back (Crimson & Gold) -->
-  <g filter="url(#nzSh)" transform="translate(285 245) rotate(18)">
+  <g transform="translate(285 245) rotate(18)" fill="#000" fill-opacity="0.099"><rect x="-67.8" y="-93.8" width="135.6" height="207.6" rx="9.8"/><rect x="-70.0" y="-96.0" width="139.9" height="211.9" rx="12.0"/><rect x="-72.1" y="-98.1" width="144.2" height="216.2" rx="14.1"/><rect x="-74.2" y="-100.2" width="148.5" height="220.5" rx="16.2"/><rect x="-76.4" y="-102.4" width="152.8" height="224.8" rx="18.4"/><rect x="-78.5" y="-104.5" width="157.1" height="229.1" rx="20.5"/><rect x="-80.7" y="-106.7" width="161.4" height="233.4" rx="22.7"/></g>
+  <g transform="translate(285 245) rotate(18)">
     <rect x="-72" y="-108" width="144" height="216" rx="14" fill="url(#nzCrimson)" stroke="url(#nzGold)" stroke-width="3"/>
     <rect x="-60" y="-96" width="120" height="192" rx="8" fill="none" stroke="#e6c677" stroke-width="1.4" opacity=".8"/>
     <rect x="-52" y="-88" width="104" height="176" rx="5" fill="none" stroke="#e6c677" stroke-width="1" stroke-dasharray="4 4" opacity=".45"/>
@@ -54,12 +53,13 @@
   </g>
 
   <!-- Center Ace of Spades card -->
-  <g filter="url(#nzSh)" transform="translate(210 225)">
+  <g transform="translate(210 225)" fill="#000" fill-opacity="0.099"><rect x="-71.8" y="-99.8" width="143.6" height="219.6" rx="9.8"/><rect x="-74.0" y="-102.0" width="147.9" height="223.9" rx="12.0"/><rect x="-76.1" y="-104.1" width="152.2" height="228.2" rx="14.1"/><rect x="-78.2" y="-106.2" width="156.5" height="232.5" rx="16.2"/><rect x="-80.4" y="-108.4" width="160.8" height="236.8" rx="18.4"/><rect x="-82.5" y="-110.5" width="165.1" height="241.1" rx="20.5"/><rect x="-84.7" y="-112.7" width="169.4" height="245.4" rx="22.7"/></g>
+  <g transform="translate(210 225)">
     <rect x="-76" y="-114" width="152" height="228" rx="14" fill="url(#nzIvory)" stroke="url(#nzGold)" stroke-width="3"/>
     <rect x="-66" y="-104" width="132" height="208" rx="9" fill="none" stroke="#c9a14a" stroke-width="1.2" opacity=".55"/>
-    <text x="-54" y="-72" fill="#0f1b2d" font-family="Georgia, serif" font-weight="700" font-size="30">A</text>
-    <text x="-53" y="-48" fill="#0f1b2d" font-family="Georgia, serif" font-size="22">♠</text>
-    <text x="35" y="92" fill="#0f1b2d" font-family="Georgia, serif" font-weight="700" font-size="30">A</text>
+    <g fill="#0f1b2d"><path transform="translate(-54.00 -72.00) scale(0.01465 -0.01465)" d="M-16 0V121H106L668 1493H907L1470 121H1612V0H913V121H1059L936 426H375L250 121H428V0ZM424 547H887L657 1118Z"/></g>
+    <g fill="#0f1b2d"><path transform="translate(-53.00 -48.00) scale(0.01074 -0.01074)" d="M920 1492Q1014 1325 1230 1049Q1467 771 1473 714Q1512 629 1512 549V509Q1512 342 1350 246Q1297 224 1233 224Q1079 224 984 445H942V433Q942 150 1025 0H810V6Q895 157 895 442L892 445H854L807 357Q722 224 595 224Q408 224 332 433L323 506V552Q323 735 510 938Q825 1324 914 1489L917 1492Z"/></g>
+    <g fill="#0f1b2d"><path transform="translate(35.00 92.00) scale(0.01465 -0.01465)" d="M-16 0V121H106L668 1493H907L1470 121H1612V0H913V121H1059L936 426H375L250 121H428V0ZM424 547H887L657 1118Z"/></g>
     <!-- Ornate center spade -->
     <path d="M0 -48 C-6 -20 -38 2 -38 26 C-38 42 -26 52 -13 52 C-5 52 0 48 0 42 C0 48 5 52 13 52 C26 52 38 42 38 26 C38 2 6 -20 0 -48 Z" fill="#0f1b2d" stroke="url(#nzGold)" stroke-width="2.4"/>
     <path d="M0 36 C-2 52 -10 62 -20 68 L20 68 C10 62 2 52 0 36 Z" fill="#0f1b2d" stroke="url(#nzGold)" stroke-width="2"/>

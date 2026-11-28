@@ -18,9 +18,6 @@
       <stop offset="0%" stop-color="#fffdf6"/>
       <stop offset="100%" stop-color="#ecdec0"/>
     </linearGradient>
-    <filter id="ohSh" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#000" flood-opacity=".6"/>
-    </filter>
   </defs>
   <rect width="420" height="520" fill="url(#ohBg)"/>
   <rect width="420" height="520" fill="url(#ohGlow)"/>
@@ -28,27 +25,30 @@
   <rect x="24" y="24" width="372" height="472" rx="13" fill="none" stroke="#fef08a" stroke-width="1" opacity=".25"/>
 
   <!-- Left card: Jack of Clubs -->
-  <g filter="url(#ohSh)" transform="translate(132 252) rotate(-20)">
+  <g transform="translate(132 252) rotate(-20)" fill="#000" fill-opacity="0.099"><rect x="-63.8" y="-89.8" width="127.6" height="199.6" rx="8.8"/><rect x="-66.0" y="-92.0" width="131.9" height="203.9" rx="11.0"/><rect x="-68.1" y="-94.1" width="136.2" height="208.2" rx="13.1"/><rect x="-70.2" y="-96.2" width="140.5" height="212.5" rx="15.2"/><rect x="-72.4" y="-98.4" width="144.8" height="216.8" rx="17.4"/><rect x="-74.5" y="-100.5" width="149.1" height="221.1" rx="19.5"/><rect x="-76.7" y="-102.7" width="153.4" height="225.4" rx="21.7"/></g>
+  <g transform="translate(132 252) rotate(-20)">
     <rect x="-68" y="-104" width="136" height="208" rx="13" fill="url(#ohIvory)" stroke="url(#ohGold)" stroke-width="2.8"/>
-    <text x="-50" y="-66" fill="#0f172a" font-family="Georgia, serif" font-weight="700" font-size="28">J</text>
-    <text x="-50" y="-42" fill="#0f172a" font-family="Georgia, serif" font-size="22">♣</text>
-    <text x="0" y="26" text-anchor="middle" fill="#0f172a" font-family="Georgia, serif" font-size="68">♣</text>
+    <g fill="#0f172a"><path transform="translate(-50.00 -66.00) scale(0.01367 -0.01367)" d="M-150 -358V-123H-20Q-14 -217 24 -261Q63 -305 139 -305Q236 -305 274 -230Q313 -156 313 49V1372H96V1493H891V1372H700V41Q700 -202 578 -314Q455 -426 188 -426Q105 -426 21 -409Q-63 -392 -150 -358Z"/></g>
+    <g fill="#0f172a"><path transform="translate(-50.00 -42.00) scale(0.01074 -0.01074)" d="M919 1492Q1133 1492 1234 1265Q1247 1213 1250 1157Q1250 1040 1130 880L1070 820H1073Q1147 848 1231 848H1250Q1488 848 1584 646Q1607 580 1607 520Q1607 315 1398 211Q1358 199 1287 193Q1045 193 944 467H941V458Q941 115 1023 6V0H815L809 6Q894 134 894 467V470H891Q791 193 546 193Q355 193 253 394Q228 462 228 520Q228 753 474 836Q540 848 591 848H600Q686 848 764 820H767V823Q683 894 654 963Q594 1073 594 1154V1168Q594 1369 809 1473Q880 1492 919 1492Z"/></g>
+    <g fill="#0f172a"><path transform="translate(-30.48 26.00) scale(0.03320 -0.03320)" d="M919 1492Q1133 1492 1234 1265Q1247 1213 1250 1157Q1250 1040 1130 880L1070 820H1073Q1147 848 1231 848H1250Q1488 848 1584 646Q1607 580 1607 520Q1607 315 1398 211Q1358 199 1287 193Q1045 193 944 467H941V458Q941 115 1023 6V0H815L809 6Q894 134 894 467V470H891Q791 193 546 193Q355 193 253 394Q228 462 228 520Q228 753 474 836Q540 848 591 848H600Q686 848 764 820H767V823Q683 894 654 963Q594 1073 594 1154V1168Q594 1369 809 1473Q880 1492 919 1492Z"/></g>
   </g>
 
   <!-- Right card: King of Diamonds -->
-  <g filter="url(#ohSh)" transform="translate(288 252) rotate(20)">
+  <g transform="translate(288 252) rotate(20)" fill="#000" fill-opacity="0.099"><rect x="-63.8" y="-89.8" width="127.6" height="199.6" rx="8.8"/><rect x="-66.0" y="-92.0" width="131.9" height="203.9" rx="11.0"/><rect x="-68.1" y="-94.1" width="136.2" height="208.2" rx="13.1"/><rect x="-70.2" y="-96.2" width="140.5" height="212.5" rx="15.2"/><rect x="-72.4" y="-98.4" width="144.8" height="216.8" rx="17.4"/><rect x="-74.5" y="-100.5" width="149.1" height="221.1" rx="19.5"/><rect x="-76.7" y="-102.7" width="153.4" height="225.4" rx="21.7"/></g>
+  <g transform="translate(288 252) rotate(20)">
     <rect x="-68" y="-104" width="136" height="208" rx="13" fill="url(#ohIvory)" stroke="url(#ohGold)" stroke-width="2.8"/>
-    <text x="-50" y="-66" fill="#b91c1c" font-family="Georgia, serif" font-weight="700" font-size="28">K</text>
-    <text x="-49" y="-42" fill="#b91c1c" font-family="Georgia, serif" font-size="22">♦</text>
+    <g fill="#b91c1c"><path transform="translate(-50.00 -66.00) scale(0.01367 -0.01367)" d="M96 0V121H287V1372H96V1493H864V1372H672V827L1305 1372H1145V1493H1702V1372H1503L967 911L1696 121H1843V0H1337L672 725V121H864V0Z"/></g>
+    <g fill="#b91c1c"><path transform="translate(-49.00 -42.00) scale(0.01074 -0.01074)" d="M918 1492 1421 839Q1490 754 1490 741L918 0Q906 8 344 741Q344 755 455 893Z"/></g>
     <path d="M0 -34 L30 6 L0 46 L-30 6 Z" fill="#b91c1c" stroke="url(#ohGold)" stroke-width="2"/>
   </g>
 
   <!-- Center Trump Card: Ace of Spades with Gold Trump Seal -->
-  <g filter="url(#ohSh)" transform="translate(210 226)">
+  <g transform="translate(210 226)" fill="#000" fill-opacity="0.099"><rect x="-69.8" y="-97.8" width="139.6" height="215.6" rx="9.8"/><rect x="-72.0" y="-100.0" width="143.9" height="219.9" rx="12.0"/><rect x="-74.1" y="-102.1" width="148.2" height="224.2" rx="14.1"/><rect x="-76.2" y="-104.2" width="152.5" height="228.5" rx="16.2"/><rect x="-78.4" y="-106.4" width="156.8" height="232.8" rx="18.4"/><rect x="-80.5" y="-108.5" width="161.1" height="237.1" rx="20.5"/><rect x="-82.7" y="-110.7" width="165.4" height="241.4" rx="22.7"/></g>
+  <g transform="translate(210 226)">
     <rect x="-74" y="-112" width="148" height="224" rx="14" fill="url(#ohIvory)" stroke="url(#ohGold)" stroke-width="3"/>
     <rect x="-64" y="-102" width="128" height="204" rx="9" fill="none" stroke="#c9a14a" stroke-width="1.2" opacity=".55"/>
-    <text x="-52" y="-70" fill="#0f172a" font-family="Georgia, serif" font-weight="700" font-size="30">A</text>
-    <text x="-50" y="-46" fill="#0f172a" font-family="Georgia, serif" font-size="22">♠</text>
+    <g fill="#0f172a"><path transform="translate(-52.00 -70.00) scale(0.01465 -0.01465)" d="M-16 0V121H106L668 1493H907L1470 121H1612V0H913V121H1059L936 426H375L250 121H428V0ZM424 547H887L657 1118Z"/></g>
+    <g fill="#0f172a"><path transform="translate(-50.00 -46.00) scale(0.01074 -0.01074)" d="M920 1492Q1014 1325 1230 1049Q1467 771 1473 714Q1512 629 1512 549V509Q1512 342 1350 246Q1297 224 1233 224Q1079 224 984 445H942V433Q942 150 1025 0H810V6Q895 157 895 442L892 445H854L807 357Q722 224 595 224Q408 224 332 433L323 506V552Q323 735 510 938Q825 1324 914 1489L917 1492Z"/></g>
     <path d="M0 -44 C-6 -18 -34 2 -34 24 C-34 39 -23 48 -11 48 C-4 48 0 44 0 39 C0 44 4 48 11 48 C23 48 34 39 34 24 C34 2 6 -18 0 -44 Z" fill="#0f172a"/>
     <path d="M0 34 C-2 48 -9 58 -18 64 L18 64 C9 58 2 48 0 34 Z" fill="#0f172a"/>
     <!-- Gold Trump Star Seal -->
