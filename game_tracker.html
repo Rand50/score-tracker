@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0c0d10">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="score-tracker-build" content="v25.1-spoons-polish-2026-11-27">
+<meta name="score-tracker-build" content="v26-favorites-history-2026-11-28">
 <meta name="apple-mobile-web-app-title" content="TallyIt">
 <title>TallyIt — Score Tracker</title>
 <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png">
@@ -11842,6 +11842,304 @@ html.v21-sheet-open, html.v21-sheet-open body { overscroll-behavior: contain; }
 .v25-admin-sub:hover { text-decoration-color: currentColor; }
 
 </style>
+<style id="v26-history-detail-css">
+
+.v26-hist-sheet {
+  --v26-bg: var(--bg, #0b1220);
+  --v26-bg2: var(--bg, #0b1220);
+  --v26-surface: var(--surface, #151c2c);
+  --v26-surface2: var(--surface2, #1e293b);
+  --v26-text: var(--text, #f1f5f9);
+  --v26-muted: var(--muted, #94a3b8);
+  --v26-border: var(--border, rgba(255, 255, 255, 0.08));
+  --v26-accent: var(--accent, #22d3ee);
+  --v26-accent-ink: #04212a;
+  --v26-win: #fbbf24;
+  --v26-win-soft: rgba(251, 191, 36, 0.13);
+  --v26-danger: var(--danger, #f43f5e);
+  --v26-neg: #fb7185;
+  --v26-bar: rgba(11, 18, 32, 0.92);
+  --v26-input: #0f172a;
+  --v26-font: var(--font, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif);
+  --v26-head-font: var(--v26-font);
+  position: fixed;
+  inset: 0;
+  z-index: 450;
+  display: flex;
+  justify-content: center;
+  background: var(--v26-bg);
+  background-image: linear-gradient(180deg, var(--v26-bg2) 0, var(--v26-bg) 260px);
+  color: var(--v26-text);
+  font-family: var(--v26-font);
+  -webkit-text-size-adjust: 100%;
+  overflow: hidden;
+}
+.v26-hist-sheet[hidden] { display: none !important; }
+.v26-hist-sheet *, .v26-hist-sheet *::before, .v26-hist-sheet *::after { box-sizing: border-box; }
+.v26-hist-sheet.v26-hist-enter { animation: v26-hist-fade 260ms ease-out both; }
+.v26-hist-sheet.v26-hist-reduced { animation: none; }
+@keyframes v26-hist-fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+.v26-hist-panel { display: flex; flex-direction: column; width: 100%; height: 100%; min-width: 0; }
+.v26-hist-bar {
+  flex: 0 0 auto;
+  display: flex; align-items: center; gap: 8px;
+  padding: max(10px, env(safe-area-inset-top)) max(12px, calc((100% - 760px) / 2 + 12px)) 10px;
+  background: var(--v26-bar);
+  border-bottom: 1px solid var(--v26-border);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+}
+.v26-hist-title { flex: 1 1 auto; min-width: 0; margin: 0; font: 700 1.06rem/1.25 var(--v26-head-font); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; outline: none; }
+.v26-hist-bar-right { flex: 0 0 auto; display: flex; gap: 8px; }
+.v26-hist-body { flex: 1 1 auto; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
+.v26-hist-col { width: 100%; max-width: 760px; margin: 0 auto; padding: 14px 14px calc(28px + env(safe-area-inset-bottom)); min-width: 0; }
+.v26-hist-foot { flex: 0 0 auto; background: var(--v26-bar); border-top: 1px solid var(--v26-border); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+.v26-hist-foot .v26-hist-col { padding-top: 10px; padding-bottom: max(10px, env(safe-area-inset-bottom)); }
+.v26-hist-foot-row { display: flex; gap: 10px; justify-content: flex-end; }
+.v26-hist-foot-row .v26-hist-btn { flex: 1 1 0; max-width: 260px; }
+
+
+.v26-hist-ic { width: 20px; height: 20px; flex: 0 0 auto; display: block; }
+.v26-hist-ic-sm { width: 15px; height: 15px; }
+.v26-hist-iconbtn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 40px; height: 40px; min-width: 40px; padding: 0; border-radius: 12px;
+  border: 1px solid var(--v26-border); background: var(--v26-surface); color: var(--v26-text);
+  cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
+.v26-hist-iconbtn:disabled { opacity: 0.35; cursor: default; }
+.v26-hist-iconbtn.v26-hist-sm { width: 36px; height: 36px; min-width: 36px; border-radius: 10px; }
+.v26-hist-iconbtn.v26-hist-xs { width: 28px; height: 28px; min-width: 28px; border-radius: 8px; margin: 4px auto 0; background: transparent; color: var(--v26-muted); }
+.v26-hist-iconbtn.v26-hist-xs .v26-hist-ic { width: 16px; height: 16px; }
+.v26-hist-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  min-height: 44px; padding: 0 16px; border-radius: 12px; border: 1px solid var(--v26-border);
+  background: var(--v26-surface); color: var(--v26-text); font: 700 0.95rem/1 var(--v26-font);
+  cursor: pointer; -webkit-tap-highlight-color: transparent; white-space: nowrap;
+}
+.v26-hist-btn:disabled { opacity: 0.55; cursor: default; }
+.v26-hist-btn-primary { background: var(--v26-accent); border-color: transparent; color: var(--v26-accent-ink); }
+.v26-hist-btn-edit { min-height: 40px; padding: 0 14px; background: var(--v26-accent); border-color: transparent; color: var(--v26-accent-ink); }
+.v26-hist-btn-ghost { background: transparent; }
+.v26-hist-sec .v26-hist-btn-ghost { margin-top: 10px; }
+.v26-hist-iconbtn:focus-visible, .v26-hist-btn:focus-visible, .v26-hist-in:focus-visible, .v26-hist-scroll:focus-visible { outline: 2px solid var(--v26-accent); outline-offset: 2px; }
+
+
+.v26-hist-head { display: flex; gap: 12px; align-items: center; padding: 14px; border-radius: 16px; background: var(--v26-surface); border: 1px solid var(--v26-border); }
+.v26-hist-art { width: 56px; height: 56px; flex: 0 0 56px; border-radius: 14px; object-fit: cover; background: var(--v26-surface2); }
+.v26-hist-art-ph { display: flex; align-items: center; justify-content: center; font: 800 1.4rem/1 var(--v26-head-font); color: var(--v26-muted); }
+.v26-hist-head-txt { min-width: 0; flex: 1 1 auto; }
+.v26-hist-game { font: 800 1.2rem/1.2 var(--v26-head-font); overflow-wrap: anywhere; }
+.v26-hist-sub { margin-top: 3px; color: var(--v26-muted); font-size: 0.86rem; line-height: 1.35; overflow-wrap: anywhere; }
+.v26-hist-edited { display: inline-flex; align-items: center; gap: 5px; margin-top: 6px; padding: 3px 9px; border-radius: 999px; background: var(--v26-surface2); color: var(--v26-text); font-size: 0.78rem; font-weight: 700; max-width: 100%; }
+.v26-hist-edited span { overflow-wrap: anywhere; }
+.v26-hist-edited.is-fresh { box-shadow: 0 0 0 2px var(--v26-accent); }
+
+
+.v26-hist-winner { display: flex; align-items: center; gap: 12px; margin-top: 12px; padding: 12px 14px; border-radius: 14px; background: linear-gradient(var(--v26-win-soft), var(--v26-win-soft)), var(--v26-surface); border: 1px solid var(--v26-win); color: var(--v26-text); }
+.v26-hist-winner > .v26-hist-ic { width: 26px; height: 26px; color: var(--v26-win); }
+.v26-hist-winner-k { font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--v26-muted); }
+.v26-hist-winner-v { font: 800 1.08rem/1.25 var(--v26-head-font); overflow-wrap: anywhere; }
+.v26-hist-winner-none { justify-content: center; color: var(--v26-muted); border-style: dashed; }
+.v26-hist-note { display: flex; gap: 8px; align-items: flex-start; margin-top: 12px; padding: 10px 12px; border-radius: 12px; background: var(--v26-surface); border: 1px dashed var(--v26-border); color: var(--v26-muted); font-size: 0.85rem; line-height: 1.4; }
+.v26-hist-note .v26-hist-ic { margin-top: 2px; }
+.v26-hist-err { margin: 0 0 12px; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--v26-danger); color: var(--v26-text); background: rgba(244, 63, 94, 0.1); font-size: 0.88rem; line-height: 1.4; }
+.v26-hist-quiet { padding: 40px 12px; text-align: center; color: var(--v26-muted); font-size: 0.95rem; }
+.v26-hist-ro { display: flex; align-items: center; justify-content: center; gap: 6px; margin: 18px 0 0; color: var(--v26-muted); font-size: 0.82rem; text-align: center; }
+.v26-hist-legend { margin: 8px 2px 0; color: var(--v26-muted); font-size: 0.8rem; line-height: 1.4; }
+
+
+.v26-hist-sec { margin-top: 18px; min-width: 0; }
+.v26-hist-sec-h { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin: 0 2px 8px; }
+.v26-hist-sec-h h3 { margin: 0; font: 800 0.98rem/1.2 var(--v26-head-font); }
+.v26-hist-hint { color: var(--v26-muted); font-size: 0.78rem; text-align: right; }
+
+
+.v26-hist-standings { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.v26-hist-st { display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 8px 12px; border-radius: 12px; background: var(--v26-surface); border: 1px solid var(--v26-border); }
+.v26-hist-st.is-winner { border-color: var(--v26-win); }
+.v26-hist-place { flex: 0 0 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--v26-surface2); font-weight: 800; font-size: 0.9rem; }
+.v26-hist-st.is-winner .v26-hist-place { background: var(--v26-win); color: #1f1300; }
+.v26-hist-st.is-winner .v26-hist-place .v26-hist-ic { width: 17px; height: 17px; }
+.v26-hist-st-name { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; }
+.v26-hist-pname { font-weight: 700; overflow-wrap: anywhere; }
+.v26-hist-members { color: var(--v26-muted); font-size: 0.78rem; overflow-wrap: anywhere; font-weight: 500; }
+.v26-hist-st-right { flex: 0 0 auto; display: flex; flex-direction: column; align-items: flex-end; }
+.v26-hist-score { font: 800 1.2rem/1.1 var(--v26-head-font); font-variant-numeric: tabular-nums; }
+.v26-hist-ord { color: var(--v26-muted); font-size: 0.72rem; }
+.v26-hist-out { color: var(--v26-muted); font-size: 0.82rem; font-weight: 700; white-space: nowrap; }
+.v26-hist-alive { color: var(--v26-win); font-weight: 800; font-size: 0.9rem; }
+
+
+.v26-hist-scroll { position: relative; max-width: 100%; overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; border-radius: 12px; border: 1px solid var(--v26-border); background: var(--v26-surface); overscroll-behavior-x: contain; }
+.v26-hist-table { border-collapse: separate; border-spacing: 0; min-width: 100%; font-size: 0.88rem; font-variant-numeric: tabular-nums; }
+.v26-hist-table th, .v26-hist-table td { padding: 8px 8px; text-align: center; border-bottom: 1px solid var(--v26-border); white-space: nowrap; vertical-align: middle; }
+.v26-hist-table tbody tr:last-child th, .v26-hist-table tbody tr:last-child td { border-bottom: 0; }
+.v26-hist-table thead th { font-size: 0.74rem; font-weight: 700; color: var(--v26-muted); background: var(--v26-surface2); }
+.v26-hist-table .v26-hist-sticky { position: sticky; left: 0; z-index: 2; text-align: left; background: var(--v26-surface); min-width: 96px; max-width: 132px; white-space: normal; box-shadow: 1px 0 0 var(--v26-border); }
+.v26-hist-table thead .v26-hist-sticky { background: var(--v26-surface2); z-index: 3; }
+.v26-hist-table tr.is-winner .v26-hist-sticky .v26-hist-pname { color: var(--v26-win); }
+.v26-hist-table .v26-hist-sticky .v26-hist-pname { display: block; font-size: 0.86rem; line-height: 1.2; }
+.v26-hist-table .v26-hist-sticky .v26-hist-members { display: block; font-size: 0.7rem; }
+.v26-hist-th { display: block; font-weight: 800; color: var(--v26-text); font-size: 0.78rem; }
+.v26-hist-th-cat { white-space: normal; min-width: 52px; line-height: 1.15; }
+.v26-hist-thsub { display: block; font-size: 0.66rem; font-weight: 500; max-width: 88px; overflow: hidden; text-overflow: ellipsis; margin: 0 auto; }
+.v26-hist-table td { min-width: 44px; }
+.v26-hist-pts { display: block; font-weight: 700; }
+.v26-hist-pts.is-neg { color: var(--v26-neg); }
+.v26-hist-pts.is-hit { color: var(--v26-accent); }
+.v26-hist-cellsub { display: block; font-size: 0.68rem; color: var(--v26-muted); }
+.v26-hist-nil { color: var(--v26-muted); opacity: 0.6; }
+.v26-hist-total { font-weight: 800; background: var(--v26-surface2); }
+.v26-hist-table thead .v26-hist-total { color: var(--v26-text); }
+.v26-hist-table .is-muted { opacity: 0.55; font-style: italic; }
+.v26-hist-table-sum td { min-width: 72px; }
+.v26-hist-table-sum tr.is-changed td, .v26-hist-table-sum tr.is-changed th { background: var(--v26-win-soft); }
+.v26-hist-was { color: var(--v26-muted); text-decoration: line-through; font-weight: 500; margin-right: 2px; }
+
+
+.v26-hist-elim, .v26-hist-order { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.v26-hist-elim li, .v26-hist-order li { display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 8px 12px; border-radius: 12px; background: var(--v26-surface); border: 1px solid var(--v26-border); }
+.v26-hist-elim li.is-winner, .v26-hist-order li.is-winner { border-color: var(--v26-win); }
+.v26-hist-elim li.is-winner .v26-hist-ic { color: var(--v26-win); }
+.v26-hist-elim-r, .v26-hist-order-r { flex: 0 0 auto; min-width: 104px; color: var(--v26-muted); font-size: 0.8rem; font-weight: 700; }
+.v26-hist-elim-n, .v26-hist-order-n { flex: 1 1 auto; min-width: 0; font-weight: 700; overflow-wrap: anywhere; }
+.v26-hist-order-btns { flex: 0 0 auto; display: flex; gap: 6px; }
+.v26-hist-order li.is-winner .v26-hist-order-r { color: var(--v26-win); }
+
+
+.v26-hist-in {
+  width: 64px; min-height: 40px; padding: 6px 6px; border-radius: 10px; border: 1px solid var(--v26-border);
+  background: var(--v26-input); color: var(--v26-text); font: 700 16px/1.1 var(--v26-font); text-align: center;
+  font-variant-numeric: tabular-nums; -moz-appearance: textfield; appearance: textfield;
+}
+.v26-hist-in::-webkit-outer-spin-button, .v26-hist-in::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.v26-hist-in-name { width: 100%; min-width: 0; text-align: left; font-weight: 600; }
+.v26-hist-table-edit td { padding: 6px 5px; }
+.v26-hist-table-edit .v26-hist-sticky { min-width: 112px; padding: 6px 6px; }
+.v26-hist-ecell { min-width: 0; }
+.v26-hist-mini { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 0.64rem; color: var(--v26-muted); font-weight: 700; }
+.v26-hist-mini + .v26-hist-mini { margin-top: 4px; }
+.v26-hist-mini .v26-hist-in { width: 56px; min-height: 36px; }
+.v26-hist-chk { display: flex; align-items: center; justify-content: center; gap: 4px; margin-top: 4px; font-size: 0.7rem; color: var(--v26-muted); font-weight: 700; min-height: 28px; }
+.v26-hist-chk input { width: 18px; height: 18px; margin: 0; accent-color: var(--v26-accent); }
+.v26-hist-lockname { display: inline-flex; align-items: center; gap: 5px; min-width: 0; }
+.v26-hist-lockname .v26-hist-ic { width: 14px; height: 14px; color: var(--v26-muted); }
+.v26-hist-names { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+.v26-hist-names .v26-hist-lockname { min-height: 40px; padding: 0 10px; border-radius: 10px; border: 1px solid var(--v26-border); background: var(--v26-surface); }
+
+
+.v26-hist-row { cursor: pointer; -webkit-tap-highlight-color: transparent; transition: border-color 150ms ease, background-color 150ms ease; }
+.v26-hist-row:focus-visible { outline: 2px solid var(--accent, #22d3ee); outline-offset: 2px; }
+.v26-hist-rowfoot { display: flex; align-items: center; justify-content: flex-end; gap: 8px; margin-top: 6px; }
+.v26-hist-more { display: inline-flex; align-items: center; gap: 2px; color: var(--accent, #22d3ee); font-size: 0.8rem; font-weight: 700; }
+.v26-hist-edchip { padding: 2px 8px; border-radius: 999px; background: rgba(255, 255, 255, 0.08); color: var(--muted, #94a3b8); font-size: 0.72rem; font-weight: 700; }
+.v26-hist-edchip[hidden] { display: none; }
+.v26-hist-ic-xs { width: 12px; height: 12px; }
+.v26-hist-link { display: inline-flex; align-items: center; gap: 3px; margin-left: 6px; padding: 1px 6px; border-radius: 999px; background: var(--v26-surface2); color: var(--v26-muted); font-size: 0.66rem; font-weight: 700; vertical-align: 2px; white-space: nowrap; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+.v26-hist-member { display: inline-flex; align-items: center; flex-wrap: wrap; margin-right: 8px; }
+
+
+body.theme-flip7 .v26-hist-sheet {
+  --v26-bg: #2f9693; --v26-bg2: #3aa9a6; --v26-surface: #f5f1e4; --v26-surface2: #ebe3cc; --v26-text: #223266; --v26-muted: #5a6690;
+  --v26-border: rgba(34, 50, 102, 0.16); --v26-accent: #d9269e; --v26-accent-ink: #ffffff; --v26-win: #e0a800; --v26-win-soft: rgba(255, 200, 21, 0.2);
+  --v26-neg: #c84b31; --v26-bar: rgba(34, 50, 102, 0.94); --v26-input: #ffffff;
+}
+body.theme-flip7 .v26-hist-bar, body.theme-flip7 .v26-hist-foot { color: #f1ece0; }
+body.theme-flip7 .v26-hist-bar .v26-hist-iconbtn { background: rgba(255, 255, 255, 0.1); border-color: rgba(255, 255, 255, 0.2); color: #f1ece0; }
+body.theme-flip7 .v26-hist-foot .v26-hist-btn-ghost { color: #f1ece0; border-color: rgba(255, 255, 255, 0.3); }
+body.theme-flip7 .v26-hist-col > .v26-hist-sec > .v26-hist-sec-h, body.theme-flip7 .v26-hist-col > .v26-hist-legend, body.theme-flip7 .v26-hist-ro { color: #ffffff; }
+body.theme-flip7 .v26-hist-col > .v26-hist-sec > .v26-hist-sec-h .v26-hist-hint { color: rgba(255, 255, 255, 0.85); }
+
+body.theme-seven-wonders .v26-hist-sheet {
+  --v26-bg: #eadbc0; --v26-bg2: #f3e8d1; --v26-surface: #f8f0df; --v26-surface2: #e8d8b7; --v26-text: #382515; --v26-muted: #84684c;
+  --v26-border: rgba(56, 37, 21, 0.16); --v26-accent: #9e4822; --v26-accent-ink: #fff7ea; --v26-win: #b8841e; --v26-win-soft: rgba(201, 151, 70, 0.18);
+  --v26-neg: #a62b22; --v26-bar: rgba(56, 37, 21, 0.95); --v26-input: #fffaf0; --v26-head-font: Georgia, 'Times New Roman', serif;
+}
+body.theme-seven-wonders .v26-hist-bar, body.theme-seven-wonders .v26-hist-foot { color: #f8f0df; }
+body.theme-seven-wonders .v26-hist-bar .v26-hist-iconbtn { background: rgba(248, 240, 223, 0.08); border-color: rgba(248, 240, 223, 0.2); color: #f8f0df; }
+body.theme-seven-wonders .v26-hist-foot .v26-hist-btn-ghost { color: #f8f0df; border-color: rgba(248, 240, 223, 0.3); }
+
+body.theme-carcassonne .v26-hist-sheet {
+  --v26-bg: #8fb86a; --v26-bg2: #a6c983; --v26-surface: #faf3e0; --v26-surface2: #efe4c6; --v26-text: #23160a; --v26-muted: #6c5537;
+  --v26-border: rgba(35, 22, 10, 0.16); --v26-accent: #4f371c; --v26-accent-ink: #faf3e0; --v26-win: #b8862a; --v26-win-soft: rgba(212, 160, 60, 0.2);
+  --v26-neg: #a8321f; --v26-bar: rgba(35, 22, 10, 0.94); --v26-input: #fffaf0;
+}
+body.theme-carcassonne .v26-hist-bar, body.theme-carcassonne .v26-hist-foot { color: #faf3e0; }
+body.theme-carcassonne .v26-hist-bar .v26-hist-iconbtn { background: rgba(250, 243, 224, 0.08); border-color: rgba(250, 243, 224, 0.2); color: #faf3e0; }
+body.theme-carcassonne .v26-hist-foot .v26-hist-btn-ghost { color: #faf3e0; border-color: rgba(250, 243, 224, 0.3); }
+body.theme-carcassonne .v26-hist-col > .v26-hist-sec > .v26-hist-sec-h, body.theme-carcassonne .v26-hist-col > .v26-hist-legend, body.theme-carcassonne .v26-hist-ro { color: #1d2a10; }
+
+body.theme-catan .v26-hist-sheet {
+  --v26-bg: #24160b; --v26-bg2: #3a2412; --v26-surface: #f4e6c4; --v26-surface2: #e6d2a3; --v26-text: #3b2814; --v26-muted: #6a4d2a;
+  --v26-border: rgba(59, 40, 20, 0.2); --v26-accent: #8a3418; --v26-accent-ink: #fff4dc; --v26-win: #c99a3e; --v26-win-soft: rgba(201, 154, 62, 0.22);
+  --v26-neg: #8a3418; --v26-bar: rgba(43, 26, 13, 0.96); --v26-input: #fffaf0; --v26-head-font: Georgia, 'Times New Roman', serif;
+}
+body.theme-catan .v26-hist-bar, body.theme-catan .v26-hist-foot { color: #f0cf7a; }
+body.theme-catan .v26-hist-bar .v26-hist-iconbtn { background: rgba(240, 207, 122, 0.08); border-color: rgba(240, 207, 122, 0.25); color: #f0cf7a; }
+body.theme-catan .v26-hist-foot .v26-hist-btn-ghost { color: #f0cf7a; border-color: rgba(240, 207, 122, 0.3); }
+body.theme-catan .v26-hist-col > .v26-hist-sec > .v26-hist-sec-h, body.theme-catan .v26-hist-col > .v26-hist-legend, body.theme-catan .v26-hist-ro { color: #f0cf7a; }
+body.theme-catan .v26-hist-col > .v26-hist-sec > .v26-hist-sec-h .v26-hist-hint { color: #d8bd85; }
+
+body.theme-ohhell .v26-hist-sheet {
+  --v26-bg: #f5f0e6; --v26-bg2: #f5f0e6; --v26-surface: #fcf9f3; --v26-surface2: #efe8da; --v26-text: #1f1c18; --v26-muted: #555a53;
+  --v26-border: rgba(62, 77, 68, 0.2); --v26-accent: #115539; --v26-accent-ink: #ffffff; --v26-win: #9a7b1c; --v26-win-soft: rgba(17, 85, 57, 0.08);
+  --v26-neg: #9a1b22; --v26-bar: rgba(11, 62, 41, 0.97); --v26-input: #ffffff; --v26-head-font: Georgia, 'Times New Roman', serif;
+}
+body.theme-ohhell .v26-hist-bar, body.theme-ohhell .v26-hist-foot { color: #faf7f0; }
+body.theme-ohhell .v26-hist-bar .v26-hist-iconbtn { background: rgba(250, 247, 240, 0.08); border-color: rgba(250, 247, 240, 0.22); color: #faf7f0; }
+body.theme-ohhell .v26-hist-bar .v26-hist-btn-edit, body.theme-ohhell .v26-hist-foot .v26-hist-btn-primary { background: #faf7f0; color: #0b3e29; }
+body.theme-ohhell .v26-hist-foot .v26-hist-btn-ghost { color: #faf7f0; border-color: rgba(250, 247, 240, 0.3); }
+
+body.theme-hearts .v26-hist-sheet {
+  --v26-bg: #f5f0e6; --v26-bg2: #f5f0e6; --v26-surface: #fcf9f3; --v26-surface2: #efe7da; --v26-text: #1f1c18; --v26-muted: #5c554c;
+  --v26-border: rgba(79, 74, 68, 0.2); --v26-accent: #9a1b22; --v26-accent-ink: #ffffff; --v26-win: #9a1b22; --v26-win-soft: rgba(154, 27, 34, 0.07);
+  --v26-neg: #2d6a4f; --v26-bar: rgba(123, 17, 24, 0.97); --v26-input: #ffffff; --v26-head-font: Georgia, 'Times New Roman', serif;
+}
+body.theme-hearts .v26-hist-bar, body.theme-hearts .v26-hist-foot { color: #faf7f0; }
+body.theme-hearts .v26-hist-bar .v26-hist-iconbtn { background: rgba(250, 247, 240, 0.08); border-color: rgba(250, 247, 240, 0.22); color: #faf7f0; }
+body.theme-hearts .v26-hist-bar .v26-hist-btn-edit, body.theme-hearts .v26-hist-foot .v26-hist-btn-primary { background: #faf7f0; color: #7b1118; }
+body.theme-hearts .v26-hist-foot .v26-hist-btn-ghost { color: #faf7f0; border-color: rgba(250, 247, 240, 0.3); }
+body.theme-hearts .v26-hist-st.is-winner .v26-hist-place { color: #ffffff; }
+
+body.theme-nertz .v26-hist-sheet {
+  --v26-bg: #071222; --v26-bg2: #0c1d36; --v26-surface: #0c1d36; --v26-surface2: #12284a; --v26-text: #faf3e1; --v26-muted: #b9ad8f;
+  --v26-border: rgba(230, 198, 119, 0.2); --v26-accent: #e6c677; --v26-accent-ink: #0f1b2d; --v26-win: #e6c677; --v26-win-soft: rgba(230, 198, 119, 0.12);
+  --v26-neg: #ff7a7a; --v26-bar: rgba(7, 18, 34, 0.95); --v26-input: #081529; --v26-head-font: Georgia, 'Times New Roman', serif;
+}
+
+body.theme-rummikub .v26-hist-sheet {
+  --v26-bg: #0b2f69; --v26-bg2: #0f3f88; --v26-surface: #faf6ec; --v26-surface2: #efe7d5; --v26-text: #0f1f3d; --v26-muted: #55637c;
+  --v26-border: rgba(15, 31, 61, 0.14); --v26-accent: #13469e; --v26-accent-ink: #ffffff; --v26-win: #df6d10; --v26-win-soft: rgba(223, 109, 16, 0.12);
+  --v26-neg: #c62828; --v26-bar: rgba(6, 28, 66, 0.96); --v26-input: #ffffff;
+}
+body.theme-rummikub .v26-hist-bar, body.theme-rummikub .v26-hist-foot { color: #faf6ec; }
+body.theme-rummikub .v26-hist-bar .v26-hist-iconbtn { background: rgba(250, 246, 236, 0.08); border-color: rgba(250, 246, 236, 0.22); color: #faf6ec; }
+body.theme-rummikub .v26-hist-bar .v26-hist-btn-edit, body.theme-rummikub .v26-hist-foot .v26-hist-btn-primary { background: #faf6ec; color: #0b2f69; }
+body.theme-rummikub .v26-hist-foot .v26-hist-btn-ghost { color: #faf6ec; border-color: rgba(250, 246, 236, 0.3); }
+body.theme-rummikub .v26-hist-col > .v26-hist-sec > .v26-hist-sec-h, body.theme-rummikub .v26-hist-col > .v26-hist-legend, body.theme-rummikub .v26-hist-ro { color: #faf6ec; }
+body.theme-rummikub .v26-hist-col > .v26-hist-sec > .v26-hist-sec-h .v26-hist-hint { color: #c9d3e6; }
+
+body.theme-qwirkle .v26-hist-sheet {
+  --v26-bg: #fbf7ee; --v26-bg2: #fbf7ee; --v26-surface: #ffffff; --v26-surface2: #fbf6ea; --v26-text: #0e1a3a; --v26-muted: #5b6480;
+  --v26-border: rgba(14, 26, 58, 0.12); --v26-accent: #7b4fd6; --v26-accent-ink: #ffffff; --v26-win: #f47a13; --v26-win-soft: rgba(249, 194, 16, 0.14);
+  --v26-neg: #e5252c; --v26-bar: rgba(11, 26, 61, 0.96); --v26-input: #ffffff;
+}
+body.theme-qwirkle .v26-hist-bar, body.theme-qwirkle .v26-hist-foot { color: #ffffff; }
+body.theme-qwirkle .v26-hist-bar .v26-hist-iconbtn { background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.22); color: #ffffff; }
+body.theme-qwirkle .v26-hist-foot .v26-hist-btn-ghost { color: #ffffff; border-color: rgba(255, 255, 255, 0.3); }
+
+body.theme-spoons .v26-hist-sheet {
+  --v26-bg: #fbf3e4; --v26-bg2: #fff9ee; --v26-surface: #fff9ee; --v26-surface2: #f3e6cf; --v26-text: #4a2c14; --v26-muted: #7a5a3e;
+  --v26-border: rgba(110, 69, 32, 0.2); --v26-accent: #b6322c; --v26-accent-ink: #ffffff; --v26-win: #b57d43; --v26-win-soft: rgba(214, 164, 104, 0.18);
+  --v26-neg: #b6322c; --v26-bar: rgba(143, 92, 44, 0.97); --v26-input: #ffffff; --v26-head-font: Georgia, 'Times New Roman', serif;
+}
+body.theme-spoons .v26-hist-sheet { background-image: linear-gradient(90deg, rgba(182, 50, 44, 0.05) 50%, transparent 50%), linear-gradient(rgba(182, 50, 44, 0.05) 50%, transparent 50%); background-size: 24px 24px; }
+body.theme-spoons .v26-hist-bar, body.theme-spoons .v26-hist-foot { color: #fff9ee; }
+body.theme-spoons .v26-hist-bar .v26-hist-iconbtn { background: rgba(255, 249, 238, 0.1); border-color: rgba(255, 249, 238, 0.25); color: #fff9ee; }
+body.theme-spoons .v26-hist-foot .v26-hist-btn-ghost { color: #fff9ee; border-color: rgba(255, 249, 238, 0.35); }
+
+</style>
 <style id="v25-transitions-css">
 
 
@@ -11896,9 +12194,144 @@ body.theme-spoons { --v25-bg: #fbf3e4; }
 #req-game-modal .v25-rkb-foot #btn-submit-game-request { width: 100%; }
 
 </style>
+<style id="v26-favorites-css">
+
+
+.v26-fav-host {
+  display: flex !important;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 1rem;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.v26-fav-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.v26-fav-section[hidden],
+.v26-fav-section.v26-fav-hidden {
+  display: none !important;
+}
+
+.v26-fav-heading {
+  margin: 0;
+  padding: 0 2px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--v21-brass, #d4a853);
+  line-height: 1.3;
+}
+
+.v26-fav-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 0.7rem;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.v26-fav-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 4;
+  width: 44px;
+  height: 44px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0 12px 0 12px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.94);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-tap-highlight-color: transparent;
+  appearance: none;
+  box-sizing: border-box;
+}
+
+.v26-fav-btn::before {
+  content: "";
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 72%);
+  pointer-events: none;
+}
+
+.v26-fav-btn svg {
+  position: relative;
+  z-index: 1;
+  width: 22px;
+  height: 22px;
+  display: block;
+  fill: none;
+  stroke: currentColor;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.65));
+  transform-origin: 50% 55%;
+}
+
+.v26-fav-btn[aria-pressed="true"] {
+  color: #b42318;
+}
+
+.v26-fav-btn[aria-pressed="true"] svg {
+  fill: currentColor;
+}
+
+.v26-fav-btn:focus {
+  outline: none;
+}
+
+.v26-fav-btn:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: -6px;
+}
+
+.v26-fav-btn.v26-fav-pop svg {
+  animation: v26-fav-pop 280ms ease;
+}
+
+.v26-fav-reduced .v26-fav-btn.v26-fav-pop svg {
+  animation: none;
+}
+
+.v26-fav-status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@keyframes v26-fav-pop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.18); }
+  100% { transform: scale(1); }
+}
+
+</style>
 </head>
 <body>
-<!-- Build: v25.1-spoons-polish-2026-11-27 -->
+<!-- Build: v26-favorites-history-2026-11-28 -->
 
 <!-- Login: starts hidden until getSession() resolves -->
 <section id="login-view" class="auth-hidden" hidden aria-label="Sign in to Score Tracker">
@@ -16408,6 +16841,8 @@ body.theme-spoons { --v25-bg: #fbf3e4; }
     const opts = options || {};
     const user = await getAuthUser();
     if (!user || !game) return { ok: false, error: 'Missing user or game.' };
+    // v26: an edited game is owned by update_game_record; re-sharing the local copy would overwrite the edit
+    if (game.edited === true || game.edited_at || (game.meta && (game.meta.edited_at || game.meta.edited))) return { ok: true, skipped: 'edited', game };
 
     const groupId = opts.groupId || game.group_id || null;
     const clientGameId = String(game.client_game_id || game.id || (game.endTime ? 'g-' + game.endTime : 'g-' + Date.now()));
@@ -20623,6 +21058,27 @@ window.SocialUI = (function () {
     current = null; emit();
     return rec;
   }
+
+  // Load a snapshot as the active game. Accepts the raw engine state (getRawState())
+  // or a UI view (getState()); persists + fires tallyit:spoons-change.
+  function restore(raw) {
+    if (!raw) { current = null; emit(); return null; }
+    if (typeof raw === 'string') raw = JSON.parse(raw);
+    let s;
+    if (Array.isArray(raw.eliminations) && Array.isArray(raw.active)) {
+      s = clone(raw);
+    } else if (Array.isArray(raw.players)) {
+      s = initState(raw.players.map((p) => ({ name: p.name, userId: p.userId != null ? p.userId : undefined })));
+      const hist = Array.isArray(raw.history) && raw.history.length ? raw.history.slice()
+        : raw.players.map((p, i) => ({ round: p.outRound, outPlayerId: p.id || pid(i) })).filter((h) => h.round != null);
+      hist.sort((a, b) => a.round - b.round).forEach((h) => {
+        const i = typeof h.outPlayerId === 'number' ? h.outPlayerId : (/^p(\d+)$/.exec(String(h.outPlayerId)) || [])[1];
+        const idx = i != null ? Number(i) : resolveIndex(s, h.outPlayerId);
+        if (idx >= 0 && !s.isGameOver) s = eliminate(s, idx);
+      });
+    } else throw new Error('Unrecognized Spoons snapshot');
+    current = s; emit(); return view(current);
+  }
   function reset() { current = null; emit(); }
 
   const api = {
@@ -20631,7 +21087,7 @@ window.SocialUI = (function () {
     getActivePlayers, isActive, canEliminate, canUndo,
     getStandings, getStats, getHistory, toGameRecord,
     // stateful UI contract
-    LS_KEY, start, resume, getState, getRawState, knockOut, undo, finishAndSave, reset, onChange
+    LS_KEY, start, resume, getState, getRawState, knockOut, undo, finishAndSave, reset, onChange, restore
   };
   global.TallyItSpoons = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
@@ -26241,6 +26697,19 @@ try { if (window.TallyItV24Backend) window.TallyItV24Backend.capturePendingClaim
     if (!h) return false;
     return deleteHistoryEntry(h.id || '', '');
   }
+  // v26: History past-game detail seam for v26_history_detail.js (read the merged list + write an edited local record back)
+  global.TallyItV26HistoryEngine = {
+    entries: () => historyEntries(), user: () => currentUser, games: () => GAMES,
+    local: (id) => history.find((h) => h && String(h.id || '') === String(id || '')) || null,
+    applyLocalEdit(id, rec) {
+      const i = history.findIndex((h) => h && String(h.id || '') === String(id || ''));
+      if (i < 0 || !rec) return false;
+      history[i] = { ...rec, id: history[i].id }; saveCache(true); saveData();
+      if (currentView === 'history') renderHistory();
+      return true;
+    },
+    refresh: () => { if (currentView === 'history') renderHistory(); }, refreshSocial: () => refreshSocial()
+  };
 
   // ---------------- Social layer: you + friends + groups ----------------
   const lc = (s) => String(s || '').trim().toLowerCase();
@@ -26850,12 +27319,13 @@ try { if (window.TallyItV24Backend) window.TallyItV24Backend.capturePendingClaim
   async function shareFinishedGame(fin) {
     const api = SAPI(), sc = SSC(), user = currentUser;
     if (!api || !sc || !user || !fin) return null;
+    if (fin.edited === true || fin.edited_at || (fin.meta && (fin.meta.edited_at || fin.meta.edited))) return null; // v26: never re-share an edited game
     try {
       const payload = sc.buildSharedGamePayload(fin, user);
       const game = {
         ...fin, client_game_id: fin.id, group_id: payload.group_id || null,
         winner: (fin.type === 'nertz' || fin.type === 'rummikub' || fin.type === '7wonders') ? fin.winner : ((payload.winner_names || []).join(', ') || fin.winner),
-        meta: fin.meta || null,
+        meta: { ...(fin.meta || {}), variation_key: fin.v22VariationKey || null, variation_name: fin.v22VariationName || null }, // v26: persist the variation so History detail can show it
         players: fin.players.map((p, i) => ({ ...p, user_id: (payload.participants[i] || {}).user_id || null, is_winner: !!(payload.participants[i] || {}).is_winner, meta: (payload.participants[i] || {}).meta || {} })),
         summary: payload.summary
       };
@@ -32399,6 +32869,1680 @@ if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(() => {}); });
 }
 </script>
+<script id="v26-record-tools">
+/* ==========================================================================
+   TallyIt v26 - Past game detail + editing (window.TallyItRecordTools + module.exports)
+
+   describeRecord(record, opts)          -> display model (players, placements, rounds, totals)
+   recomputeRecord(record, edits, opts)  -> { ok, record, errors, warnings, changes }
+   canEditRecord(record, user)           -> { canEdit, readOnly, reason }
+   buildSharedEdit(before, after)        -> { game_id, game, participants } for the Supabase save path
+
+   Works with local history records (players + rounds[{prev,deltas,...}]) and
+   normalized shared rows (social_auth normalizeGameRow output). Records with
+   no usable round data fall back to final scores only.
+   Covers all 11 games: flip7, 7wonders, carcassonne, catan, ohhell, hearts,
+   nertz, rummikub, qwirkle, spoons, other.
+   ========================================================================== */
+(function (global) {
+  'use strict';
+
+  const GAMES = {
+    flip7:       { name: 'Flip 7',      low: false, unit: 'Round' },
+    '7wonders':  { name: '7 Wonders',   low: false, unit: null },
+    carcassonne: { name: 'Carcassonne', low: false, unit: 'Score' },
+    catan:       { name: 'Catan',       low: false, unit: 'Turn' },
+    ohhell:      { name: 'Oh Hell',     low: false, unit: 'Round' },
+    hearts:      { name: 'Hearts',      low: true,  unit: 'Hand' },
+    nertz:       { name: 'Nertz',       low: false, unit: 'Round' },
+    rummikub:    { name: 'Rummikub',    low: true,  unit: 'Round' },
+    qwirkle:     { name: 'Qwirkle',     low: false, unit: 'Turn' },
+    spoons:      { name: 'Spoons',      low: false, unit: 'Round' },
+    other:       { name: 'Custom',      low: false, unit: 'Round' }
+  };
+  const ALIASES = { seven_wonders: '7wonders', 'seven-wonders': '7wonders', '7_wonders': '7wonders', flip_7: 'flip7', 'flip-7': 'flip7',
+    oh_hell: 'ohhell', 'oh-hell': 'ohhell', custom: 'other', settlers: 'catan' };
+  const CATAN_CATS = [
+    { key: 'settlements', label: 'Settlements', vp: 1 }, { key: 'cities', label: 'Cities', vp: 2 },
+    { key: 'longestRoad', label: 'Longest Road', vp: 2 }, { key: 'largestArmy', label: 'Largest Army', vp: 2 },
+    { key: 'vpCards', label: 'VP Cards', vp: 1 }
+  ];
+  const SW_CATS = ['military', 'treasury', 'wonder', 'civilian', 'commercial', 'guilds', 'science', 'leaders', 'cities', 'armada'];
+
+  function clone(o) { return o == null ? o : JSON.parse(JSON.stringify(o)); }
+  function num(v) { const n = Number(v); return Number.isFinite(n) ? n : 0; }
+  function gameKeyOf(rec) {
+    const k = String((rec && (rec.game_key || rec.type || rec.game_type || (rec.meta && rec.meta.game_key))) || 'other').trim().toLowerCase();
+    const g = ALIASES[k] || k;
+    return GAMES[g] ? g : 'other';
+  }
+  function lib(name, path) {
+    if (global[name]) return global[name];
+    try { if (typeof require === 'function') return require(path); } catch (e) {}
+    return null;
+  }
+  const Hearts = () => lib('TallyItHearts', './hearts_scoring.js');
+  const OhHell = () => lib('TallyItOhHell', './ohhell_scoring.js');
+  const SW = () => lib('SevenWondersLogic', './seven_wonders_logic.js');
+
+  function isLow(rec, gk) {
+    if (typeof rec.lowWins === 'boolean') return rec.lowWins;
+    if (typeof rec.low === 'boolean') return rec.low;
+    if (rec.meta && typeof rec.meta.low === 'boolean') return rec.meta.low;
+    if (gk === 'rummikub') return rec.rkScoringMode === 'points_up';
+    return GAMES[gk].low;
+  }
+  function playerName(rec, p) {
+    if (!p) return '';
+    if (gameKeyOf(rec) === 'nertz' && Array.isArray(p.members) && p.members.length && !p.name) return p.members.map((m) => m.name).join(' & ');
+    return String(p.name || p.display_name || '').trim();
+  }
+  function playerUserId(p) { return (p && (p.userId || p.user_id)) || null; }
+
+  // ---------------- round data detection ----------------
+  // Converts module-style qwirkle rounds ({playerIdx, score}) to engine deltas.
+  function normalizeRounds(rec) {
+    const n = (rec.players || []).length;
+    const raw = Array.isArray(rec.rounds) ? rec.rounds : [];
+    return raw.map((r) => {
+      if (!r || typeof r !== 'object') return null;
+      if (Array.isArray(r.deltas) && r.deltas.length === n) return r;
+      if (typeof r.playerIdx === 'number' && r.score != null) {
+        const deltas = Array.from({ length: n }, (_, i) => (i === r.playerIdx ? num(r.score) : 0));
+        return { ...r, by: r.playerIdx, deltas };
+      }
+      return null;
+    });
+  }
+  function usableRounds(rec, gk) {
+    if (gk === 'spoons' || gk === '7wonders') return false;
+    const rs = normalizeRounds(rec);
+    return rs.length > 0 && rs.every(Boolean);
+  }
+  function spoonsEliminations(rec) {
+    const m = rec.meta || {};
+    const src = (m.spoons && m.spoons.eliminations) || m.eliminations;
+    if (Array.isArray(src) && src.length) return src.map((e) => ({ player: e.player, round: num(e.round) }));
+    const rs = Array.isArray(rec.rounds) ? rec.rounds : [];
+    const fromRounds = rs.map((r, i) => r && (r.eliminated || (r.detail && r.detail.eliminated))
+      ? { player: r.eliminated || r.detail.eliminated, round: num(r.round || (r.detail && r.detail.round) || i + 1) } : null).filter(Boolean);
+    if (fromRounds.length) return fromRounds;
+    return (rec.players || []).filter((p) => p.eliminatedRound != null).map((p) => ({ player: p.name, round: num(p.eliminatedRound) }))
+      .sort((a, b) => a.round - b.round);
+  }
+
+  // ---------------- placements ----------------
+  function rankBy(rows, cmp) {
+    const order = rows.map((r, i) => ({ r, i })).sort((a, b) => cmp(a.r, b.r) || a.i - b.i);
+    let place = 1;
+    order.forEach((o, k) => { if (k > 0 && cmp(order[k - 1].r, o.r) !== 0) place = k + 1; o.r.place = place; });
+    return rows;
+  }
+  function computePlacements(rec, gk, scores, extra) {
+    const rows = scores.map((s, i) => ({ index: i, score: s }));
+    if (gk === 'spoons') {
+      const elim = extra.eliminations || [];
+      const n = rows.length;
+      const outPos = {}; elim.forEach((e, k) => { outPos[String(e.player).toLowerCase()] = k; });
+      const names = (rec.players || []).map((p) => playerName(rec, p).toLowerCase());
+      const remaining = names.filter((nm) => !(nm in outPos)).length;
+      rows.forEach((r) => {
+        const k = outPos[names[r.index]];
+        r.place = k == null ? 1 : n - k;
+        r.score = n - r.place;
+        r.eliminatedRound = k == null ? null : elim[k].round;
+      });
+      rows.forEach((r) => { r.isWinner = remaining === 1 && r.place === 1; });
+      return rows;
+    }
+    const low = isLow(rec, gk);
+    const coins = extra.coins || [];
+    rankBy(rows, (a, b) => {
+      const d = low ? a.score - b.score : b.score - a.score;
+      if (d) return d;
+      if (gk === '7wonders') return num(coins[b.index]) - num(coins[a.index]);
+      return 0;
+    });
+    rows.forEach((r) => { r.isWinner = rows.length > 0 && r.place === 1; });
+    return rows;
+  }
+
+  // ---------------- score computation ----------------
+  function catanScore(bd) { return CATAN_CATS.reduce((s, c) => s + num(bd && bd[c.key]) * c.vp, 0); }
+  function hasCatanBreakdown(rec) {
+    return (rec.players || []).some((p) => p.breakdown && CATAN_CATS.some((c) => num(p.breakdown[c.key])));
+  }
+  function swTotals(rec) {
+    const L = SW();
+    return (rec.players || []).map((p) => {
+      if (L && p.scores) { const c = L.swComputePlayerTotal(p, rec.expansions || (rec.meta && rec.meta.expansions)); return { score: c.total, coins: c.coins, treasuryVp: c.treasuryVp, scienceVp: c.scienceVp }; }
+      return { score: num(p.score), coins: num(p.coins != null ? p.coins : p.tiebreakCoins) };
+    });
+  }
+
+  // Replays rounds so prev/deltas are consistent; handles Flip 7 resets.
+  function rebuildRounds(rounds, n) {
+    const running = Array(n).fill(0);
+    return rounds.map((r) => {
+      const prev = running.slice();
+      let deltas = r.deltas.map(num);
+      if (r.mode === 'reset') deltas = prev.map((s) => -s);
+      deltas.forEach((d, i) => { running[i] += d; });
+      return { ...r, prev, deltas };
+    });
+  }
+  function sumRounds(rounds, n) {
+    const t = Array(n).fill(0);
+    rebuildRounds(rounds, n).forEach((r) => r.deltas.forEach((d, i) => { t[i] += d; }));
+    return t;
+  }
+
+  function roundLabel(gk, r, k, rec) {
+    const names = (rec.players || []).map((p) => playerName(rec, p));
+    if (gk === 'hearts') return 'Hand ' + (r.handNumber || k + 1) + (r.passLabel ? ' (' + r.passLabel + ')' : '');
+    if (gk === 'ohhell') return 'Round ' + (r.roundNumber || k + 1) + (r.cardsDealt ? ' (' + r.cardsDealt + ' cards' + (r.trump ? ', ' + r.trump : '') + ')' : '');
+    if (r.mode === 'reset') return 'Scores reset';
+    if (r.mode === 'edit_adjustment') return 'Score correction';
+    const by = typeof r.by === 'number' && names[r.by] ? ' (' + names[r.by] + ')' : '';
+    return (GAMES[gk].unit || 'Round') + ' ' + (k + 1) + by;
+  }
+  function roundDetail(gk, r) {
+    if (gk === 'hearts' && Array.isArray(r.entries)) return { entries: r.entries, shooterIdx: r.shooterIdx != null ? r.shooterIdx : -1 };
+    if (gk === 'ohhell' && Array.isArray(r.entries)) return { entries: r.entries.map((e) => ({ bid: e.bid, tricksWon: e.tricksWon, exact: e.exact })) };
+    if (r.detail && typeof r.detail === 'object') return clone(r.detail);
+    return null;
+  }
+
+  // ======================= describeRecord =======================
+  function describeRecord(record, opts) {
+    opts = opts || {};
+    const rec = record || {};
+    const gk = gameKeyOf(rec);
+    const players = Array.isArray(rec.players) ? rec.players : [];
+    const n = players.length;
+    const notes = [];
+    let mode = 'final_only';
+    let scores = players.map((p) => num(p.score));
+    let rounds = [];
+    let categories = null;
+    const extra = {};
+
+    if (gk === 'spoons') {
+      extra.eliminations = spoonsEliminations(rec);
+      if (extra.eliminations.length) {
+        mode = 'eliminations';
+        rounds = extra.eliminations.map((e, k) => ({ number: k + 1, label: 'Round ' + e.round, eliminated: e.player, deltas: null, running: null }));
+      }
+    } else if (gk === '7wonders') {
+      const t = swTotals(rec);
+      extra.coins = t.map((x) => x.coins);
+      if (players.some((p) => p.scores)) {
+        mode = 'categories';
+        scores = t.map((x) => x.score);
+        const keys = SW_CATS.filter((k) => players.some((p) => (k === 'science' ? p.science : p.scores && p.scores[k] != null)));
+        categories = keys.map((k) => ({
+          key: k, label: k[0].toUpperCase() + k.slice(1),
+          values: players.map((p, i) => (k === 'science' ? t[i].scienceVp : k === 'treasury' ? t[i].treasuryVp : num(p.scores && p.scores[k])))
+        }));
+        if (keys.includes('treasury')) categories.push({ key: 'coins', label: 'Coins (tiebreak)', values: extra.coins, tiebreakOnly: true });
+      }
+    } else if (usableRounds(rec, gk)) {
+      mode = 'rounds';
+      const built = rebuildRounds(normalizeRounds(rec), n);
+      const run = Array(n).fill(0);
+      rounds = built.map((r, k) => {
+        r.deltas.forEach((d, i) => { run[i] += d; });
+        return { number: k + 1, index: k, label: roundLabel(gk, r, k, rec), by: typeof r.by === 'number' ? r.by : null, mode: r.mode || null,
+          deltas: r.deltas.slice(), running: run.slice(), detail: roundDetail(gk, r), ts: r.ts || null };
+      });
+      const computed = run.slice();
+      if (computed.some((s, i) => s !== scores[i])) notes.push('Round totals differ from the saved final scores; showing saved finals.');
+    } else if (Array.isArray(rec.rounds) && rec.rounds.length) {
+      notes.push('Round data is incomplete for this game; showing final scores only.');
+    } else {
+      notes.push('No round data saved for this game; showing final scores only.');
+    }
+
+    if (gk === 'catan' && hasCatanBreakdown(rec)) {
+      categories = CATAN_CATS.map((c) => ({ key: c.key, label: c.label, vp: c.vp, values: players.map((p) => num(p.breakdown && p.breakdown[c.key])) }));
+      if (mode === 'final_only') mode = 'categories';
+    }
+
+    const ranked = computePlacements(rec, gk, scores, extra);
+    const outRows = players.map((p, i) => {
+      const r = ranked[i];
+      const o = { index: i, name: playerName(rec, p), userId: playerUserId(p), isGuest: !playerUserId(p) && !(p.members && p.members.some((m) => m.userId)),
+        score: gk === 'spoons' ? r.score : scores[i], place: r.place, isWinner: r.isWinner };
+      if (Array.isArray(p.members) && p.members.length) o.members = p.members.map((m) => ({ name: m.name, userId: m.userId || m.user_id || null }));
+      if (gk === 'spoons') o.eliminatedRound = r.eliminatedRound;
+      if (gk === '7wonders') { o.coins = extra.coins[i]; if (p.wonder) o.wonder = p.wonder; }
+      if (gk === 'catan' && p.breakdown) o.breakdown = { ...p.breakdown };
+      return o;
+    });
+    const placeMap = {};
+    outRows.forEach((r) => { (placeMap[r.place] = placeMap[r.place] || []).push(r.name); });
+    const placements = Object.keys(placeMap).map(Number).sort((a, b) => a - b).map((pl) => ({ place: pl, names: placeMap[pl], tied: placeMap[pl].length > 1 }));
+    const winnerNames = outRows.filter((r) => r.isWinner).map((r) => r.name);
+
+    return {
+      gameKey: gk,
+      gameName: rec.gameName || GAMES[gk].name,
+      version: rec.version || null,
+      variation: rec.variation_name || rec.variationName || (rec.variation && (rec.variation.name || rec.variation)) || rec.variation_key || rec.version || null,
+      id: rec.id || rec.client_game_id || null,
+      date: rec.endTime || rec.date || rec.ended_at || null,
+      lowWins: gk === 'spoons' ? false : isLow(rec, gk),
+      target: rec.target != null ? rec.target : null,
+      mode,                       // 'rounds' | 'categories' | 'eliminations' | 'final_only'
+      hasRounds: mode === 'rounds' || mode === 'eliminations',
+      columns: outRows.map((r) => r.name),
+      players: outRows,
+      placements,
+      rounds,
+      categories,
+      totals: outRows.map((r) => r.score),
+      winnerNames,
+      winner: winnerNames.join(', '),
+      edited: rec.meta && rec.meta.edited ? clone(rec.meta.edited) : null,
+      notes
+    };
+  }
+
+  // ======================= permissions =======================
+  function canEditRecord(record, user) {
+    const rec = record || {};
+    const uid = user && (user.id || user.user_id || user.userId || (typeof user === 'string' ? user : null));
+    const creator = rec.created_by || rec.createdBy || (rec.meta && rec.meta.created_by) || null;
+    if (!creator) return { canEdit: true, readOnly: false, reason: 'local' };          // local-only record on this device
+    if (uid && uid === creator) return { canEdit: true, readOnly: false, reason: 'creator' };
+    const linked = uid && (rec.players || []).concat(rec.participants || []).some((p) =>
+      playerUserId(p) === uid || (Array.isArray(p.members) && p.members.some((m) => (m.userId || m.user_id) === uid)));
+    return { canEdit: false, readOnly: true, reason: linked ? 'linked_player' : 'not_creator' };
+  }
+
+  // ======================= recomputeRecord =======================
+  /* edits:
+       players:   [{ index, name?, score? }]   score only for final-only games (or adds a correction round)
+       rounds:    [{ index, deltas?, entries?, delete? }]   entries = hearts/ohhell hand input; replayed through the module
+       addRounds: [{ deltas, by?, label? }]
+       categories:[{ index, key, value }]       catan breakdown keys / 7 Wonders score keys (+ 'coins', science.{tablets,compasses,gears,wilds})
+       eliminationOrder: [names...]             spoons, first out first
+       lowWins?, target?
+     opts: { user, now, enforcePermission (default true when user given) } */
+  function recomputeRecord(record, edits, opts) {
+    edits = edits || {}; opts = opts || {};
+    const errors = [], warnings = [], changes = [];
+    if (!record || !Array.isArray(record.players)) return { ok: false, record: record, errors: ['Record has no players'], warnings, changes };
+    if (opts.user && opts.enforcePermission !== false) {
+      const perm = canEditRecord(record, opts.user);
+      if (!perm.canEdit) return { ok: false, record: record, errors: ['Only the game creator can edit this game (' + perm.reason + ')'], warnings, changes };
+    }
+    const rec = clone(record);
+    const gk = gameKeyOf(rec);
+    const n = rec.players.length;
+    const oldNames = rec.players.map((p) => playerName(rec, p));
+    const hadRounds = usableRounds(rec, gk);
+    if (hadRounds) rec.rounds = normalizeRounds(rec);
+
+    if (typeof edits.lowWins === 'boolean' && gk !== 'spoons') { rec.lowWins = edits.lowWins; changes.push('lowWins'); }
+    if (edits.target !== undefined) { rec.target = edits.target == null || edits.target === '' ? null : num(edits.target); changes.push('target'); }
+
+    // ---- names ----
+    const scoreEdits = [];
+    (edits.players || []).forEach((e) => {
+      const p = rec.players[e.index];
+      if (!p) { errors.push('Unknown player index ' + e.index); return; }
+      if (e.name != null && String(e.name).trim() !== oldNames[e.index]) {
+        const nm = String(e.name).trim();
+        if (!nm) errors.push('Name cannot be blank');
+        else if (playerUserId(p)) errors.push(oldNames[e.index] + ' is a linked account; their name comes from their profile');
+        else if (oldNames.some((o, i) => i !== e.index && o.toLowerCase() === nm.toLowerCase())) errors.push('Duplicate name: ' + nm);
+        else { p.name = nm; if (p.display_name != null) p.display_name = nm; changes.push('rename:' + e.index); }
+      }
+      if (e.score != null) scoreEdits.push(e);
+    });
+
+    // ---- rounds ----
+    if (gk === 'spoons') {
+      if (edits.eliminationOrder) {
+        const order = edits.eliminationOrder.map((x) => String(x).trim());
+        const lower = rec.players.map((p) => playerName(rec, p).toLowerCase());
+        const bad = order.filter((x) => !lower.includes(x.toLowerCase()));
+        const dup = order.length !== new Set(order.map((x) => x.toLowerCase())).size;
+        if (bad.length) errors.push('Unknown players in elimination order: ' + bad.join(', '));
+        else if (dup) errors.push('A player can only be eliminated once');
+        else if (order.length > n - 1) errors.push('At most ' + (n - 1) + ' eliminations (one player must remain)');
+        else {
+          const elim = order.map((x, k) => ({ player: rec.players[lower.indexOf(x.toLowerCase())].name, playerIndex: lower.indexOf(x.toLowerCase()), round: k + 1 }));
+          rec.meta = rec.meta || {};
+          rec.meta.spoons = { ...(rec.meta.spoons || {}), eliminations: elim, roundsPlayed: elim.length, finished: elim.length === n - 1 };
+          rec.rounds = elim.map((e) => ({ ts: null, by: e.playerIndex, mode: 'spoons', prev: [], deltas: [], detail: { round: e.round, eliminated: e.player } }));
+          changes.push('eliminations');
+        }
+      }
+      if (scoreEdits.length) errors.push('Spoons scores come from the elimination order; edit that instead');
+    } else if (gk === '7wonders') {
+      (edits.categories || []).forEach((c) => {
+        const p = rec.players[c.index];
+        if (!p) { errors.push('Unknown player index ' + c.index); return; }
+        const v = num(c.value);
+        if (c.key === 'coins') { p.scores = p.scores || {}; p.scores.treasury = v; }
+        else if (/^science\./.test(c.key)) { p.science = p.science || {}; p.science[c.key.split('.')[1]] = v; }
+        else if (SW_CATS.includes(c.key)) { p.scores = p.scores || {}; p.scores[c.key] = v; }
+        else { errors.push('Unknown 7 Wonders category ' + c.key); return; }
+        changes.push('cat:' + c.index + ':' + c.key);
+      });
+      if (scoreEdits.length && rec.players.some((p) => p.scores)) errors.push('7 Wonders totals come from categories; edit those instead');
+      else scoreEdits.forEach((e) => { rec.players[e.index].score = num(e.score); changes.push('score:' + e.index); });
+    } else {
+      if (gk === 'catan') {
+        (edits.categories || []).forEach((c) => {
+          const p = rec.players[c.index];
+          if (!p) { errors.push('Unknown player index ' + c.index); return; }
+          if (!CATAN_CATS.some((x) => x.key === c.key)) { errors.push('Unknown Catan category ' + c.key); return; }
+          const v = num(c.value);
+          if (v < 0) { errors.push('Catan counts cannot be negative'); return; }
+          if ((c.key === 'longestRoad' || c.key === 'largestArmy') && v > 1) { errors.push(c.key + ' is 0 or 1'); return; }
+          p.breakdown = { ...(p.breakdown || {}), [c.key]: v };
+          changes.push('cat:' + c.index + ':' + c.key);
+        });
+        ['longestRoad', 'largestArmy'].forEach((k) => {
+          if (rec.players.filter((p) => num(p.breakdown && p.breakdown[k]) > 0).length > 1) errors.push('Only one player can hold ' + k);
+        });
+      }
+      const roundEdits = edits.rounds || [];
+      const needsReplay = roundEdits.some((r) => r.entries) && (gk === 'hearts' || gk === 'ohhell');
+      if ((roundEdits.length || (edits.addRounds || []).length) && !hadRounds) {
+        errors.push('This game has no round data; edit final scores instead');
+      } else if (hadRounds) {
+        roundEdits.forEach((r) => {
+          const cur = rec.rounds[r.index];
+          if (!cur) { errors.push('Unknown round ' + r.index); return; }
+          if (r.delete) { cur._delete = true; changes.push('delround:' + r.index); return; }
+          if (r.deltas) {
+            if (!Array.isArray(r.deltas) || r.deltas.length !== n || r.deltas.some((d) => !Number.isFinite(Number(d)))) { errors.push('Round ' + (r.index + 1) + ' needs ' + n + ' numeric scores'); return; }
+            cur.deltas = r.deltas.map(num);
+            if (cur.detail && Array.isArray(cur.detail.entries)) cur.detail.entries.forEach((en) => { if (en && typeof en.idx === 'number') { en.delta = cur.deltas[en.idx]; if ('net' in en) en.net = en.delta; } });
+            cur.edited = true; changes.push('round:' + r.index);
+          }
+          if (r.entries) { cur.entries = clone(r.entries); cur.edited = true; changes.push('entries:' + r.index); }
+        });
+        rec.rounds = rec.rounds.filter((r) => !r._delete);
+        (edits.addRounds || []).forEach((a) => {
+          if (!Array.isArray(a.deltas) || a.deltas.length !== n) { errors.push('New round needs ' + n + ' scores'); return; }
+          rec.rounds.push({ ts: opts.now || new Date().toISOString(), by: typeof a.by === 'number' ? a.by : null, mode: 'manual', deltas: a.deltas.map(num), detail: a.label ? { label: a.label } : null, edited: true });
+          changes.push('addround');
+        });
+        if (needsReplay && !errors.length) replayCardGame(rec, gk, errors, warnings);
+        // direct score edits on a game with rounds -> correction round so history stays consistent
+        if (scoreEdits.length && !errors.length) {
+          const cur = sumRounds(rec.rounds, n);
+          const deltas = Array(n).fill(0);
+          scoreEdits.forEach((e) => { deltas[e.index] = num(e.score) - cur[e.index]; });
+          if (deltas.some(Boolean)) { rec.rounds.push({ ts: opts.now || new Date().toISOString(), by: null, mode: 'edit_adjustment', deltas, detail: { reason: 'final score edited' }, edited: true }); warnings.push('Added a score-correction round so round totals match the edited finals'); changes.push('adjustment'); }
+        }
+      } else {
+        scoreEdits.forEach((e) => {
+          if (!Number.isFinite(Number(e.score))) { errors.push('Score must be a number'); return; }
+          rec.players[e.index].score = num(e.score); changes.push('score:' + e.index);
+        });
+      }
+    }
+
+    if (errors.length) return { ok: false, record: clone(record), errors, warnings, changes: [] };
+
+    // ---- recompute totals ----
+    let scores = rec.players.map((p) => num(p.score));
+    const extra = {};
+    if (gk === 'spoons') extra.eliminations = spoonsEliminations(rec);
+    else if (gk === '7wonders') {
+      const L = SW();
+      if (L && rec.players.some((p) => p.scores)) {
+        rec.players.forEach((p) => { const c = L.swComputePlayerTotal(p, rec.expansions || (rec.meta && rec.meta.expansions)); p.score = c.total; p.coins = c.coins; p.tiebreakCoins = c.coins; p.treasuryVp = c.treasuryVp; p.scienceVp = c.scienceVp; });
+      }
+      scores = rec.players.map((p) => num(p.score));
+      extra.coins = rec.players.map((p) => num(p.coins != null ? p.coins : p.tiebreakCoins));
+    } else if (usableRounds(rec, gk)) {
+      rec.rounds = rebuildRounds(rec.rounds, n);
+      scores = sumRounds(rec.rounds, n);
+      if (gk === 'catan' && (edits.categories || []).length) {
+        // breakdown edits: rounds kept as history, final VP follows the breakdown via a correction round
+        const target = rec.players.map((p) => catanScore(p.breakdown));
+        const d = target.map((t, i) => t - scores[i]);
+        if (d.some(Boolean)) { rec.rounds.push({ ts: opts.now || new Date().toISOString(), by: null, mode: 'edit_adjustment', prev: scores.slice(), deltas: d, detail: { reason: 'breakdown edited' }, edited: true }); scores = target; warnings.push('Added a score-correction round to match the edited breakdown'); }
+      }
+    } else if (gk === 'catan' && hasCatanBreakdown(rec)) {
+      scores = rec.players.map((p) => catanScore(p.breakdown));
+    }
+
+    const ranked = computePlacements(rec, gk, scores, extra);
+    rec.players.forEach((p, i) => {
+      p.score = gk === 'spoons' ? ranked[i].score : scores[i];
+      p.place = ranked[i].place;
+      p.isWinner = ranked[i].isWinner;
+      if (gk === 'spoons') p.eliminatedRound = ranked[i].eliminatedRound;
+    });
+    const winners = rec.players.filter((p) => p.isWinner);
+    const winnerNames = winners.map((p) => (gk === 'nertz' && Array.isArray(p.members) && p.members.length ? (p.name || p.members.map((m) => m.name).join(' & ')) : playerName(rec, p)));
+    rec.winner = winnerNames.join(', ');
+    rec.winnerNames = winnerNames;
+    if (rec.winner_names) rec.winner_names = winnerNames.slice();
+    if (rec.summary && rec.summary.winner_names) rec.summary.winner_names = winnerNames.slice();
+
+    // renames inside round details
+    rec.players.forEach((p, i) => {
+      const nm = playerName(rec, p);
+      if (nm === oldNames[i]) return;
+      (rec.rounds || []).forEach((r) => {
+        if (r.detail && Array.isArray(r.detail.entries)) r.detail.entries.forEach((en) => { if (en && en.idx === i) en.name = nm; });
+        if (r.detail && r.detail.eliminated === oldNames[i]) r.detail.eliminated = nm;
+        if (r.dealerName === oldNames[i]) r.dealerName = nm;
+      });
+      if (rec.meta && rec.meta.spoons && Array.isArray(rec.meta.spoons.eliminations)) rec.meta.spoons.eliminations.forEach((e) => { if (e.player === oldNames[i]) e.player = nm; });
+    });
+    if (gk === 'spoons') {
+      rec.meta = rec.meta || {};
+      rec.meta.spoons = { ...(rec.meta.spoons || {}), placements: rec.players.map((p) => ({ name: p.name, place: p.place })) };
+    }
+
+    // shared participants mirror
+    if (Array.isArray(rec.participants)) {
+      rec.participants.forEach((pp, k) => {
+        const p = rec.players[k];
+        if (!p || (Array.isArray(p.members) && p.members.length)) return;
+        pp.score = p.score; pp.is_winner = p.isWinner;
+        if (!pp.user_id) pp.display_name = playerName(rec, p);
+      });
+      if (gk === 'nertz') syncNertzParticipants(rec);
+    }
+
+    rec.meta = rec.meta || {};
+    const uid = opts.user && (opts.user.id || opts.user.user_id || opts.user.userId || (typeof opts.user === 'string' ? opts.user : null));
+    if (changes.length) {
+      const prevCount = rec.meta.edited ? num(rec.meta.edited.count) : 0;
+      rec.meta.edited = { at: opts.now || new Date().toISOString(), by: uid || null, count: prevCount + 1 };
+    }
+    return { ok: true, record: rec, errors, warnings, changes };
+  }
+
+  function syncNertzParticipants(rec) {
+    rec.participants.forEach((pp) => {
+      const team = rec.players.find((p) => Array.isArray(p.members) && p.members.some((m) => (m.userId && m.userId === pp.user_id) || m.name === pp.name || m.name === pp.display_name));
+      if (team) { pp.score = team.score; pp.is_winner = team.isWinner; }
+    });
+  }
+
+  // Hearts / Oh Hell: replay every hand through the scoring module so moon shots,
+  // exact bids and house rules stay correct after an entry edit.
+  function replayCardGame(rec, gk, errors, warnings) {
+    const M = gk === 'hearts' ? Hearts() : OhHell();
+    if (!M) { errors.push('Scoring module for ' + gk + ' is not loaded'); return; }
+    const missing = rec.rounds.findIndex((r) => !Array.isArray(r.entries));
+    if (missing >= 0) { errors.push('Round ' + (missing + 1) + ' has no hand details, so it cannot be replayed; edit its scores instead'); return; }
+    const base = { houseRules: rec.houseRules, ohHellRules: rec.ohHellRules, meta: rec.meta && rec.meta.houseRules ? { houseRules: rec.meta.houseRules } : undefined, rules: rec.rules, scoringOverrides: rec.scoringOverrides, target: rec.target, lowWins: rec.lowWins,
+      schedule: rec.schedule, initialDealer: rec.initialDealer, variation: rec.variation, version: rec.version };
+    Object.keys(base).forEach((k) => base[k] === undefined && delete base[k]);
+    const st = M.initState(rec.players.map((p) => ({ name: playerName(rec, p) })), base);
+    const out = [];
+    for (let k = 0; k < rec.rounds.length; k++) {
+      const r = rec.rounds[k];
+      let res;
+      if (gk === 'hearts') {
+        res = M.scoreHand(st, r.entries.map((e) => ({ hearts: e.hearts, queenOfSpades: e.queenOfSpades, jackOfDiamonds: e.jackOfDiamonds, shotMoon: e.shotMoon, overridePoints: e.overridePoints })), { force: true, allowOverride: true });
+      } else {
+        const o = {}; if (r.cardsDealt) o.cardsDealt = r.cardsDealt; if (r.dealerIndex != null) o.dealerIndex = r.dealerIndex; if (r.trump) o.trump = r.trump;
+        res = M.scoreRound(st, r.entries.map((e) => ({ bid: e.bid, tricksWon: e.tricksWon })), { ...o, enforceScrewTheDealer: false });
+      }
+      if (res && res.ok === false) { errors.push('Round ' + (k + 1) + ': ' + (res.error || 'invalid')); return; }
+      const nr = st.rounds[st.rounds.length - 1];
+      out.push({ ...nr, edited: r.edited || undefined });
+    }
+    rec.rounds = out;
+    if (gk === 'hearts') rec.hands = out.slice();
+    rec.players.forEach((p, i) => {
+      ['moonShots', 'queenHits', 'exactHits'].forEach((k) => { if (st.players[i][k] != null) p[k] = st.players[i][k]; });
+    });
+  }
+
+  // ======================= shared save helper =======================
+  // Shape for social_auth saveSharedGame / an UPDATE of score_history + game_participants.
+  function buildSharedEdit(before, after) {
+    const rec = after || {};
+    const gk = gameKeyOf(rec);
+    const payload = clone(rec);
+    ['id', 'client_game_id', 'group_name', 'participants'].forEach((k) => delete payload[k]);
+    const participants = [];
+    let seat = 0;
+    (rec.players || []).forEach((p) => {
+      if (Array.isArray(p.members) && p.members.length) {
+        p.members.forEach((m) => participants.push({ seat_order: seat++, user_id: m.userId || m.user_id || null, display_name: m.name, score: p.score, is_winner: !!p.isWinner }));
+      } else {
+        participants.push({ seat_order: seat++, user_id: playerUserId(p), display_name: playerName(rec, p), score: num(p.score), is_winner: !!p.isWinner });
+      }
+    });
+    const prevWinner = before ? (before.winner || '') : null;
+    return {
+      game_id: rec.id || null,
+      client_game_id: rec.client_game_id || (before && before.client_game_id) || null,
+      game: { game_type: gk, winner: rec.winner || '', target: rec.target != null ? rec.target : null, payload },
+      participants,
+      winnerChanged: before ? prevWinner !== (rec.winner || '') : true
+    };
+  }
+
+  const api = { GAMES, CATAN_CATS, gameKeyOf, describeRecord, recomputeRecord, canEditRecord, buildSharedEdit };
+  global.TallyItRecordTools = api;
+  // Convenience aliases requested by Score Tracker UI
+  function roundsFor(record) {
+    const d = describeRecord(record);
+    const rows = d.mode === 'eliminations'
+      ? d.rounds.map((r) => ({ label: r.label, cells: d.players.map((p) => (p.name === r.eliminated ? 'Out' : '')), eliminated: r.eliminated }))
+      : d.mode === 'categories' && d.categories
+        ? d.categories.map((c) => ({ label: c.label, cells: c.values.slice(), key: c.key, tiebreakOnly: !!c.tiebreakOnly }))
+        : d.rounds.map((r) => ({ label: r.label, cells: r.deltas.slice(), running: r.running.slice(), index: r.index, detail: r.detail }));
+    return { columns: d.columns, rows, totals: d.totals, placements: d.placements, mode: d.mode, notes: d.notes, describe: d };
+  }
+  global.TallyItScoring = Object.assign(global.TallyItScoring || {}, { roundsFor, recompute: recomputeRecord, describeRecord, canEditRecord });
+  api.roundsFor = roundsFor;
+  if (typeof module !== 'undefined' && module.exports) module.exports = api;
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+<script id="v26-backend">
+/**
+ * TallyIt — v26 Backend (window.TallyItV26Backend): cross-device Favorites + Past-game detail/edit.
+ * Drop-in module. Uses window.sb (Supabase v2 client). Requires supabase_v26_favorites_game_edit.sql.
+ * NEVER throws. Every async call resolves to an object with `ok`:
+ *   { ok:true, ... }
+ *   { ok:false, unavailable:true, error }          v26 migration not applied yet (re-probed every 30s)
+ *   { ok:false, error:'not_signed_in'|'forbidden'|'not_found'|'invalid_payload'|'invalid_input'|'too_many'|'conflict', message }
+ *   { ok:false, error, code? }                     anything else (network ...)
+ *
+ * FAVORITES (signed in -> account via RPC; signed out -> localStorage 'gst_v26_guest_favorites', replies carry guest:true)
+ *   getFavorites()                 -> {ok, favorites:[game_key...], guest?}
+ *   setFavorites(keys)             -> {ok, favorites, guest?}
+ *   toggleFavorite(key)            -> {ok, favorited, favorites, guest?}
+ *   isFavorite(key)                -> boolean, SYNC, from the last known list (account cache, or guest list when signed out)
+ *   subscribeFavorites(cb)         -> unsubscribe fn. cb({favorites, source, guest}) fires once on subscribe (refresh-on-open)
+ *                                     and whenever the list changes: realtime (user_favorites, filter user_id=eq.<me>),
+ *                                     tab becomes visible, 'online', own writes, sign-in/out. Same payload as the DOM event.
+ *   mergeGuestFavorites()          -> {ok, merged:n, favorites}  folds guest favorites into the account ONCE, then clears them
+ *                                     (auto-runs on SIGNED_IN while subscribed; safe to call after any sign-in)
+ *   Keys are normalised like the server: trim + lower-case, /^[a-z0-9][a-z0-9_.:-]{0,79}$/, max 100.
+ *
+ * GAME DETAIL / EDIT
+ *   getGameDetail(gameId)                          -> {ok, game:{id, game_key, game_type, variation_key, variation_name, played_at,
+ *                                                     created_at, created_by, created_by_name, edited_at, edited_by, edited_by_name,
+ *                                                     winner, is_owner, can_edit, payload, rounds, players:[...], participants:[...] ...}}
+ *   updateGame(gameId, editOrPayload, {expectedEditedAt})   -> {ok, game, winner_changed, ignored_user_ids}
+ *        editOrPayload = TallyItRecordTools.buildSharedEdit() output, or a bare payload object (back-compat)
+ *        expectedEditedAt (ISO string or Date; pass detail.game.edited_at, leave null for a never-edited game) -> {ok:false,error:'conflict'}
+ *   updateSharedGame(edit, opts)                   alias: reads the game id from edit.game_id (or edit.id)
+ *   canEditGame(gameOrDetail)                      SYNC: detail.can_edit || created_by === current user id
+ *
+ * Events on window: 'tallyit:favorites-changed' {favorites, source, guest}, 'tallyit:game-edited' {game_id, game, winner_changed}
+ */
+(function (global) {
+  'use strict';
+
+  const MIGRATION_RETRY_MS = 30 * 1000;
+  const LS_GUEST = 'gst_v26_guest_favorites';
+  const LS_MERGED_PREFIX = 'gst_v26_guest_merged_';
+  const KEY_RE = /^[a-z0-9][a-z0-9_.:-]{0,79}$/;
+  const MAX_FAVS = 100;
+  const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+  let migrationReady = null;
+  let migrationCheckedAt = 0;
+  let knownUid = null;               // last user id we saw (for the sync helpers)
+  let cache = { uid: null, list: null };   // account favorites cache
+  const listeners = new Set();
+  let rt = { uid: null, channel: null };
+  let docHooked = false;
+  let authHooked = false;
+  let refreshTimer = null;
+
+  // ------------------------------------------------------------------ plumbing
+  function getClient() { return global.sb || null; }
+
+  async function getAuthUser() {
+    let user = null;
+    if (global.ScoreAuth && typeof global.ScoreAuth.getUser === 'function') {
+      try { const u = await global.ScoreAuth.getUser(); if (u && u.id) user = u; } catch (_) {}
+    }
+    if (!user) {
+      const client = getClient();
+      if (client && client.auth && typeof client.auth.getSession === 'function') {
+        try {
+          const { data: { session } } = await client.auth.getSession();
+          if (session && session.user) user = session.user;
+        } catch (_) {}
+      }
+    }
+    knownUid = user ? user.id : null;
+    return user;
+  }
+
+  function isMissingMigrationError(err) {
+    if (!err) return false;
+    const code = String(err.code || '').toUpperCase();
+    const msg = String(err.message || err.details || err.hint || '').toLowerCase();
+    if (code === '42P01' || code === '42883' || code === '42703' || code === 'PGRST202' || code === 'PGRST205') return true;
+    return msg.includes('does not exist') || msg.includes('could not find the table') || msg.includes('could not find the function');
+  }
+
+  function markMigrationMissing() { migrationReady = false; migrationCheckedAt = Date.now(); }
+  function shouldSkipSupabase(client) {
+    if (!client) return true;
+    if (migrationReady !== false) return false;
+    if (Date.now() - migrationCheckedAt > MIGRATION_RETRY_MS) { migrationReady = null; return false; }
+    return true;
+  }
+  const UNAVAILABLE = 'This feature is not available yet (v26 migration pending). Try again in a bit.';
+  function unavailable() { return { ok: false, unavailable: true, error: UNAVAILABLE }; }
+  function notSignedIn() { return { ok: false, error: 'not_signed_in', message: 'Sign in first.' }; }
+
+  function emit(name, detail) {
+    try {
+      if (typeof global.dispatchEvent === 'function' && typeof global.CustomEvent === 'function') {
+        global.dispatchEvent(new global.CustomEvent(name, { detail }));
+      }
+    } catch (_) {}
+  }
+
+  async function callRpc(name, args) {
+    try {
+      const client = getClient();
+      if (shouldSkipSupabase(client)) return unavailable();
+      let res;
+      try { res = await client.rpc(name, args || {}); }
+      catch (e) { return { ok: false, error: (e && e.message) || 'Network error. Try again.' }; }
+      const { data, error } = res || {};
+      if (error) {
+        if (isMissingMigrationError(error)) { markMigrationMissing(); return unavailable(); }
+        return { ok: false, code: error.code || null, error: error.message || 'Something went wrong.' };
+      }
+      migrationReady = true;
+      if (!data || typeof data !== 'object' || typeof data.ok !== 'boolean') return { ok: false, error: 'Unexpected reply.' };
+      return data;
+    } catch (e) {
+      return { ok: false, error: (e && e.message) || 'Something went wrong.' };
+    }
+  }
+
+  // ------------------------------------------------------------------ local storage
+  function lsGet(key) { try { return global.localStorage ? global.localStorage.getItem(key) : null; } catch (_) { return null; } }
+  function lsSet(key, val) { try { if (global.localStorage) global.localStorage.setItem(key, val); return true; } catch (_) { return false; } }
+  function lsDel(key) { try { if (global.localStorage) global.localStorage.removeItem(key); } catch (_) {} }
+
+  function normKey(k) {
+    const s = String(k == null ? '' : k).trim().toLowerCase();
+    return s;
+  }
+  // -> {keys, invalid} ; blanks dropped, de-duped keeping first position
+  function normalizeKeys(arr) {
+    const keys = []; let invalid = null;
+    (Array.isArray(arr) ? arr : []).forEach((raw) => {
+      const k = normKey(raw);
+      if (!k) return;
+      if (!KEY_RE.test(k)) { if (!invalid) invalid = k; return; }
+      if (!keys.includes(k)) keys.push(k);
+    });
+    return { keys, invalid };
+  }
+
+  function readGuest() {
+    try {
+      const raw = lsGet(LS_GUEST);
+      const arr = raw ? JSON.parse(raw) : [];
+      return normalizeKeys(Array.isArray(arr) ? arr : []).keys.slice(0, MAX_FAVS);
+    } catch (_) { return []; }
+  }
+  function writeGuest(list) { lsSet(LS_GUEST, JSON.stringify(list.slice(0, MAX_FAVS))); }
+
+  function sameList(a, b) { return JSON.stringify(a || []) === JSON.stringify(b || []); }
+
+  function publish(favorites, source, guest) {
+    const detail = { favorites: favorites.slice(), source: source || 'local', guest: !!guest };
+    emit('tallyit:favorites-changed', detail);
+    listeners.forEach((cb) => { try { cb(detail); } catch (_) {} });
+  }
+
+  function setCache(uid, list, source, guestMode) {
+    const changed = !(cache.uid === uid && sameList(cache.list, list));
+    cache = { uid, list: list.slice() };
+    if (changed) publish(list, source, guestMode);
+    return changed;
+  }
+
+  // ------------------------------------------------------------------ favorites
+  async function getFavorites() {
+    try {
+      const user = await getAuthUser();
+      if (!user) return { ok: true, favorites: readGuest(), guest: true };
+      const r = await callRpc('get_my_favorites');
+      if (r.ok && Array.isArray(r.favorites)) setCache(user.id, r.favorites, 'refresh', false);
+      return r;
+    } catch (e) { return { ok: false, error: (e && e.message) || 'Something went wrong.' }; }
+  }
+
+  async function setFavorites(keys) {
+    try {
+      const n = normalizeKeys(keys);
+      if (n.invalid) return { ok: false, error: 'invalid_input', message: 'invalid game key: ' + n.invalid.slice(0, 40) };
+      if (n.keys.length > MAX_FAVS) return { ok: false, error: 'too_many', message: 'At most ' + MAX_FAVS + ' favorites.' };
+      const user = await getAuthUser();
+      if (!user) { writeGuest(n.keys); setCache(null, n.keys, 'local', true); return { ok: true, favorites: n.keys, guest: true }; }
+      const r = await callRpc('set_my_favorites', { p_game_keys: n.keys });
+      if (r.ok && Array.isArray(r.favorites)) setCache(user.id, r.favorites, 'local', false);
+      return r;
+    } catch (e) { return { ok: false, error: (e && e.message) || 'Something went wrong.' }; }
+  }
+
+  async function toggleFavorite(key) {
+    try {
+      const k = normKey(key);
+      if (!KEY_RE.test(k)) return { ok: false, error: 'invalid_input', message: 'invalid game key' };
+      const user = await getAuthUser();
+      if (!user) {
+        const list = readGuest();
+        const i = list.indexOf(k);
+        let fav;
+        if (i >= 0) { list.splice(i, 1); fav = false; }
+        else { if (list.length >= MAX_FAVS) return { ok: false, error: 'too_many', message: 'At most ' + MAX_FAVS + ' favorites.' }; list.push(k); fav = true; }
+        writeGuest(list); setCache(null, list, 'local', true);
+        return { ok: true, favorited: fav, game_key: k, favorites: list, guest: true };
+      }
+      const r = await callRpc('toggle_favorite', { p_game_key: k });
+      if (r.ok && Array.isArray(r.favorites)) setCache(user.id, r.favorites, 'local', false);
+      return r;
+    } catch (e) { return { ok: false, error: (e && e.message) || 'Something went wrong.' }; }
+  }
+
+  function isFavorite(key) {
+    try {
+      const k = normKey(key);
+      if (!k) return false;
+      const list = knownUid && cache.uid === knownUid && Array.isArray(cache.list) ? cache.list : (knownUid ? [] : readGuest());
+      return list.includes(k);
+    } catch (_) { return false; }
+  }
+
+  async function mergeGuestFavorites() {
+    try {
+      const user = await getAuthUser();
+      if (!user) return { ok: true, merged: 0, favorites: readGuest(), guest: true };
+      const guest = readGuest();
+      const flag = LS_MERGED_PREFIX + user.id;
+      if (!guest.length) { lsDel(LS_GUEST); return { ok: true, merged: 0, already: !!lsGet(flag) }; }
+      const cur = await callRpc('get_my_favorites');
+      if (!cur.ok) return cur;                                   // leave guest list untouched; retry later
+      const server = Array.isArray(cur.favorites) ? cur.favorites : [];
+      const add = guest.filter((k) => !server.includes(k));
+      let favorites = server;
+      if (add.length) {
+        const combined = server.concat(add).slice(0, MAX_FAVS);
+        const r = await callRpc('set_my_favorites', { p_game_keys: combined });
+        if (!r.ok) return r;
+        favorites = r.favorites || combined;
+      }
+      lsDel(LS_GUEST); lsSet(flag, String(Date.now()));
+      setCache(user.id, favorites, 'merge', false);
+      return { ok: true, merged: add.length, favorites };
+    } catch (e) { return { ok: false, error: (e && e.message) || 'Something went wrong.' }; }
+  }
+
+  // ---- realtime + refresh-on-open
+  function scheduleRefresh(source) {
+    if (refreshTimer) return;
+    refreshTimer = setTimeout(async () => {
+      refreshTimer = null;
+      try {
+        const user = await getAuthUser();
+        if (!user) { setCache(null, readGuest(), source, true); return; }
+        const r = await callRpc('get_my_favorites');
+        if (r.ok && Array.isArray(r.favorites)) setCache(user.id, r.favorites, source, false);
+      } catch (_) {}
+    }, 200);
+  }
+
+  async function ensureRealtime() {
+    try {
+      const client = getClient();
+      const user = await getAuthUser();
+      const uid = user ? user.id : null;
+      if (rt.uid === uid && (rt.channel || !uid)) return;
+      if (rt.channel && client && typeof client.removeChannel === 'function') { try { client.removeChannel(rt.channel); } catch (_) {} }
+      rt = { uid, channel: null };
+      if (!uid || !client || typeof client.channel !== 'function' || shouldSkipSupabase(client)) return;
+      const ch = client
+        .channel('v26-favs-' + Math.random().toString(36).slice(2, 8))
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'user_favorites', filter: 'user_id=eq.' + uid }, () => scheduleRefresh('realtime'))
+        .subscribe();
+      rt = { uid, channel: ch };
+    } catch (_) {}
+  }
+
+  function hookDocument() {
+    if (docHooked) return;
+    docHooked = true;
+    try {
+      if (global.document && typeof global.document.addEventListener === 'function') {
+        global.document.addEventListener('visibilitychange', () => {
+          if (listeners.size && global.document.visibilityState !== 'hidden') { scheduleRefresh('visibility'); ensureRealtime(); }
+        });
+      }
+      if (typeof global.addEventListener === 'function') {
+        global.addEventListener('online', () => { if (listeners.size) scheduleRefresh('online'); });
+        global.addEventListener('focus', () => { if (listeners.size) scheduleRefresh('focus'); });
+      }
+    } catch (_) {}
+  }
+
+  function hookAuth() {
+    if (authHooked) return;
+    const client = getClient();
+    if (!client || !client.auth || typeof client.auth.onAuthStateChange !== 'function') return;
+    authHooked = true;
+    try {
+      client.auth.onAuthStateChange((event) => {
+        if (!listeners.size) return;
+        if (event === 'SIGNED_IN') { mergeGuestFavorites().then(() => { scheduleRefresh('auth'); ensureRealtime(); }); }
+        else if (event === 'SIGNED_OUT') { knownUid = null; ensureRealtime(); scheduleRefresh('auth'); }
+      });
+    } catch (_) {}
+  }
+
+  function subscribeFavorites(cb) {
+    try {
+      if (typeof cb !== 'function') return function () {};
+      listeners.add(cb);
+      hookDocument(); hookAuth();
+      ensureRealtime();
+      // refresh-on-open: deliver the current list straight away
+      (async () => {
+        try {
+          const r = await getFavorites();
+          if (r && r.ok && listeners.has(cb)) {
+            const guest = !!r.guest;
+            if (guest) cache = { uid: null, list: r.favorites.slice() };
+            try { cb({ favorites: r.favorites.slice(), source: 'open', guest }); } catch (_) {}
+          }
+        } catch (_) {}
+      })();
+      return function unsubscribe() {
+        listeners.delete(cb);
+        if (!listeners.size && rt.channel) {
+          const client = getClient();
+          try { if (client && typeof client.removeChannel === 'function') client.removeChannel(rt.channel); } catch (_) {}
+          rt = { uid: null, channel: null };
+        }
+      };
+    } catch (_) { return function () {}; }
+  }
+
+  // ------------------------------------------------------------------ games
+  function cleanUuid(v) { const s = String(v == null ? '' : v).trim(); return UUID_RE.test(s) ? s : null; }
+
+  async function getGameDetail(gameId) {
+    try {
+      const id = cleanUuid(gameId);
+      if (!id) return { ok: false, error: 'not_found', message: 'Game not found.' };
+      const user = await getAuthUser();
+      if (!user) return notSignedIn();
+      return await callRpc('get_game_detail', { p_game_id: id });
+    } catch (e) { return { ok: false, error: (e && e.message) || 'Something went wrong.' }; }
+  }
+
+  function isoOrNull(v) {
+    if (v == null || v === '') return null;
+    if (v instanceof Date) return isNaN(v.getTime()) ? null : v.toISOString();
+    const s = String(v).trim();
+    return s || null;
+  }
+
+  async function updateGame(gameId, editOrPayload, options) {
+    try {
+      const id = cleanUuid(gameId);
+      if (!id) return { ok: false, error: 'not_found', message: 'Game not found.' };
+      if (!editOrPayload || typeof editOrPayload !== 'object' || Array.isArray(editOrPayload)) {
+        return { ok: false, error: 'invalid_payload', message: 'edit must be an object' };
+      }
+      const user = await getAuthUser();
+      if (!user) return notSignedIn();
+      const opts = options || {};
+      const args = { p_game_id: id, p_edit: editOrPayload };
+      const expected = isoOrNull(opts.expectedEditedAt != null ? opts.expectedEditedAt : opts.expected_edited_at);
+      if (expected) args.p_expected_edited_at = expected;
+      const r = await callRpc('update_game_record', args);
+      if (r && r.ok === true) {
+        emit('tallyit:game-edited', { game_id: id, game: r.game || null, winner_changed: !!r.winner_changed });
+      }
+      return r;
+    } catch (e) { return { ok: false, error: (e && e.message) || 'Something went wrong.' }; }
+  }
+
+  function updateSharedGame(edit, options) {
+    const id = edit && typeof edit === 'object' ? (edit.game_id || edit.gameId || edit.id) : null;
+    return updateGame(id, edit, options);
+  }
+
+  function canEditGame(x) {
+    try {
+      if (!x || typeof x !== 'object') return false;
+      const g = x.game && typeof x.game === 'object' ? x.game : x;
+      if (g.can_edit === true || g.is_owner === true) return true;
+      return !!(knownUid && g.created_by && String(g.created_by) === String(knownUid));
+    } catch (_) { return false; }
+  }
+
+  function clearCache() { cache = { uid: null, list: null }; migrationReady = null; migrationCheckedAt = 0; }
+  function isMigrationReady() { return migrationReady; }
+
+  // prime the sync helpers (isFavorite / canEditGame) without blocking
+  try { getAuthUser().then((u) => { if (u) getFavorites(); }).catch(() => {}); } catch (_) {}
+
+  global.TallyItV26Backend = {
+    getFavorites, setFavorites, toggleFavorite, isFavorite, subscribeFavorites, mergeGuestFavorites,
+    getGameDetail, updateGame, updateSharedGame, canEditGame,
+    clearCache, isMigrationReady, normalizeKeys
+  };
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+<script id="v26-history-detail">
+/* ==========================================================================
+   TallyIt v26 - History past-game detail + owner edit (window.TallyItV26History)
+
+   Tap any saved game in History -> read-only scorecard (players, final scores,
+   winner, placements, round-by-round, variation, date, Edited marker).
+   The creator gets Edit: a per-mode editor (rounds table / category grid /
+   elimination order / final scores), a review step with the change summary,
+   then save (cloud: TallyItV26Backend.updateGame, local: engine write-back).
+
+   Data layer (Score Tracker Scoring): window.TallyItRecordTools
+     describeRecord / recomputeRecord / canEditRecord / buildSharedEdit
+   Backend (Score Tracker Auth): window.TallyItV26Backend
+     getGameDetail(id) / updateGame(id, payload, {expectedEditedAt}) / canEditGame
+   Engine seam (v26 hunk in engine.js): window.TallyItV26HistoryEngine
+     entries() / local(id) / user() / games() / applyLocalEdit(id, rec) / refresh() / refreshSocial()
+
+   Every external name goes through ADAPTER / TOOLS below, so a renamed API is
+   a one-line swap: TallyItV26History.setAdapter({...}) / setTools({...}).
+   No emojis; SVG icons use a 1.75px stroke; selectors are .v26-hist-*.
+   ========================================================================== */
+(function (global) {
+  'use strict';
+  const doc = global.document;
+  if (!doc) return;
+  const ENG = () => global.TallyItV26HistoryEngine || null;
+  const BE = () => global.TallyItV26Backend || null;
+  const THEMES = { flip7: 'theme-flip7', '7wonders': 'theme-seven-wonders', carcassonne: 'theme-carcassonne', catan: 'theme-catan',
+    ohhell: 'theme-ohhell', hearts: 'theme-hearts', nertz: 'theme-nertz', rummikub: 'theme-rummikub', qwirkle: 'theme-qwirkle', spoons: 'theme-spoons', other: null };
+
+  // ---------------- small utils ----------------
+  const esc = (s) => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  const num = (v) => { const n = Number(v); return Number.isFinite(n) ? n : 0; };
+  const clone = (o) => (o == null ? o : JSON.parse(JSON.stringify(o)));
+  // UI-only keys fromDetail() adds; never sent back to the server
+  const UI_KEYS = ['_v26links', 'createdByName', 'edited_by_name', 'source', 'isShared', 'roundsCount', 'myScore', 'didIWin', 'playedAt', 'sharedByName'];
+  const stripUi = (rec) => { const o = clone(rec) || {}; UI_KEYS.forEach((k) => delete o[k]); return o; };
+  // Marks a local History copy as edited so the old share path (saveSharedGame) never re-uploads it over the edit
+  const markEdited = (rec, at, byName) => { rec.edited = true; rec.edited_at = at || rec.edited_at || new Date().toISOString(); if (byName) rec.edited_by_name = byName; rec.meta = { ...(rec.meta || {}), edited_at: rec.edited_at }; return rec; };
+  const isPlainStandard = (v) => /^\s*standard\s*$/i.test(String(v || ''));
+  const fmtDate = (d) => { const t = Date.parse(d || ''); if (!t) return ''; try { return new Date(t).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }); } catch (_) { return new Date(t).toDateString(); } };
+  const ordinal = (n) => { const s = ['th', 'st', 'nd', 'rd'], v = n % 100; return n + (s[(v - 20) % 10] || s[v] || s[0]); };
+  const svg = (inner, cls) => `<svg class="v26-hist-ic${cls ? ' ' + cls : ''}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${inner}</svg>`;
+  const IC = {
+    back: svg('<path d="M15 18l-6-6 6-6"/>'),
+    close: svg('<path d="M6 6l12 12M18 6L6 18"/>'),
+    edit: svg('<path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/>'),
+    crown: svg('<path d="M3 8l4.5 4L12 5l4.5 7L21 8l-2 11H5L3 8z"/>'),
+    lock: svg('<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>'),
+    up: svg('<path d="M12 19V5M6 11l6-6 6 6"/>'),
+    down: svg('<path d="M12 5v14M6 13l6 6 6-6"/>'),
+    trash: svg('<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>'),
+    plus: svg('<path d="M12 5v14M5 12h14"/>'),
+    check: svg('<path d="M5 12.5l4.5 4.5L19 7"/>'),
+    refresh: svg('<path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 5v6h-6"/>'),
+    pencilSm: svg('<path d="M4 20h4L19 9l-4-4L4 16v4z"/>', 'v26-hist-ic-sm'),
+    chev: svg('<path d="M9 6l6 6-6 6"/>', 'v26-hist-ic-sm'),
+    info: svg('<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>', 'v26-hist-ic-sm'),
+    link: svg('<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>', 'v26-hist-ic-xs')
+  };
+
+  // ---------------- swappable tools (Score Tracker Scoring) ----------------
+  const TOOLS = {
+    describe: (rec) => global.TallyItRecordTools.describeRecord(rec),
+    recompute: (rec, edits, opts) => global.TallyItRecordTools.recomputeRecord(rec, edits, opts),
+    canEdit: (rec, user) => global.TallyItRecordTools.canEditRecord(rec, user),
+    // Auth's update_game_record takes buildSharedEdit() output (or a bare payload, back-compat)
+    sharedEdit: (before, after) => { const b = stripUi(before), a = stripUi(after); delete b.sharedGameId; delete a.sharedGameId; const RT = global.TallyItRecordTools; return RT && RT.buildSharedEdit ? RT.buildSharedEdit(b, a) : a; },
+    ready: () => !!(global.TallyItRecordTools && global.TallyItRecordTools.describeRecord)
+  };
+
+  // ---------------- backend adapter (Score Tracker Auth) ----------------
+  // All calls resolve; never throw. Shapes: {ok:true,...} | {ok:false, error, unavailable?, forbidden?, conflict?}
+  const norm = (r) => {
+    if (!r || typeof r !== 'object') return { ok: false, error: 'error' };
+    if (r.ok) return r;
+    const e = String(r.error || (r.unavailable ? 'unavailable' : 'error'));
+    return { ...r, ok: false, error: e, unavailable: !!r.unavailable || e === 'unavailable', forbidden: e === 'forbidden', conflict: e === 'conflict', tooMany: e === 'too_many' };
+  };
+  const ADAPTER = {
+    async getDetail(sharedId) {
+      const b = BE(); if (!b || typeof b.getGameDetail !== 'function') return { ok: false, error: 'unavailable', unavailable: true };
+      try { return norm(await b.getGameDetail(sharedId)); } catch (e) { return { ok: false, error: 'error', message: String(e && e.message || e) }; }
+    },
+    async update(sharedId, edit, opts) {
+      const b = BE(); if (!b || typeof b.updateGame !== 'function') return { ok: false, error: 'unavailable', unavailable: true };
+      try { return norm(await b.updateGame(sharedId, edit, opts || {})); } catch (e) { return { ok: false, error: 'error', message: String(e && e.message || e) }; }
+    },
+    user: () => { const E = ENG(); return E && E.user ? E.user() : null; },
+    entries: () => { const E = ENG(); try { return E ? E.entries() : []; } catch (_) { return []; } },
+    local: (id) => { const E = ENG(); return E && E.local ? E.local(id) : null; },
+    saveLocal: (id, rec) => { const E = ENG(); return !!(E && E.applyLocalEdit && E.applyLocalEdit(id, rec)); },
+    refresh: () => { const E = ENG(); if (E && E.refresh) E.refresh(); },
+    refreshSocial: () => { const E = ENG(); if (E && E.refreshSocial) { try { E.refreshSocial(); } catch (_) {} } },
+    games: () => { const E = ENG(); return (E && E.games && E.games()) || (global.ScoreTracker && global.ScoreTracker.GAMES) || []; }
+  };
+
+  // Build one record from Auth's detail row (+ the local copy for anything the payload lacks).
+  function fromDetail(game, base) {
+    const payload = (game && game.payload && typeof game.payload === 'object') ? game.payload : {};
+    const rec = { ...(base || {}), ...clone(payload) };
+    const gk = game.game_key || game.game_type || payload.type || (base && base.type) || 'other';
+    rec.type = gk; rec.game_key = gk;
+    rec.id = (base && base.id) || payload.id || game.id;
+    rec.sharedGameId = String(game.id || (base && base.sharedGameId) || '');
+    rec.version = payload.version || game.variation_name || (base && base.version) || null;
+    if (game.variation_name && !rec.v22VariationName && game.variation_key && /^house|custom/i.test(String(game.variation_key))) rec.v22VariationName = game.variation_name;
+    rec.endTime = payload.endTime || game.played_at || (base && base.endTime) || game.created_at || null;
+    if (!Array.isArray(rec.rounds) || !rec.rounds.length) rec.rounds = Array.isArray(game.rounds) ? game.rounds : (rec.rounds || []);
+    if (!Array.isArray(rec.players) || !rec.players.length) {
+      rec.players = (game.players || []).map((p) => ({ name: p.name || p.display_name, score: num(p.score), userId: p.user_id || null, isWinner: !!p.is_winner }));
+    }
+    if (game.winner != null) rec.winner = game.winner;
+    rec.created_by = game.created_by || rec.created_by || rec.createdBy || null;
+    rec.createdBy = rec.created_by;
+    rec.createdByName = game.created_by_name || null;
+    rec.edited_at = game.edited_at || null;
+    rec.edited_by_name = game.edited_by_name || null;
+    if (rec.target == null && game.target != null) rec.target = game.target;
+    if (!rec.client_game_id && game.client_game_id) rec.client_game_id = game.client_game_id;
+    // linked-account badges: per-member participants (teams) + top-level player rows
+    const links = {};
+    const addLink = (p) => { if (!p) return; const label = p.account_name || (p.linked_via ? 'Linked' : '') || (p.user_id ? 'Linked' : ''); if (!label) return;
+      [p.display_name, p.name, p.name_key].forEach((n) => { if (n) links[String(n).trim().toLowerCase()] = label; }); };
+    (game.participants || []).forEach(addLink);
+    (game.players || []).forEach((p) => { addLink(p); (p.members || []).forEach(addLink); });
+    rec._v26links = links;
+    return rec;
+  }
+
+  // ---------------- public seam: getGame / isOwner / updateGame ----------------
+  async function getGame(id) {
+    const sid = String(id || '');
+    const entry = ADAPTER.entries().find((g) => g && (String(g.id || '') === sid || String(g.sharedGameId || '') === sid)) || null;
+    const local = ADAPTER.local(entry ? entry.id : sid);
+    const user = ADAPTER.user();
+    const sharedId = entry && entry.sharedGameId ? String(entry.sharedGameId) : (!entry && !local ? sid : '');
+    const fallback = local || entry;
+    if (sharedId && user) {
+      const r = await ADAPTER.getDetail(sharedId);
+      if (r.ok && r.game) {
+        const rec = fromDetail(r.game, fallback);
+        const be = !!(r.game.can_edit || r.game.is_owner);
+        let rt = true; try { rt = TOOLS.ready() ? !!TOOLS.canEdit(rec, user).canEdit : be; } catch (_) { rt = be; }
+        return { ok: true, record: rec, original: clone(rec), game: r.game, source: 'cloud', sharedId, localId: local ? local.id : null, canEdit: be && rt, notice: '' };
+      }
+      if (!fallback) return { ok: false, forbidden: !!r.forbidden, error: r.error || 'error' };
+      const notice = r.forbidden ? 'You can view this game but only its creator can change it.'
+        : r.unavailable ? '' : 'Showing the copy saved on this device.';
+      return { ok: true, record: clone(fallback), original: clone(fallback), game: null, source: 'local', sharedId, localId: local ? local.id : null, canEdit: false, notice };
+    }
+    if (!fallback) return { ok: false, error: 'not_found' };
+    // local-only game (never synced): the creator is this device
+    let can = false; try { can = !!(local && TOOLS.ready() && TOOLS.canEdit(local, user).canEdit); } catch (_) { can = false; }
+    if (sharedId) can = false; // a cloud game with no signed-in user stays read-only
+    return { ok: true, record: clone(fallback), original: clone(fallback), game: null, source: 'local', sharedId: '', localId: local ? local.id : null, canEdit: can, notice: '' };
+  }
+  function isOwner(record, game) {
+    const user = ADAPTER.user();
+    let rt = false; try { rt = !!(TOOLS.ready() && TOOLS.canEdit(record, user).canEdit); } catch (_) { rt = false; }
+    if (game) return rt && !!(game.can_edit || game.is_owner);
+    const b = BE(); if (b && typeof b.canEditGame === 'function' && record && (record.sharedGameId || record.created_by)) { try { return rt && !!b.canEditGame(record); } catch (_) { return false; } }
+    return rt;
+  }
+  async function updateGame(id, payload, opts) { return ADAPTER.update(id, payload, opts); }
+
+  // ---------------- view state ----------------
+  let S = null; // { id, data, mode:'view'|'edit'|'review', draft, result, msg, busy, theme, prevFocus }
+  let root = null;
+
+  function ensureRoot() {
+    if (root && doc.body.contains(root)) return root;
+    root = doc.createElement('div');
+    root.id = 'v26-hist-sheet';
+    root.className = 'v26-hist-sheet';
+    root.hidden = true;
+    root.setAttribute('role', 'dialog');
+    root.setAttribute('aria-modal', 'true');
+    root.setAttribute('aria-labelledby', 'v26-hist-title');
+    doc.body.appendChild(root);
+    root.addEventListener('click', onSheetClick);
+    root.addEventListener('input', onSheetInput);
+    root.addEventListener('change', onSheetInput);
+    root.addEventListener('keydown', (e) => { if (e.key === 'Escape') { e.preventDefault(); if (S && S.mode !== 'view') { S.mode = 'view'; S.result = null; render(); } else close(); } });
+    return root;
+  }
+  function setTheme(gk) {
+    const cls = THEMES[gk] || null;
+    if (S && S.theme && S.theme !== cls && S.themeAdded) doc.body.classList.remove(S.theme);
+    if (cls && !doc.body.classList.contains(cls)) { doc.body.classList.add(cls); S.themeAdded = true; } else if (cls) S.themeAdded = false;
+    S.theme = cls;
+  }
+  function clearTheme() { if (S && S.theme && S.themeAdded) doc.body.classList.remove(S.theme); }
+
+  async function open(id, opts) {
+    if (!id) return false;
+    ensureRoot();
+    const prevFocus = (opts && opts.returnFocus) || doc.activeElement;
+    if (S) clearTheme();
+    S = { id: String(id), data: null, mode: 'view', draft: null, result: null, msg: '', busy: true, theme: null, themeAdded: false, prevFocus };
+    root.hidden = false;
+    root.classList.toggle('v26-hist-reduced', !!(global.matchMedia && global.matchMedia('(prefers-reduced-motion: reduce)').matches));
+    root.classList.remove('v26-hist-enter'); void root.offsetWidth; root.classList.add('v26-hist-enter');
+    doc.documentElement.style.setProperty('overflow', 'hidden');
+    render();
+    const data = await getGame(id);
+    if (!S || S.id !== String(id)) return false;
+    S.data = data; S.busy = false;
+    if (data.ok) setTheme(gameKey(data.record));
+    render();
+    const t = root.querySelector('#v26-hist-title'); if (t) { try { t.focus({ preventScroll: true }); } catch (_) { t.focus(); } }
+    return true;
+  }
+  function close() {
+    if (!root) return;
+    clearTheme();
+    const pf = S && S.prevFocus;
+    S = null; root.hidden = true; root.innerHTML = '';
+    doc.documentElement.style.removeProperty('overflow');
+    if (pf && pf.focus && doc.body.contains(pf)) { try { pf.focus({ preventScroll: true }); } catch (_) {} }
+  }
+  async function reload() { if (!S) return; const id = S.id, pf = S.prevFocus; await open(id, { returnFocus: pf }); }
+
+  function gameKey(rec) { try { return global.TallyItRecordTools ? global.TallyItRecordTools.gameKeyOf(rec) : String(rec.type || 'other'); } catch (_) { return 'other'; } }
+  function gameMeta(gk) { return (ADAPTER.games() || []).find((g) => g.id === gk) || null; }
+
+  // ---------------- rendering ----------------
+  function render() {
+    if (!root || !S) return;
+    if (S.busy) { root.innerHTML = frame('Game details', '', `<div class="v26-hist-quiet" role="status">Loading game...</div>`); return; }
+    const d = S.data;
+    if (!d || !d.ok) {
+      const msg = d && d.forbidden ? 'This game is private to its players.' : 'This game could not be found.';
+      root.innerHTML = frame('Game details', '', `<div class="v26-hist-quiet" role="status">${esc(msg)}</div>`); return;
+    }
+    if (!TOOLS.ready()) { root.innerHTML = frame('Game details', '', `<div class="v26-hist-quiet" role="status">Game details are not available yet.</div>`); return; }
+    let model;
+    try { model = TOOLS.describe(d.record); } catch (e) { root.innerHTML = frame('Game details', '', `<div class="v26-hist-quiet" role="status">This game could not be displayed.</div>`); return; }
+    LINKS = (d.record && d.record._v26links) || {};
+    root.setAttribute('data-game', model.gameKey);
+    root.setAttribute('data-mode', S.mode);
+    if (S.mode === 'view') root.innerHTML = frame(model.gameName, d.canEdit ? `<button type="button" class="v26-hist-btn v26-hist-btn-edit" data-act="edit">${IC.edit}<span>Edit</span></button>` : '', viewBody(model, d));
+    else if (S.mode === 'edit') root.innerHTML = frame('Edit ' + model.gameName, '', editBody(model, d), editFoot());
+    else root.innerHTML = frame('Review changes', '', reviewBody(model, d), reviewFoot());
+  }
+  function frame(title, right, body, foot) {
+    return `<div class="v26-hist-panel">
+      <div class="v26-hist-bar">
+        <button type="button" class="v26-hist-iconbtn" data-act="${S && S.mode !== 'view' ? 'cancel' : 'close'}" aria-label="${S && S.mode !== 'view' ? 'Back to scorecard' : 'Back to History'}">${IC.back}</button>
+        <h2 id="v26-hist-title" class="v26-hist-title" tabindex="-1">${esc(title)}</h2>
+        <div class="v26-hist-bar-right">${right || ''}</div>
+      </div>
+      <div class="v26-hist-body"><div class="v26-hist-col">${body}</div></div>
+      ${foot ? `<div class="v26-hist-foot"><div class="v26-hist-col v26-hist-foot-row">${foot}</div></div>` : ''}
+    </div>`;
+  }
+  function variationOf(rec, model) { const v = rec.v22VariationName || model.version || rec.version || ''; return isPlainStandard(v) ? '' : v; }
+  function editedInfo(rec, model) {
+    const at = rec.edited_at || (model.edited && model.edited.at) || rec.editedAt || null;
+    if (!at) return null;
+    return { at, by: rec.edited_by_name || rec.editedByName || null };
+  }
+  function headerCard(model, d) {
+    const rec = d.record, meta = gameMeta(model.gameKey);
+    const img = meta && (meta.art || meta.img);
+    const ed = editedInfo(rec, model);
+    const bits = [variationOf(rec, model), fmtDate(model.date || rec.endTime || rec.startTime)].filter(Boolean);
+    return `<div class="v26-hist-head">
+      ${img ? `<img class="v26-hist-art" src="${esc(img)}" alt="" width="56" height="56" decoding="async">` : `<span class="v26-hist-art v26-hist-art-ph" aria-hidden="true">${esc((model.gameName || '?').slice(0, 1))}</span>`}
+      <div class="v26-hist-head-txt">
+        <div class="v26-hist-game">${esc(model.gameName)}</div>
+        <div class="v26-hist-sub">${bits.map(esc).join(' <span aria-hidden="true">&middot;</span> ')}</div>
+        ${rec.createdByName ? `<div class="v26-hist-sub">Recorded by ${esc(rec.createdByName)}</div>` : ''}
+        ${ed ? `<div class="v26-hist-edited" data-edited-at="${esc(ed.at)}">${IC.pencilSm}<span>Edited ${esc(fmtDate(ed.at))}${ed.by ? ' by ' + esc(ed.by) : ''}</span></div>` : ''}
+      </div>
+    </div>`;
+  }
+  function winnerBanner(model) {
+    if (!model.winnerNames || !model.winnerNames.length) return `<div class="v26-hist-winner v26-hist-winner-none">No winner recorded</div>`;
+    const label = model.gameKey === 'spoons' ? 'Last one standing' : model.winnerNames.length > 1 ? 'Winners (tied)' : 'Winner';
+    return `<div class="v26-hist-winner" data-winner="${esc(model.winner)}">${IC.crown}<div><div class="v26-hist-winner-k">${label}</div><div class="v26-hist-winner-v">${esc(model.winner)}</div></div></div>`;
+  }
+  let LINKS = {};
+  const linkBadge = (name, userId) => { const l = LINKS[String(name || '').trim().toLowerCase()] || (userId ? 'Linked' : ''); return l ? `<span class="v26-hist-link" title="Linked account">${IC.link}<span>${esc(l)}</span></span>` : ''; };
+  function playerLabel(p) {
+    const team = p.members && p.members.length;
+    return `<span class="v26-hist-pname">${esc(p.name)}${team ? '' : linkBadge(p.name, p.userId)}</span>${team ? `<span class="v26-hist-members">${p.members.map((m) => `<span class="v26-hist-member">${esc(m.name)}${linkBadge(m.name, m.userId)}</span>`).join('')}</span>` : ''}`;
+  }
+  function standings(model) {
+    const rows = model.players.slice().sort((a, b) => a.place - b.place || a.index - b.index);
+    const tied = {}; rows.forEach((r) => { tied[r.place] = (tied[r.place] || 0) + 1; });
+    const unit = model.gameKey === 'spoons' ? '' : (model.lowWins ? 'Lowest score wins' : '');
+    return `<section class="v26-hist-sec" aria-label="Final standings">
+      <div class="v26-hist-sec-h"><h3>Final standings</h3>${unit ? `<span class="v26-hist-hint">${unit}</span>` : ''}</div>
+      <ol class="v26-hist-standings">${rows.map((p) => {
+        const right = model.gameKey === 'spoons'
+          ? (p.eliminatedRound != null ? `<span class="v26-hist-out">Out in round ${p.eliminatedRound}</span>` : `<span class="v26-hist-alive">${p.isWinner ? 'Winner' : 'Still in'}</span>`)
+          : `<span class="v26-hist-score">${esc(p.score)}</span>`;
+        return `<li class="v26-hist-st${p.isWinner ? ' is-winner' : ''}" data-player="${p.index}" data-place="${p.place}">
+          <span class="v26-hist-place" aria-label="${ordinal(p.place)} place${tied[p.place] > 1 ? ', tied' : ''}">${p.isWinner ? IC.crown : esc(p.place)}</span>
+          <span class="v26-hist-st-name">${playerLabel(p)}${model.gameKey === '7wonders' && p.wonder ? `<span class="v26-hist-members">${esc(p.wonder)}</span>` : ''}</span>
+          <span class="v26-hist-st-right">${right}<span class="v26-hist-ord">${ordinal(p.place)}${tied[p.place] > 1 ? ' (tie)' : ''}</span></span>
+        </li>`;
+      }).join('')}</ol>
+    </section>`;
+  }
+  function shortLabel(r) {
+    const L = String(r.label || '');
+    if (r.mode === 'reset' || /^Scores reset/i.test(L)) return { top: 'Reset', sub: '' };
+    if (r.mode === 'edit_adjustment' || /correction/i.test(L)) return { top: 'Adj.', sub: '' };
+    const m = /^(\S+)\s+(\d+)\s*(?:\((.*)\))?/.exec(L);
+    if (!m) return { top: L || 'R' + r.number, sub: '' };
+    return { top: m[1].charAt(0).toUpperCase() + m[2], sub: m[3] || '' };
+  }
+  function cellView(model, r, i) {
+    const d = r.deltas ? r.deltas[i] : 0;
+    const det = r.detail || {};
+    if (model.gameKey === 'ohhell' && det.entries && det.entries[i]) {
+      const e = det.entries[i];
+      return `<span class="v26-hist-pts${e.exact ? ' is-hit' : ''}">${esc(d)}</span><span class="v26-hist-cellsub">${esc(e.bid)}/${esc(e.tricksWon)}</span>`;
+    }
+    if (model.gameKey === 'hearts' && det.entries && det.entries[i]) {
+      const e = det.entries[i], moon = det.shooterIdx === i;
+      return `<span class="v26-hist-pts">${esc(d)}</span><span class="v26-hist-cellsub">${moon ? 'Moon' : (num(e.hearts) + 'h' + (e.queenOfSpades ? ' Q' : ''))}</span>`;
+    }
+    if (r.by != null && r.by !== i && !d) return '<span class="v26-hist-nil" aria-label="no score">&middot;</span>';
+    return `<span class="v26-hist-pts${d < 0 ? ' is-neg' : ''}">${esc(d > 0 && r.mode !== 'reset' ? d : d)}</span>`;
+  }
+  function roundsTable(model) {
+    const rounds = model.rounds || [];
+    const head = rounds.map((r) => { const s = shortLabel(r); return `<th scope="col" title="${esc(r.label)}"><span class="v26-hist-th">${esc(s.top)}</span>${s.sub ? `<span class="v26-hist-thsub">${esc(s.sub)}</span>` : ''}</th>`; }).join('');
+    const body = model.players.map((p) => `<tr class="${p.isWinner ? 'is-winner' : ''}"><th scope="row" class="v26-hist-sticky">${playerLabel(p)}</th>${rounds.map((r) => `<td>${cellView(model, r, p.index)}</td>`).join('')}<td class="v26-hist-total">${esc(p.score)}</td></tr>`).join('');
+    const legend = model.gameKey === 'ohhell' ? '<p class="v26-hist-legend">Points, then bid/tricks taken.</p>' : model.gameKey === 'hearts' ? '<p class="v26-hist-legend">Points, then hearts taken (Q = queen of spades).</p>' : '';
+    return `<section class="v26-hist-sec" aria-label="Round by round">
+      <div class="v26-hist-sec-h"><h3>Round by round</h3><span class="v26-hist-hint">${rounds.length} ${rounds.length === 1 ? 'entry' : 'entries'}</span></div>
+      <div class="v26-hist-scroll" tabindex="0" role="region" aria-label="Round by round table, scrolls sideways">
+        <table class="v26-hist-table"><thead><tr><th scope="col" class="v26-hist-sticky">Player</th>${head}<th scope="col" class="v26-hist-total">Total</th></tr></thead><tbody>${body}</tbody></table>
+      </div>${legend}
+    </section>`;
+  }
+  function categoriesTable(model, title) {
+    const cats = model.categories || [];
+    const head = cats.map((c) => `<th scope="col" class="${c.tiebreakOnly ? 'is-muted' : ''}"><span class="v26-hist-th v26-hist-th-cat">${esc(c.label)}</span>${c.vp ? `<span class="v26-hist-thsub">${c.vp} VP</span>` : ''}</th>`).join('');
+    const body = model.players.map((p) => `<tr class="${p.isWinner ? 'is-winner' : ''}"><th scope="row" class="v26-hist-sticky">${playerLabel(p)}</th>${cats.map((c) => `<td class="${c.tiebreakOnly ? 'is-muted' : ''}"><span class="v26-hist-pts">${esc(c.values[p.index])}</span></td>`).join('')}<td class="v26-hist-total">${esc(p.score)}</td></tr>`).join('');
+    return `<section class="v26-hist-sec" aria-label="${esc(title)}">
+      <div class="v26-hist-sec-h"><h3>${esc(title)}</h3>${model.gameKey === '7wonders' ? '<span class="v26-hist-hint">Coins break ties</span>' : ''}</div>
+      <div class="v26-hist-scroll" tabindex="0" role="region" aria-label="${esc(title)} table, scrolls sideways">
+        <table class="v26-hist-table v26-hist-table-cat"><thead><tr><th scope="col" class="v26-hist-sticky">Player</th>${head}<th scope="col" class="v26-hist-total">Total</th></tr></thead><tbody>${body}</tbody></table>
+      </div>
+    </section>`;
+  }
+  function eliminationList(model) {
+    const rows = model.rounds || [];
+    return `<section class="v26-hist-sec" aria-label="Rounds">
+      <div class="v26-hist-sec-h"><h3>Round by round</h3><span class="v26-hist-hint">Who went out each round</span></div>
+      <ol class="v26-hist-elim">${rows.map((r) => `<li><span class="v26-hist-elim-r">${esc(r.label)}</span><span class="v26-hist-elim-n">${esc(r.eliminated)}</span><span class="v26-hist-out">Out</span></li>`).join('')}
+      ${model.winnerNames && model.winnerNames.length ? `<li class="is-winner"><span class="v26-hist-elim-r">Last one standing</span><span class="v26-hist-elim-n">${esc(model.winner)}</span>${IC.crown}</li>` : ''}</ol>
+    </section>`;
+  }
+  function viewBody(model, d) {
+    const notes = (model.notes || []).concat(d.notice ? [d.notice] : []);
+    let main = '';
+    if (model.mode === 'rounds') main = roundsTable(model) + (model.categories && model.categories.length ? categoriesTable(model, model.gameKey === 'catan' ? 'Victory points by category' : 'Categories') : '');
+    else if (model.mode === 'categories') main = categoriesTable(model, model.gameKey === 'catan' ? 'Victory points by category' : 'Score by category');
+    else if (model.mode === 'eliminations') main = eliminationList(model);
+    return headerCard(model, d) + winnerBanner(model)
+      + (notes.length ? `<div class="v26-hist-note" role="note">${IC.info}<span>${notes.map(esc).join(' ')}</span></div>` : '')
+      + standings(model) + main
+      + (!d.canEdit ? `<p class="v26-hist-ro">${IC.lock}<span>Read-only${d.record && (d.record.createdByName) ? '. Only ' + esc(d.record.createdByName) + ' can edit this game.' : '. Only the player who recorded this game can edit it.'}</span></p>` : '');
+  }
+
+  // ---------------- edit ----------------
+  function startEdit() {
+    const model = TOOLS.describe(S.data.record);
+    const rec = S.data.record;
+    const draft = { mode: model.mode, names: model.players.map((p) => p.name), locked: model.players.map((p) => !!p.userId || !!(p.members && p.members.some((m) => m.userId))),
+      scores: model.players.map((p) => p.score), rounds: [], del: {}, add: [], cats: {}, order: [] };
+    if (model.mode === 'rounds') {
+      draft.rounds = model.rounds.map((r) => ({ index: r.index, label: r.label, deltas: r.deltas.slice(), entries: entriesFor(model, rec, r) }));
+    }
+    if (model.categories) model.categories.forEach((c) => { if (!c.tiebreakOnly || c.key === 'coins') draft.cats[c.key] = c.values.slice(); });
+    if (model.gameKey === '7wonders') {
+      draft.cats.coins = model.players.map((p, i) => num(((rec.players[i] || {}).scores || {}).treasury));
+    }
+    if (model.mode === 'eliminations' || model.gameKey === 'spoons') {
+      const out = model.players.filter((p) => p.eliminatedRound != null).sort((a, b) => a.eliminatedRound - b.eliminatedRound).map((p) => p.name);
+      const rest = model.players.filter((p) => p.eliminatedRound == null).map((p) => p.name);
+      draft.order = out.concat(rest); // first out first; the last name is the winner
+    }
+    S.draft = draft; S.mode = 'edit'; S.result = null; S.msg = '';
+    render();
+  }
+  function entriesFor(model, rec, r) {
+    const raw = (rec.rounds || [])[r.index] || {};
+    if (model.gameKey === 'ohhell' && Array.isArray(raw.entries)) return raw.entries.map((e) => ({ bid: num(e.bid), tricksWon: num(e.tricksWon) }));
+    if (model.gameKey === 'hearts' && Array.isArray(raw.entries)) return raw.entries.map((e) => ({ hearts: num(e.hearts), queenOfSpades: !!e.queenOfSpades, jackOfDiamonds: !!e.jackOfDiamonds }));
+    return null;
+  }
+  const numIn = (attrs, v, label) => `<input class="v26-hist-in" type="number" inputmode="numeric" step="1" ${attrs} value="${esc(v)}" aria-label="${esc(label)}" enterkeyhint="next">`;
+  function nameCell(i) {
+    const D = S.draft;
+    return D.locked[i]
+      ? `<th scope="row" class="v26-hist-sticky"><span class="v26-hist-lockname" title="Linked account; name comes from their profile">${IC.lock}<span class="v26-hist-pname">${esc(D.names[i])}</span></span></th>`
+      : `<th scope="row" class="v26-hist-sticky"><input class="v26-hist-in v26-hist-in-name" type="text" data-k="name" data-i="${i}" value="${esc(D.names[i])}" aria-label="Player ${i + 1} name" maxlength="40" autocomplete="off" enterkeyhint="next"></th>`;
+  }
+  function editBody(model, d) {
+    const D = S.draft, gk = model.gameKey;
+    let main = '';
+    if (gk === 'spoons') {
+      const n = D.order.length;
+      main = `<section class="v26-hist-sec"><div class="v26-hist-sec-h"><h3>Elimination order</h3><span class="v26-hist-hint">First out at the top</span></div>
+        <ol class="v26-hist-order">${D.order.map((nm, k) => `<li class="${k === n - 1 ? 'is-winner' : ''}" data-k="${k}">
+          <span class="v26-hist-order-r">${k === n - 1 ? 'Winner' : 'Out in round ' + (k + 1)}</span><span class="v26-hist-order-n">${esc(nm)}</span>
+          <span class="v26-hist-order-btns"><button type="button" class="v26-hist-iconbtn v26-hist-sm" data-act="up" data-k="${k}" aria-label="Move ${esc(nm)} earlier"${k === 0 ? ' disabled' : ''}>${IC.up}</button><button type="button" class="v26-hist-iconbtn v26-hist-sm" data-act="down" data-k="${k}" aria-label="Move ${esc(nm)} later"${k === n - 1 ? ' disabled' : ''}>${IC.down}</button></span>
+        </li>`).join('')}</ol></section>`;
+    } else if (model.mode === 'rounds' && !(gk === 'catan' && model.categories)) {
+      const card = gk === 'hearts' || gk === 'ohhell';
+      const live = D.rounds.filter((r) => !D.del[r.index]);
+      const head = live.map((r) => { const s = shortLabel({ label: r.label, number: r.index + 1 }); return `<th scope="col" title="${esc(r.label)}"><span class="v26-hist-th">${esc(s.top)}</span><button type="button" class="v26-hist-iconbtn v26-hist-xs" data-act="delround" data-r="${r.index}" aria-label="Delete ${esc(r.label)}">${IC.trash}</button></th>`; }).join('')
+        + D.add.map((a, k) => `<th scope="col"><span class="v26-hist-th">New</span><button type="button" class="v26-hist-iconbtn v26-hist-xs" data-act="delnew" data-a="${k}" aria-label="Remove new round">${IC.trash}</button></th>`).join('');
+      const rows = model.players.map((p, i) => `<tr>${nameCell(i)}${live.map((r) => {
+        if (card && r.entries) {
+          const e = r.entries[i];
+          return gk === 'ohhell'
+            ? `<td class="v26-hist-ecell"><label class="v26-hist-mini"><span>Bid</span>${numIn(`data-k="bid" data-r="${r.index}" data-i="${i}" min="0"`, e.bid, D.names[i] + ' bid, ' + r.label)}</label><label class="v26-hist-mini"><span>Took</span>${numIn(`data-k="took" data-r="${r.index}" data-i="${i}" min="0"`, e.tricksWon, D.names[i] + ' tricks, ' + r.label)}</label></td>`
+            : `<td class="v26-hist-ecell"><label class="v26-hist-mini"><span>Hearts</span>${numIn(`data-k="hearts" data-r="${r.index}" data-i="${i}" min="0" max="13"`, e.hearts, D.names[i] + ' hearts, ' + r.label)}</label><label class="v26-hist-chk"><input type="checkbox" data-k="queen" data-r="${r.index}" data-i="${i}"${e.queenOfSpades ? ' checked' : ''}><span>Queen</span></label></td>`;
+        }
+        return `<td>${numIn(`data-k="delta" data-r="${r.index}" data-i="${i}"`, r.deltas[i], D.names[i] + ', ' + r.label)}</td>`;
+      }).join('')}${D.add.map((a, k) => `<td>${numIn(`data-k="adddelta" data-a="${k}" data-i="${i}"`, a[i], D.names[i] + ', new round')}</td>`).join('')}</tr>`).join('');
+      main = `<section class="v26-hist-sec"><div class="v26-hist-sec-h"><h3>Rounds</h3>${card ? '<span class="v26-hist-hint">Points are recalculated from each hand</span>' : '<span class="v26-hist-hint">Points per round</span>'}</div>
+        <div class="v26-hist-scroll" tabindex="0" role="region" aria-label="Editable rounds table, scrolls sideways"><table class="v26-hist-table v26-hist-table-edit"><thead><tr><th scope="col" class="v26-hist-sticky">Player</th>${head}</tr></thead><tbody>${rows}</tbody></table></div>
+        ${card ? '' : `<button type="button" class="v26-hist-btn v26-hist-btn-ghost" data-act="addround">${IC.plus}<span>Add a round</span></button>`}</section>`;
+    } else if (model.categories && model.categories.length) {
+      const cats = gk === '7wonders' ? model.categories.filter((c) => c.key !== 'treasury' && c.key !== 'coins').concat([{ key: 'coins', label: 'Coins' }]) : model.categories;
+      const keyFor = (c) => (gk === '7wonders' && c.key === 'science' ? 'science.override' : c.key);
+      const head = cats.map((c) => `<th scope="col"><span class="v26-hist-th v26-hist-th-cat">${esc(c.label)}</span>${c.vp ? `<span class="v26-hist-thsub">${c.vp} VP each</span>` : c.key === 'coins' ? '<span class="v26-hist-thsub">3 = 1 VP</span>' : c.key === 'science' ? '<span class="v26-hist-thsub">VP</span>' : ''}</th>`).join('');
+      const rows = model.players.map((p, i) => `<tr>${nameCell(i)}${cats.map((c) => {
+        const k = c.key, v = (D.cats[k] || [])[i];
+        const lim = k === 'longestRoad' || k === 'largestArmy' ? ' min="0" max="1"' : gk === 'catan' ? ' min="0"' : '';
+        return `<td>${numIn(`data-k="cat" data-c="${esc(keyFor(c))}" data-ck="${esc(k)}" data-i="${i}"${lim}`, v == null ? 0 : v, D.names[i] + ', ' + c.label)}</td>`;
+      }).join('')}</tr>`).join('');
+      main = `<section class="v26-hist-sec"><div class="v26-hist-sec-h"><h3>${gk === 'catan' ? 'Victory points by category' : 'Score by category'}</h3><span class="v26-hist-hint">${gk === 'catan' ? 'Counts; one player each for Longest Road and Largest Army' : 'Totals are recalculated'}</span></div>
+        <div class="v26-hist-scroll" tabindex="0" role="region" aria-label="Editable category table, scrolls sideways"><table class="v26-hist-table v26-hist-table-edit"><thead><tr><th scope="col" class="v26-hist-sticky">Player</th>${head}</tr></thead><tbody>${rows}</tbody></table></div></section>`;
+    } else {
+      main = `<section class="v26-hist-sec"><div class="v26-hist-sec-h"><h3>Final scores</h3></div>
+        <div class="v26-hist-scroll" tabindex="0" role="region" aria-label="Editable final scores"><table class="v26-hist-table v26-hist-table-edit"><thead><tr><th scope="col" class="v26-hist-sticky">Player</th><th scope="col">Score</th></tr></thead>
+        <tbody>${model.players.map((p, i) => `<tr>${nameCell(i)}<td>${numIn(`data-k="score" data-i="${i}"`, D.scores[i], D.names[i] + ' final score')}</td></tr>`).join('')}</tbody></table></div></section>`;
+    }
+    const names = gk === 'spoons' ? `<section class="v26-hist-sec"><div class="v26-hist-sec-h"><h3>Player names</h3></div><div class="v26-hist-names">${model.players.map((p, i) => D.locked[i]
+      ? `<span class="v26-hist-lockname">${IC.lock}<span class="v26-hist-pname">${esc(D.names[i])}</span></span>`
+      : `<input class="v26-hist-in v26-hist-in-name" type="text" data-k="name" data-i="${i}" value="${esc(D.names[i])}" aria-label="Player ${i + 1} name" maxlength="40" autocomplete="off">`).join('')}</div></section>` : '';
+    const err = S.result && !S.result.ok ? `<div class="v26-hist-err" role="alert">${S.result.errors.map((e) => `<div>${esc(e)}</div>`).join('')}</div>` : '';
+    return `${err}<p class="v26-hist-legend">${model.players.some((p, i) => D.locked[i]) ? 'Names with a lock belong to linked accounts and come from their profile. ' : ''}Winner, totals and placements are recalculated when you review.</p>${main}${names}`;
+  }
+  function editFoot() {
+    return `<button type="button" class="v26-hist-btn v26-hist-btn-ghost" data-act="cancel">Cancel</button><button type="button" class="v26-hist-btn v26-hist-btn-primary" data-act="review">${IC.check}<span>Review changes</span></button>`;
+  }
+  function buildEdits(model) {
+    const D = S.draft, gk = model.gameKey, edits = {};
+    const players = [];
+    model.players.forEach((p, i) => { if (!D.locked[i] && String(D.names[i]).trim() !== p.name) players.push({ index: i, name: D.names[i] }); });
+    if (gk === 'spoons') {
+      const was = model.players.filter((p) => p.eliminatedRound != null).sort((a, b) => a.eliminatedRound - b.eliminatedRound).map((p) => p.name);
+      const now = D.order.slice(0, D.order.length - 1);
+      // names in the order list follow renames by index
+      const ren = now.map((nm) => { const i = model.players.findIndex((p) => p.name === nm); return i >= 0 ? model.players[i].name : nm; });
+      if (ren.join('\u0001') !== was.join('\u0001')) edits.eliminationOrder = ren;
+    } else if (model.mode === 'rounds' && !(gk === 'catan' && model.categories)) {
+      const rounds = [];
+      D.rounds.forEach((r) => {
+        const orig = model.rounds.find((x) => x.index === r.index);
+        if (D.del[r.index]) { rounds.push({ index: r.index, delete: true }); return; }
+        if (r.entries) { const o = entriesFor(model, S.data.record, orig); if (JSON.stringify(o) !== JSON.stringify(r.entries)) rounds.push({ index: r.index, entries: r.entries }); return; }
+        if (r.deltas.some((v, i) => num(v) !== num(orig.deltas[i]))) rounds.push({ index: r.index, deltas: r.deltas.map(num) });
+      });
+      // card games: a deleted hand with entry edits elsewhere still needs every remaining hand replayed
+      if (rounds.length) edits.rounds = rounds;
+      if (D.add.length) edits.addRounds = D.add.map((a) => ({ deltas: a.map(num) }));
+    } else if (model.categories && model.categories.length) {
+      const cats = [];
+      const orig = {}; model.categories.forEach((c) => { orig[c.key] = c.values; });
+      if (gk === '7wonders') orig.coins = model.players.map((p, i) => num(((S.data.record.players[i] || {}).scores || {}).treasury));
+      Object.keys(D.cats).forEach((k) => {
+        if (gk === '7wonders' && k === 'treasury') return;
+        const key = gk === '7wonders' && k === 'science' ? 'science.override' : k;
+        D.cats[k].forEach((v, i) => { if (num(v) !== num((orig[k] || [])[i])) cats.push({ index: i, key, value: num(v) }); });
+      });
+      if (cats.length) edits.categories = cats;
+    } else {
+      model.players.forEach((p, i) => { if (num(D.scores[i]) !== num(p.score)) { const e = players.find((x) => x.index === i); if (e) e.score = num(D.scores[i]); else players.push({ index: i, score: num(D.scores[i]) }); } });
+    }
+    if (players.length) edits.players = players;
+    return edits;
+  }
+  function review() {
+    const model = TOOLS.describe(S.data.record);
+    const edits = buildEdits(model);
+    if (!Object.keys(edits).length) { S.result = { ok: false, errors: ['Nothing has changed yet.'], warnings: [], changes: [] }; render(); return; }
+    let res;
+    try { res = TOOLS.recompute(S.data.record, edits, { user: ADAPTER.user() || undefined, enforcePermission: !!ADAPTER.user() }); }
+    catch (e) { res = { ok: false, errors: ['These changes could not be applied.'], warnings: [], changes: [] }; }
+    S.result = res; S.edits = edits;
+    if (!res || !res.ok) { S.mode = 'edit'; render(); return; }
+    S.mode = 'review'; S.msg = ''; render();
+  }
+  function reviewBody(model) {
+    const res = S.result, after = TOOLS.describe(res.record);
+    const rows = model.players.map((p, i) => {
+      const a = after.players[i];
+      const isSp = model.gameKey === 'spoons';
+      const was = isSp ? (p.eliminatedRound != null ? 'Out R' + p.eliminatedRound : 'Winner') : p.score;
+      const now = isSp ? (a.eliminatedRound != null ? 'Out R' + a.eliminatedRound : 'Winner') : a.score;
+      const changed = String(was) !== String(now) || p.place !== a.place || p.name !== a.name;
+      return `<tr class="${changed ? 'is-changed' : ''}"><th scope="row" class="v26-hist-sticky">${a.name !== p.name ? `<span class="v26-hist-was">${esc(p.name)}</span> ` : ''}<span class="v26-hist-pname">${esc(a.name)}</span></th>
+        <td>${String(was) !== String(now) ? `<span class="v26-hist-was">${esc(was)}</span> ${esc(now)}` : esc(now)}</td><td>${p.place !== a.place ? `<span class="v26-hist-was">${ordinal(p.place)}</span> ` : ''}${ordinal(a.place)}</td></tr>`;
+    }).join('');
+    const winChanged = model.winner !== after.winner;
+    const msg = S.msg ? `<div class="v26-hist-err" role="alert">${S.msg}</div>` : '';
+    const nRounds = (res.changes || []).filter((c) => /^(round|entries|delround|addround|adjustment)/.test(c)).length;
+    const nCats = (res.changes || []).filter((c) => /^cat:/.test(c)).length;
+    const lines = [];
+    if (nRounds) lines.push(nRounds + ' round ' + (nRounds === 1 ? 'change' : 'changes'));
+    if (nCats) lines.push(nCats + ' category ' + (nCats === 1 ? 'change' : 'changes'));
+    if ((res.changes || []).some((c) => /^rename/.test(c))) lines.push('player renamed');
+    if ((res.changes || []).includes('eliminations')) lines.push('elimination order changed');
+    return `${msg}<div class="v26-hist-winner${winChanged ? ' is-changed' : ''}" data-winner="${esc(after.winner)}">${IC.crown}<div><div class="v26-hist-winner-k">${winChanged ? 'New winner' : 'Winner unchanged'}</div><div class="v26-hist-winner-v">${winChanged ? `<span class="v26-hist-was">${esc(model.winner || 'None')}</span> ` : ''}${esc(after.winner || 'None')}</div></div></div>
+      ${lines.length ? `<p class="v26-hist-legend">${esc(lines.join(', '))}.</p>` : ''}
+      ${(res.warnings || []).length ? `<div class="v26-hist-note" role="note">${IC.info}<span>${res.warnings.map(esc).join(' ')}</span></div>` : ''}
+      <section class="v26-hist-sec"><div class="v26-hist-sec-h"><h3>Totals after your changes</h3></div>
+      <div class="v26-hist-scroll" tabindex="0" role="region" aria-label="Change summary"><table class="v26-hist-table v26-hist-table-sum"><thead><tr><th scope="col" class="v26-hist-sticky">Player</th><th scope="col">${model.gameKey === 'spoons' ? 'Result' : 'Score'}</th><th scope="col">Place</th></tr></thead><tbody>${rows}</tbody></table></div></section>`;
+  }
+  function reviewFoot() {
+    const busy = S.busy;
+    if (S.conflict) return `<button type="button" class="v26-hist-btn v26-hist-btn-ghost" data-act="cancel">Discard</button><button type="button" class="v26-hist-btn v26-hist-btn-primary" data-act="reload">${IC.refresh}<span>Reload</span></button>`;
+    return `<button type="button" class="v26-hist-btn v26-hist-btn-ghost" data-act="backedit"${busy ? ' disabled' : ''}>Keep editing</button><button type="button" class="v26-hist-btn v26-hist-btn-primary" data-act="save"${busy ? ' disabled aria-busy="true"' : ''}>${IC.check}<span>${busy ? 'Saving...' : 'Save changes'}</span></button>`;
+  }
+  // Keep the device copy in step with the server after an edit (and flag it edited so no re-share can revert it)
+  function syncLocal(localId, game, fallbackRec) {
+    const cur = ADAPTER.local(localId); if (!cur) return false;
+    const payload = game && game.payload && typeof game.payload === 'object' ? game.payload : stripUi(fallbackRec || {});
+    const next = { ...cur, ...clone(payload), id: cur.id };
+    ['type', 'version', 'startTime', 'endTime', 'groupId', 'groupName'].forEach((k) => { if (cur[k] != null && next[k] == null) next[k] = cur[k]; });
+    if (game && game.winner != null) next.winner = game.winner;
+    markEdited(next, game && game.edited_at, game && game.edited_by_name);
+    return ADAPTER.saveLocal(localId, stripUi(next));
+  }
+  async function save() {
+    if (!S || !S.result || !S.result.ok || S.busy) return;
+    const d = S.data, rec = S.result.record;
+    S.busy = true; S.msg = ''; render();
+    let ok = false;
+    if (d.source === 'cloud' && d.sharedId) {
+      const edit = TOOLS.sharedEdit(d.original, rec);
+      const r = await ADAPTER.update(d.sharedId, edit, { expectedEditedAt: d.game ? (d.game.edited_at || null) : null });
+      if (!S) return;
+      S.busy = false;
+      if (r.ok) {
+        ok = true;
+        const next = r.game ? fromDetail(r.game, rec) : markEdited({ ...rec }, null, null);
+        if (d.localId) syncLocal(d.localId, r.game, rec);
+        S.data = { ...d, record: next, original: clone(next), game: r.game || d.game, canEdit: r.game ? !!(r.game.can_edit || r.game.is_owner) : d.canEdit };
+        ADAPTER.refreshSocial();
+      } else if (r.conflict) { S.conflict = true; S.msg = 'This game was edited elsewhere. Reload to see the latest version, then make your change again.'; }
+      else if (r.forbidden) S.msg = 'Only the player who recorded this game can edit it.';
+      else if (r.error === 'not_signed_in') S.msg = 'Sign in again to save changes.';
+      else if (r.error === 'not_found') S.msg = 'This game no longer exists.';
+      else if (r.error === 'invalid_payload' || r.error === 'invalid_input') S.msg = 'These changes could not be saved. Check the numbers and try again.';
+      else if (r.tooMany) S.msg = 'Too many changes at once. Try again in a moment.';
+      else if (r.unavailable) S.msg = 'Editing is not available yet.';
+      else S.msg = 'Could not save right now. Try again in a moment.';
+    } else {
+      S.busy = false;
+      if (d.localId && ADAPTER.saveLocal(d.localId, markEdited(stripUi(rec), (rec.meta && rec.meta.edited && rec.meta.edited.at) || null, null))) {
+        ok = true;
+        const saved = ADAPTER.local(d.localId) || rec;
+        S.data = { ...d, record: clone(saved), original: clone(saved) };
+      } else S.msg = 'Could not save this game on this device.';
+    }
+    if (ok) { S.mode = 'view'; S.result = null; S.draft = null; S.conflict = false; ADAPTER.refresh(); decorate(); }
+    render();
+    if (ok) { const t = root.querySelector('.v26-hist-edited'); if (t) t.classList.add('is-fresh'); }
+  }
+
+  // ---------------- sheet events ----------------
+  function onSheetClick(e) {
+    const b = e.target.closest('[data-act]'); if (!b || !root.contains(b) || b.disabled) return;
+    const a = b.getAttribute('data-act');
+    if (a === 'close') close();
+    else if (a === 'edit') startEdit();
+    else if (a === 'cancel') { S.mode = 'view'; S.result = null; S.draft = null; S.conflict = false; S.msg = ''; render(); }
+    else if (a === 'review') review();
+    else if (a === 'backedit') { S.mode = 'edit'; S.msg = ''; render(); }
+    else if (a === 'save') save();
+    else if (a === 'reload') reload();
+    else if (a === 'addround') { S.draft.add.push(S.draft.names.map(() => 0)); render(); }
+    else if (a === 'delnew') { S.draft.add.splice(Number(b.getAttribute('data-a')), 1); render(); }
+    else if (a === 'delround') { S.draft.del[Number(b.getAttribute('data-r'))] = true; render(); }
+    else if (a === 'up' || a === 'down') {
+      const k = Number(b.getAttribute('data-k')), j = a === 'up' ? k - 1 : k + 1, o = S.draft.order;
+      if (j < 0 || j >= o.length) return;
+      const t = o[k]; o[k] = o[j]; o[j] = t; render();
+      const nb = root.querySelector(`[data-act="${a}"][data-k="${j}"]`) || root.querySelector(`[data-k="${j}"] [data-act]`); if (nb) nb.focus();
+    }
+  }
+  function onSheetInput(e) {
+    const el = e.target; if (!S || !S.draft || !el.getAttribute) return;
+    const k = el.getAttribute('data-k'); if (!k) return;
+    const i = Number(el.getAttribute('data-i')), D = S.draft;
+    const r = el.hasAttribute('data-r') ? D.rounds.find((x) => x.index === Number(el.getAttribute('data-r'))) : null;
+    const v = el.type === 'checkbox' ? el.checked : el.value;
+    if (k === 'name') {
+      const old = D.names[i]; D.names[i] = v;
+      if (D.order) D.order = D.order.map((nm) => (nm === old ? v : nm));
+    }
+    else if (k === 'delta' && r) r.deltas[i] = v;
+    else if (k === 'adddelta') D.add[Number(el.getAttribute('data-a'))][i] = v;
+    else if (k === 'bid' && r) r.entries[i].bid = num(v);
+    else if (k === 'took' && r) r.entries[i].tricksWon = num(v);
+    else if (k === 'hearts' && r) r.entries[i].hearts = num(v);
+    else if (k === 'queen' && r) { r.entries[i].queenOfSpades = !!v; if (v) r.entries.forEach((en, j) => { if (j !== i) en.queenOfSpades = false; }); if (e.type === 'change') { root.querySelectorAll(`input[data-k="queen"][data-r="${r.index}"]`).forEach((c) => { c.checked = r.entries[Number(c.getAttribute('data-i'))].queenOfSpades; }); } }
+    else if (k === 'cat') { const ck = el.getAttribute('data-ck'); (D.cats[ck] = D.cats[ck] || [])[i] = v; }
+    else if (k === 'score') D.scores[i] = v;
+  }
+
+  // ---------------- History list integration ----------------
+  function decorate() {
+    const list = doc.getElementById('history-list'); if (!list) return;
+    const byId = {}; ADAPTER.entries().forEach((g) => { if (g && g.id != null) byId[String(g.id)] = g; });
+    list.querySelectorAll('.history-item').forEach((row) => {
+      const id = row.getAttribute('data-game-id') || '';
+      const g = byId[id] || null;
+      if (!row.classList.contains('v26-hist-row')) {
+        row.classList.add('v26-hist-row');
+        row.setAttribute('tabindex', '0');
+        row.setAttribute('role', 'button');
+        const t = row.querySelector('strong');
+        row.setAttribute('aria-label', 'Open ' + (t ? t.textContent : 'game') + ' details');
+        const foot = doc.createElement('div'); foot.className = 'v26-hist-rowfoot'; foot.innerHTML = `<span class="v26-hist-edchip" hidden>Edited</span><span class="v26-hist-more">Details${IC.chev}</span>`;
+        row.appendChild(foot);
+      }
+      const chip = row.querySelector('.v26-hist-edchip');
+      const ed = g && ((g.meta && g.meta.edited && g.meta.edited.at) || g.edited_at || g.editedAt);
+      if (chip) chip.hidden = !ed;
+    });
+  }
+  function onDocClick(e) {
+    const row = e.target.closest && e.target.closest('#history-list .history-item');
+    if (!row) return;
+    if (e.target.closest('button, a, input, select, textarea, label, .v24-link-slot, [role="menu"]')) return;
+    const id = row.getAttribute('data-game-id') || row.getAttribute('data-shared-id');
+    if (id) open(id, { returnFocus: row });
+  }
+  function onDocKey(e) {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    const row = e.target && e.target.classList && e.target.classList.contains('v26-hist-row') ? e.target : null;
+    if (!row) return;
+    e.preventDefault();
+    const id = row.getAttribute('data-game-id') || row.getAttribute('data-shared-id');
+    if (id) open(id, { returnFocus: row });
+  }
+  function init() {
+    doc.addEventListener('click', onDocClick);
+    doc.addEventListener('keydown', onDocKey);
+    const list = doc.getElementById('history-list');
+    if (list && global.MutationObserver) new MutationObserver(() => decorate()).observe(list, { childList: true });
+    decorate();
+    // close the sheet if the app navigates away from History underneath it
+    global.addEventListener('tallyit:game-edited', (ev) => {
+      const det = (ev && ev.detail) || {};
+      if (det.game_id && det.game) {
+        const e = ADAPTER.entries().find((g) => g && String(g.sharedGameId || '') === String(det.game_id));
+        if (e && ADAPTER.local(e.id)) syncLocal(e.id, det.game, null);
+      }
+      ADAPTER.refresh();
+      if (S && S.mode === 'view' && S.data && S.data.ok && (String(det.game_id || '') === String(S.data.sharedId || '') || String(det.game_id || '') === S.id)) {
+        if (det.game) { const next = fromDetail(det.game, S.data.record); S.data = { ...S.data, record: next, original: clone(next), game: det.game }; render(); }
+        else reload();
+      }
+    });
+  }
+  if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', init, { once: true }); else init();
+
+  global.TallyItV26History = {
+    open, close, reload, getGame, isOwner, updateGame, decorate,
+    setAdapter(o) { Object.assign(ADAPTER, o || {}); },
+    setTools(o) { Object.assign(TOOLS, o || {}); },
+    get adapter() { return ADAPTER; }, get tools() { return TOOLS; },
+    themes: THEMES,
+    _state: () => S
+  };
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
 <script id="v25-transitions">
 /* TallyIt v25 polish - smooth page transitions (window.TallyItV25Fx).
    engine.js calls TallyItV25Fx.wrap(fn) around every view / setup-step change. wrap() stays synchronous:
@@ -32580,6 +34724,448 @@ if ('serviceWorker' in navigator) {
   }
   if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', init, { once: true }); else init();
   global.TallyItV25RequestKb = { update: update, isOpen: isOpen, keyboardHeight: function () { return lastKb; } };
+})(window);
+
+</script>
+<script id="v26-favorites">
+/* TallyIt v26 Play-page Favorites.
+   Thin window.TallyItV26Favorites over window.TallyItV26Backend (Auth, v3/v26_backend.js).
+   Backend contract (all async methods never throw):
+     getFavorites()            -> {ok, favorites:[game_key], guest?}
+     setFavorites(keys)        -> {ok, favorites}
+     toggleFavorite(key)       -> {ok, favorited, favorites}
+     isFavorite(key)           sync, from cache
+     subscribeFavorites(cb)    -> unsubscribe; cb({favorites, source, guest})
+                               fires once on subscribe, then on realtime, tab visible,
+                               focus, online, own writes, and sign-in / sign-out
+     mergeGuestFavorites()     Auth runs this automatically on sign-in while subscribed;
+                               the UI does not call it
+     Event on window: 'tallyit:favorites-changed' detail {favorites, source, guest}
+     {ok:false, unavailable:true} -> hide hearts
+     Guests live inside the backend (localStorage gst_v26_guest_favorites).
+     Signed-out calls return {ok:true, favorites, guest:true}.
+   Favorited games are removed from All games (no duplicates). Both sections A-Z.
+   Zero emojis. */
+(function (global) {
+  'use strict';
+
+  var KEYS = ['flip7', '7wonders', 'carcassonne', 'catan', 'ohhell', 'hearts', 'nertz', 'rummikub', 'qwirkle', 'spoons', 'other'];
+  var ALIAS = {
+    custom: 'other',
+    '7-wonders': '7wonders',
+    seven_wonders: '7wonders',
+    'seven-wonders': '7wonders',
+    sevenwonders: '7wonders',
+    oh_hell: 'ohhell',
+    'oh-hell': 'ohhell'
+  };
+  var HEART = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M19.5 12.57c-3.38 3.48-7.5 6.93-7.5 6.93s-4.12-3.45-7.5-6.93C2.4 10.4 3.22 6.7 6.4 5.62c1.74-.6 3.58.12 5.6 1.86 2.02-1.74 3.86-2.46 5.6-1.86 3.18 1.08 4 4.78 1.9 6.95z"/></svg>';
+
+  var doc = global.document;
+  var cache = [];
+  var pending = Object.create(null);
+  var listeners = [];
+  var unsub = null;
+  var ready = false;
+  var hidden = true;
+  var busy = false;
+
+  function be() { return global.TallyItV26Backend || null; }
+  function normKey(k) {
+    var s = String(k == null ? '' : k).trim().toLowerCase();
+    if (!s) return '';
+    if (KEYS.indexOf(s) >= 0) return s;
+    var a = ALIAS[s] || ALIAS[s.toLowerCase()];
+    return a || s;
+  }
+  function normList(arr) {
+    var out = [], seen = Object.create(null);
+    (arr || []).forEach(function (k) {
+      var id = normKey(k);
+      if (id && KEYS.indexOf(id) >= 0 && !seen[id]) { seen[id] = 1; out.push(id); }
+    });
+    return out;
+  }
+  function setCache(arr) { cache = normList(arr); }
+  function isFavKey(id) {
+    id = normKey(id);
+    if (Object.prototype.hasOwnProperty.call(pending, id)) return !!pending[id];
+    var b = be();
+    if (b && typeof b.isFavorite === 'function') {
+      try { return !!b.isFavorite(id); } catch (_) {}
+    }
+    return cache.indexOf(id) >= 0;
+  }
+  function notify() {
+    var list = cache.slice();
+    listeners.slice().forEach(function (fn) { try { fn(list); } catch (_) {} });
+  }
+  function announce(msg) {
+    var el = doc.getElementById('v26-fav-status');
+    if (!el) {
+      el = doc.createElement('div');
+      el.id = 'v26-fav-status';
+      el.className = 'v26-fav-status';
+      el.setAttribute('role', 'status');
+      el.setAttribute('aria-live', 'polite');
+      (doc.body || doc.documentElement).appendChild(el);
+    }
+    el.textContent = '';
+    if (msg) setTimeout(function () { el.textContent = msg; }, 20);
+  }
+
+  async function getFavorites() {
+    var b = be();
+    if (!b || typeof b.getFavorites !== 'function') {
+      return { ok: false, unavailable: true, error: 'unavailable', message: 'Favorites are not available yet.', favorites: [] };
+    }
+    var res;
+    try { res = await b.getFavorites(); } catch (_) {
+      return { ok: false, error: 'throw', message: 'Favorites are not available yet.', favorites: [] };
+    }
+    if (res && res.ok) setCache(res.favorites);
+    return res || { ok: false, error: 'empty', favorites: [] };
+  }
+
+  async function toggleFavorite(id) {
+    var key = normKey(id);
+    var b = be();
+    if (!b || typeof b.toggleFavorite !== 'function') {
+      return { ok: false, unavailable: true, error: 'unavailable', favorites: cache.slice() };
+    }
+    var res;
+    try { res = await b.toggleFavorite(key); } catch (_) {
+      return { ok: false, error: 'throw', message: "Couldn't update favorites.", favorites: cache.slice() };
+    }
+    if (res && res.ok) {
+      if (res.favorites) setCache(res.favorites);
+      else if (res.favorited) { if (cache.indexOf(key) < 0) cache = cache.concat([key]); }
+      else cache = cache.filter(function (k) { return k !== key; });
+    }
+    return res || { ok: false, error: 'empty', favorites: cache.slice() };
+  }
+
+  function onChange(fn) {
+    if (typeof fn !== 'function') return function () {};
+    listeners.push(fn);
+    return function () {
+      listeners = listeners.filter(function (x) { return x !== fn; });
+    };
+  }
+
+  var Fav = {
+    list: function () { return cache.slice(); },
+    toggle: toggleFavorite,
+    isFav: isFavKey,
+    onChange: onChange,
+    getFavorites: getFavorites,
+    setFavorites: async function (keys) {
+      var b = be();
+      if (!b || typeof b.setFavorites !== 'function') return { ok: false, unavailable: true, favorites: cache.slice() };
+      var res;
+      try { res = await b.setFavorites(normList(keys)); } catch (_) {
+        return { ok: false, error: 'throw', favorites: cache.slice() };
+      }
+      if (res && res.ok && res.favorites) setCache(res.favorites);
+      return res || { ok: false, favorites: cache.slice() };
+    },
+    mergeGuestFavorites: async function () {
+      var b = be();
+      if (!b || typeof b.mergeGuestFavorites !== 'function') return { ok: true, favorites: cache.slice() };
+      var res;
+      try { res = await b.mergeGuestFavorites(); } catch (_) { return { ok: false, error: 'throw', favorites: cache.slice() }; }
+      if (res && res.ok && res.favorites) setCache(res.favorites);
+      return res || { ok: true, favorites: cache.slice() };
+    },
+    isAvailable: function () { return !hidden; }
+  };
+  global.TallyItV26Favorites = Fav;
+
+  function games() {
+    return (global.ScoreTracker && global.ScoreTracker.GAMES) || [];
+  }
+  function gameName(id) {
+    id = normKey(id);
+    var g = games().filter(function (x) { return x.id === id; })[0];
+    if (g && g.name) return g.name;
+    var card = doc.querySelector('#game-grid .game-card[data-game="' + id + '"] .overlay');
+    return (card && card.textContent.trim()) || id;
+  }
+  function sortCards(arr) {
+    arr.sort(function (a, b) {
+      return gameName(a.getAttribute('data-game')).localeCompare(gameName(b.getAttribute('data-game')), undefined, { sensitivity: 'base' });
+    });
+    return arr;
+  }
+  function visible(el) {
+    return !!(el && el.style.display !== 'none' && !el.classList.contains('v22-filtered-out'));
+  }
+
+  function setReduced(on) {
+    var root = doc.documentElement;
+    if (root) root.classList.toggle('v26-fav-reduced', !!on);
+  }
+  function hookMotion() {
+    var mql;
+    try { mql = global.matchMedia && global.matchMedia('(prefers-reduced-motion: reduce)'); } catch (_) {}
+    if (!mql) return;
+    setReduced(mql.matches);
+    var ch = function (e) { setReduced(e.matches); };
+    if (mql.addEventListener) mql.addEventListener('change', ch);
+    else if (mql.addListener) mql.addListener(ch);
+  }
+
+  function heartLabel(id, on) {
+    var n = gameName(id);
+    return on ? ('Remove ' + n + ' from favorites') : ('Add ' + n + ' to favorites');
+  }
+
+  function decorate(card) {
+    if (!card || !card.getAttribute) return;
+    var id = normKey(card.getAttribute('data-game'));
+    if (!id) return;
+    var btn = card.querySelector(':scope > .v26-fav-btn');
+    if (!btn) {
+      btn = doc.createElement('button');
+      btn.type = 'button';
+      btn.className = 'v26-fav-btn';
+      btn.innerHTML = HEART;
+      var stop = function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (e.stopImmediatePropagation) e.stopImmediatePropagation();
+      };
+      // NOTE: do NOT preventDefault on pointerdown/mousedown/touchstart: on touch devices preventDefault on touchstart
+      // cancels the synthesized click, so the heart would never toggle on a real phone. Only keep the card from seeing the press.
+      var isolate = function (e) { e.stopPropagation(); if (e.stopImmediatePropagation) e.stopImmediatePropagation(); };
+      btn.addEventListener('pointerdown', isolate);
+      btn.addEventListener('mousedown', isolate);
+      btn.addEventListener('touchstart', isolate, { passive: true });
+      btn.addEventListener('keydown', function (e) {
+        var k = e.key || e.code;
+        if (k === 'Enter' || k === ' ' || k === 'Spacebar' || k === 'Space') stop(e);
+      });
+      btn.addEventListener('click', function (e) {
+        stop(e);
+        onToggle(id, btn);
+      });
+      card.appendChild(btn);
+    }
+    var on = isFavKey(id);
+    btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    btn.setAttribute('aria-label', heartLabel(id, on));
+  }
+
+  function ensureSections(grid) {
+    var fav = doc.getElementById('v26-fav-section');
+    var all = doc.getElementById('v26-all-section');
+    if (!fav || fav.parentNode !== grid) {
+      fav = doc.createElement('section');
+      fav.id = 'v26-fav-section';
+      fav.className = 'v26-fav-section';
+      fav.setAttribute('aria-label', 'Favorites');
+      fav.hidden = true;
+      fav.innerHTML = '<h3 class="v26-fav-heading" id="v26-fav-heading">Favorites</h3><div class="v26-fav-grid" id="v26-fav-grid"></div>';
+      fav.setAttribute('aria-labelledby', 'v26-fav-heading');
+    }
+    if (!all || all.parentNode !== grid) {
+      all = doc.createElement('section');
+      all.id = 'v26-all-section';
+      all.className = 'v26-fav-section';
+      all.setAttribute('aria-label', 'All games');
+      all.innerHTML = '<h3 class="v26-fav-heading" id="v26-all-heading">All games</h3><div class="v26-fav-grid" id="v26-all-grid"></div>';
+      all.setAttribute('aria-labelledby', 'v26-all-heading');
+    }
+    if (grid.firstChild !== fav) grid.insertBefore(fav, grid.firstChild);
+    if (fav.nextSibling !== all) grid.insertBefore(all, fav.nextSibling);
+    return { fav: fav, all: all, favGrid: fav.querySelector('.v26-fav-grid'), allGrid: all.querySelector('.v26-fav-grid') };
+  }
+
+  function syncSectionVisibility() {
+    var fav = doc.getElementById('v26-fav-section');
+    var all = doc.getElementById('v26-all-section');
+    if (!fav || !all) return;
+    var favN = fav.querySelectorAll('.game-card');
+    var allN = all.querySelectorAll('.game-card');
+    var favVis = 0, allVis = 0;
+    favN.forEach(function (c) { if (visible(c)) favVis++; });
+    allN.forEach(function (c) { if (visible(c)) allVis++; });
+    var showFav = favVis > 0;
+    fav.hidden = !showFav;
+    fav.classList.toggle('v26-fav-hidden', !showFav);
+    all.hidden = allVis === 0 && showFav;
+    all.classList.toggle('v26-fav-hidden', all.hidden);
+    var head = doc.getElementById('v26-all-heading');
+    if (head) head.hidden = !showFav;
+  }
+
+  function partition(cards) {
+    var favs = [], rest = [];
+    cards.forEach(function (c) {
+      (isFavKey(c.getAttribute('data-game')) ? favs : rest).push(c);
+    });
+    return { favs: sortCards(favs), rest: sortCards(rest) };
+  }
+  function alreadyArranged(grid, cards, parts) {
+    if (!grid.classList.contains('v26-fav-host')) return false;
+    var favG = doc.getElementById('v26-fav-grid');
+    var allG = doc.getElementById('v26-all-grid');
+    if (!favG || !allG || favG.parentNode.parentNode !== grid || allG.parentNode.parentNode !== grid) return false;
+    var i;
+    for (i = 0; i < cards.length; i++) if (!cards[i].querySelector(':scope > .v26-fav-btn')) return false;
+    var favNow = favG.querySelectorAll(':scope > .game-card');
+    var allNow = allG.querySelectorAll(':scope > .game-card');
+    if (favNow.length !== parts.favs.length || allNow.length !== parts.rest.length) return false;
+    for (i = 0; i < parts.favs.length; i++) if (favNow[i] !== parts.favs[i]) return false;
+    for (i = 0; i < parts.rest.length; i++) if (allNow[i] !== parts.rest[i]) return false;
+    return true;
+  }
+  function enhance() {
+    var grid = doc.getElementById('game-grid');
+    if (!grid || hidden || !ready || busy) return;
+    var cards = Array.prototype.slice.call(grid.querySelectorAll('.game-card'));
+    if (!cards.length) return;
+    var parts = partition(cards);
+    var needDecorate = false;
+    cards.forEach(function (c) { if (!c.querySelector(':scope > .v26-fav-btn')) needDecorate = true; });
+    if (!needDecorate && alreadyArranged(grid, cards, parts)) { syncSectionVisibility(); return; }
+    busy = true;
+    try {
+      grid.classList.add('v26-fav-host');
+      var sec = ensureSections(grid);
+      cards.forEach(decorate);
+      parts.favs.forEach(function (c) { sec.favGrid.appendChild(c); });
+      parts.rest.forEach(function (c) { sec.allGrid.appendChild(c); });
+      syncSectionVisibility();
+    } finally {
+      busy = false;
+    }
+  }
+
+  function hideHearts() {
+    hidden = true;
+    ready = false;
+    var grid = doc.getElementById('game-grid');
+    if (!grid) return;
+    busy = true;
+    grid.querySelectorAll('.v26-fav-btn').forEach(function (b) { if (b.parentNode) b.parentNode.removeChild(b); });
+    var favG = doc.getElementById('v26-fav-grid');
+    var allG = doc.getElementById('v26-all-grid');
+    var host = grid;
+    if (favG && allG) {
+      Array.prototype.slice.call(favG.querySelectorAll('.game-card'))
+        .concat(Array.prototype.slice.call(allG.querySelectorAll('.game-card')))
+        .forEach(function (c) { host.appendChild(c); });
+    }
+    var fav = doc.getElementById('v26-fav-section');
+    var all = doc.getElementById('v26-all-section');
+    if (fav && fav.parentNode) fav.parentNode.removeChild(fav);
+    if (all && all.parentNode) all.parentNode.removeChild(all);
+    grid.classList.remove('v26-fav-host');
+    busy = false;
+  }
+
+  function pop(btn) {
+    if (!btn || (doc.documentElement && doc.documentElement.classList.contains('v26-fav-reduced'))) return;
+    btn.classList.remove('v26-fav-pop');
+    void btn.offsetWidth;
+    btn.classList.add('v26-fav-pop');
+    setTimeout(function () { btn.classList.remove('v26-fav-pop'); }, 320);
+  }
+
+  var inflight = Object.create(null);
+  async function onToggle(id, btn) {
+    id = normKey(id);
+    if (!id || inflight[id] || hidden) return;
+    var was = isFavKey(id);
+    inflight[id] = 1;
+    pending[id] = !was;
+    if (btn) {
+      btn.setAttribute('aria-pressed', !was ? 'true' : 'false');
+      btn.setAttribute('aria-label', heartLabel(id, !was));
+      if (!was) pop(btn);
+    }
+    enhance();
+    var res = await toggleFavorite(id);
+    delete pending[id];
+    delete inflight[id];
+    if (!res || !res.ok) {
+      if (res && res.unavailable) { hideHearts(); return; }
+      enhance();
+      announce((res && res.message) || "Couldn't update favorites.");
+      return;
+    }
+    enhance();
+    notify();
+  }
+
+  function applyIncoming(favs) {
+    setCache(favs || []);
+    Object.keys(pending).forEach(function (k) { delete pending[k]; });
+    enhance();
+    notify();
+  }
+
+  function hookSearch() {
+    ['v22FilterGames', 'v22ClearGameSearch'].forEach(function (name) {
+      var orig = global[name];
+      if (typeof orig !== 'function' || orig._v26fav) return;
+      var wrapped = function () {
+        var r = orig.apply(this, arguments);
+        try { syncSectionVisibility(); } catch (_) {}
+        return r;
+      };
+      wrapped._v26fav = true;
+      global[name] = wrapped;
+    });
+  }
+
+  function observe() {
+    var grid = doc.getElementById('game-grid');
+    if (!grid || !global.MutationObserver) return;
+    new MutationObserver(function () {
+      if (busy || hidden || !ready) return;
+      enhance();
+    }).observe(grid, { childList: true, subtree: true });
+  }
+
+  function onEvent(e) {
+    var d = e && e.detail;
+    if (!d) return;
+    if (hidden || !ready) return;
+    applyIncoming(d.favorites);
+  }
+
+  async function start() {
+    hookMotion();
+    hookSearch();
+    observe();
+    var res = await getFavorites();
+    if (!res || !res.ok) {
+      if (res && res.unavailable) hideHearts();
+      return;
+    }
+    hidden = false;
+    ready = true;
+    setCache(res.favorites);
+    var b = be();
+    if (b && typeof b.subscribeFavorites === 'function') {
+      try {
+        if (unsub) unsub();
+        unsub = b.subscribeFavorites(function (detail) {
+          var favs = detail && detail.favorites ? detail.favorites : detail;
+          if (hidden || !ready) return;
+          applyIncoming(favs);
+        });
+      } catch (_) {}
+    }
+    try { global.addEventListener('tallyit:favorites-changed', onEvent); } catch (_) {}
+    try { if (doc !== global) doc.addEventListener('tallyit:favorites-changed', onEvent); } catch (_) {}
+    enhance();
+  }
+
+  if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', start, { once: true });
+  else start();
 })(window);
 
 </script>
